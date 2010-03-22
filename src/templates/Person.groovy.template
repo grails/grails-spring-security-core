@@ -1,0 +1,17 @@
+package ${packageName}
+
+class ${userClassName} {
+
+	String username
+	String passwd
+	boolean enabled
+
+	static constraints = {
+		username blank: false, unique: true
+		passwd blank: false
+	}
+
+	Set<${roleClassName}> getAuthorities() {
+		${userClassName}${roleClassName}.findAllBy${userClassName}(this).collect { it.${roleClassProperty} } as Set
+	}
+}

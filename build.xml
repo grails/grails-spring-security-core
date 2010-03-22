@@ -1,0 +1,90 @@
+<project name='spring-security-core' default='package'>
+
+	<!-- Properties -->
+
+	<property file='application.properties' />
+
+	<property environment='env'/>
+
+	<!-- optional properties file for developer overrides -->
+	<property file='build.properties' />
+
+	<property name='grails.home' value='${env.GRAILS_HOME}' />
+
+	<condition property='grails' value='grails.bat'>
+		<os family='windows'/>
+	</condition>
+	<property name='grails' value='grails' />
+
+	<condition property='grails-debug' value='grails-debug.bat'>
+		<os family='windows'/>
+	</condition>
+	<property name='grails-debug' value='grails-debug' />
+
+	<!-- Macrodefs -->
+
+	<macrodef name='grails'>
+		<attribute name='action' />
+		<attribute name='environment' default='dev' />
+		<element name='args' optional='true' />
+		<sequential>
+			<exec executable='${grails}' failonerror='true'>
+				<args />
+				<arg value='@{environment}'/>
+				<arg value='@{action}'/>
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<macrodef name='grails-debug'>
+		<attribute name='action' />
+		<attribute name='environment' default='dev' />
+		<element name='args' optional='true' />
+		<sequential>
+			<exec executable='${grails-debug}' failonerror='true'>
+				<args />
+				<arg value='@{environment}'/>
+				<arg value='@{action}'/>
+			</exec>
+		</sequential>
+	</macrodef>
+
+	<!-- Targets -->
+
+	<target name='init'>
+		<mkdir dir='grails-app/conf/spring'/>
+	</target>
+
+	<target name='clean' description='Cleans a Grails application' depends='init'>
+		<grails action='clean' />
+		<delete><fileset dir='.' includes='*.log*' /></delete>
+	</target>
+
+	<target name='doc' description='Generates docs' depends='init'>
+		<grails action='doc' />
+	</target>
+
+	<target name='test' description='Run unit tests' depends='clean'>
+		<grails action='test-app' environment='test' />
+	</target>
+
+	<target name='package' description='Package the plugin' depends='test'>
+
+		<grails action='package-plugin' />
+
+		<!-- clean up -->
+		<delete dir='grails-app/conf/hibernate'/>
+		<delete dir='grails-app/conf/spring'/>
+		<delete dir='grails-app/controllers'/>
+		<delete dir='grails-app/i18n'/>
+		<delete dir='grails-app/utils'/>
+		<delete dir='grails-app/views'/>
+		<delete dir='web-app/css'/>
+		<delete dir='web-app/images'/>
+		<delete dir='web-app/js'/>
+		<delete dir='web-app/plugins'/>
+		<delete dir='web-app/META-INF'/>
+		<delete dir='web-app/WEB-INF'/>
+	</target>
+
+</project>
