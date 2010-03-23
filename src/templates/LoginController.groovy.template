@@ -77,10 +77,10 @@ class LoginController {
 		def exception = session[AbstractAuthenticationProcessingFilter.SPRING_SECURITY_LAST_EXCEPTION_KEY]
 		if (exception) {
 			if (exception instanceof DisabledException) {
-				msg = "[$username] is disabled."
+				msg = SpringSecurityUtils.securityConfig.errors.login.disabled
 			}
 			else {
-				msg = "[$username] wrong username/password."
+				msg = SpringSecurityUtils.securityConfig.errors.login.fail
 			}
 		}
 

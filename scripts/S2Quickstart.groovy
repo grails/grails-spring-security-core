@@ -17,7 +17,7 @@ import groovy.text.SimpleTemplateEngine
 import grails.util.GrailsNameUtils
 
 USAGE = """
-Usage: grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME [REQUESTMAP_CLASS_NAME]
+Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name]
 
 Creates a user and role class (and optionally a requestmap class) in the specified package
 
@@ -103,16 +103,17 @@ private void summarize() {
 		requestmapClassName
 	}
 
-	println """
+	ant.echo message: """
 Created domain classes, controllers, and GSPs.
 
 Next you'll need to edit Config.groovy and add the following:
 
-  grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'
+  grails.plugins.springsecurity.authority.className = '${packageName}.$roleClassName'
+  grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"""
 """
 
 	if (requestmapClassName) {
-		println "  grails.plugins.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
+		ant.echo message: "  grails.plugins.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
 	}
 }
 
@@ -120,13 +121,13 @@ generateFile = { String templatePath, String outputPath ->
 
 	File templateFile = new File(templatePath)
 	if (!templateFile.exists()) {
-		println "$templatePath doesn't exist"
+		ant.echo message: "$templatePath doesn't exist"
 		return
 	}
 
 	File outFile = new File(outputPath)
 	if (outFile.exists() && !overwrite) {
-		println "file *not* generated: $outFile.absolutePath"
+		ant.echo message: "file *not* generated: $outFile.absolutePath"
 		return
 	}
 
@@ -137,7 +138,7 @@ generateFile = { String templatePath, String outputPath ->
 		templateEngine.createTemplate(templateFile.text).make(templateAttributes).writeTo(writer)
 	}
 
-	println "generated $outFile.absolutePath"
+	ant.echo message: "generated $outFile.absolutePath"
 }
 
 copyFile = { String from, String to ->
@@ -148,13 +149,13 @@ private parseArgs() {
 	args = args ? args.split('\n') : []
 	switch (args.size()) {
 		case 3:
-			println "Creating User class ${args[1]} and Role class ${args[2]} in package ${args[0]}"
+			ant.echo message: "Creating User class ${args[1]} and Role class ${args[2]} in package ${args[0]}"
 			return args
 		case 4:
-			println "Creating User class ${args[1]}, Role class ${args[2]}, and Requestmap class ${args[3]} in package ${args[0]}"
+			ant.echo message: "Creating User class ${args[1]}, Role class ${args[2]}, and Requestmap class ${args[3]} in package ${args[0]}"
 			return args
 		default:
-			println "Usage:\n$USAGE"
+			ant.echo message: USAGE
 			System.exit(1)
 			break
 	}
