@@ -14,6 +14,8 @@
  */
 package grails.plugins.springsecurity
 
+import javax.servlet.http.HttpServletRequest
+
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityConfigType
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
@@ -62,8 +64,8 @@ class SpringSecurityService {
 	/**
 	 * Encode the password using the configured PasswordEncoder.
 	 */
-	String encodePassword(String passwd, salt = null) {
-		passwordEncoder.encodePassword passwd, salt
+	String encodePassword(String password, salt = null) {
+		passwordEncoder.encodePassword password, salt
 	}
 
 	/**
@@ -155,7 +157,7 @@ class SpringSecurityService {
 	/**
 	 * Rebuild an Authentication for the given username and register it in the security context.
 	 * Typically used after updating a user's authorities or other auth-cached info.
-	 * 
+	 * <p/>
 	 * Also removes the user from the user cache to force a refresh at next login.
 	 *
 	 * @param username  the user's login name
@@ -166,6 +168,15 @@ class SpringSecurityService {
 		SCH.context.authentication = new UsernamePasswordAuthenticationToken(
 				userDetails, password ?: userDetails.password, userDetails.authorities)
 		userCache.removeUserFromCache username
+	}
+
+	/**
+	 * Check if the request was triggered by an Ajax call.
+	 * @param request the request
+	 * @return <code>true</code> if Ajax
+	 */
+	boolean isAjax(HttpServletRequest request) {
+		SpringSecurityUtils.isAjax request
 	}
 
 	private List findRequestmapsByRole(String roleName, domainClass, conf) {

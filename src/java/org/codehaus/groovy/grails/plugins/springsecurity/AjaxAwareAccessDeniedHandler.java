@@ -116,7 +116,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	}
 
 	/**
-	 * Dependency injection for the Ajax error page, e.g. '/login/deniedAjax'.
+	 * Dependency injection for the Ajax error page, e.g. '/login/ajaxDenied'.
 	 * @param page  the page
 	 */
 	public void setAjaxErrorPage(final String page) {

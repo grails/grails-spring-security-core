@@ -39,7 +39,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	 * we give a user with no granted roles this one which gets past that restriction but
 	 * doesn't grant anything.
 	 */
-	static final List NO_ROLES = [new GrantedAuthorityImpl('ROLE_NO_ROLES')]
+	static final List NO_ROLES = [new GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)]
 
 	/** Dependency injection for Hibernate session factory. */
 	def sessionFactory
@@ -72,8 +72,8 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	}
 
 	protected loadUser(String username, session) {
-		String userDomainClassName = ReflectionUtils.getConfigProperty('userLookup', 'userDomainClassName')
-		String usernamePropertyName = ReflectionUtils.getConfigProperty('userLookup', 'usernamePropertyName')
+		String userDomainClassName = ReflectionUtils.getConfigProperty('userLookup.userDomainClassName')
+		String usernamePropertyName = ReflectionUtils.getConfigProperty('userLookup.usernamePropertyName')
 
 		List<?> users = session.createQuery(
 				"FROM $userDomainClassName WHERE $usernamePropertyName = :username")
@@ -93,8 +93,8 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 			return []
 		}
 
-		String authoritiesPropertyName = ReflectionUtils.getConfigProperty('userLookup', 'authoritiesPropertyName')
-		String authorityPropertyName = ReflectionUtils.getConfigProperty('authority', 'nameField')
+		String authoritiesPropertyName = ReflectionUtils.getConfigProperty('userLookup.authoritiesPropertyName')
+		String authorityPropertyName = ReflectionUtils.getConfigProperty('authority.nameField')
 
 		Collection<?> userAuthorities = user."$authoritiesPropertyName"
 		def authorities = userAuthorities.collect { new GrantedAuthorityImpl(it."$authorityPropertyName") }
@@ -103,9 +103,9 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 	protected UserDetails createUserDetails(user, Collection<GrantedAuthority> authorities) {
 
-		String usernamePropertyName = ReflectionUtils.getConfigProperty('userLookup', 'usernamePropertyName')
-		String enabledPropertyName = ReflectionUtils.getConfigProperty('userLookup', 'enabledPropertyName')
-		String passwordPropertyName = ReflectionUtils.getConfigProperty('userLookup', 'passwordPropertyName')
+		String usernamePropertyName = ReflectionUtils.getConfigProperty('userLookup.usernamePropertyName')
+		String enabledPropertyName = ReflectionUtils.getConfigProperty('userLookup.enabledPropertyName')
+		String passwordPropertyName = ReflectionUtils.getConfigProperty('userLookup.passwordPropertyName')
 
 		String username = user."$usernamePropertyName"
 		String password = user."$passwordPropertyName"

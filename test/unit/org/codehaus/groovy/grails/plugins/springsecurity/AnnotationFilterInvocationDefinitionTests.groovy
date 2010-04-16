@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import grails.plugins.springsecurity.Secured
 import grails.test.GrailsUnitTestCase
 
 import javax.servlet.ServletContext

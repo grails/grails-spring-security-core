@@ -29,15 +29,11 @@ class ReflectionUtils {
 	}
 
 	static getConfigProperty(String name) {
-		SpringSecurityUtils.securityConfig."$name"
-	}
-
-	static getConfigProperty(String... names) {
-		def current = SpringSecurityUtils.securityConfig
-		for (String name in names) {
-			current = current."$name"
+		def value = SpringSecurityUtils.securityConfig
+		for (String part in name.split('\\.')) {
+			value = value."$part"
 		}
-		current
+		value
 	}
 
 	static void setConfigProperty(String name, p) {
@@ -45,15 +41,15 @@ class ReflectionUtils {
 	}
 
 	static String getRoleAuthority(role) {
-		lookupPropertyValue role, 'authority', 'nameField'
+		lookupPropertyValue role, 'authority.nameField'
 	}
 
 	static String getRequestmapUrl(requestmap) {
-		lookupPropertyValue requestmap, 'requestMap', 'urlField'
+		lookupPropertyValue requestmap, 'requestMap.urlField'
 	}
 
 	static String getRequestmapConfigAttribute(requestmap) {
-		lookupPropertyValue requestmap, 'requestMap', 'configAttributeField'
+		lookupPropertyValue requestmap, 'requestMap.configAttributeField'
 	}
 
 	static List loadAllRequestmaps() {
@@ -81,8 +77,7 @@ class ReflectionUtils {
 		split
 	}
 	
-	private static lookupPropertyValue(o, String... confPropertyNames) {
-		String fieldName = getConfigProperty(confPropertyNames)
-		o."$fieldName"
+	private static lookupPropertyValue(o, String name) {
+		o."${getConfigProperty(name)}"
 	}
 }

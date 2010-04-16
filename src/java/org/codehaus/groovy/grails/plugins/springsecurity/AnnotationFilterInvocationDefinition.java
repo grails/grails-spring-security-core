@@ -14,6 +14,8 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
+import grails.plugins.springsecurity.Secured;
+
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;

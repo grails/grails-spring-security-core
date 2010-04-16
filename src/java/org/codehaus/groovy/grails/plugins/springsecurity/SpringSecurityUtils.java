@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -48,6 +49,13 @@ public final class SpringSecurityUtils {
 	private static ConfigObject securityConfig;
 
 	public static final Map<Integer, String> ORDERED_FILTERS = new HashMap<Integer, String>();
+
+	/**
+	 * Used to ensure that all authenticated users have at least one granted authority to work
+	 * around Spring Security code that assumes at least one. By granting this non-authority,
+	 * the user can't do anything but gets past the somewhat arbitrary restrictions.
+	 */
+	public static final String NO_ROLE = "ROLE_NO_ROLES";
 
 	private SpringSecurityUtils() {
 		// static only
@@ -79,7 +87,7 @@ public final class SpringSecurityUtils {
 	 */
 	public static Collection<GrantedAuthority> getPrincipalAuthorities() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (null == authentication) {
+		if (authentication == null) {
 			return Collections.emptyList();
 		}
 
@@ -88,17 +96,25 @@ public final class SpringSecurityUtils {
 			return Collections.emptyList();
 		}
 
-		return authorities;
+		// remove the fake role if it's there
+		Collection<GrantedAuthority> copy = new ArrayList<GrantedAuthority>(authorities);
+		for (Iterator<GrantedAuthority> iter = copy.iterator(); iter.hasNext();) {
+			if (iter.next().getAuthority().equals(NO_ROLE)) {
+				iter.remove();
+			}
+		}
+
+		return copy;
 	}
 
 	/**
 	 * Split the role names and create {@link GrantedAuthority}s for each.
-	 * @param authorizationsString  comma-delimited role names
+	 * @param roleNames  comma-delimited role names
 	 * @return authorities (possibly empty)
 	 */
-	public static List<GrantedAuthority> parseAuthoritiesString(final String authorizationsString) {
+	public static List<GrantedAuthority> parseAuthoritiesString(final String roleNames) {
 		List<GrantedAuthority> requiredAuthorities = new ArrayList<GrantedAuthority>();
-		for (String auth : StringUtils.commaDelimitedListToStringArray(authorizationsString)) {
+		for (String auth : StringUtils.commaDelimitedListToStringArray(roleNames)) {
 			auth = auth.trim();
 			if (auth.length() > 0) {
 				requiredAuthorities.add(new GrantedAuthorityImpl(auth));
@@ -189,13 +205,13 @@ public final class SpringSecurityUtils {
 
 		String ajaxHeaderName = (String)ReflectionUtils.getConfigProperty("ajaxHeader");
 
-		// look for an ajax=true parameter
-		if ("true".equals(request.getParameter("ajax"))) {
+		// check the current request's headers
+		if (request.getHeader(ajaxHeaderName) != null) {
 			return true;
 		}
 
-		// check the current request's headers
-		if (request.getHeader(ajaxHeaderName) != null) {
+		// look for an ajax=true parameter
+		if ("true".equals(request.getParameter("ajax"))) {
 			return true;
 		}
 

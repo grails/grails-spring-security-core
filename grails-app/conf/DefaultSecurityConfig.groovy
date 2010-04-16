@@ -33,7 +33,6 @@ security {
 	/** error messages */
 	errors.login.disabled = "Sorry, your account is disabled."
 	errors.login.fail = "Sorry, we were not able to find a user with that username and password."
-	errors.login.no_granted_roles = errors.login.fail
 
 	// hierarchical roles
 	roleHierarchy = ''
@@ -62,7 +61,7 @@ security {
 	userLookup.userDomainClassName = 'Person'
 	userLookup.usernamePropertyName = 'username'
 	userLookup.enabledPropertyName = 'enabled'
-	userLookup.passwordPropertyName = 'passwd'
+	userLookup.passwordPropertyName = 'password'
 	userLookup.authoritiesPropertyName = 'authorities'
 	authority.className = 'Authority'
 	authority.nameField = 'authority'
@@ -86,6 +85,7 @@ security {
 	successHandler.alwaysUseDefaultTargetUrl = false
 	successHandler.targetUrlParameter = 'spring-security-redirect'
 	successHandler.useReferer = false
+	successHandler.ajaxSuccessUrl = '/login/ajaxSuccess'
 
 	// requestCache
 	requestCache.justUseSavedRequestOnGet = false
@@ -100,7 +100,7 @@ security {
 	// session fixation
 	useSessionFixation = false
 	sessionFixation.migrate = true
-	sessionFixation.alwaysCreateSession = true
+	sessionFixation.alwaysCreateSession = false
 
 	/** daoAuthenticationProvider **/
 	dao.reflectionSaltSourceUserProperty = null // if null, don't use salt source
@@ -125,7 +125,7 @@ security {
 	 * set errorPage to null to send Error 403 instead of showing error page
 	 */
 	adh.errorPage = '/login/denied'
-	adh.ajaxErrorPage = '/login/deniedAjax'
+	adh.ajaxErrorPage = '/login/ajaxDenied'
 
 	/** passwordEncoder */
 	// see http://java.sun.com/j2se/1.5.0/docs/guide/security/CryptoSpec.html#AppA

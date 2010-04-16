@@ -42,7 +42,7 @@ templateAttributes = [:]
 templateDir = "$springSecurityCorePluginDir/src/templates"
 appDir = "$basedir/grails-app"
 
-target('default': 'Creates artifacts for the Spring Security plugin') {
+target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	depends(checkVersion, configureProxy, packageApp, classpath)
 
 	configure()
@@ -109,6 +109,7 @@ Created domain classes, controllers, and GSPs.
 Next you'll need to edit Config.groovy and add the following:
 
   grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'
+  grails.plugins.springsecurity.authority.className = '${packageName}.$roleClassName'
 """
 
 	if (requestmapClassName) {
@@ -159,3 +160,5 @@ private parseArgs() {
 			break
 	}
 }
+
+setDefaultTarget 's2Quickstart'

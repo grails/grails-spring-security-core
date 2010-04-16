@@ -23,3 +23,8 @@ grails {
 		}
 	}
 }
+
+grails.doc.authors = 'Burt Beckwith'
+grails.doc.license = 'Apache License 2.0'
+grails.doc.images = new File('src/docs/resources/img')
+

@@ -24,27 +24,27 @@ class SecurityTagLib {
 
 	def ifAllGranted = { attrs, body ->
 
-		assertAttribute 'roles', attrs, 'ifAllGranted'
+		String roles = assertAttribute('roles', attrs, 'ifAllGranted')
 
-		if (SpringSecurityUtils.ifAllGranted(attrs.roles)) {
+		if (SpringSecurityUtils.ifAllGranted(roles)) {
 			out << body()
 		}
 	}
 
 	def ifNotGranted = { attrs, body ->
 
-		assertAttribute 'roles', attrs, 'ifNotGranted'
+		String roles = assertAttribute('roles', attrs, 'ifNotGranted')
 
-		if (SpringSecurityUtils.ifNotGranted(attrs.roles)) {
+		if (SpringSecurityUtils.ifNotGranted(roles)) {
 			out << body()
 		}
 	}
 
 	def ifAnyGranted = { attrs, body ->
 
-		assertAttribute 'roles', attrs, 'ifAnyGranted'
+		String roles = assertAttribute('roles', attrs, 'ifAnyGranted')
 
-		if (SpringSecurityUtils.ifAnyGranted(attrs.roles)) {
+		if (SpringSecurityUtils.ifAnyGranted(roles)) {
 			out << body()
 		}
 	}
@@ -53,12 +53,12 @@ class SecurityTagLib {
 	// TODO support 'var' and 'scope' and set the result instead of writing it
 	def loggedInUserInfo = { attrs, body ->
 
-		assertAttribute 'field', attrs, 'loggedInUserInfo'
+		String field = assertAttribute('field', attrs, 'loggedInUserInfo')
 
 		def source
 		if (springSecurityService.isLoggedIn()) {
 			source = determineSource()
-			for (pathElement in attrs.field.split('\\.')) {
+			for (pathElement in field.split('\\.')) {
 				source = source."$pathElement"
 				if (source == null) {
 					break
@@ -92,10 +92,11 @@ class SecurityTagLib {
 		}
 	}
 
-	private void assertAttribute(String name, attrs, String tag) {
-		if (!attrs[name]) {
+	private assertAttribute(String name, attrs, String tag) {
+		if (!attrs.containsKey(name)) {
 			throwTagError "Tag [$tag] is missing required attribute [$name]"
 		}
+		attrs.remove name
 	}
 
 	// TODO not supporting getDomainClass?

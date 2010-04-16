@@ -3,12 +3,16 @@ package ${packageName}
 class ${userClassName} {
 
 	String username
-	String passwd
+	String password
 	boolean enabled
 
 	static constraints = {
 		username blank: false, unique: true
-		passwd blank: false
+		password blank: false
+	}
+
+	static mapping = {
+		password column: '`password`'
 	}
 
 	Set<${roleClassName}> getAuthorities() {

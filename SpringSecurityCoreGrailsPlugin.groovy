@@ -44,9 +44,7 @@ import org.springframework.security.web.access.channel.RetryWithHttpsEntryPoint
 import org.springframework.security.web.access.channel.SecureChannelProcessor
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter
-import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
-import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
@@ -70,6 +68,8 @@ import org.springframework.web.filter.DelegatingFilterProxy
 
 import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAccessDeniedHandler
 import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationEntryPoint
+import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationFailureHandler
+import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationSuccessHandler
 import org.codehaus.groovy.grails.plugins.springsecurity.AnnotationFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.AuthenticatedVetoableDecisionManager
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
@@ -678,20 +678,19 @@ class SpringSecurityCoreGrailsPlugin {
 
 		if (conf.useSessionFixation) {
 			sessionAuthenticationStrategy(SessionFixationProtectionStrategy) {
-				migrateSessionAttributes = conf.sessionFixation.migrate
-				alwaysCreateSession = conf.sessionFixation.alwaysCreate
+				migrateSessionAttributes = conf.sessionFixation.migrate // true
+				alwaysCreateSession = conf.sessionFixation.alwaysCreate // false
 			}
 		}
 		else {
 			sessionAuthenticationStrategy(NullAuthenticatedSessionStrategy)
 		}
 
-		// TODO ajax aware
-		authenticationFailureHandler(ExceptionMappingAuthenticationFailureHandler) {
+		authenticationFailureHandler(AjaxAwareAuthenticationFailureHandler) {
 			redirectStrategy = ref('redirectStrategy')
 			defaultFailureUrl = conf.failureHandler.defaultFailureUrl //'/login/authfail?login_error=1'
 			useForward = conf.failureHandler.useForward // false
-//			ajaxAuthenticationFailureUrl = conf.failureHandler.ajaxAuthenticationFailureUrl // '/login/authfail?ajax=true'
+			ajaxAuthenticationFailureUrl = conf.failureHandler.ajaxAuthenticationFailureUrl // '/login/authfail?ajax=true'
 			exceptionMappings = conf.failureHandler.exceptionMappings // [:]
 		}
 
@@ -720,16 +719,17 @@ class SpringSecurityCoreGrailsPlugin {
 			createSessionAllowed = conf.requestCache.createSessionAllowed // true
 		}
 
-		authenticationSuccessHandler(SavedRequestAwareAuthenticationSuccessHandler) {
+		authenticationSuccessHandler(AjaxAwareAuthenticationSuccessHandler) {
 			requestCache = ref('requestCache')
 			defaultTargetUrl = conf.successHandler.defaultTargetUrl // '/'
 			alwaysUseDefaultTargetUrl = conf.successHandler.alwaysUseDefaultTargetUrl // false
 			targetUrlParameter = conf.successHandler.targetUrlParameter
+			ajaxSuccessUrl = conf.successHandler.ajaxSuccessUrl // '/login/ajaxSuccess'
 			useReferer = conf.successHandler.useReferer
 			redirectStrategy = ref('redirectStrategy')
 		}
 
-		redirectStrategy(DefaultRedirectStrategy) { // TODO ajax aware
+		redirectStrategy(DefaultRedirectStrategy) {
 			contextRelative = conf.redirectStrategy.contextRelative // false
 		}
 	}

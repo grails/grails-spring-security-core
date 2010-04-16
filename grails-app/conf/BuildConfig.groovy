@@ -11,6 +11,7 @@ grails.project.dependency.resolution = {
 	repositories {
 		grailsPlugins()
 		grailsHome()
+		grailsCentral()
 
 		ebr() // SpringSource  http://www.springsource.com/repository
 	}
