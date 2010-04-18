@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.FactoryBean;
@@ -66,7 +67,8 @@ public class LogoutFilterFactoryBean implements FactoryBean<LogoutFilter>, Initi
 		Assert.notNull(_logoutSuccessUrl, "logoutSuccessUrl is required");
 		Assert.notNull(_handlers, "handlers are required");
 
-		_logoutFilter = new LogoutFilter(_logoutSuccessUrl, _handlers.toArray(new LogoutHandler[_handlers.size()]));
+		_logoutFilter = new LogoutFilter(_logoutSuccessUrl,
+				_handlers.toArray(new LogoutHandler[_handlers.size()]));
 		_logoutFilter.setFilterProcessesUrl(_filterProcessesUrl);
 	}
 
@@ -92,5 +94,13 @@ public class LogoutFilterFactoryBean implements FactoryBean<LogoutFilter>, Initi
 	 */
 	public void setHandlers(final List<LogoutHandler> handlers) {
 		_handlers = handlers;
+	}
+
+	/**
+	 * For debugging.
+	 * @return  the handlers
+	 */
+	public List<LogoutHandler> getHandlers() {
+		return Collections.unmodifiableList(_handlers);
 	}
 }

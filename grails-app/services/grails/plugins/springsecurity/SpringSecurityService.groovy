@@ -17,7 +17,6 @@ package grails.plugins.springsecurity
 import javax.servlet.http.HttpServletRequest
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.plugins.springsecurity.SecurityConfigType
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken

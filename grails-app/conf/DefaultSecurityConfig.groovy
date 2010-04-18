@@ -12,10 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import grails.plugins.springsecurity.SecurityConfigType
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authentication.RememberMeAuthenticationToken
+import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler as ATRH
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter as UPAF
 import org.springframework.security.web.authentication.WebAuthenticationDetails
-import org.codehaus.groovy.grails.plugins.springsecurity.SecurityConfigType
 
 security {
 
@@ -26,8 +29,8 @@ security {
 	ajaxHeader = 'X-Requested-With'
 
 	// 'strict' mode where an explicit grant is required to access any resource;
-	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY 
-	// for /, /js/**, /css/**, /images/**, /login/**, /logout/**, etc. 
+	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY
+	// for /, /js/**, /css/**, /images/**, /login/**, /logout/**, etc.
 	rejectIfNoRule = false
 
 	/** error messages */
@@ -41,12 +44,10 @@ security {
 	ipRestrictions = [:]
 
 	// voters
-	voterNames = ['authenticatedVoter', 'roleVoter']
+	voterNames = [] // 'authenticatedVoter', 'roleVoter'
 
 	// providers
-	providerNames = ['daoAuthenticationProvider',
-	                 'anonymousAuthenticationProvider',
-	                 'rememberMeAuthenticationProvider']
+	providerNames = [] // 'daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'
 
 	// HttpSessionEventPublisher
 	useHttpSessionEventPublisher = false
@@ -68,8 +69,8 @@ security {
 
 	/** authenticationProcessingFilter */
 	apf.filterProcessesUrl = '/j_spring_security_check'
-	apf.usernameParameter = 'j_username'
-	apf.passwordParameter = 'j_password'
+	apf.usernameParameter = UPAF.SPRING_SECURITY_FORM_USERNAME_KEY // 'j_username'
+	apf.passwordParameter = UPAF.SPRING_SECURITY_FORM_PASSWORD_KEY // 'j_password'
 	apf.continueChainBeforeSuccessfulAuthentication = false
 	apf.allowSessionCreation = true
 	apf.postOnly = true
@@ -83,7 +84,7 @@ security {
 	// successHandler
 	successHandler.defaultTargetUrl = '/'
 	successHandler.alwaysUseDefaultTargetUrl = false
-	successHandler.targetUrlParameter = 'spring-security-redirect'
+	successHandler.targetUrlParameter = ATRH.DEFAULT_TARGET_PARAMETER // 'spring-security-redirect'
 	successHandler.useReferer = false
 	successHandler.ajaxSuccessUrl = '/login/ajaxSuccess'
 
@@ -118,7 +119,7 @@ security {
 	/** logoutFilter */
 	logout.afterLogoutUrl = '/'
 	logout.filterProcessesUrl = '/j_spring_security_logout'
-	logout.handlerNames = ['rememberMeServices', 'securityContextLogoutHandler']
+	logout.handlerNames = [] // 'rememberMeServices', 'securityContextLogoutHandler'
 
 	/**
 	 * accessDeniedHandler
@@ -143,8 +144,6 @@ security {
 
 	// default to annotation mode
 	securityConfigType = SecurityConfigType.Annotation
-	// whether to use SpEL expressions
-	securityConfig.useExpressions = false
 
 	// use Requestmap domain class to store rules in the database
 	// 	change securityConfigType to SecurityConfigType.Requestmap
@@ -170,7 +169,8 @@ security {
 	useSwitchUserFilter = false
 	switchUser.switchUserUrl = '/j_spring_security_switch_user'
 	switchUser.exitUserUrl = '/j_spring_security_exit_user'
-	switchUser.targetUrl = '/'
+	switchUser.targetUrl = null // use the authenticationSuccessHandler
+	switchUser.switchFailureUrl = null // use the authenticationFailureHandler
 
 	/** filterChainProxy */
 	filterChain.stripQueryStringFromUrls = true
@@ -180,8 +180,7 @@ security {
 	portMapper.httpsPort = 8443
 
 	// secure channel filter (http/https)
-	secureChannel.definitionSource = ''
-	secureChannel.config = [secure: [], insecure: []]
+	secureChannel.definition = [:]
 
 	// X509
 	useX509 = false

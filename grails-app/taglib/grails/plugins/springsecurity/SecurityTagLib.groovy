@@ -92,6 +92,24 @@ class SecurityTagLib {
 		}
 	}
 
+	def ifSwitched = { attrs, body ->
+		if (SpringSecurityUtils.isSwitched()) {
+			out << body()
+		}
+	}
+
+	def ifNotSwitched = { attrs, body ->
+		if (!SpringSecurityUtils.isSwitched()) {
+			out << body()
+		}
+	}
+
+	def switchedUserOriginalUsername = { attrs ->
+		if (SpringSecurityUtils.isSwitched()) {
+			out << SpringSecurityUtils.switchedUserOriginalUsername
+		}
+	}
+
 	private assertAttribute(String name, attrs, String tag) {
 		if (!attrs.containsKey(name)) {
 			throwTagError "Tag [$tag] is missing required attribute [$name]"

@@ -48,7 +48,7 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	configure()
 	createDomains()
 	copyControllersAndViews()
-	summarize()
+	updateConfig()
 }
 
 private void configure() {
@@ -97,24 +97,29 @@ private void copyControllersAndViews() {
 	copyFile "$templateDir/LogoutController.groovy.template", "$appDir/controllers/LogoutController.groovy"
 }
 
-private void summarize() {
-	String requestmapFullName = packageName
-	if (packageName) {
-		requestmapClassName
+private void updateConfig() {
+
+	def configFile = new File(appDir, 'conf/Config.groovy')
+	if (configFile.exists()) {
+		configFile.withWriterAppend {
+			it.writeLine '\n// Added by the Spring Security Core plugin:'
+			it.writeLine "grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
+			it.writeLine "grails.plugins.springsecurity.authority.className = '${packageName}.$roleClassName'"
+			if (requestmapClassName) {
+				it.writeLine "grails.plugins.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
+				it.writeLine "grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Requestmap"
+			}
+		}
 	}
 
 	println """
-Created domain classes, controllers, and GSPs.
-
-Next you'll need to edit Config.groovy and add the following:
-
-  grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'
-  grails.plugins.springsecurity.authority.className = '${packageName}.$roleClassName'
+*******************************************************
+* Created domain classes, controllers, and GSPs. Your *
+* grails-app/conf/Config.groovy has been updated with *
+* the class names of the configured domain classes;   *
+* please verify that the values are correct.          *
+*******************************************************
 """
-
-	if (requestmapClassName) {
-		println "  grails.plugins.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
-	}
 }
 
 generateFile = { String templatePath, String outputPath ->

@@ -35,6 +35,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
+import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
@@ -48,7 +50,37 @@ public final class SpringSecurityUtils {
 
 	private static ConfigObject securityConfig;
 
+	/**
+	 * Default ordered filter names. Here to let plugins add or remove them. Can be overridden by config.
+	 */
 	public static final Map<Integer, String> ORDERED_FILTERS = new HashMap<Integer, String>();
+
+	/**
+	 * Default voter names. Here to let plugins add or remove them. Can be overridden by config.
+	 */
+	public static final Set<String> VOTER_NAMES = new HashSet<String>();
+
+	/**
+	 * Default authentication provider names. Here to let plugins add or remove them. Can be overridden by config.
+	 */
+	public static final Set<String> PROVIDER_NAMES = new HashSet<String>();
+
+	/**
+	 * Default logout handler names. Here to let plugins add or remove them. Can be overridden by config.
+	 */
+	public static final Set<String> LOGOUT_HANDLER_NAMES = new HashSet<String>();
+
+	static {
+		VOTER_NAMES.add("authenticatedVoter");
+		VOTER_NAMES.add("roleVoter");
+
+		PROVIDER_NAMES.add("daoAuthenticationProvider");
+		PROVIDER_NAMES.add("anonymousAuthenticationProvider");
+		PROVIDER_NAMES.add("rememberMeAuthenticationProvider");
+
+		LOGOUT_HANDLER_NAMES.add("rememberMeServices");
+		LOGOUT_HANDLER_NAMES.add("securityContextLogoutHandler");
+	}
 
 	/**
 	 * Used to ensure that all authenticated users have at least one granted authority to work
@@ -250,6 +282,30 @@ public final class SpringSecurityUtils {
 	 */
 	public static void registerFilter(final String beanName, final int order) {
 		ORDERED_FILTERS.put(order, beanName);
+	}
+
+	/**
+	 * Check if the current user is switched to another user.
+	 * @return  <code>true</code> if logged in and switched
+	 */
+	public static boolean isSwitched() {
+		return ifAllGranted(SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR);
+	}
+
+	/**
+	 * Get the username of the original user before switching to another.
+	 * @return  the original login name
+	 */
+	public static String getSwitchedUserOriginalUsername() {
+		if (isSwitched()) {
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			for (GrantedAuthority auth : authentication.getAuthorities()) {
+				if (auth instanceof SwitchUserGrantedAuthority) {
+					return ((SwitchUserGrantedAuthority)auth).getSource().getName();
+				}
+			}
+		}
+		return null;
 	}
 
 	@SuppressWarnings("unchecked")

@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import grails.plugins.springsecurity.SecurityConfigType
+
 import javax.servlet.Filter
 
 import org.springframework.cache.ehcache.EhCacheFactoryBean
@@ -29,6 +31,7 @@ import org.springframework.security.authentication.dao.ReflectionSaltSource
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
+import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
 import org.springframework.security.web.DefaultRedirectStrategy
@@ -50,7 +53,6 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedGrantedAuthoritiesUserDetailsService
 import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
@@ -72,6 +74,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthentication
 import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationSuccessHandler
 import org.codehaus.groovy.grails.plugins.springsecurity.AnnotationFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.AuthenticatedVetoableDecisionManager
+import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
@@ -79,7 +82,6 @@ import org.codehaus.groovy.grails.plugins.springsecurity.LogoutFilterFactoryBean
 import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestmapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestHolderAuthenticationFilter
-import org.codehaus.groovy.grails.plugins.springsecurity.SecurityConfigType
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityEventListener
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityRequestHolder
@@ -87,14 +89,9 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 class SpringSecurityCoreGrailsPlugin {
 
-	private static final String DEFINITION_SOURCE_PREFIX =
-		'CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON\n' +
-		'PATTERN_TYPE_APACHE_ANT\n'
-
 	String version = '0.1'
 	String grailsVersion = '1.2 > *'
 	List observe = ['controllers']
-	Map dependsOn = [:]
 	List loadAfter = ['controllers', 'services', 'hibernate']
 
 	List pluginExcludes = [
@@ -223,6 +220,7 @@ class SpringSecurityCoreGrailsPlugin {
 			rememberMeClass = conf.atr.rememberMeClass
 		}
 
+		// default 'authenticationEntryPoint' unless overridden with basic auth or x509
 		authenticationEntryPoint(AjaxAwareAuthenticationEntryPoint) {
 			loginFormUrl = conf.auth.loginFormUrl // '/login/auth'
 			forceHttps = conf.auth.forceHttps // 'false'
@@ -341,22 +339,31 @@ class SpringSecurityCoreGrailsPlugin {
 		if (conf.useSwitchUserFilter) {
 			switchUserProcessingFilter(SwitchUserFilter) {
 				userDetailsService = ref('userDetailsService')
-				switchUserUrl = conf.switchUser.switchUserUrl
-				exitUserUrl = conf.switchUser.exitUserUrl
-				targetUrl = conf.switchUser.targetUrl
-				authenticationSuccessHandler = ref('authenticationSuccessHandler')
-				authenticationFailureHandler = ref('authenticationFailureHandler')
+				switchUserUrl = conf.switchUser.switchUserUrl // '/j_spring_security_switch_user'
+				exitUserUrl = conf.switchUser.exitUserUrl // '/j_spring_security_exit_user'
+				if (conf.switchUser.targetUrl) {
+					targetUrl = conf.switchUser.targetUrl
+				}
+				else {
+					successHandler = ref('authenticationSuccessHandler')
+				}
+				if (conf.switchUser.switchFailureUrl) {
+					switchFailureUrl = conf.switchUser.switchFailureUrl
+				}
+				else {
+					failureHandler = ref('authenticationFailureHandler')
+				}
 			}
 		}
 
-		// X509
+		// x509
 		if (conf.useX509) {
 			configureX509.delegate = delegate
 			configureX509 conf
 		}
 
 		// channel (http/https) security
-		if (useSecureChannel(conf)) {
+		if (conf.secureChannel.definition) {
 			configureChannelProcessingFilter.delegate = delegate
 			configureChannelProcessingFilter conf
 		}
@@ -434,16 +441,26 @@ class SpringSecurityCoreGrailsPlugin {
 		filterChain.filterChainMap = filterChainMap
 
 		// build voters list here to give dependent plugins a chance to register some
-		def voters = createBeanList(conf.voterNames, ctx)
-		ctx.accessDecisionManager.decisionVoters = voters
+		def voterNames = conf.voterNames ?: SpringSecurityUtils.VOTER_NAMES
+		ctx.accessDecisionManager.decisionVoters = createBeanList(voterNames, ctx)
 
 		// build providers list here to give dependent plugins a chance to register some
-		def providers = createBeanList(conf.providerNames, ctx)
-		ctx.authenticationManager.providers = providers
+		def providerNames = []
+		if (conf.providerNames) {
+			providerNames.addAll conf.providerNames
+		}
+		else {
+			providerNames.addAll SpringSecurityUtils.PROVIDER_NAMES
+			if (conf.useX509) {
+				providerNames << 'x509AuthenticationProvider'
+			}
+		}
+		ctx.authenticationManager.providers = createBeanList(providerNames, ctx)
 
-		// TODO uses constructor injection
 		// build handlers list here to give dependent plugins a chance to register some
-//		def logoutHandlers = createBeanList(conf.logout.handlerNames, ctx)
+		def logoutHandlerNames = conf.logout.handlerNames ?: SpringSecurityUtils.LOGOUT_HANDLER_NAMES
+		def logoutHandlers = createBeanList(logoutHandlerNames, ctx)
+		// TODO uses constructor injection
 //		ctx.logoutFilter.handlers = logoutHandlers
 	}
 
@@ -488,15 +505,12 @@ class SpringSecurityCoreGrailsPlugin {
 
 	private createBeanList(names, ctx) { names.collect { name -> ctx.getBean(name) } }
 
-	private boolean useSecureChannel(conf) {
-		conf.secureChannel.definitionSource || conf.secureChannel.config.secure || conf.secureChannel.config.insecure
-	}
-
 	private configureLogout = { conf ->
 
 		securityContextLogoutHandler(SecurityContextLogoutHandler)
 
-		def logoutHandlers = createRefList(conf.logout.handlerNames)
+		// create the default list here, will be replaced in doWithApplicationContext
+		def logoutHandlers = createRefList(SpringSecurityUtils.LOGOUT_HANDLER_NAMES)
 
 		/** logoutFilter */
 		logoutFilter(LogoutFilterFactoryBean) {
@@ -530,7 +544,8 @@ class SpringSecurityCoreGrailsPlugin {
 			authenticationTrustResolver = ref('authenticationTrustResolver')
 		}
 
-		def voters = createRefList(conf.voterNames)
+		// create the default list here, will be replaced in doWithApplicationContext
+		def voters = createRefList(SpringSecurityUtils.VOTER_NAMES)
 
 		/** accessDecisionManager */
 		accessDecisionManager(AuthenticatedVetoableDecisionManager) {
@@ -540,7 +555,10 @@ class SpringSecurityCoreGrailsPlugin {
 	}
 
 	private configureAuthenticationManager = { conf ->
-		def providerRefs = createRefList(conf.providerNames)
+
+		// create the default list here, will be replaced in doWithApplicationContext
+		def providerRefs = createRefList(SpringSecurityUtils.PROVIDER_NAMES)
+
 		/** authenticationManager */
 		authenticationManager(ProviderManager) {
 			providers = providerRefs
@@ -562,7 +580,7 @@ class SpringSecurityCoreGrailsPlugin {
 		if (!filterNames) {
 			def orderedNames = new TreeMap()
 
-			if (useSecureChannel(conf)) {
+			if (conf.secureChannel.definition) {
 				orderedNames[SecurityFilterPosition.CHANNEL_FILTER.order] = 'channelProcessingFilter'
 			}
 
@@ -647,24 +665,13 @@ class SpringSecurityCoreGrailsPlugin {
 			channelProcessors = [insecureChannelProcessor, secureChannelProcessor]
 		}
 
-		// TODO see if these are still supported
-		String definitionSource
-		if (conf.secureChannel.definitionSource) {
-			// if the entire string is set in the config, use that
-			definitionSource = conf.secureChannel.definitionSource
-		}
-		else {
-			definitionSource = DEFINITION_SOURCE_PREFIX
-			for (pattern in conf.secureChannel.config.secure) {
-				definitionSource += "$pattern=REQUIRES_SECURE_CHANNEL\n"
-			}
-			for (pattern in conf.secureChannel.config.insecure) {
-				definitionSource += "$pattern=REQUIRES_INSECURE_CHANNEL\n"
-			}
+		channelFilterInvocationSecurityMetadataSource(ChannelFilterInvocationSecurityMetadataSourceFactoryBean) {
+			urlMatcher = new AntUrlPathMatcher(true)
+			definition = conf.secureChannel.definition
 		}
 		channelProcessingFilter(ChannelProcessingFilter) {
 			channelDecisionManager = channelDecisionManager
-			filterInvocationDefinitionSource = definitionSource
+			securityMetadataSource = channelFilterInvocationSecurityMetadataSource
 		}
 	}
 
@@ -723,9 +730,9 @@ class SpringSecurityCoreGrailsPlugin {
 			requestCache = ref('requestCache')
 			defaultTargetUrl = conf.successHandler.defaultTargetUrl // '/'
 			alwaysUseDefaultTargetUrl = conf.successHandler.alwaysUseDefaultTargetUrl // false
-			targetUrlParameter = conf.successHandler.targetUrlParameter
+			targetUrlParameter = conf.successHandler.targetUrlParameter // 'spring-security-redirect'
 			ajaxSuccessUrl = conf.successHandler.ajaxSuccessUrl // '/login/ajaxSuccess'
-			useReferer = conf.successHandler.useReferer
+			useReferer = conf.successHandler.useReferer // false
 			redirectStrategy = ref('redirectStrategy')
 		}
 
@@ -750,7 +757,9 @@ class SpringSecurityCoreGrailsPlugin {
 			subjectDnRegex = conf.x509.subjectDnRegex // CN=(.*?),
 		}
 
-		preAuthenticatedUserDetailsService(PreAuthenticatedGrantedAuthoritiesUserDetailsService)
+		preAuthenticatedUserDetailsService(UserDetailsByNameServiceWrapper) {
+			userDetailsService = ref('userDetailsService')
+		}
 
 		userDetailsChecker(AccountStatusUserDetailsChecker)
 

@@ -15,9 +15,8 @@
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
 import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
+import org.codehaus.groovy.grails.web.util.WebUtils;
+import org.springframework.security.web.util.IpAddressMatcher;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -51,6 +52,9 @@ public class IpAddressFilter extends GenericFilterBean {
 
 	private Map<String, List<String>> _restrictions;
 
+	private static final String IPV4_LOOPBACK = "127.0.0.1";
+	private static final String IPV6_LOOPBACK = "0:0:0:0:0:0:0:1";
+
 	/**
 	 * {@inheritDoc}
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
@@ -59,11 +63,12 @@ public class IpAddressFilter extends GenericFilterBean {
 	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 				throws IOException, ServletException {
 
-		HttpServletRequest request = (HttpServletRequest) req;
-		HttpServletResponse response = (HttpServletResponse) res;
+		HttpServletRequest request = (HttpServletRequest)req;
+		HttpServletResponse response = (HttpServletResponse)res;
 
-		if (!isAllowed(request.getRemoteAddr(), request.getRequestURI())) {
-			response.sendError(HttpServletResponse.SC_NOT_FOUND); // 404
+		if (!isAllowed(request)) {
+			// send 404 to hide the existence of the resource
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 			return;
 		}
 
@@ -80,9 +85,9 @@ public class IpAddressFilter extends GenericFilterBean {
 	}
 
 	/**
-	 * Dependency injection for the ip/pattern restriction map. Keys are URL patterns and values are either
-	 * single <code>String</code>s or <code>List</code>s of <code>String</code>s representing IP address patterns
-	 * to allow for the specified URLs.
+	 * Dependency injection for the ip/pattern restriction map. Keys are URL patterns and values
+	 * are either single <code>String</code>s or <code>List</code>s of <code>String</code>s
+	 * representing IP address patterns to allow for the specified URLs.
 	 *
 	 * @param restrictions  the map
 	 */
@@ -90,94 +95,47 @@ public class IpAddressFilter extends GenericFilterBean {
 		_restrictions = ReflectionUtils.splitMap(restrictions);
 	}
 
-	private boolean isAllowed(final String ip, final String requestURI) {
-
-		if ("127.0.0.1".equals(ip)) {
+	private boolean isAllowed(final HttpServletRequest request) {
+		String ip = request.getRemoteAddr();
+		if (IPV4_LOOPBACK.equals(ip) || IPV6_LOOPBACK.equals(ip)) {
+			// always allow localhost
 			return true;
 		}
 
-		String reason = null;
+		String uri = (String)request.getAttribute(WebUtils.FORWARD_REQUEST_URI_ATTRIBUTE);
+		if (!StringUtils.hasLength(uri)) {
+			uri = request.getRequestURI();
+			if (!request.getContextPath().equals("/") && uri.startsWith(request.getContextPath())) {
+				uri = uri.substring(request.getContextPath().length());
+			}
+		}
 
+		Collection<Map.Entry<String, List<String>>> matching = findMatchingRules(uri);
+		if (matching.isEmpty()) {
+			return true;
+		}
+
+		for (Map.Entry<String, List<String>> entry : matching) {
+			for (String ipPattern : entry.getValue()) {
+				if (new IpAddressMatcher(ipPattern).matches(request)) {
+					return true;
+				}
+			}
+		}
+
+		_log.warn("disallowed request " + uri + " from " + ip);
+		return false;
+	}
+
+	private Collection<Map.Entry<String, List<String>>> findMatchingRules(String uri) {
+		Collection<Map.Entry<String, List<String>>> matching =
+			new ArrayList<Map.Entry<String, List<String>>>();
 		for (Map.Entry<String, List<String>> entry : _restrictions.entrySet()) {
 			String uriPattern = entry.getKey();
-			if (!_pathMatcher.match(uriPattern, requestURI)) {
-				continue;
-			}
-
-			for (String ipPattern : entry.getValue()) {
-				if (ipPattern.contains("/")) {
-					try {
-						if (!matchesUsingMask(ipPattern, ip)) {
-							reason = ipPattern;
-						}
-					}
-					catch (UnknownHostException e) {
-						reason = e.getMessage();
-					}
-				}
-				else if (!_pathMatcher.match(ipPattern, ip)) {
-					reason = ipPattern;
-				}
-
-				if (reason != null) {
-					break;
-				}
-			}
-
-			break;
-		}
-
-		if (reason != null) {
-			_log.error("disallowed request " + requestURI + " from " + ip + ": " + reason);
-			return false;
-		}
-
-		return true;
-	}
-
-	private boolean matchesUsingMask(final String ipPattern, final String ip) throws UnknownHostException {
-
-		String[] addressAndMask = StringUtils.split(ipPattern, "/");
-
-		InetAddress requiredAddress = parseAddress(addressAndMask[0]);
-		InetAddress remoteAddress = parseAddress(ip);
-		Assert.isTrue(requiredAddress.getClass().equals(remoteAddress.getClass()),
-				"IP Address in expression must be the same type as version returned by request");
-
-		int maskBits = Integer.parseInt(addressAndMask[1]);
-		if (maskBits == 0) {
-			return remoteAddress.equals(requiredAddress);
-		}
-
-		int oddBits = maskBits % 8;
-		byte[] mask = new byte[maskBits / 8 + (oddBits == 0 ? 0 : 1)];
-
-		Arrays.fill(mask, 0, oddBits == 0 ? mask.length : mask.length - 1, (byte)0xFF);
-
-		if (oddBits != 0) {
-			int finalByte = (1 << oddBits) - 1;
-			finalByte <<= 8 - oddBits;
-			mask[mask.length - 1] = (byte) finalByte;
-		}
-
-		byte[] remoteAddressBytes = remoteAddress.getAddress();
-		byte[] requiredAddressBytes = requiredAddress.getAddress();
-		for (int i = 0; i < mask.length; i++) {
-			if ((remoteAddressBytes[i] & mask[i]) != (requiredAddressBytes[i] & mask[i])) {
-				return false;
+			if (_pathMatcher.match(uriPattern, uri)) {
+				matching.add(entry);
 			}
 		}
-
-		return true;
-	}
-
-	private InetAddress parseAddress(final String address) throws UnknownHostException {
-		try {
-			return InetAddress.getByName(address);
-		}
-		catch (UnknownHostException e) {
-			_log.error("unable to parse " + address);
-			throw e;
-		}
+		return matching;
 	}
 }
