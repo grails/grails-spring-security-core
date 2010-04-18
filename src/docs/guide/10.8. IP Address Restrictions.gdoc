@@ -1,18 +1,16 @@
-Ordinarily it's sufficient to guard URLs with roles, but the plugin provides an extra layer of security with its ability to restrict by IP address. One use for this would be to guard an admin-only part of your site to only be accessible from IP addresses of the local LAN or VPN, e.g. 192.168.\*.\* or 10.\*.\*.\*. This can also be done at your firewall and/or routers, but it can be convenient to have this encapsulated within your application.
+Ordinarily it's sufficient to guard URLs with roles, but the plugin provides an extra layer of security with its ability to restrict by IP address. One use for this would be to guard an admin-only part of your site to only be accessible from IP addresses of the local LAN or VPN, e.g. 192.168.1.xxx or 10.xxx.xxx.xxx. This can also be done at your firewall and/or routers, but it can be convenient to have this encapsulated within your application.
 
-To use this feature, specify an @ipRestrictions@ configuration map, where the keys are URL patterns, and the values are IP address patterns that can access those URLs. The IP patterns can be single-valued strings, or multi-valued lists of strings. For example, given this configuration:
+To use this feature, specify an @ipRestrictions@ configuration map, where the keys are URL patterns, and the values are IP address patterns that can access those URLs. The IP patterns can be single-valued strings, or multi-valued lists of strings and can use [CIDR|http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
 
 {code}
 grails.plugins.springsecurity.ipRestrictions = [
    '/pattern1/**': '123.234.345.456',
-   '/pattern2/**': '10.**',
+   '/pattern2/**': '10.0.0.0/8',
    '/pattern3/**': ['10.10.200.42', '10.10.200.63']
 ]
 {code}
 
-then @pattern1@ URLs can only be access from the external address 123.234.345.456, @pattern2@ URLs can only be accessed from an intranet address, and @pattern3@ URLs can only be accessed from 10.10.200.42 or 10.10.200.63. All other URL patterns are accessible from any IP address.
-
-You can use either Ant-style patterns (e.g. 10.\*\*) or masked patterns (e.g. 192.168.1.0/24 or 202.24.0.0/14), and can specify either IPv4 or IPv6 patterns.
+then @pattern1@ URLs can only be access from the external address 123.234.345.456, @pattern2@ URLs can only be accessed from a 10.xxx.xxx.xxx intranet address, and @pattern3@ URLs can only be accessed from 10.10.200.42 or 10.10.200.63. All other URL patterns are accessible from any IP address.
 
 Note that all addresses can always be accessed from localhost regardless of IP pattern, primarily to support local development mode.
 

@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 
@@ -39,6 +40,8 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 		_entryPoint.useForward = true
 		_entryPoint.loginFormUrl = _loginFormUrl
 		_entryPoint.ajaxLoginFormUrl = _ajaxLoginFormUrl
+		CH.config = new ConfigObject()
+		ReflectionUtils.setConfigProperty 'ajaxHeader', SpringSecurityUtils.AJAX_HEADER
 	}
 
 	/**
@@ -62,8 +65,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 		MockHttpServletRequest request = new MockHttpServletRequest()
 		MockHttpServletResponse response = new MockHttpServletResponse()
 
-		_entryPoint.ajaxHeader = 'ajax_header'
-		request.addHeader('ajax_header', 'XHR')
+		request.addHeader SpringSecurityUtils.AJAX_HEADER, 'XHR'
 
 		_entryPoint.commence request, response, null
 
@@ -79,5 +81,15 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 		}
 
 		_entryPoint.ajaxLoginFormUrl = '/foo'
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see junit.framework.TestCase#tearDown()
+	 */
+	@Override
+	protected void tearDown() {
+		super.tearDown()
+		CH.config = null
 	}
 }

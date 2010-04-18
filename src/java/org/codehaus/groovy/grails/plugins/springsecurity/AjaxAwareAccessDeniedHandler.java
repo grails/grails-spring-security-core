@@ -37,7 +37,6 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 
 	private String errorPage;
 	private String ajaxErrorPage;
-	private String ajaxHeader = AjaxAwareAuthenticationEntryPoint.AJAX_HEADER;
 	private PortResolver portResolver;
 	private AuthenticationTrustResolver authenticationTrustResolver;
 
@@ -62,7 +61,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 			return;
 		}
 
-		boolean ajaxError = ajaxErrorPage != null && request.getHeader(ajaxHeader) != null;
+		boolean ajaxError = ajaxErrorPage != null && SpringSecurityUtils.isAjax(request);
 		if (errorPage == null && !ajaxError) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 			return;
@@ -125,14 +124,6 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	}
 
 	/**
-	 * Dependency injection for the Ajax header name; defaults to 'X-Requested-With'.
-	 * @param header  the header name
-	 */
-	public void setAjaxHeader(final String header) {
-		ajaxHeader = header;
-	}
-
-	/**
 	 * Dependency injection for the port resolver.
 	 * @param resolver  the resolver
 	 */
@@ -153,7 +144,6 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
-		Assert.notNull(ajaxHeader, "ajaxHeader is required");
 		Assert.notNull(portResolver, "portResolver is required");
 		Assert.notNull(authenticationTrustResolver, "authenticationTrustResolver is required");
 	}

@@ -12,16 +12,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.springsecurity.taglib
+package grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import java.security.Principal
 
-import org.springframework.security.authentication.TestingAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.security.core.userdetails.User
+import javax.servlet.FilterChain
 
 import grails.test.GroovyPagesTestCase
+
+import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.security.authentication.AuthenticationDetailsSource
+import org.springframework.security.authentication.TestingAuthenticationToken
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.AuthenticationException
+import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsChecker
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 
 /**
  * Integration tests for <code>SecurityTagLib</code>.
@@ -147,18 +160,65 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	}
 
 	void testUsername() {
-		assertOutputEquals '', "<sec:username/>"
+		assertOutputEquals '', '<sec:username/>'
 
 		authenticate 'role1'
-		assertOutputEquals 'username1', "<sec:username/>"
+		assertOutputEquals 'username1', '<sec:username/>'
+	}
+
+	void testSwitched() {
+		String body = 'the_content'
+
+		assertOutputEquals body, "<sec:ifNotSwitched>${body}</sec:ifNotSwitched>"
+		assertOutputEquals '', "<sec:ifSwitched>${body}</sec:ifSwitched>"
+
+		authenticate 'role1'
+		assertOutputEquals body, "<sec:ifNotSwitched>${body}</sec:ifNotSwitched>"
+		assertOutputEquals '', "<sec:ifSwitched>${body}</sec:ifSwitched>"
+
+		switchUser()
+
+		assertOutputEquals body, "<sec:ifSwitched>${body}</sec:ifSwitched>"
+		assertOutputEquals '', "<sec:ifNotSwitched>${body}</sec:ifNotSwitched>"
+	}
+
+	void testSwitchedUserOriginalUsername() {
+		assertOutputEquals '', "<sec:switchedUserOriginalUsername/>"
+		authenticate 'role1'
+		assertOutputEquals '', "<sec:switchedUserOriginalUsername/>"
+
+		switchUser()
+
+		assertOutputEquals 'username1', "<sec:switchedUserOriginalUsername/>"
+	}
+
+	private void switchUser() {
+		def filter = new SwitchUserFilter()
+		def request = new MockHttpServletRequest('POST', '/j_spring_security_switch_user')
+		request.addParameter 'j_username', 'somebody'
+		def response = new MockHttpServletResponse()
+
+		boolean chainCalled = false
+		boolean onAuthenticationSuccessCalled = false
+		def chain = [doFilter: { req, res -> chainCalled = true }] as FilterChain
+		def onAuthenticationSuccess = { req, res, targetUser -> onAuthenticationSuccessCalled = true }
+		filter.successHandler = [onAuthenticationSuccess: onAuthenticationSuccess] as AuthenticationSuccessHandler
+
+		def user = new User('somebody', 'password', true, true, true, true,
+				[new GrantedAuthorityImpl('ROLE_USER')])
+		def loadUserByUsername = { String username -> user }
+		filter.userDetailsService = [loadUserByUsername: loadUserByUsername] as UserDetailsService
+		filter.userDetailsChecker = [check: { details -> }] as UserDetailsChecker
+		filter.authenticationDetailsSource = [buildDetails: { req -> '' }] as AuthenticationDetailsSource
+
+		filter.doFilter request, response, chain
+
+		assertFalse chainCalled
+		assertTrue onAuthenticationSuccessCalled
 	}
 
 	private void authenticate(String roles) {
-
-		def principal = new Expando(username: 'username1')
-		principal.domainClass = _user
-
-		authenticate principal, roles
+		authenticate new SimplePrincipal(name: 'username1', domainClass: _user), roles
 	}
 
 	private void authenticate(principal, String roles) {
@@ -205,4 +265,11 @@ class HasDomainClass extends User {
 	String getFullName() { _fullName }
 
 	def getDomainClass() { _domainClass }
+}
+
+class SimplePrincipal implements Principal {
+	String name
+	def domainClass
+
+	String getUsername() { name }
 }

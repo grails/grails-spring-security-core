@@ -209,9 +209,6 @@ class SpringSecurityCoreGrailsPlugin {
 			ajaxErrorPage = conf.adh.ajaxErrorPage
 			portResolver = ref('portResolver')
 			authenticationTrustResolver = ref('authenticationTrustResolver')
-			if (conf.ajaxHeader) {
-				ajaxHeader = conf.ajaxHeader //default: X-Requested-With
-			}
 		}
 
 		/** authenticationTrustResolver */
@@ -226,9 +223,6 @@ class SpringSecurityCoreGrailsPlugin {
 			forceHttps = conf.auth.forceHttps // 'false'
 			ajaxLoginFormUrl = conf.auth.ajaxLoginFormUrl // '/login/authAjax'
 			useForward = conf.auth.useForward // false
-			if (conf.auth.ajaxHeader) {
-				ajaxHeader = conf.ajaxHeader //default: X-Requested-With
-			}
 			portMapper = ref('portMapper')
 			portResolver = ref('portResolver')
 		}
@@ -241,7 +235,7 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 		if (conf.securityConfigType == SecurityConfigType.Annotation) {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
-				boolean lowercase = conf.controllerAnnotations.matchesLowercase // true
+				boolean lowercase = conf.controllerAnnotations.lowercase // true
 				if ('ant'.equals(conf.controllerAnnotations.matcher)) {
 					urlMatcher = new AntUrlPathMatcher(lowercase)
 				}
@@ -288,9 +282,9 @@ class SpringSecurityCoreGrailsPlugin {
 		configureAuthenticationManager conf
 
 		/** daoAuthenticationProvider */
-		if (conf.dao.reflectionSaltSourceUserProperty) {
+		if (conf.dao.reflectionSaltSourceProperty) {
 			saltSource(ReflectionSaltSource) {
-				userPropertyToUse = conf.dao.reflectionSaltSourceUserProperty
+				userPropertyToUse = conf.dao.reflectionSaltSourceProperty
 			}
 		}
 		else {
@@ -697,7 +691,7 @@ class SpringSecurityCoreGrailsPlugin {
 			redirectStrategy = ref('redirectStrategy')
 			defaultFailureUrl = conf.failureHandler.defaultFailureUrl //'/login/authfail?login_error=1'
 			useForward = conf.failureHandler.useForward // false
-			ajaxAuthenticationFailureUrl = conf.failureHandler.ajaxAuthenticationFailureUrl // '/login/authfail?ajax=true'
+			ajaxAuthenticationFailureUrl = conf.failureHandler.ajaxAuthFailUrl // '/login/authfail?ajax=true'
 			exceptionMappings = conf.failureHandler.exceptionMappings // [:]
 		}
 
@@ -722,14 +716,14 @@ class SpringSecurityCoreGrailsPlugin {
 
 		requestCache(HttpSessionRequestCache) {
 			portResolver = ref('portResolver')
-			justUseSavedRequestOnGet = conf.requestCache.justUseSavedRequestOnGet // false
-			createSessionAllowed = conf.requestCache.createSessionAllowed // true
+			justUseSavedRequestOnGet = conf.requestCache.onlyOnGet // false
+			createSessionAllowed = conf.requestCache.createSession // true
 		}
 
 		authenticationSuccessHandler(AjaxAwareAuthenticationSuccessHandler) {
 			requestCache = ref('requestCache')
 			defaultTargetUrl = conf.successHandler.defaultTargetUrl // '/'
-			alwaysUseDefaultTargetUrl = conf.successHandler.alwaysUseDefaultTargetUrl // false
+			alwaysUseDefaultTargetUrl = conf.successHandler.alwaysUseDefault // false
 			targetUrlParameter = conf.successHandler.targetUrlParameter // 'spring-security-redirect'
 			ajaxSuccessUrl = conf.successHandler.ajaxSuccessUrl // '/login/ajaxSuccess'
 			useReferer = conf.successHandler.useReferer // false

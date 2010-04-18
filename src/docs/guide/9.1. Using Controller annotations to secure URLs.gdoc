@@ -226,10 +226,10 @@ You can annotate the entire controller or individual actions. In this case since
 Now run @grails run-app@ again and navigate to [http://localhost:8080/bookstore/secure|http://localhost:8080/bookstore/secure] and this time, you should be presented with the login page. Log in with the username and password you used for the test user, and you should again be able to see the secure page.
 
 When logging in, you can test the Remember Me functionality. Check the checkbox, and once you've tested the secure page close your browser and re-open it. Navigate again the the secure page, and since you have a cookie stored, you shouldn't need to log in again. Logout at any time by navigating to [http://localhost:8080/bookstore/logout|http://localhost:8080/bookstore/logout]
-    
+
 h4. Creating a UI
 
-If you would like to have a CRUD UI to work with users and roles, there are a few things you need to do beyond running @grails generate-all@. 
+If you would like to have a CRUD UI to work with users and roles, there are a few things you need to do beyond running @grails generate-all@.
 
 The generated @UserController.save@ action will look something like this:
 

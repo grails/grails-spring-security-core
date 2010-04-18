@@ -35,7 +35,7 @@ class IpAddressFilterTests extends GroovyTestCase {
 		}
 
 		_filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                          '/bar/**': '10.**',
+		                          '/bar/**': '10.0.0.0/8',
 		                          '/wahoo/**': '10.10.200.63']
 
 		_filter.afterPropertiesSet()
@@ -44,7 +44,7 @@ class IpAddressFilterTests extends GroovyTestCase {
 	void testDoFilterHttpAllowed() {
 
 		_filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                          '/bar/**': '10.**',
+		                          '/bar/**': '10.0.0.0/8',
 		                          '/wahoo/**': '10.10.200.63',
 		                          '/masked/**': '192.168.1.0/24']
 
@@ -79,7 +79,7 @@ class IpAddressFilterTests extends GroovyTestCase {
 	void testDoFilterHttpDenied() {
 
 		_filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                          '/bar/**': '10.**',
+		                          '/bar/**': '10.0.0.0/8',
 		                          '/wahoo/**': '10.10.200.63',
 		                          '/masked/**': '192.168.1.0/24']
 
@@ -116,7 +116,7 @@ class IpAddressFilterTests extends GroovyTestCase {
 	void testDoFilterMixIPv6IPv4() {
 
 		_filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                          '/bar/**': '10.**',
+		                          '/bar/**': '10.0.0.0/8',
 		                          '/wahoo/**': '10.10.200.63',
 		                          '/masked/**': '192.168.1.0/24']
 

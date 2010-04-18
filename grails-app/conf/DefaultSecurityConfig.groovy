@@ -76,21 +76,21 @@ security {
 	apf.postOnly = true
 
 	// failureHandler
-	failureHandler.defaultFailureUrl  = '/login/authfail?login_error=1'
-	failureHandler.ajaxAuthenticationFailureUrl = '/login/authfail?ajax=true'
+	failureHandler.defaultFailureUrl = '/login/authfail?login_error=1'
+	failureHandler.ajaxAuthFailUrl = '/login/authfail?ajax=true'
 	failureHandler.exceptionMappings = [:]
 	failureHandler.useForward = false
 
 	// successHandler
 	successHandler.defaultTargetUrl = '/'
-	successHandler.alwaysUseDefaultTargetUrl = false
+	successHandler.alwaysUseDefault = false
 	successHandler.targetUrlParameter = ATRH.DEFAULT_TARGET_PARAMETER // 'spring-security-redirect'
 	successHandler.useReferer = false
 	successHandler.ajaxSuccessUrl = '/login/ajaxSuccess'
 
 	// requestCache
-	requestCache.justUseSavedRequestOnGet = false
-	requestCache.createSessionAllowed = true
+	requestCache.onlyOnGet = false
+	requestCache.createSession = true
 
 	// redirectStrategy
 	redirectStrategy.contextRelative = false
@@ -104,7 +104,7 @@ security {
 	sessionFixation.alwaysCreateSession = false
 
 	/** daoAuthenticationProvider **/
-	dao.reflectionSaltSourceUserProperty = null // if null, don't use salt source
+	dao.reflectionSaltSourceProperty = null // if null, don't use salt source
 
 	/** anonymousProcessingFilter */
 	anon.key = 'foo'
@@ -154,7 +154,7 @@ security {
 	// use annotations from Controllers to define security rules
 	// 	change securityConfigType to SecurityConfigType.Annotation
 	controllerAnnotations.matcher = 'ant' // or 'regex'
-	controllerAnnotations.matchesLowercase = true
+	controllerAnnotations.lowercase = true
 	controllerAnnotations.staticRules = [:]
 
 	// use a Map of URL -> roles to define security rules

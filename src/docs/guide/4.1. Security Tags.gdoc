@@ -92,7 +92,7 @@ Logged in as <sec:username/>
 
 <sec:ifSwitched>
 <a href='${request.contextPath}/j_spring_security_exit_user'>
-	Resume as <sec:switchedUserOriginalUsername/>
+   Resume as <sec:switchedUserOriginalUsername/>
 </a>
 </sec:ifSwitched>
 
@@ -102,9 +102,9 @@ Logged in as <sec:username/>
 
    <form action='${request.contextPath}/j_spring_security_switch_user' method='POST'>
 
-		Switch to user: <input type='text' name='j_username'/><br/>
+      Switch to user: <input type='text' name='j_username'/><br/>
 
-		<input type='submit' value='Switch'/> </form>
+      <input type='submit' value='Switch'/> </form>
 
    </sec:ifAllGranted>
 

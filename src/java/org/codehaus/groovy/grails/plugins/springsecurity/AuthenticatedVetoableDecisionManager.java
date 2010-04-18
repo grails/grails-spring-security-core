@@ -89,22 +89,22 @@ public class AuthenticatedVetoableDecisionManager extends AbstractAccessDecision
 
 			int result = voter.vote(authentication, object, configAttributes);
 			switch (result) {
-           	case AccessDecisionVoter.ACCESS_GRANTED:
-           		return true;
-           	case AccessDecisionVoter.ACCESS_DENIED:
-           		denyCount++;
-           		break;
+				case AccessDecisionVoter.ACCESS_GRANTED:
+					return true;
+				case AccessDecisionVoter.ACCESS_DENIED:
+					denyCount++;
+					break;
 				default: // abstain
-           		break;
-           }
-       }
+					break;
+			}
+		}
 
-       if (denyCount > 0) {
-           deny();
-       }
+		if (denyCount > 0) {
+			deny();
+		}
 
-       // all abstain
-       return false;
+		// all abstain
+		return false;
 	}
 
 	private void deny() {

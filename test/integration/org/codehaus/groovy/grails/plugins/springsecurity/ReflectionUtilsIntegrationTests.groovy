@@ -12,27 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package test
+package org.codehaus.groovy.grails.plugins.springsecurity
+
+import test.TestRequestmap
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class TestUser {
+class ReflectionUtilsIntegrationTests extends GroovyTestCase {
 
-	static transients = ['pass', 'roleNames']
+	void testLoadAllRequestmaps() {
+		assertEquals 0, ReflectionUtils.loadAllRequestmaps().size()
 
-	String loginName
-	String passwrrd
-	boolean enabld
+		10.times {
+			new TestRequestmap(urlPattern: "/url$it", rolePattern: "ROLE_$it").save(flush: true)
+		}
 
-	String pass = '[secret]'
-
-	Set<TestRole> getRoles() { TestUserRole.findAllByUser(this).collect { it.role } }
-
-	Collection<String> getRoleNames() { roles*.auth }
-
-	static constraints = {
-		loginName blank: false, unique: true
-		passwrrd blank: false
+		assertEquals 10, ReflectionUtils.loadAllRequestmaps().size()
 	}
 }

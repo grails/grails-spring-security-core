@@ -16,6 +16,9 @@ package grails.plugins.springsecurity
 
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
+/**
+ * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ */
 class SecurityTagLib {
 
 	static namespace = 'sec'

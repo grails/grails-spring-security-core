@@ -1,7 +1,20 @@
+/* Copyright 2006-2010 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -13,17 +26,18 @@ import org.springframework.security.web.access.intercept.DefaultFilterInvocation
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.RequestKey;
 import org.springframework.security.web.util.UrlMatcher;
+import org.springframework.util.Assert;
 
 /**
  * Factory bean that builds a {@link FilterInvocationSecurityMetadataSource} for channel security.
  *
- * @author Burt
+ * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
        implements FactoryBean<FilterInvocationSecurityMetadataSource>, InitializingBean {
 
 	private UrlMatcher _urlMatcher;
-	private Map<String, String> _definition = new HashMap<String, String>();
+	private Map<String, String> _definition;
 	private DefaultFilterInvocationSecurityMetadataSource _source;
 
 	/**
@@ -55,6 +69,9 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
+		Assert.notNull(_definition, "definition map is required");
+		Assert.notNull(_urlMatcher, "urlMatcher is required");
+
 		_source = new DefaultFilterInvocationSecurityMetadataSource(_urlMatcher, buildMap());
 	}
 

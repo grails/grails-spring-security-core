@@ -12,17 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.grails.plugins.springsecurity.service
-
-import grails.plugins.springsecurity.SpringSecurityService
-import grails.test.GrailsUnitTestCase
+package grails.plugins.springsecurity
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityTestUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
-import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.security.authentication.AuthenticationTrustResolverImpl
 import org.springframework.security.authentication.TestingAuthenticationToken
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
 
@@ -31,7 +30,7 @@ import org.springframework.security.core.userdetails.User
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SpringSecurityServiceTests extends GrailsUnitTestCase {
+class SpringSecurityServiceTests extends GroovyTestCase {
 
 	private _service
 
@@ -54,18 +53,12 @@ class SpringSecurityServiceTests extends GrailsUnitTestCase {
 	}
 
 	/**
-	 * Test getPrincipal() when authenticated.
+	 * Test getPrincipal().
 	 */
 	void testPrincipalAuthenticated() {
+		assertNull _service.principal
 		authenticate 'role1'
 		assertNotNull _service.principal
-	}
-
-	/**
-	 * Test getPrincipal() when not authenticated.
-	 */
-	void testPrincipalNotAuthenticated() {
-		assertNull _service.principal
 	}
 
 	/**
@@ -83,6 +76,40 @@ class SpringSecurityServiceTests extends GrailsUnitTestCase {
 		_service.clearCachedRequestmaps()
 
 		assertTrue resetCalled
+	}
+
+	void testGetAuthentication() {
+		assertNull _service.authentication
+		authenticate 'role1'
+		assertNotNull _service.authentication
+	}
+
+	void testIsLoggedIn() {
+		_service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
+		assertFalse _service.isLoggedIn()
+		authenticate 'role1'
+		assertTrue _service.isLoggedIn()
+	}
+
+	void testReauthenticate() {
+		_service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
+		assertFalse _service.isLoggedIn()
+		authenticate 'role1'
+		assertTrue _service.isLoggedIn()
+
+		assertTrue _service.authentication instanceof TestingAuthenticationToken
+
+		boolean removedFromCache = false
+		def user = new User('username', 'password', true, true, true, true,
+				[new GrantedAuthorityImpl('ROLE_USER')])
+
+		_service.userDetailsService = [loadUserByUsername: { String username -> user }]
+		_service.userCache = [removeUserFromCache: { String username -> removedFromCache = true }]
+
+		_service.reauthenticate 'username'
+
+		assertTrue _service.authentication instanceof UsernamePasswordAuthenticationToken
+		assertTrue removedFromCache
 	}
 
 	private void authenticate(roles) {

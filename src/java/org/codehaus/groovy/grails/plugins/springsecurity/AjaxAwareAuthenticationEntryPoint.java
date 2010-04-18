@@ -26,19 +26,13 @@ import org.springframework.util.Assert;
  */
 public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
-	/**
-	 * Default value for the name of the Ajax header.
-	 */
-	public static final String AJAX_HEADER = "X-Requested-With";
-
 	private String ajaxLoginFormUrl;
-	private String ajaxHeader = AJAX_HEADER;
 
 	@Override
 	protected String determineUrlToUseForThisRequest(final HttpServletRequest request,
 			final HttpServletResponse response, final AuthenticationException e) {
 
-		if (ajaxLoginFormUrl != null && request.getHeader(ajaxHeader) != null) {
+		if (ajaxLoginFormUrl != null && SpringSecurityUtils.isAjax(request)) {
 			return ajaxLoginFormUrl;
 		}
 
@@ -52,13 +46,5 @@ public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEnt
 	public void setAjaxLoginFormUrl(final String url) {
 		Assert.isTrue(url == null || url.startsWith("/"), "ajaxLoginFormUrl must begin with '/'");
 		ajaxLoginFormUrl = url;
-	}
-
-	/**
-	 * Dependency injection for the Ajax header name; defaults to 'X-Requested-With'.
-	 * @param header  the header name
-	 */
-	public void setAjaxHeader(final String header) {
-		ajaxHeader = header;
 	}
 }

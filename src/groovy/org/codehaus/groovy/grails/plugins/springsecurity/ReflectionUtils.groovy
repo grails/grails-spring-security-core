@@ -36,8 +36,16 @@ class ReflectionUtils {
 		value
 	}
 
-	static void setConfigProperty(String name, p) {
-		SpringSecurityUtils.securityConfig."$name" = p
+	static void setConfigProperty(String name, value) {
+		def config = SpringSecurityUtils.securityConfig
+		def parts = name.split('\\.') as List
+		name = parts.remove(parts.size() - 1)
+
+		for (String part in parts) {
+			config = config."$part"
+		}
+
+		config."$name" = value
 	}
 
 	static String getRoleAuthority(role) {
@@ -57,9 +65,7 @@ class ReflectionUtils {
 		AH.application.getClassForName(requestMapClassName).list()
 	}
 
-	static List asList(authorities) {
-		authorities ? authorities as List : []
-	}
+	static List asList(o) { o ? o as List : [] }
 
 	static ConfigObject getSecurityConfig() { CH.config.grails.plugins.springsecurity }
 	static void setSecurityConfig(ConfigObject c) { CH.config.grails.plugins.springsecurity = c }
@@ -76,7 +82,7 @@ class ReflectionUtils {
 		}
 		split
 	}
-	
+
 	private static lookupPropertyValue(o, String name) {
 		o."${getConfigProperty(name)}"
 	}

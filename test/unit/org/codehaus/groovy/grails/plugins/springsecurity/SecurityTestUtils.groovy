@@ -15,19 +15,20 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import java.lang.reflect.Modifier
+import junit.framework.Assert
 
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
-import org.springframework.security.core.context.SecurityContextHolder  as SCH
+import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 /**
  * Utility methods for security unit tests.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SecurityTestUtils extends GroovyTestCase {
+class SecurityTestUtils {
 
 	/**
 	 * Register a currently authenticated user.
@@ -65,10 +66,10 @@ class SecurityTestUtils extends GroovyTestCase {
 	}
 
 	static void testPrivateConstructor(Class clazz) {
-		assertEquals 1, clazz.declaredConstructors.length
+		Assert.assertEquals 1, clazz.declaredConstructors.length
 		def constructor = clazz.getDeclaredConstructor()
-		assertTrue Modifier.isPrivate(constructor.modifiers)
-		assertFalse constructor.accessible
+		Assert.assertTrue Modifier.isPrivate(constructor.modifiers)
+		Assert.assertFalse constructor.accessible
 		constructor.accessible = true
 		constructor.newInstance()
 	}

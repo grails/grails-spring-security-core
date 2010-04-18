@@ -39,8 +39,8 @@ import org.springframework.web.filter.GenericFilterBean;
  * Blocks access to protected resources based on IP address. Sends 404 rather than
  * reporting error to hide visibility of the resources.
  * <br/>
- * Supports either Ant-style patterns (e.g. 10.**) or masked patterns
- * (e.g. 192.168.1.0/24 or 202.24.0.0/14).
+ * Supports either single IP addresses or CIDR masked patterns
+ * (e.g. 192.168.1.0/24, 202.24.0.0/14, 10.0.0.0/8, etc.).
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */

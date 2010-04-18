@@ -28,6 +28,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the request
  * and response in the {@link SecurityRequestHolder}.
+ *
+ * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 

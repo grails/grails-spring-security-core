@@ -51,15 +51,14 @@ h4. URL attributes
 apf.filterProcessesUrl | '/j_spring_security_check' | login form post URL, intercepted by Spring Security filter
 apf.usernameParameter | 'j_username' | login form username parameter
 apf.passwordParameter | 'j_password' | login form password parameter
-apf.continueChainBeforeSuccessfulAuthentication | @false@ |
 apf.allowSessionCreation | @true@ | whether or not to allow authentication to create an HTTP session
 apf.postOnly | @true@ | whether to only allow POST login requests
 failureHandler.defaultFailureUrl | '/login/authfail?login_error=1' | redirect URL for failed logins
-failureHandler.ajaxAuthenticationFailureUrl | '/login/authfail?ajax=true' | redirect URL for failed Ajax logins
+failureHandler.ajaxAuthFailUrl | '/login/authfail?ajax=true' | redirect URL for failed Ajax logins
 failureHandler.exceptionMappings | none | a map of exception class name (subclass of [AuthenticationException|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/AuthenticationException.html]) to URL to redirect to for that exception type after authentication failure
 failureHandler.useForward | @false@ | whether to render the error page (@true@) or redirect (@false@)
 successHandler.defaultTargetUrl | '/' | default post-login URL if there's no saved request that triggered the login
-successHandler.alwaysUseDefaultTargetUrl | @false@ | if @true@, always redirect to the value of @successHandler.defaultTargetUrl@ after successful authentication, otherwise redirects to to originally-requested page
+successHandler.alwaysUseDefault | @false@ | if @true@, always redirect to the value of @successHandler.defaultTargetUrl@ after successful authentication, otherwise redirects to to originally-requested page
 successHandler.targetUrlParameter | 'spring-security-redirect' | name of optional login form parameter that specifies destination after successful login
 successHandler.useReferer | @false@ | whether to use the HTTP @Referer@ header to determine post-login destination
 successHandler.ajaxSuccessUrl | '/login/ajaxSuccess' | URL to redirect to after successful Ajax login
@@ -145,11 +144,10 @@ More configuration details are [here|guide:10.6. Certificate (X509) login]
 {table}
 *Property* | *Default Value* | *Meaning*
 useX509 | @false@ | whether to support certificate-based logins
-x509.continueFilterChainOnUnsuccessfulAuthentication | @true@ |
-x509.subjectDnRegex | 'CN=(.\*?),' | 
-x509.checkForPrincipalChanges | @false@ | 
-x509.invalidateSessionOnPrincipalChange | @true@ | 
-x509.throwExceptionWhenTokenRejected | @false@ | 
+x509.continueFilterChainOnUnsuccessfulAuthentication | @true@ | whether to proceed when an authentication attempt fails to allow other authentication mechanisms to process the request
+x509.subjectDnRegex | 'CN=(.\*?),' | the regex for extracting the username from the certificate's subject name
+x509.checkForPrincipalChanges | @false@ | whether to re-extract the username from the certificate and check that it's still the current user when there's a valid @Authentication@ already
+x509.invalidateSessionOnPrincipalChange | @true@ | whether to invalidate the session if the principal changed (based on a @checkForPrincipalChanges@ check)
 {table}
 
 h4. Other miscellaneous attributes
@@ -159,21 +157,21 @@ h4. Other miscellaneous attributes
 active | @true@ | whether the plugin is enabled
 rejectIfNoRule | @false@ | 'strict' mode where an explicit grant is required to access any resource; if @true@ make sure to allow @IS_AUTHENTICATED_ANONYMOUSLY@ for '/', '/js/\*\*', '/css/\*\*', '/images/\*\*', '/login/\*\*', '/logout/\*\*', etc.
 anon.key | 'foo' | anonymousProcessingFilter key
-anon.userAttribute | 'anonymousUser,ROLE_ANONYMOUS' | anonymousProcessingFilter username and role
+anon.userAttribute | 'anonymousUser, ROLE_ANONYMOUS' | anonymousProcessingFilter username and role
 atr.anonymousClass | [AnonymousAuthenticationToken|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AnonymousAuthenticationToken.html] | anonymous token class
 useHttpSessionEventPublisher | @false@ | if @true@, an [HttpSessionEventPublisher|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/session/HttpSessionEventPublisher.html] will be configured
 cacheUsers | @false@ | if @true@, logins are cached using an @EhCache@
 useSecurityEventListener | @false@ | if @true@, configure @SecurityEventListener@; more details [here|guide:5. Events]
-dao.reflectionSaltSourceUserProperty | none | which property to use for the reflection-based salt source; more details [here|guide:10.5. Salted passwords]
-requestCache.justUseSavedRequestOnGet | @false@ | whether to only cache a [SavedRequest|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/savedrequest/SavedRequest.html] on GET requests
-requestCache.createSessionAllowed | @true@ | whether caching @SavedRequest@ can trigger the creation of a session
+dao.reflectionSaltSourceProperty | none | which property to use for the reflection-based salt source; more details [here|guide:10.5. Salted passwords]
+requestCache.onlyOnGet | @false@ | whether to only cache a [SavedRequest|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/savedrequest/SavedRequest.html] on GET requests
+requestCache.createSession | @true@ | whether caching @SavedRequest@ can trigger the creation of a session
 authenticationDetails.authClass | [WebAuthenticationDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/WebAuthenticationDetails.html] | the @Authentication@ details class to use
 roleHierarchy | none | hierarchical role definition; more details [here|guide:10.12. Hierarchical Roles]
 voterNames | ['authenticatedVoter', 'roleVoter'] | bean names of voters; more details [here|guide:10.10. Voters]
 providerNames | ['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'] | bean names of authentication providers; more details [here|guide:10.11. Authentication Providers]
 securityConfigType | type of request mapping to use | one of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3. Securing URLs]
 controllerAnnotations.matcher | 'ant' | whether to use an Ant-style URL matcher ('ant') or Regex ('regex')
-controllerAnnotations.matchesLowercase | @true@ | whether to do URL comparisons using lowercase
+controllerAnnotations.lowercase | @true@ | whether to do URL comparisons using lowercase
 controllerAnnotations.staticRules | none | extra rules that cannot be mapped using annotations
 interceptUrlMap | none | request mapping definition when using @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3.2 Config.groovy]
 {table}

@@ -59,5 +59,5 @@ None of these closures are required; if none are configured, nothing will be cal
 
 Note that when a user authenticates, Spring Security initially fires an @AuthenticationSuccessEvent@ but this happens before the @Authentication@ is registered in the @SecurityContextHolder@. This means that the @springSecurityService@ methods that access the logged-in user won't work. Later in the processing a second event is fired, an @InteractiveAuthenticationSuccessEvent@, and when this happens the @SecurityContextHolder@ will have the @Authentication@. So depending on your needs you can choose to implement a callback for either or both events.
 
-Also note that your event callback(s) will be ignored unless you set the @useSecurityEventListener@ property to true. This allows you to temporarily disable/enable them or enable them per-environment. 
+Also note that your event callback(s) will be ignored unless you set the @useSecurityEventListener@ property to true. This allows you to temporarily disable/enable them or enable them per-environment.
 

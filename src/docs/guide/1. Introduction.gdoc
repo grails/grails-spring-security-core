@@ -18,12 +18,7 @@ TODO
 * Spring Security sample apps
 * No explicit dependence on Hibernate (e.g. App Engine or other non-GORM uses)
 * Form login
-* Hierarchical roles
 * Remember-me cookie
 * Authentication cache (disabled by default)
 * Secured service methods (via annotation) (TBD)
-* is secureChannel.definitionSource still supported?
-
-* IP address filter
-** support many-one
 

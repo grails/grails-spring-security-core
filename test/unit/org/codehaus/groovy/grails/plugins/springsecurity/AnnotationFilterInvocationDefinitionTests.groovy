@@ -184,7 +184,7 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 
 			"/$controller/$action?/$id?" { constraints {} }
 
-	      "/"(view:"/index")
+			"/"(view:"/index")
 
 			/**** Error Mappings ****/
 

@@ -29,11 +29,11 @@ grails.project.dependency.resolution = {
 			excludes 'com.springsource.javax.servlet',
 			         'com.springsource.org.aopalliance',
 			         'com.springsource.org.apache.commons.logging',
-	   	         'org.springframework.aop',
-	         		'org.springframework.beans',
-	   	         'org.springframework.context',
-	   	         'org.springframework.core',
-	   	         'org.springframework.web'
+			         'org.springframework.aop',
+			         'org.springframework.beans',
+			         'org.springframework.context',
+			         'org.springframework.core',
+			         'org.springframework.web'
 		}
 	}
 }

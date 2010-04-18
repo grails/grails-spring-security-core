@@ -51,6 +51,11 @@ public final class SpringSecurityUtils {
 	private static ConfigObject securityConfig;
 
 	/**
+	 * Default value for the name of the Ajax header.
+	 */
+	public static final String AJAX_HEADER = "X-Requested-With";
+
+	/**
 	 * Default ordered filter names. Here to let plugins add or remove them. Can be overridden by config.
 	 */
 	public static final Map<Integer, String> ORDERED_FILTERS = new HashMap<Integer, String>();
@@ -211,6 +216,13 @@ public final class SpringSecurityUtils {
 		}
 
 		return securityConfig;
+	}
+
+	/**
+	 * Reset the config for testing.
+	 */
+	public static synchronized void resetSecurityConfig() {
+		securityConfig = null;
 	}
 
 	/**
