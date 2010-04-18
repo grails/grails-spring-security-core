@@ -1,0 +1,43 @@
+With this approach you store mapping entries in the database, using the @Requestmap@ domain class. @Requestmap@ has a @url@ property which contains the secured URL pattern and a @configAttribute@ property containing a comma-delimited list of required roles and/or tokens such as @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, and @IS_AUTHENTICATED_ANONYMOUSLY@.
+
+Creation of @Requestmap@ entries is the same as for any Grails domain class:
+
+{code}
+new Requestmap(url: '/js/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/css/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/images/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/login/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/logout/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/*', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/profile/**', configAttribute: 'ROLE_USER').save()
+new Requestmap(url: '/admin/**', configAttribute: 'ROLE_ADMIN').save()
+new Requestmap(url: '/admin/user/**', configAttribute: 'ROLE_SUPERVISOR').save()
+{code}
+
+Unlike the @Config.groovy@ Map approach above, you don't need to worry about @Requestmap@ entry order since the plugin calculates the most specific rule that applies to the current request.
+
+h4. Requestmap cache
+
+@Requestmap@ entries are cached for performance, but this has an impact on runtime configurability. If you create, edit, or delete an instance, the cache must be flushed and repopulated to be consistent with the database. You can call @springSecurityService.clearCachedRequestmaps()@ to do this. For example, if you create a @RequestmapController@ the @save@ action should look like this (and the update and delete actions should similarly call @clearCachedRequestmaps()@):
+
+{code}
+class RequestmapController {
+
+   def springSecurityService
+
+   ...
+
+   def save = {
+      def requestmapInstance = new Requestmap(params)
+      if (!requestmapInstance.save(flush: true)) {
+         render view: 'create', model: [requestmapInstance: requestmapInstance]
+         return
+      }
+
+      springSecurityService.clearCachedRequestmaps()
+      flash.message = "${message(code: 'default.created.message', args: [message(code: 'requestmap.label', default: 'Requestmap'), requestmapInstance.id])}"
+      redirect action: show, id: requestmapInstance.id
+   }
+}
+{code}
+

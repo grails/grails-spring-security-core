@@ -1,0 +1,29 @@
+The Spring Security plugin simplifies the work involved in integrating Spring Security (formerly called Acegi Security) into Grails applications. By combining a core configuration with user-specified options and overrides, it creates a best-practice configuration of Spring Security in any Grails application while allowing developers to make config changes without having to deal with the complexity of using Spring Security directly.
+
+Spring Security is a very powerful framework and is the default security framework for Spring, but this power comes at the cost of complexity and a rather steep learning curve. The Grails Spring Security plugin manages most of the complexity for you while allowing application-specific customization.
+
+By installing the plugin you get:
+
+* Spring Security filters and Spring beans are registered in web.xml and the application context for you; customization is done in SecurityConfig.groovy
+* all required Spring Security jar files
+* Domain classes, Controllers, and CRUD GSPs for User and Role management and persistence
+* Login and Logout Controllers and GSPs
+* DefaultSecurityConfig.groovy with default attribute values, and SecurityConfig.groovy for application-specific overrides
+* Taglibs and Service for Security
+
+
+TODO
+* Grails Security API/plugin
+* post-login, post-logout actions
+* Spring Security sample apps
+* No explicit dependence on Hibernate (e.g. App Engine or other non-GORM uses)
+* Form login
+* Hierarchical roles
+* Remember-me cookie
+* Authentication cache (disabled by default)
+* Secured service methods (via annotation) (TBD)
+* is secureChannel.definitionSource still supported?
+
+* IP address filter
+** support many-one
+

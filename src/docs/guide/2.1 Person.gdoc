@@ -1,0 +1,72 @@
+Spring Security uses an [Authentication|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/Authentication.html] object to determine whether the current user has the right to perform a secured action, i.e. accessing a URL, manipulate a secured domain object, access a secured method, etc. This is created during login, and typically there's overlap between the need for the data that's required to populate the authentication (username, password, granted authorities, etc.) and the need to represent a user in the application in ways that aren't related to security. The mechanism for populating the authentication is completely pluggable in Spring Security - you only need to provide an implementation of [UserDetailsService|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html] and implement its one method, @loadUserByUsername()@.
+
+You can easily [plug in your own implementation|guide:7. Custom UserDetailsService] but by default the plugin uses a Grails 'person' domain class to manage this data. The class name and package can be named whatever you want, and so can the fields. By default the class name is @Person@, and @username@, @enabled@, @password@ are the default names of the required properties. In addition it's expected that there is an @authorities@ property to retrieve roles; this can either be a public field or a @getAuthorities()@ method, and it can either be defined via a traditional GORM many-to-many or via a custom mapping (more HERE).
+
+Assuming you choose @com.mycompany.myapp@ as your package, and @User@ as your class name, you'll generate this class:
+
+{code}
+package com.mycompany.myapp
+
+class User {
+
+   String username
+   String password
+   boolean enabled
+
+   static constraints = {
+      username blank: false, unique: true
+      password blank: false
+   }
+
+   static mapping = {
+      password column: '`password`'
+   }
+
+   Set<Role> getAuthorities() {
+      UserRole.findAllByUser(this).collect { it.role } as Set
+   }
+}
+{code}
+
+and of course if you like you can add other properties, e.g. @email@, @firstName@, @lastName@, and convenience methods, etc.:
+
+{code}
+package com.mycompany.myapp
+
+class User {
+
+   String username
+   String password
+   boolean enabled
+   String email
+   String firstName
+   String lastName
+
+   static constraints = {
+      username blank: false, unique: true
+      password blank: false
+   }
+
+   Set<Role> getAuthorities() {
+      UserRole.findAllByUser(this).collect { it.role } as Set
+   }
+
+   def someMethod {
+      ...
+   }
+}
+{code}
+
+The @getAuthorities()@ method is analagous to defining @static hasMany = \[authorities: Authority\]@ in a traditional many-to-many mapping. This way @GormUserDetailsService@ can call @user.authorities@ during login to retrieve the roles without the overhead of a bidirectional many-to-many mapping.
+
+The class and property names are configurable using these configuration attributes:
+
+{table}
+*Property* | *Default Value* | *Meaning*
+userLookup.userDomainClassName | 'Person' | User class name
+userLookup.usernamePropertyName | 'username' | User class username field
+userLookup.passwordPropertyName | 'password' | User class password field
+userLookup.enabledPropertyName | 'enabled' | User class enabled field
+userLookup.authoritiesPropertyName | 'authorities' | User class role collection field
+{table}
+

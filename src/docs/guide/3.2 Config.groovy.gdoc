@@ -1,0 +1,29 @@
+To use this approach, just define a Map in @Config.groovy@:
+
+{code}
+grails.plugins.springsecurity.interceptUrlMap = [
+   '/secure/**':    ['ROLE_ADMIN'],
+   '/finance/**':   ['ROLE_FINANCE', 'IS_AUTHENTICATED_FULLY'],
+   '/js/**':        ['IS_AUTHENTICATED_ANONYMOUSLY'],
+   '/css/**':       ['IS_AUTHENTICATED_ANONYMOUSLY'],
+   '/images/**':    ['IS_AUTHENTICATED_ANONYMOUSLY'],
+   '/*':            ['IS_AUTHENTICATED_ANONYMOUSLY'],
+   '/login/**':     ['IS_AUTHENTICATED_ANONYMOUSLY'],
+   '/logout/**':    ['IS_AUTHENTICATED_ANONYMOUSLY']
+]
+{code}
+
+When using this approach, make sure that you order the rules correctly. The first applicable rule is used, so for example if you have a controller that has one set of rules but an action that has stricter access rules, e.g.
+
+{code}
+'/secure/**':              ['ROLE_ADMIN', 'ROLE_SUPERUSER'],
+'/secure/reallysecure/**': ['ROLE_SUPERUSER']
+{code}
+
+then this would fail - it wouldn't restrict access to @/secure/reallysecure/list@ to a user with @ROLE_SUPERUSER@ since the first URL pattern matches, so the second would be ignored. The correct mapping would be
+
+{code}
+'/secure/reallysecure/**': ['ROLE_SUPERUSER']
+'/secure/**':              ['ROLE_ADMIN', 'ROLE_SUPERUSER'],
+{code}
+

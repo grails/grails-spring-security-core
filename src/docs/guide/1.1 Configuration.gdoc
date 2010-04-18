@@ -1,0 +1,3 @@
+The plugin is highly configurable, but hopefully most of the default settings should be fine. If you need to override a property, you can do that under @grails.plugins.springsecurity@ in @grails-app/conf/Config.groovy@. Since the plugin uses Config.groovy and not a custom config file, it's easy to support configurations for multiple environments - just wrap your configuration in an @environments@ block.
+
+See [here|guide:6. Configuration] for a detailed discussion about the various configuration options.

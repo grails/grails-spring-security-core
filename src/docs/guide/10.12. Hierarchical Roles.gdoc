@@ -1,0 +1,43 @@
+Hierarchical roles are a convenient way to reduce some clutter in your request mappings. For example, if you have several types of 'admin' roles and any one of them can be used to access some URL pattern, then without using hierarchical roles you need to specify all of them:
+
+{code}
+package com.mycompany.myapp
+
+import grails.plugins.springsecurity.Secured
+
+class SomeController {
+
+   @Secured(['ROLE_ADMIN', 'ROLE_FINANCE_ADMIN', 'ROLE_SUPERADMIN'])
+   def someAction = {
+      ...
+   }
+}
+{code}
+
+But if you have a business rule that says that being granted @ROLE_FINANCE_ADMIN@ implies being granted @ROLE_ADMIN@, and that being granted @ROLE_SUPERADMIN@ implies being granted @ROLE_FINANCE_ADMIN@, then you can express that hierarchy as
+
+{code}
+grails.plugins.springsecurity.roleHierarchy = '''
+   ROLE_SUPERADMIN > ROLE_FINANCE_ADMIN
+   ROLE_FINANCE_ADMIN > ROLE_ADMIN
+'''
+{code}
+
+Then you can simplify your mappings by specifying only the roles that are required:
+
+{code}
+package com.mycompany.myapp
+
+import grails.plugins.springsecurity.Secured
+
+class SomeController {
+
+   @Secured(['ROLE_ADMIN'])
+   def someAction = {
+      ...
+   }
+}
+{code}
+
+You can also reduce the number of granted roles in the database using this approach - where previously you had to grant @ROLE_SUPERADMIN@, @ROLE_FINANCE_ADMIN@, and @ROLE_ADMIN@, now you only need to grant @ROLE_SUPERADMIN@.
+
