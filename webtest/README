@@ -1,0 +1,25 @@
+Running the functional tests is a 2-step process. First you create the test apps using the create-test-app script, then you cd into each app directory and run the Ant build there.
+
+The create-test-app expects a config file in the project root directory called testapps.config.groovy. This is a ConfigSlurper-formatted file and shoud look something like this:
+
+	v12 {
+		pluginVersion = '0.1'
+		projectDir = '/home/burt/workspace/testapps/spring-security-test'
+		grailsHome = '/home/burt/dev/javalib/grails-1.2.2'
+		dotGrails = '/home/burt/.grails/1.2.2'
+	}
+	
+	v13 {
+		pluginVersion = '0.1'
+		projectDir = '/home/burt/workspace/testapps/spring-security-test'
+		grailsHome = '/home/burt/dev/javalib/grails-1.3.0.RC1'
+		dotGrails = '/home/burt/.grails/1.3.0.RC1'
+	}
+
+Each top-level property is a configuration, and it should contain the 4 properties shown. 'pluginVersion' is the current version of the plugin and is used to find the zip file to use to install into the test projects. It should be the same value for each configuration block. Likewise 'projectDir' is the root directory that will contain the generated projects and should probably be consistent. 'grailsHome' is the location of the Grails install to use to build each project. And 'dotGrails' is the location of your $HOME/.grails folder for that version of Grails; it will be used to delete the projects' working directories to ensure that things go smoothly.
+
+After running the script, you can cd into each project's folder and run the Ant build. Either run 'ant' to run the default target which runs all functional tests, or run each group individually. Run "ant -projecthelp" to get a list of the runnable targets.
+
+The test-reports folder will be renamed after running each group of tests to keep them separate.
+
+Note that after a group of tests is finished, the application can be run using 'grails run-app' for manual testing with that configuration.

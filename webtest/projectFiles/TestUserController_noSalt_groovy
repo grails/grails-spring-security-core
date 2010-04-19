@@ -1,0 +1,139 @@
+package com.testapp
+
+import org.springframework.dao.DataIntegrityViolationException
+
+class TestUserController {
+
+	def springSecurityService
+
+	static allowedMethods = [delete: 'POST', save: 'POST', update: 'POST']
+
+	def index = {
+		redirect action: list, params: params
+	}
+
+	def list = {
+		params.max = Math.min((params.max ?: 10).toInteger(), 100)
+		[personList: TestUser.list(params), personCount: TestUser.count()]
+	}
+
+	def create = {
+		[person: new TestUser(params), authorityList: TestRole.list()]
+	}
+
+	def save = {
+
+		def person = new TestUser(params)
+		person.password = springSecurityService.encodePassword(params.password)
+		if (person.save(flush: true)) {
+			addRoles(person)
+			redirect action: show, id: person.id
+		}
+		else {
+			render view: 'create', model: [authorityList: TestRole.list(), person: person]
+		}
+	}
+
+	def show = {
+		def person = TestUser.get(params.id)
+		if (!person) {
+			flash.message = "TestUser not found with id $params.id"
+			redirect action: list
+			return
+		}
+		List roleNames = person.authorities*.authority
+		[person: person, roleNames: roleNames.sort()]
+	}
+
+	def edit = {
+
+		def person = TestUser.get(params.id)
+		if (!person) {
+			flash.message = "TestUser not found with id $params.id"
+			redirect action: list
+			return
+		}
+
+		return buildPersonModel(person)
+	}
+
+	def update = {
+
+		def person = TestUser.get(params.id)
+		if (!person) {
+			flash.message = "TestUser not found with id $params.id"
+			redirect action: edit, id: params.id
+			return
+		}
+
+		long version = params.version.toLong()
+		if (person.version > version) {
+			person.errors.rejectValue 'version', "person.optimistic.locking.failure",
+				"Another user has updated this TestUser while you were editing."
+				render view: 'edit', model: buildPersonModel(person)
+			return
+		}
+
+		def oldPassword = person.password
+		person.properties = params
+		if (!params.password.equals(oldPassword)) {
+			person.password = springSecurityService.encodePassword(params.password)
+		}
+		if (person.save()) {
+			TestUserTestRole.removeAll person
+			addRoles(person)
+			redirect action: show, id: person.id
+		}
+		else {
+			render view: 'edit', model: buildPersonModel(person)
+		}
+	}
+
+	def delete = {
+
+		def person = TestUser.get(params.id)
+		if (person) {
+			def authPrincipal = springSecurityService.principal
+			//avoid self-delete if the logged-in user is an admin
+			if (!(authPrincipal instanceof String) && authPrincipal.username == person.username) {
+				flash.message = "You can not delete yourself, please login as another admin and try again"
+			}
+			else {
+				try {
+					TestUserTestRole.removeAll person
+					person.delete flush: true
+					flash.message = "TestUser $params.id deleted."
+				}
+				catch (DataIntegrityViolationException e) {
+					flash.message = "TestUser $params.id could not be deleted"
+					redirect action: show, id: params.id
+				}
+			}
+		}
+		else {
+			flash.message = "TestUser not found with id $params.id"
+		}
+
+		redirect action: list
+	}
+
+	private void addRoles(person) {
+		for (String key in params.keySet()) {
+			if (key.contains('ROLE') && 'on' == params.get(key)) {
+				TestUserTestRole.create person, TestRole.findByAuthority(key), true
+			}
+		}
+	}
+
+	private Map buildPersonModel(person) {
+
+		List roles = TestRole.list().sort { it.authority }
+		Set userRoleNames = person.authorities*.authority
+		LinkedHashMap<TestRole, Boolean> roleMap = [:]
+		for (role in roles) {
+			roleMap[(role)] = userRoleNames.contains(role.authority)
+		}
+
+		return [person: person, roleMap: roleMap]
+	}
+}

@@ -3,3 +3,4 @@ stacktrace.log
 /target
 /docs
 
+/testapps.config.groovy
