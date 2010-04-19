@@ -98,7 +98,10 @@ class SpringSecurityCoreGrailsPlugin {
 		'lib/easymock*.jar',
 		'grails-app/domain/**',
 		'grails-app/services/**/Test*Service.groovy',
-		'scripts/_Events.groovy'
+		'scripts/_Events.groovy',
+		'scripts/CreateTestApp.groovy',
+		'docs/**',
+		'src/docs/**'
 	]
 
 	String author = 'Burt Beckwith'
