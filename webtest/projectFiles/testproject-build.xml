@@ -9,7 +9,16 @@
 		<exec executable='${grails}' failonerror='true'><arg value='clean'/></exec>
 	</target>
 
-	<target name='test-static' description='Run Static tests' depends='clean'>
+	<target name='test-static'     description='Run Static tests'     depends='clean, init-static, run-suite' />
+	<target name='test-annotation' description='Run Annotation tests' depends='clean, init-annotation, run-suite' />
+	<target name='test-requestmap' description='Run Requestmap tests' depends='clean, init-requestmap, run-suite' />
+	<target name='test-basic'      description='Run BasicAuth tests'  depends='clean, init-basic, run-suite' />
+	<target name='test-misc'       description='Run misc tests'       depends='clean, init-misc, run-suite' />
+
+	<target name='init-static'>
+
+		<property name='suite' value='StaticSuite' />
+
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
 
@@ -31,14 +40,12 @@ grails.plugins.springsecurity.useSwitchUserFilter = false
 
 ]]></echo>
 
-		<exec executable='${grails}' failonerror='true'>
-			<arg value='func-test'/>
-			<arg value='StaticSuite'/>
-		</exec>
-
 	</target>
 
-	<target name='test-annotation' description='Run Annotation tests' depends='clean'>
+	<target name='init-annotation'>
+
+		<property name='suite' value='AnnotationSuite' />
+
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
@@ -50,15 +57,12 @@ grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
 ]]></echo>
-
-		<exec executable='${grails}' failonerror='true'>
-			<arg value='func-test'/>
-			<arg value='AnnotationSuite'/>
-		</exec>
-
 	</target>
 
-	<target name='test-requestmap' description='Run Requestmap tests' depends='clean'>
+	<target name='init-requestmap'>
+
+		<property name='suite' value='RequestmapSuite' />
+
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
@@ -70,15 +74,12 @@ grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
 ]]></echo>
-
-		<exec executable='${grails}' failonerror='true'>
-			<arg value='func-test'/>
-			<arg value='RequestmapSuite'/>
-		</exec>
-
 	</target>
 
-	<target name='test-basic' description='Run BasicAuth tests' depends='clean'>
+	<target name='init-basic'>
+
+		<property name='suite' value='BasicAuthSuite' />
+
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
@@ -92,15 +93,12 @@ grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
 ]]></echo>
-
-		<exec executable='${grails}' failonerror='true'>
-			<arg value='func-test'/>
-			<arg value='BasicAuthSuite'/>
-		</exec>
-
 	</target>
 
-	<target name='test-misc' description='Run misc tests' depends='clean'>
+	<target name='init-misc'>
+
+		<property name='suite' value='MiscSuite' />
+
 		<copy file='grails-app/controllers/com/testapp/TestUserController_usingSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
@@ -115,12 +113,13 @@ grails.plugins.springsecurity.useSwitchUserFilter = true
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
 ]]></echo>
+	</target>
 
+	<target name='run-suite'>
 		<exec executable='${grails}' failonerror='true'>
 			<arg value='func-test'/>
-			<arg value='MiscSuite'/>
+			<arg value='${suite}'/>
 		</exec>
-
 	</target>
 
 	<target name='test-all' description='run all sets of functional tests'>
