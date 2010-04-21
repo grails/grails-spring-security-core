@@ -110,6 +110,13 @@ grails.plugins.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
 
 grails.plugins.springsecurity.useSwitchUserFilter = true
 
+grails.plugins.springsecurity.failureHandler.exceptionMappings = [
+	'org.springframework.security.authentication.LockedException': '/testUser/accountLocked',
+	'org.springframework.security.authentication.DisabledException': '/testUser/accountDisabled',
+	'org.springframework.security.authentication.AccountExpiredException': '/testUser/accountExpired',
+	'org.springframework.security.authentication.CredentialsExpiredException': '/testUser/passwordExpired'
+]
+
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
 ]]></echo>

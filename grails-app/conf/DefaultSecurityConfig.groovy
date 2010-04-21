@@ -35,6 +35,9 @@ security {
 
 	/** error messages */
 	errors.login.disabled = "Sorry, your account is disabled."
+	errors.login.expired = "Sorry, your account has expired."
+	errors.login.passwordExpired = "Sorry, your password has expired."
+	errors.login.locked = "Sorry, your account is locked."
 	errors.login.fail = "Sorry, we were not able to find a user with that username and password."
 
 	// hierarchical roles
@@ -64,6 +67,9 @@ security {
 	userLookup.enabledPropertyName = 'enabled'
 	userLookup.passwordPropertyName = 'password'
 	userLookup.authoritiesPropertyName = 'authorities'
+	userLookup.accountExpiredPropertyName = 'accountExpired'
+	userLookup.accountLockedPropertyName = 'accountLocked'
+	userLookup.passwordExpiredPropertyName = 'passwordExpired'
 	authority.className = 'Authority'
 	authority.nameField = 'authority'
 

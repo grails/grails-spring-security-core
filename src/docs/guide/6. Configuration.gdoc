@@ -14,9 +14,12 @@ h4. Properties that are most likely to be overridden are the @User@ and @Role@ (
 *Property* | *Default Value* | *Meaning*
 userLookup.userDomainClassName | 'Person' | User class name
 userLookup.usernamePropertyName | 'username' | User class username field
-userLookup.passwordPropertyName | 'passorwd' | User class password field
-userLookup.enabledPropertyName | 'enabled' | User class enabled field
+userLookup.passwordPropertyName | 'password' | User class password field
 userLookup.authoritiesPropertyName | 'authorities' | User class role collection field
+userLookup.enabledPropertyName | 'enabled' | User class enabled field
+userLookup.accountExpiredPropertyName | 'accountExpired' | User class account expired field
+userLookup.accountLockedPropertyName | 'accountLocked' | User class account locked field
+userLookup.passwordExpiredPropertyName | 'passwordExpired' | User class password expired field
 authority.className | 'Authority' | Role class name
 authority.nameField | 'authority' | Role class role name field
 requestMap.className | 'Requestmap' | Requestmap class name

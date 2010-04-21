@@ -22,7 +22,7 @@ import grails.plugins.springsecurity.SecurityConfigType
 
 ...
 
-grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation
+grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
 {code}
 
 To use @Requestmap@ entries, specify @SecurityConfigType.Requestmap@:

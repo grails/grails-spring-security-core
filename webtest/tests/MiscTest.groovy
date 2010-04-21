@@ -6,8 +6,7 @@ class MiscTest extends AbstractSecurityWebTest {
 		createRoles()
 		createUsers()
 
-		def response = getInNewPage('/hack/getPassword?user=user1')
-		String encryptedPassword = stripWS(response.contentAsString)
+		String encryptedPassword = getContent('/hack/getUserProperty?user=user1&propName=password', true)
 
 		def passwordEncoder = new MessageDigestPasswordEncoder('SHA-256')
 		String notSalted = passwordEncoder.encodePassword('p4ssw0rd', null)

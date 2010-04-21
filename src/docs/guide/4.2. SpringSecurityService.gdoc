@@ -49,7 +49,7 @@ class SomeController {
 
 h4. getPrincipal()
 
-Retrieves the currently logged in user's @Principal@, or @null@ if not logged in. This will be a Spring Security [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html] unless you've created a custom @UserDetailsService@, in which case it'll be whatever implementation of [UserDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html] you use there.
+Retrieves the currently logged in user's @Principal@, or @null@ if not logged in. This will be a @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@ unless you've created a custom @UserDetailsService@, in which case it'll be whatever implementation of [UserDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html] you use there.
 
 Example:
 

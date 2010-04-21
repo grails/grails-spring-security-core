@@ -117,6 +117,22 @@ class TestUserController {
 		redirect action: list
 	}
 
+	def accountLocked = {
+		render 'accountLocked'
+	}
+
+	def accountDisabled = {
+		render 'accountDisabled'
+	}
+
+	def accountExpired = {
+		render 'accountExpired'
+	}
+
+	def passwordExpired = {
+		render 'passwordExpired'
+	}
+
 	private void addRoles(person) {
 		for (String key in params.keySet()) {
 			if (key.contains('ROLE') && 'on' == params.get(key)) {

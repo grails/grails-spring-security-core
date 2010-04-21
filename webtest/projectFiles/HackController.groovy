@@ -2,6 +2,8 @@ import com.testapp.TestUser
 
 class HackController {
 
+	def userCache
+
 	def getSessionValue = {
 		def value = session[params.name]
 		render value ? value.toString() : ''
@@ -18,8 +20,14 @@ class HackController {
 		render sb.toString()
 	}
 
-	def getPassword = {
-		render TestUser.findByUsername(params.user).password
+	def getUserProperty = {
+		render TestUser.findByUsername(params.user)."$params.propName"
+	}
+
+	def setUserProperty = {
+		TestUser.findByUsername(params.user).properties = params
+		userCache.removeUserFromCache params.user
+		render 'ok'
 	}
 
 	def clearAllData = {

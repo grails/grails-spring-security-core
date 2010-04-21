@@ -1,4 +1,10 @@
 // for testing only, not included in plugin zip
+
+import org.springframework.security.authentication.LockedException
+import org.springframework.security.authentication.DisabledException
+import org.springframework.security.authentication.AccountExpiredException
+import org.springframework.security.authentication.CredentialsExpiredException
+
 grails {
 	plugins {
 		springsecurity {
@@ -20,6 +26,15 @@ grails {
 				className = 'test.TestRole'
 				nameField = 'auth'
 			}
+
+			failureHandler {
+				exceptionMappings = [
+					(LockedException.name): '/testUser/accountLocked',
+					(DisabledException.name): '/testUser/accountDisabled',
+					(AccountExpiredException.name): '/testUser/accountExpired',
+					(CredentialsExpiredException.name): '/testUser/passwordExpired'
+				]
+			}
 		}
 	}
 }
@@ -27,4 +42,3 @@ grails {
 grails.doc.authors = 'Burt Beckwith'
 grails.doc.license = 'Apache License 2.0'
 grails.doc.images = new File('src/docs/resources/img')
-

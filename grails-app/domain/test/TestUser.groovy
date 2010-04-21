@@ -19,13 +19,14 @@ package test
  */
 class TestUser {
 
-	static transients = ['pass', 'roleNames']
+	static transients = ['roles', 'roleNames']
 
 	String loginName
 	String passwrrd
 	boolean enabld
-
-	String pass = '[secret]'
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
 	Set<TestRole> getRoles() { TestUserRole.findAllByUser(this).collect { it.role } }
 

@@ -98,6 +98,18 @@ println "\n\n verifyXPath xpath: $xpath expected $expected : $results ${results*
 		return client.loadWebResponse(settings)
 	}
 
+	protected String getContent(String url, boolean newPage = false) {
+		def res
+		if (newPage) {
+			res = getInNewPage(url)
+		}
+		else {
+			get url
+			res = response
+		}
+		stripWS res.contentAsString
+	}
+
 	def get(url, Closure paramSetup = null) {
 		super.get(url, paramSetup)
 		def cookie = response.responseHeaders.find { it.name == 'Set-Cookie' }

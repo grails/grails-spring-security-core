@@ -17,7 +17,6 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 import org.apache.log4j.Logger
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.transaction.PlatformTransactionManager
@@ -113,16 +112,26 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		String usernamePropertyName = ReflectionUtils.getConfigProperty(
 				'userLookup.usernamePropertyName')
-		String enabledPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.enabledPropertyName')
 		String passwordPropertyName = ReflectionUtils.getConfigProperty(
 				'userLookup.passwordPropertyName')
+		String enabledPropertyName = ReflectionUtils.getConfigProperty(
+				'userLookup.enabledPropertyName')
+		String accountExpiredPropertyName = ReflectionUtils.getConfigProperty(
+				'userLookup.accountExpiredPropertyName')
+		String accountLockedPropertyName = ReflectionUtils.getConfigProperty(
+				'userLookup.accountLockedPropertyName')
+		String passwordExpiredPropertyName = ReflectionUtils.getConfigProperty(
+				'userLookup.passwordExpiredPropertyName')
 
 		String username = user."$usernamePropertyName"
 		String password = user."$passwordPropertyName"
-		boolean enabled = user."$enabledPropertyName"
+		boolean enabled = enabledPropertyName ? user."$enabledPropertyName" : true
+		boolean accountExpired = accountExpiredPropertyName ? user."$accountExpiredPropertyName" : false
+		boolean accountLocked = accountLockedPropertyName ? user."$accountLockedPropertyName" : false
+		boolean passwordExpired = passwordExpiredPropertyName ? user."$passwordExpiredPropertyName" : false
 
-		new User(username, password, enabled, enabled, enabled, enabled, authorities)
+		new GrailsUser(username, password, enabled, !accountExpired, !passwordExpired,
+				!accountLocked, authorities, user.id)
 	}
 
 	protected Logger getLog() { _log }
