@@ -395,6 +395,11 @@ class SpringSecurityCoreGrailsPlugin {
 		else {
 			userCache(NullUserCache)
 		}
+
+		/** loggerListener */
+		if (conf.registerLoggerListener) {
+			loggerListener(LoggerListener)
+		}
 	}
 
 	def doWithDynamicMethods = { ctx ->

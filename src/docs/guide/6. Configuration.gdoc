@@ -182,5 +182,6 @@ controllerAnnotations.matcher | 'ant' | whether to use an Ant-style URL matcher 
 controllerAnnotations.lowercase | @true@ | whether to do URL comparisons using lowercase
 controllerAnnotations.staticRules | none | extra rules that cannot be mapped using annotations
 interceptUrlMap | none | request mapping definition when using @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3.2 Config.groovy]
+registerLoggerListener | @false@ | if @true@ registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] which logs interceptor-related application events 
 {table}
 

@@ -28,6 +28,8 @@ security {
 
 	ajaxHeader = 'X-Requested-With'
 
+	registerLoggerListener = false
+
 	// 'strict' mode where an explicit grant is required to access any resource;
 	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY
 	// for /, /js/**, /css/**, /images/**, /login/**, /logout/**, etc.

@@ -1,3 +1,13 @@
-The plugin is highly configurable, but hopefully most of the default settings should be fine. If you need to override a property, you can do that under @grails.plugins.springsecurity@ in @grails-app/conf/Config.groovy@. Since the plugin uses Config.groovy and not a custom config file, it's easy to support configurations for multiple environments - just wrap your configuration in an @environments@ block.
+The plugin is highly configurable, but hopefully most of the default settings should be fine. If you need to override a property, you can do that under  @grails-app/conf/Config.groovy@. The earlier Acegi plugin used its own configuration file, @SecurityConfig.groovy@ but this plugin maintains its configuration in the standard @Config.groovy@ file. This enables environment-specific configuration, e.g. if you want less restrictive security rules when developing than when you deploy to production. Like any environment-specific config parameters, just wrap them in an @environments@ block.
 
-See [here|guide:6. Configuration] for a detailed discussion about the various configuration options.
+{note}
+Note that the plugin's configuration values all start with @grails.plugins.springsecurity@ to keep them separate from similarly named options in Grails or other plugins. In the documentation if you see an attribute such as @password.algorithm@ remember that this would be specified as 
+
+{code}
+grails.plugins.springsecurity.password.algorithm='SHA-512'
+{code}
+
+in @Config.groovy@
+{note}
+
+See [Chapter 6|guide:6. Configuration] for a detailed discussion about the various general configuration options and [Chapter 10|guide:10. Extending and configuring the plugin] for options for specific features.
