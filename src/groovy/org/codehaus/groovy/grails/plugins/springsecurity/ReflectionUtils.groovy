@@ -62,7 +62,12 @@ class ReflectionUtils {
 
 	static List loadAllRequestmaps() {
 		String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
-		AH.application.getClassForName(requestMapClassName).list()
+		def Requestmap = AH.application.getClassForName(requestMapClassName)
+		if (!Requestmap) {
+			throw new IllegalStateException(
+					'Cannot load Requestmaps, "requestMap.className" property is not set')
+		}
+		Requestmap.list()
 	}
 
 	static List asList(o) { o ? o as List : [] }

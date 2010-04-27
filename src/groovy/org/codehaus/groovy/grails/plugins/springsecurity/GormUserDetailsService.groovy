@@ -19,7 +19,6 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.transaction.PlatformTransactionManager
 import org.springframework.transaction.TransactionStatus
 import org.springframework.transaction.support.TransactionCallback
 import org.springframework.transaction.support.TransactionTemplate
@@ -45,7 +44,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	def sessionFactory
 
 	/** Dependency injection for Hibernate transaction manager. */
-	PlatformTransactionManager transactionManager
+	def transactionManager
 
 	/**
 	 * {@inheritDoc}

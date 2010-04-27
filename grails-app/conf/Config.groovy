@@ -14,6 +14,7 @@ grails {
 				enabledPropertyName = 'enabld'
 				passwordPropertyName = 'passwrrd'
 				authoritiesPropertyName = 'roles'
+				authorityJoinClassName = 'test.TestUserRole'
 			}
 
 			requestMap {

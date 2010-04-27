@@ -1,7 +1,7 @@
 import junit.framework.TestSuite
 
 /**
- * Suite for tests that use the Controller annotation configuration.
+ * Suite for tests that use Basic auth.
  */
 class BasicAuthSuite extends functionaltestplugin.FunctionalTestCase {
 

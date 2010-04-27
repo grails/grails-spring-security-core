@@ -1,9 +1,0 @@
-To use [HTTP Basic Authentication|http://en.wikipedia.org/wiki/Basic_access_authentication] in your application set the @useBasicAuth@ attribute to @true@. You should also change the @basic.realmName@ from its default value to one that's appropriate for your application, e.g.
-
-{code}
-grails.plugins.springsecurity.useBasicAuth = true
-grails.plugins.springsecurity.basic.realmName = "Ralph's Bait and Tackle"
-{code}
-
-With this in place, users will be prompted with the standard browser login dialog instead of being redirected to a login page.
-

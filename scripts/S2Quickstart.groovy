@@ -104,6 +104,7 @@ private void updateConfig() {
 		configFile.withWriterAppend {
 			it.writeLine '\n// Added by the Spring Security Core plugin:'
 			it.writeLine "grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
+			it.writeLine "grails.plugins.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
 			it.writeLine "grails.plugins.springsecurity.authority.className = '${packageName}.$roleClassName'"
 			if (requestmapClassName) {
 				it.writeLine "grails.plugins.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"

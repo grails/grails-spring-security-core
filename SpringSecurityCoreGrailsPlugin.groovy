@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import grails.plugins.springsecurity.DigestAuthPasswordEncoder
 import grails.plugins.springsecurity.SecurityConfigType
 
 import javax.servlet.Filter
@@ -29,6 +30,7 @@ import org.springframework.security.authentication.RememberMeAuthenticationProvi
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.authentication.dao.ReflectionSaltSource
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
+import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
@@ -60,6 +62,8 @@ import org.springframework.security.web.authentication.session.SessionFixationPr
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
+import org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint
+import org.springframework.security.web.authentication.www.DigestAuthenticationFilter
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
@@ -220,7 +224,7 @@ class SpringSecurityCoreGrailsPlugin {
 			rememberMeClass = conf.atr.rememberMeClass
 		}
 
-		// default 'authenticationEntryPoint' unless overridden with basic auth or x509
+		// default 'authenticationEntryPoint' unless overridden with basic auth, digest, or x509
 		authenticationEntryPoint(AjaxAwareAuthenticationEntryPoint) {
 			loginFormUrl = conf.auth.loginFormUrl // '/login/auth'
 			forceHttps = conf.auth.forceHttps // 'false'
@@ -332,6 +336,12 @@ class SpringSecurityCoreGrailsPlugin {
 			configureBasicAuth conf
 		}
 
+		// Digest Auth
+		if (conf.useDigestAuth) {
+			configureDigestAuth.delegate = delegate
+			configureDigestAuth conf
+		}
+
 		// Switch User
 		if (conf.useSwitchUserFilter) {
 			switchUserProcessingFilter(SwitchUserFilter) {
@@ -414,8 +424,14 @@ class SpringSecurityCoreGrailsPlugin {
 		// build filters here to give dependent plugins a chance to register some
 		def filterChain = ctx.springSecurityFilterChain
 		Map<String, List<Filter>> filterChainMap = [:]
-		List<String> filterNames = findFilterChainNames(conf)
-		def allConfiguredFilters = filterNames.collect { name -> ctx.getBean(name) }
+
+		SortedMap<Integer, String> filterNames = findFilterChainNames(conf)
+		def allConfiguredFilters = []
+		filterNames.each { int order, String name ->
+			def filter = ctx.getBean(name)
+			allConfiguredFilters << filter
+			SpringSecurityUtils.CONFIGURED_ORDERED_FILTERS[order] = filter
+		}
 
 		if (conf.filterChain.chainMap) {
 			conf.filterChain.chainMap.each { key, value ->
@@ -456,9 +472,8 @@ class SpringSecurityCoreGrailsPlugin {
 
 		// build handlers list here to give dependent plugins a chance to register some
 		def logoutHandlerNames = conf.logout.handlerNames ?: SpringSecurityUtils.LOGOUT_HANDLER_NAMES
-		def logoutHandlers = createBeanList(logoutHandlerNames, ctx)
-		// TODO uses constructor injection
-//		ctx.logoutFilter.handlers = logoutHandlers
+		ctx.logoutHandlers.clear()
+		ctx.logoutHandlers.addAll createBeanList(logoutHandlerNames, ctx)
 	}
 
 	def onChange = { event ->
@@ -506,8 +521,8 @@ class SpringSecurityCoreGrailsPlugin {
 
 		securityContextLogoutHandler(SecurityContextLogoutHandler)
 
-		// create the default list here, will be replaced in doWithApplicationContext
-		def logoutHandlers = createRefList(SpringSecurityUtils.LOGOUT_HANDLER_NAMES)
+		// create a dummy list here, will be replaced in doWithApplicationContext
+		logoutHandlers(ArrayList, [new SecurityContextLogoutHandler()])
 
 		/** logoutFilter */
 		logoutFilter(LogoutFilterFactoryBean) {
@@ -526,6 +541,35 @@ class SpringSecurityCoreGrailsPlugin {
 		basicAuthenticationFilter(BasicAuthenticationFilter) {
 			authenticationManager = ref('authenticationManager')
 			authenticationEntryPoint = ref('authenticationEntryPoint')
+		}
+	}
+
+	private configureDigestAuth = { conf ->
+
+		if (conf.digest.useCleartextPasswords) {
+			passwordEncoder(PlaintextPasswordEncoder)
+		}
+		else {
+			conf.digest.passwordAlreadyEncoded = true
+			conf.dao.reflectionSaltSourceProperty = conf.userLookup.usernamePropertyName
+			passwordEncoder(DigestAuthPasswordEncoder) {
+				realm = conf.digest.realmName
+			}
+		}
+
+		authenticationEntryPoint(DigestAuthenticationEntryPoint) {
+			realmName = conf.digest.realmName // 'Grails Realm'
+			key = conf.digest.key // 'changeme'
+			nonceValiditySeconds = conf.digest.nonceValiditySeconds // 300
+		}
+
+		digestAuthenticationFilter(DigestAuthenticationFilter) {
+			authenticationDetailsSource = ref('authenticationDetailsSource')
+			authenticationEntryPoint = ref('authenticationEntryPoint')
+			userCache = ref('userCache')
+			userDetailsService = ref('userDetailsService')
+			passwordAlreadyEncoded = conf.digest.passwordAlreadyEncoded // false
+			createAuthenticatedToken = conf.digest.createAuthenticatedToken // false
 		}
 	}
 
@@ -570,12 +614,20 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 	}
 
-	private List<String> findFilterChainNames(conf) {
+	private SortedMap<Integer, String> findFilterChainNames(conf) {
+
+		SortedMap<Integer, String> orderedNames = new TreeMap()
 
 		// if the user listed the names, use those
 		def filterNames = conf.filterChain.filterNames
-		if (!filterNames) {
-			def orderedNames = new TreeMap()
+		if (filterNames) {
+			// cheat and put them in the map in order - the key values don't
+			// matter in this case since the user has chosen the order and
+			// the map will be used to insert single filters, which wouldn't happen
+			// if they've defined the order already
+			filterNames.eachWithIndex { name, index -> orderedNames[index] = name }
+		}
+		else {
 
 			if (conf.secureChannel.definition) {
 				orderedNames[SecurityFilterPosition.CHANNEL_FILTER.order] = 'channelProcessingFilter'
@@ -605,7 +657,9 @@ class SpringSecurityCoreGrailsPlugin {
 
 			// facebook
 
-			// DIGEST_AUTH_FILTER
+			if (conf.useDigestAuth) {
+				orderedNames[SecurityFilterPosition.DIGEST_AUTH_FILTER.order] = 'digestAuthenticationFilter'
+			}
 
 			if (conf.useBasicAuth) {
 				orderedNames[SecurityFilterPosition.BASIC_AUTH_FILTER.order] = 'basicAuthenticationFilter'
@@ -631,11 +685,9 @@ class SpringSecurityCoreGrailsPlugin {
 
 			// add in filters contributed by secondary plugins
 			orderedNames.putAll SpringSecurityUtils.ORDERED_FILTERS
-
-			filterNames = orderedNames.values() as List
 		}
 
-		filterNames
+		orderedNames
 	}
 
 	private configureChannelProcessingFilter = { conf ->
@@ -750,7 +802,6 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 
 		x509PrincipalExtractor(SubjectDnX509PrincipalExtractor) {
-			messageSource = ref('messageSource')
 			subjectDnRegex = conf.x509.subjectDnRegex // CN=(.*?),
 		}
 

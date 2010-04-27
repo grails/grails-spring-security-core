@@ -20,6 +20,7 @@ userLookup.enabledPropertyName | 'enabled' | User class enabled field
 userLookup.accountExpiredPropertyName | 'accountExpired' | User class account expired field
 userLookup.accountLockedPropertyName | 'accountLocked' | User class account locked field
 userLookup.passwordExpiredPropertyName | 'passwordExpired' | User class password expired field
+userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name
 authority.className | 'Authority' | Role class name
 authority.nameField | 'authority' | Role class role name field
 requestMap.className | 'Requestmap' | Requestmap class name
@@ -106,9 +107,13 @@ password.algorithm | 'SHA-256' | passwordEncoder Message Digest algorithm, see [
 password.encodeHashAsBase64 | @false@ | if @true@, Base64-encode the hashed password
 {table}
 
-h4. HTTP Basic Auth
+h4. HTTP Basic Authentication
 
-More configuration details are [here|guide:10.2. Basic Auth]
+More configuration details are [here|guide:10.2. Basic and Digest Auth]
+
+h4. Digest Authentication
+
+More configuration details are [here|guide:10.2. Basic and Digest Auth]
 
 {table}
 *Property* | *Default* | *Description*

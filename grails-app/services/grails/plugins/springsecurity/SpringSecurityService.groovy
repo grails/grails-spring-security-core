@@ -36,6 +36,9 @@ class SpringSecurityService {
 	/** dependency injection for authenticationTrustResolver */
 	def authenticationTrustResolver
 
+	/** dependency injection for grailsApplication */
+	def grailsApplication
+
 	/** dependency injection for the password encoder */
 	def passwordEncoder
 
@@ -113,6 +116,10 @@ class SpringSecurityService {
 				}
 				clearCachedRequestmaps()
 			}
+
+			// remove the role grant from all users
+			def joinClass = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
+			joinClass.removeAll role
 
 			role.delete(flush: true)
 		}

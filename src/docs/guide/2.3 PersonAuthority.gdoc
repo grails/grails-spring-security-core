@@ -53,8 +53,6 @@ class UserRole implements Serializable {
 }
 {code}
 
-This class is not used by the plugin - you use it in your application code to grant and revoke roles - so there are no plugin configuration options necessary.
-
 The helper methods make it easy to grant or revoke roles. Assuming you've already loaded a user and a role, you grant the role to the user with
 
 {code}
@@ -87,4 +85,10 @@ Role role = ...
 UserRole.revoke user, role, true
 {code}
 
+The class name is the only configurable attribute:
+
+{table}
+*Property* | *Default Value* | *Meaning*
+userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name
+{table}
 

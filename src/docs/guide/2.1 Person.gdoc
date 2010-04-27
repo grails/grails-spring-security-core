@@ -74,5 +74,6 @@ userLookup.enabledPropertyName | 'enabled' | User class enabled field
 userLookup.accountExpiredPropertyName | 'accountExpired' | User class account expired field
 userLookup.accountLockedPropertyName | 'accountLocked' | User class account locked field
 userLookup.passwordExpiredPropertyName | 'passwordExpired' | User class password expired field
+userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name
 {table}
 

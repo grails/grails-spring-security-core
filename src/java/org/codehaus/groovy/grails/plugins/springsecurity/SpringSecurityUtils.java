@@ -28,13 +28,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.groovy.grails.commons.ApplicationHolder;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
@@ -59,6 +65,12 @@ public final class SpringSecurityUtils {
 	 * Default ordered filter names. Here to let plugins add or remove them. Can be overridden by config.
 	 */
 	public static final Map<Integer, String> ORDERED_FILTERS = new HashMap<Integer, String>();
+
+	/**
+	 * Set by SpringSecurityCoreGrailsPlugin; contains the actual filter beans in order.
+	 */
+	public static final SortedMap<Integer, Filter> CONFIGURED_ORDERED_FILTERS =
+		new TreeMap<Integer, Filter>();
 
 	/**
 	 * Default voter names. Here to let plugins add or remove them. Can be overridden by config.
@@ -271,15 +283,21 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a provider bean name.
+	 * <p/>
+	 * Note - only for use by plugins during bean building.
+	 *
 	 * @param beanName  the Spring bean name of the provider
 	 */
-	@SuppressWarnings("unchecked")
 	public static void registerProvider(final String beanName) {
-		getOrCreateConfigList("providerNames").add(beanName);
+		PROVIDER_NAMES.add(beanName);
 	}
 
 	/**
 	 * Register a filter bean name in a specified position in the chain.
+	 * <p/>
+	 * Note - only for use by plugins during bean building - to register at runtime
+	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
+	 *
 	 * @param beanName  the Spring bean name of the filter
 	 * @param order  the position
 	 */
@@ -289,11 +307,62 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter bean name in a specified position in the chain.
+	 * <p/>
+	 * Note - only for use by plugins during bean building - to register at runtime
+	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
+	 *
 	 * @param beanName  the Spring bean name of the filter
 	 * @param order  the position (see {@link SecurityFilterPosition})
 	 */
 	public static void registerFilter(final String beanName, final int order) {
+		String oldName = ORDERED_FILTERS.get(order);
+		if (oldName != null) {
+			throw new IllegalArgumentException("Cannot register filter '" + beanName +
+					"' at position " + order + "; '" + oldName +
+					"' is already registered in that position");
+		}
 		ORDERED_FILTERS.put(order, beanName);
+	}
+
+	/**
+	 * Register a filter in a specified position in the chain.
+	 * <p/>
+	 * Note - this is for use in application code after the plugin has initialized,
+	 * e.g. in BootStrap where you want to register a custom filter in the correct
+	 * order without dealing with the existing configured filters.
+	 *
+	 * @param beanName  the Spring bean name of the filter
+	 * @param order  the position
+	 */
+	public static void clientRegisterFilter(final String beanName, final SecurityFilterPosition order) {
+		clientRegisterFilter(beanName, order.getOrder());
+	}
+
+	/**
+	 * Register a filter in a specified position in the chain.
+	 * <p/>
+	 * Note - this is for use in application code after the plugin has initialized,
+	 * e.g. in BootStrap where you want to register a custom filter in the correct
+	 * order without dealing with the existing configured filters.
+	 *
+	 * @param beanName  the Spring bean name of the filter
+	 * @param order  the position (see {@link SecurityFilterPosition})
+	 */
+	public static void clientRegisterFilter(final String beanName, final int order) {
+		ApplicationContext ctx = ApplicationHolder.getApplication().getMainContext();
+
+		Filter oldFilter = CONFIGURED_ORDERED_FILTERS.get(order);
+		if (oldFilter != null) {
+			throw new IllegalArgumentException("Cannot register filter '" + beanName +
+					"' at position " + order + "; '" + oldFilter +
+					"' is already registered in that position");
+		}
+
+		CONFIGURED_ORDERED_FILTERS.put(order, (Filter)ctx.getBean(beanName));
+		FilterChainProxy filterChain = (FilterChainProxy)ctx.getBean("springSecurityFilterChain");
+		filterChain.setFilterChainMap(Collections.singletonMap(
+				filterChain.getMatcher().getUniversalMatchPattern(),
+				new ArrayList<Filter>(CONFIGURED_ORDERED_FILTERS.values())));
 	}
 
 	/**
@@ -318,20 +387,6 @@ public final class SpringSecurityUtils {
 			}
 		}
 		return null;
-	}
-
-	@SuppressWarnings("unchecked")
-	private static List getOrCreateConfigList(final String name) {
-		Object o = ReflectionUtils.getConfigProperty(name);
-		List<String> list;
-		if (o instanceof List<?>) {
-			list = (List)o;
-		}
-		else {
-			list = new ArrayList();
-		}
-		ReflectionUtils.setConfigProperty(name, list);
-		return list;
 	}
 
 	/**

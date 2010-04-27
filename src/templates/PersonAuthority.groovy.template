@@ -41,6 +41,10 @@ class ${userClassName}${roleClassName} implements Serializable {
 		executeUpdate 'DELETE FROM ${userClassName}${roleClassName} WHERE ${userClassProperty}=:${userClassProperty}', [${userClassProperty}: ${userClassProperty}]
 	}
 
+	static void removeAll(${roleClassName} ${roleClassProperty}) {
+		executeUpdate 'DELETE FROM ${userClassName}${roleClassName} WHERE ${roleClassProperty}=:${roleClassProperty}', [${roleClassProperty}: ${roleClassProperty}]
+	}
+
 	static mapping = {
 		id composite: ['${roleClassProperty}', '${userClassProperty}']
 		version false

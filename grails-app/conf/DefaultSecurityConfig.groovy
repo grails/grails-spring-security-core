@@ -70,6 +70,7 @@ security {
 	userLookup.accountExpiredPropertyName = 'accountExpired'
 	userLookup.accountLockedPropertyName = 'accountLocked'
 	userLookup.passwordExpiredPropertyName = 'passwordExpired'
+	userLookup.authorityJoinClassName = 'PersonAuthority'
 	authority.className = 'Authority'
 	authority.nameField = 'authority'
 
@@ -170,6 +171,15 @@ security {
 	/** basic auth */
 	useBasicAuth = false
 	basic.realmName = 'Grails Realm'
+
+	/** digest auth */
+	useDigestAuth = false
+	digest.realmName = 'Grails Realm'
+	digest.key = 'changeme'
+	digest.nonceValiditySeconds = 300
+	digest.passwordAlreadyEncoded = false
+	digest.createAuthenticatedToken = false
+	digest.useCleartextPasswords = false
 
 	/** use switchUserProcessingFilter */
 	useSwitchUserFilter = false

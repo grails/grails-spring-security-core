@@ -16,6 +16,9 @@ package org.codehaus.groovy.grails.plugins.springsecurity;
 
 /**
  * Stores the default order numbers of all Spring Security filters for use in configuration.
+ * <p/>
+ * Equivalent to <code>org.springframework.security.config.http.SecurityFilters</code> which
+ * unfortunately is package-default.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
