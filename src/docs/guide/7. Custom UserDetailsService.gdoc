@@ -15,8 +15,8 @@ package com.foo.bar
 
 import org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser
 
-import org.springframework.security.GrantedAuthority
-import org.springframework.security.userdetails.User
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.userdetails.User
 
 class MyUserDetails extends GrailsUser {
 
@@ -38,8 +38,8 @@ class MyUserDetails extends GrailsUser {
 {code}
 package com.foo.bar
 
-import org.springframework.security.userdetails.UserDetails
-import org.springframework.security.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
 
 class MyUserDetailsService implements UserDetailsService {
 
