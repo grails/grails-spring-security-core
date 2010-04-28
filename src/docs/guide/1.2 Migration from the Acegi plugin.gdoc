@@ -163,4 +163,28 @@ In the Acegi plugin you run the @create-auth-domains@ script to initialize the p
 
 In the Spring Security plugin, there's just one script, [s2-quickstart|Scripts]. It's most similar to @create-auth-domains@ since it creates domain classes and login/logout controllers, but it appends to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There's no equivalent to @generate-manager@ or @generate-registration@ since there will be an optional UI plugin that will generate domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages you can use the standard Grails @generate-all@ script. Various sections of this documentation discusses the changes you'll need to make in the generated source files, e.g. encrypting passwords before saving or updating a user.
  
-  
+h4. domainClass
+
+The Acegi plugin extended the @UserDetails@ instance and added an accessor for the person domain class instance that was used to populate the @UserDetails@. This is convenient because since the @Authentication@ is kept in the HTTP session and the @UserDetails@ is attached to that, so it was easy to access non-security data such as full name, email, etc. without hitting the database.
+
+This caused problems however. One is that if the domain class has a lot of data, you increase the size of the session payload and this is even worse if you have clustered sessions. Further, any lazy-loaded collections would fail to load after retrieving the person from the session since it would have become a detached Hibernate object. This caused confusion but is easily fixed, either by calling person.attach() or by reloading by id, i.e.
+
+{code}
+def userDetails = authenticateService.principal()
+def person = userDetails.domainClass
+person = Person.get(person.id)
+{code}
+
+but then the person has essentially become a very large wrapper around its primary key since that's the real data you're storing.
+
+So the approach that this plugin takes is to not store the domain class but instead store the id so you can retrieve the person easily:
+
+{code}
+def userDetails = springSecurityService.principal
+person = Person.get(userDetails.id)
+{code}
+
+This works because the @UserDetails@ implementation is an instance of @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@ which extends the standard Spring Security [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
+
+You're encouraged to further extend this class if you want to store more data along with the authentication to avoid database access - see [Chapter 7|guide:7. Custom UserDetailsService] for details on this.
+
