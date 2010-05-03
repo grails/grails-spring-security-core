@@ -148,6 +148,10 @@ security {
 	rememberMe.tokenValiditySeconds = 1209600 //14 days
 	rememberMe.parameter = '_spring_security_remember_me'
 	rememberMe.key = 'grailsRocks'
+	rememberMe.persistent = false
+	rememberMe.persistentToken.domainClassName = 'PersistentLogin'
+	rememberMe.persistentToken.seriesLength = 16
+	rememberMe.persistentToken.tokenLength = 16
 
 	/** URL <-> Role mapping */
 

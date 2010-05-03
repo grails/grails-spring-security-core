@@ -45,6 +45,10 @@ rememberMe.alwaysRemember | @false@ | create a remember-me cookie even if there'
 rememberMe.tokenValiditySeconds | 1209600 (14 days) | max age of the cookie in seconds
 rememberMe.parameter | '_spring_security_remember_me' | Login form remember-me checkbox name
 rememberMe.key | 'grailsRocks' | a value used to encode cookies - should be unique per application
+rememberMe.persistent | @false@ | if @true@ store persistent login information in the database
+rememberMe.persistentToken.domainClassName | 'PersistentLogin' | domain class used to manage persistent logins
+rememberMe.persistentToken.seriesLength | 16 | the number of characters in the cookie's @series@ attribute
+rememberMe.persistentToken.tokenLength | 16 | the number of characters in the cookie's @token@ attribute
 atr.rememberMeClass | [RememberMeAuthenticationToken|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html] | remember-me authentication class
 {table}
 

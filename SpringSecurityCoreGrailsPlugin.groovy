@@ -52,6 +52,8 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
+import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider
@@ -79,6 +81,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthentication
 import org.codehaus.groovy.grails.plugins.springsecurity.AnnotationFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.AuthenticatedVetoableDecisionManager
 import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
+import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepository
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
@@ -93,7 +96,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.1'
+	String version = '0.2'
 	String grailsVersion = '1.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -189,13 +192,34 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 
 		/** rememberMeServices */
-		rememberMeServices(TokenBasedRememberMeServices) {
-			userDetailsService = ref('userDetailsService')
-			key = conf.rememberMe.key
-			cookieName = conf.rememberMe.cookieName
-			alwaysRemember = conf.rememberMe.alwaysRemember
-			tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
-			parameter = conf.rememberMe.parameter
+		if (conf.rememberMe.persistent) {
+			rememberMeServices(PersistentTokenBasedRememberMeServices) {
+				userDetailsService = ref('userDetailsService')
+				key = conf.rememberMe.key
+				cookieName = conf.rememberMe.cookieName
+				alwaysRemember = conf.rememberMe.alwaysRemember
+				tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
+				parameter = conf.rememberMe.parameter
+
+				tokenRepository = ref('tokenRepository')
+				seriesLength = conf.rememberMe.persistentToken.seriesLength // 16
+				tokenLength = conf.rememberMe.persistentToken.tokenLength // 16
+			}
+
+			tokenRepository(GormPersistentTokenRepository)
+		}
+		else {
+			rememberMeServices(TokenBasedRememberMeServices) {
+				userDetailsService = ref('userDetailsService')
+				key = conf.rememberMe.key
+				cookieName = conf.rememberMe.cookieName
+				alwaysRemember = conf.rememberMe.alwaysRemember
+				tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
+				parameter = conf.rememberMe.parameter
+			}
+
+			// register a lightweight impl so there's a bean in either case
+			tokenRepository(InMemoryTokenRepositoryImpl)
 		}
 
 		/** anonymousAuthenticationFilter */

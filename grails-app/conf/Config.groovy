@@ -28,6 +28,12 @@ grails {
 				nameField = 'auth'
 			}
 
+			rememberMe {
+				persistentToken {
+					domainClassName = 'test.TestPersistentLogin'
+				}
+			}
+
 			failureHandler {
 				exceptionMappings = [
 					(LockedException.name): '/testUser/accountLocked',

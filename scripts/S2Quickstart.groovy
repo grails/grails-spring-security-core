@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import groovy.text.SimpleTemplateEngine
-
 import grails.util.GrailsNameUtils
+
+includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groovy")
 
 USAGE = """
 Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name]
@@ -32,16 +32,6 @@ userClassName = ''
 roleClassName = ''
 requestmapClassName = ''
 
-templateEngine = new SimpleTemplateEngine()
-
-// TODO  ask
-overwrite = true
-
-templateAttributes = [:]
-
-templateDir = "$springSecurityCorePluginDir/src/templates"
-appDir = "$basedir/grails-app"
-
 target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	depends(checkVersion, configureProxy, packageApp, classpath)
 
@@ -49,6 +39,15 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	createDomains()
 	copyControllersAndViews()
 	updateConfig()
+
+	ant.echo """
+*******************************************************
+* Created domain classes, controllers, and GSPs. Your *
+* grails-app/conf/Config.groovy has been updated with *
+* the class names of the configured domain classes;   *
+* please verify that the values are correct.          *
+*******************************************************
+"""
 }
 
 private void configure() {
@@ -80,15 +79,6 @@ private void createDomains() {
 	}
 }
 
-private String packageToDir(pkg) {
-	String dir = ''
-	if (pkg) {
-		dir = pkg.replaceAll('\\.', '/') + '/'
-	}
-
-	return dir
-}
-
 private void copyControllersAndViews() {
 	ant.mkdir dir: "$appDir/views/login"
 	copyFile "$templateDir/auth.gsp.template", "$appDir/views/login/auth.gsp"
@@ -112,43 +102,6 @@ private void updateConfig() {
 			}
 		}
 	}
-
-	ant.echo """
-*******************************************************
-* Created domain classes, controllers, and GSPs. Your *
-* grails-app/conf/Config.groovy has been updated with *
-* the class names of the configured domain classes;   *
-* please verify that the values are correct.          *
-*******************************************************
-"""
-}
-
-generateFile = { String templatePath, String outputPath ->
-
-	File templateFile = new File(templatePath)
-	if (!templateFile.exists()) {
-		ant.echo message: "$templatePath doesn't exist"
-		return
-	}
-
-	File outFile = new File(outputPath)
-	if (outFile.exists() && !overwrite) {
-		ant.echo message: "file *not* generated: $outFile.absolutePath"
-		return
-	}
-
-	// in case it's in a package, create dirs
-	ant.mkdir dir: outFile.parentFile
-
-	outFile.withWriter { writer ->
-		templateEngine.createTemplate(templateFile.text).make(templateAttributes).writeTo(writer)
-	}
-
-	ant.echo message: "generated $outFile.absolutePath"
-}
-
-copyFile = { String from, String to ->
-	ant.copy(file: from, tofile: to, overwrite: overwrite)
 }
 
 private parseArgs() {

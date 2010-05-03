@@ -74,10 +74,9 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	}
 
 	protected loadUser(String username, session) {
-		String userDomainClassName = ReflectionUtils.getConfigProperty(
-				'userLookup.userDomainClassName')
-		String usernamePropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.usernamePropertyName')
+		def conf = SpringSecurityUtils.securityConfig
+		String userDomainClassName = conf.userLookup.userDomainClassName
+		String usernamePropertyName = conf.userLookup.usernamePropertyName
 
 		List<?> users = session.createQuery(
 				"FROM $userDomainClassName WHERE $usernamePropertyName = :username")
@@ -97,10 +96,10 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 			return []
 		}
 
-		String authoritiesPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.authoritiesPropertyName')
-		String authorityPropertyName = ReflectionUtils.getConfigProperty(
-				'authority.nameField')
+		def conf = SpringSecurityUtils.securityConfig
+
+		String authoritiesPropertyName = conf.userLookup.authoritiesPropertyName
+		String authorityPropertyName = conf.authority.nameField
 
 		Collection<?> userAuthorities = user."$authoritiesPropertyName"
 		def authorities = userAuthorities.collect { new GrantedAuthorityImpl(it."$authorityPropertyName") }
@@ -109,18 +108,14 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 	protected UserDetails createUserDetails(user, Collection<GrantedAuthority> authorities) {
 
-		String usernamePropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.usernamePropertyName')
-		String passwordPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.passwordPropertyName')
-		String enabledPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.enabledPropertyName')
-		String accountExpiredPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.accountExpiredPropertyName')
-		String accountLockedPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.accountLockedPropertyName')
-		String passwordExpiredPropertyName = ReflectionUtils.getConfigProperty(
-				'userLookup.passwordExpiredPropertyName')
+		def conf = SpringSecurityUtils.securityConfig
+
+		String usernamePropertyName = conf.userLookup.usernamePropertyName
+		String passwordPropertyName = conf.userLookup.passwordPropertyName
+		String enabledPropertyName = conf.userLookup.enabledPropertyName
+		String accountExpiredPropertyName = conf.userLookup.accountExpiredPropertyName
+		String accountLockedPropertyName = conf.userLookup.accountLockedPropertyName
+		String passwordExpiredPropertyName = conf.userLookup.passwordExpiredPropertyName
 
 		String username = user."$usernamePropertyName"
 		String password = user."$passwordPropertyName"
