@@ -97,7 +97,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 class SpringSecurityCoreGrailsPlugin {
 
 	String version = '0.2'
-	String grailsVersion = '1.2 > *'
+	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
 
