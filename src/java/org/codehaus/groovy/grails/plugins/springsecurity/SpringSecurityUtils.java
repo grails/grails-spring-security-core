@@ -35,7 +35,7 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder;
-import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
@@ -192,8 +192,8 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has all the roles
 	 */
 	public static boolean ifAllGranted(final String roles) {
-		Collection<GrantedAuthority> granted = getPrincipalAuthorities();
-		return granted.containsAll(parseAuthoritiesString(roles));
+		Collection<GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		return inferred.containsAll(parseAuthoritiesString(roles));
 	}
 
 	/**
@@ -202,8 +202,8 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has none the roles
 	 */
 	public static boolean ifNotGranted(final String roles) {
-		Collection<GrantedAuthority> granted = getPrincipalAuthorities();
-		Set<String> grantedCopy = retainAll(granted, parseAuthoritiesString(roles));
+		Collection<GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Set<String> grantedCopy = retainAll(inferred, parseAuthoritiesString(roles));
 		return grantedCopy.isEmpty();
 	}
 
@@ -213,8 +213,8 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has any the roles
 	 */
 	public static boolean ifAnyGranted(final String roles) {
-		Collection<GrantedAuthority> granted = getPrincipalAuthorities();
-		Set<String> grantedCopy = retainAll(granted, parseAuthoritiesString(roles));
+		Collection<GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Set<String> grantedCopy = retainAll(inferred, parseAuthoritiesString(roles));
 		return !grantedCopy.isEmpty();
 	}
 
@@ -349,7 +349,6 @@ public final class SpringSecurityUtils {
 	 * @param order  the position (see {@link SecurityFilterPosition})
 	 */
 	public static void clientRegisterFilter(final String beanName, final int order) {
-		ApplicationContext ctx = ApplicationHolder.getApplication().getMainContext();
 
 		Filter oldFilter = CONFIGURED_ORDERED_FILTERS.get(order);
 		if (oldFilter != null) {
@@ -358,8 +357,9 @@ public final class SpringSecurityUtils {
 					"' is already registered in that position");
 		}
 
-		CONFIGURED_ORDERED_FILTERS.put(order, (Filter)ctx.getBean(beanName));
-		FilterChainProxy filterChain = (FilterChainProxy)ctx.getBean("springSecurityFilterChain");
+		Filter filter = getBean(beanName);
+		CONFIGURED_ORDERED_FILTERS.put(order, filter);
+		FilterChainProxy filterChain = getBean("springSecurityFilterChain");
 		filterChain.setFilterChainMap(Collections.singletonMap(
 				filterChain.getMatcher().getUniversalMatchPattern(),
 				new ArrayList<Filter>(CONFIGURED_ORDERED_FILTERS.values())));
@@ -429,5 +429,20 @@ public final class SpringSecurityUtils {
 			config.putAll(secondary.merge(currentConfig));
 		}
 		return config;
+	}
+
+	private static Collection<GrantedAuthority> findInferredAuthorities(
+			final Collection<GrantedAuthority> granted) {
+		RoleHierarchy roleHierarchy = getBean("roleHierarchy");
+		Collection<GrantedAuthority> reachable = roleHierarchy.getReachableGrantedAuthorities(granted);
+		if (reachable == null) {
+			return Collections.emptyList();
+		}
+		return reachable;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static  <T> T getBean(final String name) {
+		return (T)ApplicationHolder.getApplication().getMainContext().getBean(name);
 	}
 }

@@ -14,9 +14,14 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 
+import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy
+import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.web.PortResolverImpl
@@ -167,7 +172,9 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testIfAllGranted() {
+		initRoleHierarchy ''
 		SecurityTestUtils.authenticate(['ROLE_1', 'ROLE_2'])
+
 		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_1')
 		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_2')
 		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_1,ROLE_2')
@@ -175,8 +182,22 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assertFalse SpringSecurityUtils.ifAllGranted('ROLE_3')
 	}
 
+	void testIfAllGranted_UsingHierarchy() {
+		initRoleHierarchy 'ROLE_3 > ROLE_2 \n ROLE_2 > ROLE_1'
+		SecurityTestUtils.authenticate(['ROLE_3'])
+
+		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_1')
+		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_2')
+		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_1,ROLE_2')
+		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_1,ROLE_2,ROLE_3')
+		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_3')
+		assertFalse SpringSecurityUtils.ifAllGranted('ROLE_4')
+	}
+
 	void testIfNotGranted() {
+		initRoleHierarchy ''
 		SecurityTestUtils.authenticate(['ROLE_1', 'ROLE_2'])
+
 		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1')
 		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_2')
 		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1,ROLE_2')
@@ -184,13 +205,39 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assertTrue SpringSecurityUtils.ifNotGranted('ROLE_3')
 	}
 
+	void testIfNotGranted_UsingHierarchy() {
+		initRoleHierarchy 'ROLE_3 > ROLE_2 \n ROLE_2 > ROLE_1'
+		SecurityTestUtils.authenticate(['ROLE_3'])
+
+		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1')
+		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_2')
+		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1,ROLE_2')
+		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1,ROLE_2,ROLE_3')
+		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_3')
+		assertTrue SpringSecurityUtils.ifNotGranted('ROLE_4')
+	}
+
 	void testIfAnyGranted() {
+		initRoleHierarchy ''
 		SecurityTestUtils.authenticate(['ROLE_1', 'ROLE_2'])
+
 		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_1')
 		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_2')
 		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_1,ROLE_2')
 		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_1,ROLE_2,ROLE_3')
 		assertFalse SpringSecurityUtils.ifAnyGranted('ROLE_3')
+	}
+
+	void testIfAnyGranted_UsingHierarchy() {
+		initRoleHierarchy 'ROLE_3 > ROLE_2 \n ROLE_2 > ROLE_1'
+		SecurityTestUtils.authenticate(['ROLE_3'])
+
+		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_1')
+		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_2')
+		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_1,ROLE_2')
+		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_1,ROLE_2,ROLE_3')
+		assertTrue SpringSecurityUtils.ifAnyGranted('ROLE_3')
+		assertFalse SpringSecurityUtils.ifAnyGranted('ROLE_4')
 	}
 
 	void testPrivateConstructor() {
@@ -205,6 +252,12 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assertTrue c1.containsAll(c2)
 	}
 
+	private void initRoleHierarchy(String hierarchy) {
+		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
+		def ctx = [getBean: { String name -> roleHierarchy }] as ApplicationContext
+		AH.application = new DefaultGrailsApplication(mainContext: ctx)
+	}
+
 	/**
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#tearDown()
@@ -215,6 +268,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		SecurityTestUtils.logout()
 		CH.config = null
 		SpringSecurityUtils.securityConfig = null
+		AH.application = null
 	}
 }
 
