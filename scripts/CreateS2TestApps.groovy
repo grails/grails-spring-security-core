@@ -10,7 +10,7 @@ pluginVersion = null
 pluginZip = null
 testprojectRoot = null
 
-target(createTestApp: 'Creates test apps for functional tests') {
+target(createS2TestApp: 'Creates test apps for functional tests') {
 
 	def configFile = new File(basedir, 'testapps.config.groovy')
 	if (!configFile.exists()) {
@@ -177,4 +177,4 @@ private void error(String message) {
 	exit 1
 }
 
-setDefaultTarget 'createTestApp'
+setDefaultTarget 'createS2TestApp'

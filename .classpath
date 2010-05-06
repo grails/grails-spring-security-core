@@ -13,6 +13,5 @@
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security.core/jars/org.springframework.security.core-3.0.2.RELEASE.jar" sourcepath="/SPRING_SECURITY_SOURCE/spring-security-core-3.0.2.RELEASE-sources.jar"/>
 	<classpathentry kind="var" path="IVY_CACHE/org.springframework.security/org.springframework.security.web/jars/org.springframework.security.web-3.0.2.RELEASE.jar" sourcepath="/SPRING_SECURITY_SOURCE/spring-security-web-3.0.2.RELEASE-sources.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/grails1.2"/>
-	<classpathentry kind="lib" path="lib/easymock.jar"/>
 	<classpathentry kind="output" path="target/eclipseclasses"/>
 </classpath>

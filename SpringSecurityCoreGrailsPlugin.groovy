@@ -52,6 +52,7 @@ import org.springframework.security.web.authentication.AnonymousAuthenticationFi
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
@@ -85,7 +86,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepo
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
-import org.codehaus.groovy.grails.plugins.springsecurity.LogoutFilterFactoryBean
+import org.codehaus.groovy.grails.plugins.springsecurity.MutableLogoutFilter
 import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestmapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestHolderAuthenticationFilter
@@ -96,15 +97,13 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.2'
+	String version = '0.2.1'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
 
 	List pluginExcludes = [
-		'lib/easymock*.jar',
 		'grails-app/domain/**',
-		'grails-app/services/**/Test*Service.groovy',
 		'scripts/_Events.groovy',
 		'scripts/CreateTestApp.groovy',
 		'docs/**',
@@ -341,6 +340,9 @@ class SpringSecurityCoreGrailsPlugin {
 			transactionManager = ref('transactionManager')
 		}
 
+		/** authenticationUserDetailsService */
+		authenticationUserDetailsService(UserDetailsByNameServiceWrapper, ref('userDetailsService'))
+
 		// port mappings for channel security, etc.
 		portMapper(PortMapperImpl) {
 			portMappings = [(conf.portMapper.httpPort.toString()) : conf.portMapper.httpsPort.toString()]
@@ -550,13 +552,16 @@ class SpringSecurityCoreGrailsPlugin {
 
 		securityContextLogoutHandler(SecurityContextLogoutHandler)
 
-		// create a dummy list here, will be replaced in doWithApplicationContext
-		logoutHandlers(ArrayList, [new SecurityContextLogoutHandler()])
+		// create an initially empty list here, will be populated in doWithApplicationContext
+		logoutHandlers(ArrayList)
+
+		logoutSuccessHandler(SimpleUrlLogoutSuccessHandler) {
+			redirectStrategy = ref('redirectStrategy')
+			defaultTargetUrl = conf.logout.afterLogoutUrl // '/'
+		}
 
 		/** logoutFilter */
-		logoutFilter(LogoutFilterFactoryBean) {
-			handlers = logoutHandlers
-			logoutSuccessUrl = conf.logout.afterLogoutUrl // '/'
+		logoutFilter(MutableLogoutFilter, ref('logoutSuccessHandler')) {
 			filterProcessesUrl = conf.logout.filterProcessesUrl // '/j_spring_security_logout'
 		}
 	}
@@ -834,14 +839,10 @@ class SpringSecurityCoreGrailsPlugin {
 			subjectDnRegex = conf.x509.subjectDnRegex // CN=(.*?),
 		}
 
-		preAuthenticatedUserDetailsService(UserDetailsByNameServiceWrapper) {
-			userDetailsService = ref('userDetailsService')
-		}
-
 		userDetailsChecker(AccountStatusUserDetailsChecker)
 
 		x509AuthenticationProvider(PreAuthenticatedAuthenticationProvider) {
-			preAuthenticatedUserDetailsService = ref('preAuthenticatedUserDetailsService')
+			preAuthenticatedUserDetailsService = ref('authenticationUserDetailsService')
 			userDetailsChecker = ref('userDetailsChecker')
 			throwExceptionWhenTokenRejected = conf.x509.throwExceptionWhenTokenRejected // false
 		}
