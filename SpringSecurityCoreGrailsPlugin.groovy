@@ -563,6 +563,7 @@ class SpringSecurityCoreGrailsPlugin {
 		/** logoutFilter */
 		logoutFilter(MutableLogoutFilter, ref('logoutSuccessHandler')) {
 			filterProcessesUrl = conf.logout.filterProcessesUrl // '/j_spring_security_logout'
+			handlers = ref('logoutHandlers')
 		}
 	}
 

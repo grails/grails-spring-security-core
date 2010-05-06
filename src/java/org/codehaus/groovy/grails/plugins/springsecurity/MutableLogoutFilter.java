@@ -29,7 +29,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
-import org.springframework.util.Assert;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -85,7 +84,6 @@ public class MutableLogoutFilter extends LogoutFilter {
 	 * @param handlers  the handlers
 	 */
 	public void setHandlers(final List<LogoutHandler> handlers) {
-		Assert.notEmpty(handlers, "LogoutHandlers are required");
 		_handlers = handlers;
 	}
 
