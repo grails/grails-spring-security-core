@@ -29,7 +29,7 @@ class GrailsUser extends User {
 
 	GrailsUser(String username, String password, boolean enabled, boolean accountNonExpired,
          boolean credentialsNonExpired, boolean accountNonLocked,
-         Collection<GrantedAuthority> authorities, long id) {
+         Collection<GrantedAuthority> authorities, Object id) {
 		super(username, password, enabled, accountNonExpired, credentialsNonExpired,
 				accountNonLocked, authorities)
 		_id = id
