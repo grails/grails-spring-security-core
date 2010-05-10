@@ -109,8 +109,8 @@ security {
 
 	// session fixation
 	useSessionFixationPrevention = false
-	sessionFixation.migrate = true
-	sessionFixation.alwaysCreateSession = false
+	sessionFixationPrevention.migrate = true
+	sessionFixationPrevention.alwaysCreateSession = false
 
 	/** daoAuthenticationProvider **/
 	dao.reflectionSaltSourceProperty = null // if null, don't use salt source

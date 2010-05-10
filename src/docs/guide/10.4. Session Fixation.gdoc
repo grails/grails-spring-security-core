@@ -12,7 +12,7 @@ There are a couple of configuration options:
 
 {table}
 *Name* | *Default Value* |
-sessionFixation.migrate | @true@ | whether to copy the session attributes of the existing session to the new session after login
-sessionFixation.alwaysCreateSession | @false@ | whether to always create a session even if one didn't exist at the start of the request
+sessionFixationPrevention.migrate | @true@ | whether to copy the session attributes of the existing session to the new session after login
+sessionFixationPrevention.alwaysCreateSession | @false@ | whether to always create a session even if one didn't exist at the start of the request
 {table}
 

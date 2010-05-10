@@ -144,9 +144,9 @@ More configuration details are [here|guide:10.4. Session Fixation]
 
 {table}
 *Property* | *Default Value* |
-useSessionFixation | @false@ | whether to use session fixation
-sessionFixation.migrate | @true@ | whether to copy the session attributes of the existing session to the new session after login
-sessionFixation.alwaysCreateSession | @false@ | whether to always create a session even if one didn't exist at the start of the request
+useSessionFixationPrevention | @false@ | whether to use session fixation
+sessionFixationPrevention.migrate | @true@ | whether to copy the session attributes of the existing session to the new session after login
+sessionFixationPrevention.alwaysCreateSession | @false@ | whether to always create a session even if one didn't exist at the start of the request
 {table}
 
 h4. Certificate (X509) login

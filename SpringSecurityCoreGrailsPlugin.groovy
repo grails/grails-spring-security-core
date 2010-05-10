@@ -769,8 +769,8 @@ class SpringSecurityCoreGrailsPlugin {
 
 		if (conf.useSessionFixationPrevention) {
 			sessionAuthenticationStrategy(SessionFixationProtectionStrategy) {
-				migrateSessionAttributes = conf.sessionFixation.migrate // true
-				alwaysCreateSession = conf.sessionFixation.alwaysCreate // false
+				migrateSessionAttributes = conf.sessionFixationPrevention.migrate // true
+				alwaysCreateSession = conf.sessionFixationPrevention.alwaysCreate // false
 			}
 		}
 		else {
