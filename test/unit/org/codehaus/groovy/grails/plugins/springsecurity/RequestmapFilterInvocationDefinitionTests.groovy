@@ -23,7 +23,10 @@ import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.security.access.vote.AuthenticatedVoter
+import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.security.web.util.AntUrlPathMatcher
 
 import test.TestRequestmap
@@ -112,6 +115,9 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	void testReset() {
 		_fid = new TestRequestmapFilterInvocationDefinition()
 		_fid.urlMatcher = new AntUrlPathMatcher()
+		_fid.roleVoter = new RoleVoter()
+		_fid.authenticatedVoter = new AuthenticatedVoter()
+		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
 
 		assertEquals 0, _fid.configAttributeMap.size()
 
@@ -123,6 +129,9 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	void testInitialize() {
 		_fid = new TestRequestmapFilterInvocationDefinition()
 		_fid.urlMatcher = new AntUrlPathMatcher()
+		_fid.roleVoter = new RoleVoter()
+		_fid.authenticatedVoter = new AuthenticatedVoter()
+		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
 
 		assertEquals 0, _fid.configAttributeMap.size()
 

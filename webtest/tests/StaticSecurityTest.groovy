@@ -4,7 +4,7 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 		createRoles()
 		createUsers()
 		checkSecuredUrlsNotVisibleWithoutLogin()
-		loginAndCheckAllAllowed()
+		loginAndCheckAllowed()
 	}
 
 	private void createRoles() {
@@ -106,7 +106,7 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 		assertContentContains 'admin2: you have ROLE_ADMIN2'
 	}
 
-	private void loginAndCheckAllAllowed() {
+	private void loginAndCheckAllowed() {
 		// login as admin1
 		get '/login/auth'
 		assertContentContains 'Please Login'
@@ -139,6 +139,9 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secureClassAnnotated/admin2'
 		assertContentContains "admin2: you have ROLE_ADMIN2"
+
+		get '/secureAnnotated/expression'
+		assertContentContains 'OK'
 
 		// login as admin2
 		get '/logout'
@@ -175,5 +178,8 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secureClassAnnotated/admin2'
 		assertContentContains 'admin2: you have ROLE_ADMIN2'
+
+		get '/secureAnnotated/expression'
+		assertContentContains "Sorry, you're not authorized to view this page."
 	}
 }

@@ -28,6 +28,7 @@ grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity
 
 grails.plugins.springsecurity.interceptUrlMap = [
 	'/secureannotated/admineither': ['ROLE_ADMIN', 'ROLE_ADMIN2'],
+	'/secureannotated/expression': ["authentication.name == 'admin1'"],
 	'/secureannotated/**': 'ROLE_ADMIN',
 	'/**': 'IS_AUTHENTICATED_ANONYMOUSLY'
 ]
@@ -86,7 +87,7 @@ grails.plugins.springsecurity.useSwitchUserFilter = false
 grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Annotation
 
 grails.plugins.springsecurity.useBasicAuth = true
-grails.plugins.springsecurity.basic.realmName = 'Grails Spring Security Test Realm'
+grails.plugins.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
 
 // reset settings from other test runs
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null

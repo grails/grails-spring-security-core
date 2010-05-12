@@ -79,7 +79,7 @@ class SecurityTagLib {
 
 	def username = { attrs ->
 		if (springSecurityService.isLoggedIn()) {
-			out << springSecurityService.principal.username
+			out << springSecurityService.authentication.name
 		}
 	}
 
