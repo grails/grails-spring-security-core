@@ -99,7 +99,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
 
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.3'
+	String version = '0.3.1'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -265,7 +265,7 @@ class SpringSecurityCoreGrailsPlugin {
 			accessDecisionManager = ref('accessDecisionManager')
 			securityMetadataSource = ref('objectDefinitionSource')
 		}
-		if (conf.securityConfigType == SecurityConfigType.Annotation) {
+		if (conf.securityConfigType.name() == 'Annotation') {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -282,7 +282,7 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
-		else if (conf.securityConfigType == SecurityConfigType.Requestmap) {
+		else if (conf.securityConfigType.name() == 'Requestmap') {
 			objectDefinitionSource(RequestmapFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -293,7 +293,7 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
-		else if (conf.securityConfigType == SecurityConfigType.InterceptUrlMap) {
+		else if (conf.securityConfigType.name() == 'InterceptUrlMap') {
 			objectDefinitionSource(InterceptUrlMapFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
