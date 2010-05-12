@@ -97,9 +97,12 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SecurityRequestHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
 
+/**
+ * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.3.1'
+	String version = '0.4'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -789,7 +792,7 @@ class SpringSecurityCoreGrailsPlugin {
 		if (conf.useSessionFixationPrevention) {
 			sessionAuthenticationStrategy(SessionFixationProtectionStrategy) {
 				migrateSessionAttributes = conf.sessionFixationPrevention.migrate // true
-				alwaysCreateSession = conf.sessionFixationPrevention.alwaysCreate // false
+				alwaysCreateSession = conf.sessionFixationPrevention.alwaysCreateSession // false
 			}
 		}
 		else {
