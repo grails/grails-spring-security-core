@@ -108,9 +108,9 @@ security {
 	authenticationDetails.authClass = WebAuthenticationDetails
 
 	// session fixation
-	useSessionFixation = false
-	sessionFixation.migrate = true
-	sessionFixation.alwaysCreateSession = false
+	useSessionFixationPrevention = false
+	sessionFixationPrevention.migrate = true
+	sessionFixationPrevention.alwaysCreateSession = false
 
 	/** daoAuthenticationProvider **/
 	dao.reflectionSaltSourceProperty = null // if null, don't use salt source

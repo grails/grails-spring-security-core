@@ -786,10 +786,10 @@ class SpringSecurityCoreGrailsPlugin {
 
 	private configureAuthenticationProcessingFilter = { conf ->
 
-		if (conf.useSessionFixation) {
+		if (conf.useSessionFixationPrevention) {
 			sessionAuthenticationStrategy(SessionFixationProtectionStrategy) {
-				migrateSessionAttributes = conf.sessionFixation.migrate // true
-				alwaysCreateSession = conf.sessionFixation.alwaysCreate // false
+				migrateSessionAttributes = conf.sessionFixationPrevention.migrate // true
+				alwaysCreateSession = conf.sessionFixationPrevention.alwaysCreate // false
 			}
 		}
 		else {
