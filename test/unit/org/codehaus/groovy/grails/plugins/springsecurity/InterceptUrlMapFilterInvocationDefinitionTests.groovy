@@ -19,7 +19,10 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+import org.springframework.security.access.vote.AuthenticatedVoter
+import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.security.web.util.AntUrlPathMatcher
 
 /**
@@ -70,6 +73,10 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 		ReflectionUtils.setConfigProperty('interceptUrlMap',
 				['/foo/**': 'ROLE_ADMIN',
 				 '/bar/**': ['ROLE_BAR', 'ROLE_BAZ']])
+
+		_fid.roleVoter = new RoleVoter()
+		_fid.authenticatedVoter = new AuthenticatedVoter()
+		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
 
 		assertEquals 0, _fid.configAttributeMap.size()
 

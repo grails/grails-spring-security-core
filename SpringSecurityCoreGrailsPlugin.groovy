@@ -47,6 +47,7 @@ import org.springframework.security.web.access.channel.InsecureChannelProcessor
 import org.springframework.security.web.access.channel.RetryWithHttpEntryPoint
 import org.springframework.security.web.access.channel.RetryWithHttpsEntryPoint
 import org.springframework.security.web.access.channel.SecureChannelProcessor
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
@@ -94,10 +95,11 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SecurityEventListener
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityRequestHolder
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
+import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
 
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.2.1'
+	String version = '0.3'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -261,10 +263,13 @@ class SpringSecurityCoreGrailsPlugin {
 		filterInvocationInterceptor(FilterSecurityInterceptor) {
 			authenticationManager = ref('authenticationManager')
 			accessDecisionManager = ref('accessDecisionManager')
-			objectDefinitionSource = ref('objectDefinitionSource')
+			securityMetadataSource = ref('objectDefinitionSource')
 		}
 		if (conf.securityConfigType == SecurityConfigType.Annotation) {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
+				roleVoter = ref('roleVoter')
+				authenticatedVoter = ref('authenticatedVoter')
+				expressionHandler = ref('webExpressionHandler')
 				boolean lowercase = conf.controllerAnnotations.lowercase // true
 				if ('ant'.equals(conf.controllerAnnotations.matcher)) {
 					urlMatcher = new AntUrlPathMatcher(lowercase)
@@ -279,6 +284,9 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 		else if (conf.securityConfigType == SecurityConfigType.Requestmap) {
 			objectDefinitionSource(RequestmapFilterInvocationDefinition) {
+				roleVoter = ref('roleVoter')
+				authenticatedVoter = ref('authenticatedVoter')
+				expressionHandler = ref('webExpressionHandler')
 				urlMatcher = new AntUrlPathMatcher(true)
 				if (conf.rejectIfNoRule instanceof Boolean) {
 					rejectIfNoRule = conf.rejectIfNoRule
@@ -287,6 +295,9 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 		else if (conf.securityConfigType == SecurityConfigType.InterceptUrlMap) {
 			objectDefinitionSource(InterceptUrlMapFilterInvocationDefinition) {
+				roleVoter = ref('roleVoter')
+				authenticatedVoter = ref('authenticatedVoter')
+				expressionHandler = ref('webExpressionHandler')
 				urlMatcher = new AntUrlPathMatcher(true)
 				if (conf.rejectIfNoRule instanceof Boolean) {
 					rejectIfNoRule = conf.rejectIfNoRule
@@ -618,6 +629,14 @@ class SpringSecurityCoreGrailsPlugin {
 
 		authenticatedVoter(AuthenticatedVoter) {
 			authenticationTrustResolver = ref('authenticationTrustResolver')
+		}
+
+		webExpressionHandler(DefaultWebSecurityExpressionHandler) {
+			roleHierarchy = ref('roleHierarchy')
+		}
+
+		webExpressionVoter(WebExpressionVoter) {
+			expressionHandler = ref('webExpressionHandler')
 		}
 
 		// create the default list here, will be replaced in doWithApplicationContext

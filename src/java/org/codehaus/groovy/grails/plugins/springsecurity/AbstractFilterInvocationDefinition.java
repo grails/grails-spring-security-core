@@ -24,9 +24,13 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.expression.Expression;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
+import org.springframework.security.access.vote.AuthenticatedVoter;
+import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.security.web.access.expression.WebSecurityExpressionHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.util.AntUrlPathMatcher;
 import org.springframework.security.web.util.UrlMatcher;
@@ -42,6 +46,9 @@ public abstract class AbstractFilterInvocationDefinition
 	private UrlMatcher _urlMatcher;
 	private boolean _rejectIfNoRule;
 	private boolean _stripQueryStringFromUrls = true;
+	private RoleVoter _roleVoter;
+	private AuthenticatedVoter _authenticatedVoter;
+	private WebSecurityExpressionHandler _expressionHandler;
 
 	private final Map<Object, Collection<ConfigAttribute>> _compiled = new HashMap<Object, Collection<ConfigAttribute>>();
 
@@ -207,25 +214,86 @@ public abstract class AbstractFilterInvocationDefinition
 
 	protected void compileAndStoreMapping(final String pattern, final List<String> tokens) {
 
-		Collection<ConfigAttribute> configAttributes = new HashSet<ConfigAttribute>();
-		for (String token : tokens) {
-			configAttributes.add(new SecurityConfig(token));
-		}
-
 		Object key = getUrlMatcher().compile(pattern);
 
-		Collection<ConfigAttribute> replaced = storeMapping(key, Collections.unmodifiableCollection(configAttributes));
+		Collection<ConfigAttribute> configAttributes = buildConfigAttributes(tokens);
+
+		Collection<ConfigAttribute> replaced = storeMapping(key,
+				Collections.unmodifiableCollection(configAttributes));
 		if (replaced != null) {
-			_log.warn("replaced rule for '" + key + "' with roles " + replaced + " with roles " + configAttributes);
+			_log.warn("replaced rule for '" + key + "' with roles " + replaced +
+					" with roles " + configAttributes);
 		}
 	}
 
-	protected Collection<ConfigAttribute> storeMapping(Object key, Collection<ConfigAttribute> configAttributes) {
+	protected Collection<ConfigAttribute> buildConfigAttributes(final Collection<String> tokens) {
+		Collection<ConfigAttribute> configAttributes = new HashSet<ConfigAttribute>();
+		for (String token : tokens) {
+			ConfigAttribute config = new SecurityConfig(token);
+			if ((_roleVoter != null && _roleVoter.supports(config)) ||
+					(_authenticatedVoter != null && _authenticatedVoter.supports(config))) {
+				configAttributes.add(config);
+			}
+			else {
+				Expression expression = _expressionHandler.getExpressionParser().parseExpression(token);
+				configAttributes.add(new WebExpressionConfigAttribute(expression));
+			}
+		}
+		return configAttributes;
+	}
+
+	protected Collection<ConfigAttribute> storeMapping(final Object key,
+			final Collection<ConfigAttribute> configAttributes) {
 		return _compiled.put(key, configAttributes);
 	}
 
 	protected void resetConfigs() {
 		_compiled.clear();
+	}
+
+	public Collection<ConfigAttribute> findMatchingAttributes(final String url) {
+		for (Map.Entry<Object, Collection<ConfigAttribute>> entry : _compiled.entrySet()) {
+			if (_urlMatcher.pathMatchesUrl(entry.getKey(), url)) {
+				return entry.getValue();
+			}
+		}
+		return Collections.emptyList();
+	}
+
+	/**
+	 * Dependency injection for the role voter.
+	 * @param voter  the voter
+	 */
+	public void setRoleVoter(final RoleVoter voter) {
+		_roleVoter = voter;
+	}
+
+	protected RoleVoter getRoleVoter() {
+		return _roleVoter;
+	}
+
+	/**
+	 * Dependency injection for the authenticated voter.
+	 * @param voter  the voter
+	 */
+	public void setAuthenticatedVoter(final AuthenticatedVoter voter) {
+		_authenticatedVoter = voter;
+	}
+
+	protected AuthenticatedVoter getAuthenticatedVoter() {
+		return _authenticatedVoter;
+	}
+
+	/**
+	 * Dependency injection for the expression handler.
+	 * @param handler  the handler
+	 */
+	public void setExpressionHandler(final WebSecurityExpressionHandler handler) {
+		_expressionHandler = handler;
+	}
+
+	protected WebSecurityExpressionHandler getExpressionHandler() {
+		return _expressionHandler;
 	}
 
 	/**

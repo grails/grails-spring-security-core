@@ -16,4 +16,9 @@ class SecureAnnotatedController {
 	def userAction = {
 		render 'you have ROLE_USER'
 	}
+
+	@Secured(["authentication.name == 'admin1'"])
+	def expression = {
+		render 'OK'
+	}
 }

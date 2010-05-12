@@ -40,7 +40,6 @@ import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
 import org.codehaus.groovy.grails.web.util.WebUtils;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.util.Assert;
@@ -227,10 +226,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			fullPattern = sb.toString();
 		}
 
-		Collection<ConfigAttribute> configAttributes = new HashSet<ConfigAttribute>();
-		for (String token : tokens) {
-			configAttributes.add(new SecurityConfig(token));
-		}
+		Collection<ConfigAttribute> configAttributes = buildConfigAttributes(tokens);
 
 		Object key = getUrlMatcher().compile(fullPattern);
 		Collection<ConfigAttribute> replaced = storeMapping(key, configAttributes);

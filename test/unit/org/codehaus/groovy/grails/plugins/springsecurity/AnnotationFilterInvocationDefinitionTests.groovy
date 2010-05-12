@@ -41,7 +41,10 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.mock.web.MockServletContext
 import org.springframework.security.access.SecurityConfig
+import org.springframework.security.access.vote.AuthenticatedVoter
+import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
+import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.security.web.util.AntUrlPathMatcher
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
@@ -213,6 +216,9 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 		                                   new DefaultGrailsControllerClass(MethodAnnotatedController)]
 
 		_fid.urlMatcher = new AntUrlPathMatcher()
+		_fid.roleVoter = new RoleVoter()
+		_fid.authenticatedVoter = new AuthenticatedVoter()
+		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
 
 		_fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
 

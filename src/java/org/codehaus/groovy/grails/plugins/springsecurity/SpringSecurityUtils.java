@@ -90,6 +90,7 @@ public final class SpringSecurityUtils {
 	static {
 		VOTER_NAMES.add("authenticatedVoter");
 		VOTER_NAMES.add("roleVoter");
+		VOTER_NAMES.add("webExpressionVoter");
 
 		PROVIDER_NAMES.add("daoAuthenticationProvider");
 		PROVIDER_NAMES.add("anonymousAuthenticationProvider");

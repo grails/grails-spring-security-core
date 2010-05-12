@@ -143,7 +143,10 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		get '/secureClassAnnotated/admin2'
 		assertContentContains "Sorry, you're not authorized to view this page."
 
-			// login as admin2
+		get '/secureAnnotated/expression'
+		assertContentContains 'OK'
+
+		// login as admin2
 		get '/logout'
 		assertContentContains 'Welcome to Grails'
 
@@ -178,5 +181,8 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secureClassAnnotated/admin2'
 		assertContentContains 'admin2: you have ROLE_ADMIN2'
+
+		get '/secureAnnotated/expression'
+		assertContentContains "Sorry, you're not authorized to view this page."
 	}
 }
