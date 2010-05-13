@@ -107,7 +107,7 @@ security {
 	// authenticationDetails
 	authenticationDetails.authClass = WebAuthenticationDetails
 
-	// session fixation
+	// session fixation prevention
 	useSessionFixationPrevention = false
 	sessionFixationPrevention.migrate = true
 	sessionFixationPrevention.alwaysCreateSession = false

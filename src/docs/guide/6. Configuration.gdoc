@@ -138,13 +138,13 @@ switchUser.targetUrl | the same as @successHandler.defaultTargetUrl@ | the URL t
 switchUser.switchFailureUrl | the same as @failureHandler.defaultFailureUrl@ | the URL to redirect to after an error attempting to switch
 {table}
 
-h4. Session Fixation
+h4. Session Fixation Prevention
 
-More configuration details are [here|guide:10.4. Session Fixation]
+More configuration details are [here|guide:10.4. Session Fixation Prevention]
 
 {table}
 *Property* | *Default Value* |
-useSessionFixationPrevention | @false@ | whether to use session fixation
+useSessionFixationPrevention | @false@ | whether to use session fixation prevention
 sessionFixationPrevention.migrate | @true@ | whether to copy the session attributes of the existing session to the new session after login
 sessionFixationPrevention.alwaysCreateSession | @false@ | whether to always create a session even if one didn't exist at the start of the request
 {table}
