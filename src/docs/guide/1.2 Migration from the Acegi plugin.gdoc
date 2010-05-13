@@ -17,7 +17,7 @@ The Spring Security plugin retains many of the core features of the Acegi plugin
 
 and in addition adds several new features:
 * Digest Auth
-* Session Fixation
+* Session Fixation Prevention
 * Salted passwords
 * Certificate (x509) login
 * Hierarchical Roles
