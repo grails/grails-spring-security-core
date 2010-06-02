@@ -1,7 +1,7 @@
-If you need to override a default setting in the @grails-app/conf/DefaultSecurityConfig.groovy file, you can do that under  @grails-app/conf/Config.groovy@. The earlier Acegi plug-in used its own configuration file, @SecurityConfig.groovy@, but this plug-in maintains its configuration in the standard @Config.groovy@ file. This structure enables environment-specific configuration, for example, if you want less structure restrictive security rules when developing than when you deploy to production. Like any environment-specific config parameters, just wrap them in an @environments@ block.
+You override default settings in the @grails-app/conf/DefaultSecurityConfig.groovy file under  @grails-app/conf/Config.groovy@. The earlier Acegi plugin used its own configuration file, @SecurityConfig.groovy@, but this plugin maintains its configuration in the standard @Config.groovy@ file. This structure enables environment-specific configuration such as, for example, fewer structure-restrictive security rules during development than in production. Like any environment-specific config parameters, you wrap them in an @environments@ block.
 
 {note}
-The plug-in's configuration values all start with @grails.plugins.springsecurity@ to distinguish them from similarly named options in Grails and other plug-ins. In the documentation if you see an attribute such as @password.algorithm@, you would specify it as 
+The plugin's configuration values all start with @grails.plugins.springsecurity@ to distinguish them from similarly named options in Grails and from other plugins. For example, you would specify the attribute @password.algorithm@ as 
 
 {code}
 grails.plugins.springsecurity.password.algorithm='SHA-512'
@@ -10,4 +10,4 @@ grails.plugins.springsecurity.password.algorithm='SHA-512'
 in @Config.groovy@
 {note}
 
-See [Chapter 6|guide:6. Configuration] for a detailed discussion about the various general configuration options and [Chapter 10|guide:10. Extending and Configuring the Plug-in] for options for specific features.
+For a detailed discussion of configuration options, see [Configuration|guide:6. Configuration] and [Extending and Configuring the Plugin|guide:10. Extending and configuring the plugin].
