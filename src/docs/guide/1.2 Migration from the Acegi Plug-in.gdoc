@@ -1,38 +1,32 @@
-This plugin is a successor to the original plugin that provided support for Spring Security, the [Acegi plugin|http://grails.org/plugin/acegi/]. It's a new plugin that doesn't depend on that plugin but there are many similarities, so migrating is fairly straightforward.
+The Spring Security plugin is a successor to the [Acegi plugin|http://grails.org/plugin/acegi/]. It does not depend on that plugin, but contains many similarities, so migrating is fairly straightforward.
 
-h4. Core differences
+h4. Core Similarities and Differences Between Spring Security and Acegi Plugins
 
-The Spring Security plugin retains many of the core features of the Acegi plugin:
-* form-based authentication
-* storing users, roles, and optionally requestmaps in the database and accessing via domain classes
-* guarding URLs with annotations, requestmap domain class, or static configuration
-* security tags
-* security service
-* security events
+The Spring Security plugin retains many core features of the Acegi plugin:
+* Form-based authentication
+* Storing users, roles, and optionally requestmaps in the database, with access through domain classes
+* Guarding URLs with annotations, requestmap domain class, or static configuration
+* Security tags
+* Security service
+* Security events
 * Ajax login
-* Basic auth
+* Basic authentication
 * Switch User
 * Channel security
-* IP Address Restrictions
+* IP address restrictions
 
 and in addition adds several new features:
-* Digest Auth
+* Digest authentication
 * Session Fixation Prevention
 * Salted passwords
 * Certificate (x509) login
-* Hierarchical Roles
-* Account Locking and Forcing Password Change
+* Hierarchical roles
+* Account locking and forcing password change
 
-There are a few core concepts that have changed and will require configuration changes in your application:
-{table}
-| *Spring Security plugin* | *Acegi plugin*
-enabled by default | @true@ | @false@
-cache UserDetails by default | @false@ | @true@
-configuration location | @grails-app/conf/Config.groovy@ | @grails-app/conf/SecurityConfig.groovy@
-security service | @springSecurityService@ | @authenticateService@
-{table}
 
-There are features that are not included but which will be available in secondary plugins that will extend and depend on the core plugin:
+h4. Features Not Included in the Spring Security Plugin
+
+The following features are not included in the Spring Security plugin, but will be available in secondary plugins that will extend and depend on the core plugin:
 * Facebook
 * OpenID
 * LDAP
@@ -41,7 +35,18 @@ There are features that are not included but which will be available in secondar
 * Kerberos
 * User registration
 
-h4. Configuration differences
+h4. Required Configuration Changes to Your Application
+
+If you formerly used the Acegi plugin, you will need to change your application configuration settings as follows:
+{table}
+| *Spring Security plugin* | *Acegi plugin*
+Enabled by default | @true@ | @false@
+Cache UserDetails by default | @false@ | @true@
+Configuration location | @grails-app/conf/Config.groovy@ | @grails-app/conf/SecurityConfig.groovy@
+Security service | @springSecurityService@ | @authenticateService@
+{table}
+
+h4. Comparing Configuration Attribute Names
 
 This table summarizes the configuration attribute names in both plugins:
 
@@ -157,17 +162,19 @@ facebook.apiKey | N/A - will be supported in the Facebook plugin
 facebook.secretKey | N/A - will be supported in the Facebook plugin
 {table}
 
-h4. Script differences
+h4. Comparing Script Differences
 
-In the Acegi plugin you run the @create-auth-domains@ script to initialize the plugin. This creates @grails-app/conf/SecurityConfig.groovy@ to allow configuration customization, and creates the User, Role, and Requestmap domain classes, along with the Login and Logout controllers and views. In addition there's the @generate-manager@ script which creates CRUD pages for the domain classes (earlier version of Grails didn't scaffold many-to-many relationships well, so these GSPs were necessary), and a @generate-registration@ script which installs a basic user registration controller.
+To initialize the Acegi plugin, you run the @create-auth-domains@. This initialization creates @grails-app/conf/SecurityConfig.groovy@ to allow configuration customization; creates the User, Role, and Requestmap domain classes; and creates the Login and Logout controllers and views. Another Acegi script, @generate-manager@, creates CRUD pages for the domain classes. (The earlier version of Grails did not scaffold many-to-many relationships well, so these GSPs were necessary.)In addition, a @generate-registration@ script installs a basic user registration controller.
 
-In the Spring Security plugin, there's just one script, [s2-quickstart|Scripts]. It's most similar to @create-auth-domains@ since it creates domain classes and login/logout controllers, but it appends to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There's no equivalent to @generate-manager@ or @generate-registration@ since there will be an optional UI plugin that will generate domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages you can use the standard Grails @generate-all@ script. Various sections of this documentation discusses the changes you'll need to make in the generated source files, e.g. encrypting passwords before saving or updating a user.
+
+The Spring Security plugin uses only one script, [s2-quickstart|Scripts]. It most resembles @create-auth-domains@ because it creates domain classes and login and logout controllers, but it appends files to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There's no equivalent to @generate-manager@ or @generate-registration@ because an optional UI plugin will generate domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages you can use the standard Grails @generate-all@ script. Various sections of this documentation discuss required changes to the generated source files, for example, encrypting passwords before saving or updating a user.
  
-h4. domainClass
+h4. domainClass Differences
 
-The Acegi plugin extended the @UserDetails@ instance and added an accessor for the person domain class instance that was used to populate the @UserDetails@. This is convenient because since the @Authentication@ is kept in the HTTP session and the @UserDetails@ is attached to that, so it was easy to access non-security data such as full name, email, etc. without hitting the database.
+The Acegi plugin extends the @UserDetails@ instance and adds an accessor for the person domain class instance that is used to populate the @UserDetails@. Because the @Authentication@ is kept in the HTTP session and the @UserDetails@ is attached to that, it is easy to access non-security data such as full name, email, and so on without hitting the database.
 
-This caused problems however. One is that if the domain class has a lot of data, you increase the size of the session payload and this is even worse if you have clustered sessions. Further, any lazy-loaded collections would fail to load after retrieving the person from the session since it would have become a detached Hibernate object. This caused confusion but is easily fixed, either by calling person.attach() or by reloading by id, i.e.
+
+However, with this approach, if the domain class has a lot of data, you increase the size of the session payload, which is exacerbated with clustered sessions. Further, any lazy-loaded collections fail to load after retrieving the person from the session because it would have become a detached Hibernate object. This problem is fixed by calling person.attach() or by reloading by id, for example:
 
 {code}
 def userDetails = authenticateService.principal()
@@ -175,16 +182,16 @@ def person = userDetails.domainClass
 person = Person.get(person.id)
 {code}
 
-but then the person has essentially become a very large wrapper around its primary key since that's the real data you're storing.
+But with this approach, the person is essentially a very large wrapper around its primary key since that's the real data you're storing.
 
-So the approach that this plugin takes is to not store the domain class but instead store the id so you can retrieve the person easily:
+To resolve this issue, the Spring Security plugin does not store the domain class but instead stores the id so you can retrieve the person easily:
 
 {code}
 def userDetails = springSecurityService.principal
 person = Person.get(userDetails.id)
 {code}
 
-This works because the @UserDetails@ implementation is an instance of @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@ which extends the standard Spring Security [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
+This works because the @UserDetails@ implementation is an instance of @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@, which extends the standard Spring Security [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
 
-You're encouraged to further extend this class if you want to store more data along with the authentication to avoid database access - see [Chapter 7|guide:7. Custom UserDetailsService] for details on this.
+You can further extend this class if you want to store more data along with the authentication to avoid database access. See [Chapter 7|guide:7. Custom UserDetailsService] for details on this.
 
