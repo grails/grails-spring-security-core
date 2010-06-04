@@ -1,11 +1,11 @@
-The Spring Security plug-in simplifies the integration of  [Spring Security|http://static.springsource.org/spring-security/site/index.html] (formerly Acegi Security) into Grails applications. The plug-in provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plug-in and in Spring Security itself, which makes extensive use of interfaces. You can easily make changes to support various options.
+The Spring Security plugin simplifies the integration of  [Spring Security|http://static.springsource.org/spring-security/site/index.html] (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces. You can make changes easily to support various options.
 
-Once you install the plug-in, you run the initialization script and make any required configuration changes in @Config.groovy@. The plug-in registers filters in @web.xml@, and also configures the Spring beans in the application context that implement various pieces of functionality.  Ivy determines which jar files to use. 
+Once you install the plugin, you simply run the initialization script and make any required configuration changes in @Config.groovy@. The plugin registers filters in @web.xml@, and also configures the Spring beans in the application context that implement various pieces of functionality.  Ivy determines which jar files to use. 
 
-You do not need to know much about Spring Security to use the plug-in, but it can be helpful to understand the underlying implementation. See [the Spring Security documentation|http://static.springsource.org/spring-security/site/reference.html].
+You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See [the Spring Security documentation|http://static.springsource.org/spring-security/site/reference.html].
 
 
 h4. Getting Started
 
-See the [Tutorials|guide:9. Tutorials] section to get started using the Spring Security plug-in with your Grails application.
+See the [Tutorials|guide:9. Tutorials] section to get started using the Spring Security plugin with your Grails application.
 

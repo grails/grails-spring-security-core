@@ -30,4 +30,4 @@ requestMap.urlField | 'url' | URL pattern field name
 requestMap.configAttributeField | 'configAttribute' | authority pattern field name
 {table}
 
-See [this section|guide:3.3 Requestmap] on URL mapping for details on using Requestmap entries to guard URLs.
+To use Requestmap entries to guard URLs, see [Requestmap Instances Stored in the Database|guide:3.3 Requestmap Instances Stored in the Database].

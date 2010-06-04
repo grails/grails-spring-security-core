@@ -181,11 +181,11 @@ authenticationDetails.authClass | [WebAuthenticationDetails|http://static.spring
 roleHierarchy | none | hierarchical role definition; more details [here|guide:10.12. Hierarchical Roles]
 voterNames | ['authenticatedVoter', 'roleVoter'] | bean names of voters; more details [here|guide:10.10. Voters]
 providerNames | ['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'] | bean names of authentication providers; more details [here|guide:10.11. Authentication Providers]
-securityConfigType | type of request mapping to use | one of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3. Securing URLs]
+securityConfigType | type of request mapping to use | one of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3. Configuring Request Mappings to Secure URLs]
 controllerAnnotations.matcher | 'ant' | whether to use an Ant-style URL matcher ('ant') or Regex ('regex')
 controllerAnnotations.lowercase | @true@ | whether to do URL comparisons using lowercase
 controllerAnnotations.staticRules | none | extra rules that cannot be mapped using annotations
-interceptUrlMap | none | request mapping definition when using @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3.2 Config.groovy]
+interceptUrlMap | none | request mapping definition when using @SecurityConfigType.InterceptUrlMap@; more details [here|guide:3.2 Simple Map in Config.groovy]
 registerLoggerListener | @false@ | if @true@ registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] which logs interceptor-related application events 
 {table}
 

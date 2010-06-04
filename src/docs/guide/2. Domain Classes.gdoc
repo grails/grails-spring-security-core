@@ -1,4 +1,0 @@
-The plugin uses regular Grails domain classes to access its required data. At a minimum you'll need a 'person' and an 'authority' domain class. In addition, if you want to store URL<->Role mappings in the database (this is one of multiple approaches for defining the mappings) then you'll need a 'requestmap' domain class, and if you use the recommended approach for mapping the many-to-many relationship between 'person' and 'authority' then you'll also need a domain class to map the join table.
-
-The [s2-quickstart|Scripts] script creates initial domain classes for you. You specify the package and class names, and it creates the corresponding domain classes. After that you can customize them as you like. You can add as many other fields, methods, etc. as you like, as long as the core security-related functionality remains.
-
