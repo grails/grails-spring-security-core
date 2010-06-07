@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.apache.log4j.Logger
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
@@ -28,6 +29,8 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  */
 class GormPersistentTokenRepository implements PersistentTokenRepository {
 
+	private final Logger _log = Logger.getLogger(getClass())
+
 	/**
 	 * {@inheritDoc}
 	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#createNewToken(
@@ -36,6 +39,8 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 	void createNewToken(PersistentRememberMeToken token) {
 		// join an existing transaction if one is active
 		def clazz = lookupDomainClass()
+		if (!clazz) return
+
 		clazz.withTransaction { status ->
 			clazz.newInstance(username: token.username, series: token.series,
 					token: token.tokenValue, lastUsed: token.date).save()
@@ -48,7 +53,11 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 	 * 	java.lang.String)
 	 */
 	PersistentRememberMeToken getTokenForSeries(String seriesId) {
-		def persistentToken = lookupDomainClass().get(seriesId)
+		def persistentToken
+		def clazz = lookupDomainClass()
+		if (clazz) {
+			persistentToken = clazz.get(seriesId)
+		}
 		if (!persistentToken) {
 			return null
 		}
@@ -64,6 +73,8 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 	 */
 	void removeUserTokens(String username) {
 		def clazz = lookupDomainClass()
+		if (!clazz) return
+
 		// join an existing transaction if one is active
 		clazz.withTransaction { status ->
 			clazz.executeUpdate(
@@ -79,6 +90,8 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 	 */
 	void updateToken(String series, String tokenValue, Date lastUsed) {
 		def clazz = lookupDomainClass()
+		if (!clazz) return
+
 		// join an existing transaction if one is active
 		clazz.withTransaction { status ->
 			def persistentLogin = clazz.get(series)
@@ -89,7 +102,11 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 
 	protected Class lookupDomainClass() {
 		def conf = SpringSecurityUtils.securityConfig
-		String domainClassName = conf.rememberMe.persistentToken.domainClassName
-		AH.application.getClassForName domainClassName
+		String domainClassName = conf.rememberMe.persistentToken.domainClassName ?: ''
+		def clazz = AH.application.getClassForName(domainClassName)
+		if (!clazz) {
+			log.error "Persistent token class not found: '${domainClassName}'"
+		}
+		clazz
 	}
 }
