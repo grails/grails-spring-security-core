@@ -2,7 +2,7 @@ You can choose among several approaches to configuring request mappings for secu
 * @\@Secured@ annotations (default approach)
 * A simple Map in @Config.groovy@
 * @Requestmap@ domain class instances stored in the database
-* Pessimistic lockdown
+
 
 You can only use one method at a time. You configure it with the @securityConfigType@ attribute; the value has to be an @SecurityConfigType@ enum value.
 
@@ -16,7 +16,7 @@ import grails.plugins.springsecurity.SecurityConfigType
 grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation
 {code}
 
-See [Defining @Secured Annotations|guide:3.1 Defining @Secured Annotations].
+See [Defining Secured Annotations|guide:3.1 Defining Secured Annotations].
 
 To use the @Config.groovy@ Map, specify @SecurityConfigType.InterceptUrlMap@:
 
@@ -28,7 +28,7 @@ import grails.plugins.springsecurity.SecurityConfigType
 grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
 {code}
 
-See [Simple Map in Config.groovy|guide:3.2 Simple Map in Config.groovy]. See
+See [Simple Map in Config.groovy|guide:3.2 Simple Map in Config.groovy]. 
 
 To use @Requestmap@ entries, specify @SecurityConfigType.Requestmap@:
 
@@ -42,7 +42,7 @@ grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap
 
 See [Requestmap Instances Stored in the Database|guide:3.3 Requestmap Instances Stored in the Database].
 
-Most applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it makes more sense to leave URLs open by default and restrict access one a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role configuration. 
+Most applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it makes more sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role configuration. 
 
 To use the pessimistic approach, add this line to @grails-app/conf/Config.groovy@:
 

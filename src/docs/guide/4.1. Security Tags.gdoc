@@ -1,4 +1,4 @@
-The plugin comes with a few GSP tags to support conditional display based on whether the user is authenticated, and/or has the required role to perform some action. All of the tags are in the @sec@ namespace and are implemented in @grails.plugins.springsecurity.SecurityTagLib@.
+The plugin comes with a few GSP tags to support conditional display based on whether the user is authenticated, and/or has the required role to perform a particular action. All GSP tags are in the @sec@ namespace and are implemented in @grails.plugins.springsecurity.SecurityTagLib@.
 
 h4. ifLoggedIn
 
@@ -56,13 +56,13 @@ Example:
 
 h4.  loggedInUserInfo
 
-Displays the value of the specified authentication field if logged in. For example this will show the username property:
+Displays the value of the specified authentication field if you are logged in. For example, to show the username property:
 
 {code}
 <sec:loggedInUserInfo field="username"/>
 {code}
 
-and if you have customized the authentication to add a @fullName@ property, you would access it using
+If you customize the authentication to add a @fullName@ property, you access it using:
 
 {code}
 Welcome Back <sec:loggedInUserInfo field="fullName"/>
@@ -70,7 +70,7 @@ Welcome Back <sec:loggedInUserInfo field="fullName"/>
 
 h4.  username
 
-Displays the value of the authentication @username@ field if logged in.
+Displays the value of the authentication @username@ field if you are logged in.
 
 {code}
 <sec:ifLoggedIn>
@@ -83,7 +83,7 @@ Welcome Back <sec:username/>!
 
 h4. ifSwitched
 
-Displays the inner body content only if the current user switched from another user.
+Displays the inner body content only if the current user switched from another user:
 
 {code}
 <sec:ifLoggedIn>
@@ -113,7 +113,7 @@ Logged in as <sec:username/>
 
 h4. ifNotSwitched
 
-Displays the inner body content only if the current user has not switched from another user.
+Displays the inner body content only if the current user has not switched from another user:
 
 h4. switchedUserOriginalUsername
 

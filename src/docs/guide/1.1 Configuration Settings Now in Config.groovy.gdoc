@@ -10,4 +10,4 @@ grails.plugins.springsecurity.password.algorithm='SHA-512'
 in @Config.groovy@
 {note}
 
-For a detailed discussion of configuration options, see [Configuration|guide:6. Configuration] and [Extending and Configuring the Plugin|guide:10. Extending and configuring the plugin].
+For a detailed discussion of configuration options, see [Configuration|guide:6. Configuration] and [Extending and Configuring the Plugin|guide:10. Extending and Configuring the Plugin].
