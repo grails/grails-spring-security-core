@@ -31,7 +31,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
  */
 class SpringSecurityService {
 
-	boolean transactional = false
+	static transactional = false
 
 	/** dependency injection for authenticationTrustResolver */
 	def authenticationTrustResolver

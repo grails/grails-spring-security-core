@@ -29,6 +29,7 @@ target(s2CreatePersistentToken: 'Creates the persistent token domain class for t
 
 	configure()
 	createDomainClass()
+	updateConfig()
 }
 
 private void configure() {
@@ -52,6 +53,16 @@ private void createDomainClass() {
 	String dir = packageToDir(templateAttributes.packageName)
 	generateFile "$templateDir/PersistentLogin.groovy.template",
 		"$appDir/domain/${dir}${templateAttributes.className}.groovy"
+}
+
+private void updateConfig() {
+	def configFile = new File(appDir, 'conf/Config.groovy')
+	if (configFile.exists()) {
+		configFile.withWriterAppend {
+			it.writeLine "grails.plugins.springsecurity.rememberMe.persistent = true"
+			it.writeLine "grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = '$fullClassName'"
+		}
+	}
 }
 
 private parseArgs() {
