@@ -27,9 +27,9 @@ class SecureAnnotatedController {
 }
 {code}
 
-you'd need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@.
+you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@.
 
-Quite often most actions in a controller require similar access rules, so you can also define annotations at the class level:
+Often most actions in a controller require similar access rules, so you can also define annotations at the class level:
 
 {code}
 package com.mycompany.myapp
@@ -54,11 +54,11 @@ class SecureClassAnnotatedController {
 }
 {code}
 
-Here you'd need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureClassAnnotated@ (or @/myapp/secureClassAnnotated/index@) or @/myapp/secureClassAnnotated/otherAction@. However you must have @ROLE_SUPERUSER@ to access @/myapp/secureClassAnnotated/super@ - the action-scope annotation overrides the class-scope annotation.
+Here you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureClassAnnotated@ (or @/myapp/secureClassAnnotated/index@) or @/myapp/secureClassAnnotated/otherAction@. However, you must have @ROLE_SUPERUSER@ to access @/myapp/secureClassAnnotated/super@. The action-scope annotation overrides the class-scope annotation.
 
 h4. controllerAnnotations.staticRules
 
-You can also define 'static' mappings that cannot be expressed in the controllers, such as '/**' or for JavaScript, CSS, or image URLs. Use the @controllerAnnotations.staticRules@ property, e.g.
+You can also define 'static' mappings that cannot be expressed in the controllers, such as '/**' or for JavaScript, CSS, or image URLs. Use the @controllerAnnotations.staticRules@ property, for example:
 
 {code}
 grails.plugins.springsecurity.controllerAnnotations.staticRules = [
@@ -67,4 +67,4 @@ grails.plugins.springsecurity.controllerAnnotations.staticRules = [
 ]
 {code}
 
-In this example we've mapped all URLs associated with 'somePlugin' to @ROLE_ADMIN@; annotations aren't an option here since you wouldn't want to edit plugin code for a change like this.
+This example maps all URLs associated with 'somePlugin' to @ROLE_ADMIN@; annotations are not an option here because you would not edit plugin code for a change like this.
