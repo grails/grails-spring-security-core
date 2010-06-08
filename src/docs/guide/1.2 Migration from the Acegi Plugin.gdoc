@@ -15,7 +15,7 @@ The Spring Security plugin retains many core features of the Acegi plugin:
 * Channel security
 * IP address restrictions
 
-and in addition adds several new features:
+and adds several new features:
 * Digest authentication
 * Session Fixation Prevention
 * Salted passwords
@@ -37,9 +37,9 @@ The following features are not included in the Spring Security plugin, but will 
 
 h4. Required Configuration Changes to Your Application
 
-If you formerly used the Acegi plugin, you will need to change your application configuration settings as follows:
+If you formerly used the Acegi plugin, you need to change your application configuration settings as follows.
 {table}
-| *Spring Security plugin* | *Acegi plugin*
+| *Setting* | *Spring Security Plugin* | *Acegi Plugin*
 Enabled by default | @true@ | @false@
 Cache UserDetails by default | @false@ | @true@
 Configuration location | @grails-app/conf/Config.groovy@ | @grails-app/conf/SecurityConfig.groovy@
@@ -48,10 +48,10 @@ Security service | @springSecurityService@ | @authenticateService@
 
 h4. Comparing Configuration Attribute Names
 
-This table summarizes the configuration attribute names in both plugins:
+This table summarizes the configuration attribute names in both plugins.
 
 {table}
-*Acegi plugin* | *Spring Security plugin*
+*Acegi Plugin* | *Spring Security Plugin*
 active | active
 loginUserDomainClass | userLookup.userDomainClassName
 userName | userLookup.usernamePropertyName
@@ -167,7 +167,7 @@ h4. Comparing Script Differences
 To initialize the Acegi plugin, you run the @create-auth-domains@. This initialization creates @grails-app/conf/SecurityConfig.groovy@ to allow configuration customization; creates the User, Role, and Requestmap domain classes; and creates the Login and Logout controllers and views. Another Acegi script, @generate-manager@, creates CRUD pages for the domain classes. (The earlier version of Grails did not scaffold many-to-many relationships well, so these GSPs were necessary.)In addition, a @generate-registration@ script installs a basic user registration controller.
 
 
-The Spring Security plugin uses only one script, [s2-quickstart|Scripts]. It is similar to @create-auth-domains@ because it creates domain classes and login and logout bcontrollers, but it appends files to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There is no equivalent to @generate-manager@ or @generate-registration@ because an optional UI plugin will generate domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages you can use the standard Grails @generate-all@ script. Various sections of this documentation discuss required changes to the generated source files, for example, encrypting passwords before saving or updating a user.
+The Spring Security plugin uses only one script, [s2-quickstart|Scripts]. It is similar to @create-auth-domains@ because it creates domain classes and login and logout bcontrollers, but it appends files to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There is no equivalent to @generate-manager@ or @generate-registration@ because an optional UI plugin will generates domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages you can use the standard Grails @generate-all@ script. Various sections of this documentation discuss required changes to the generated source files, for example, encrypting passwords before saving or updating a user.
  
 h4. domainClass Differences
 

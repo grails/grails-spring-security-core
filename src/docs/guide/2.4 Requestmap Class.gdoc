@@ -21,10 +21,10 @@ class Requestmap {
 }
 {code}
 
-The class and property names are configurable using these configuration attributes:
+You can configure class and property names are configurable with these configuration attributes:
 
 {table}
-*Property* | *Default Value* | *Meaning*
+*Attribute* | *Default Value* | *Meaning*
 requestMap.className | 'Requestmap' | requestmap class name
 requestMap.urlField | 'url' | URL pattern field name
 requestMap.configAttributeField | 'configAttribute' | authority pattern field name

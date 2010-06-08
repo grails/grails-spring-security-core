@@ -1,1 +1,1 @@
-You can use the plugin's helper classes in your application to avoid the lower-level details of Spring Security.
+The plugin has a few helper classes that you can use in your application to avoid having to deal with the lower-level details of Spring Security.
