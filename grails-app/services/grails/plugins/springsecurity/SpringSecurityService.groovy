@@ -52,14 +52,21 @@ class SpringSecurityService {
 	def userCache
 
 	/**
-	 * Get the currently logged in user's principal.
-	 * @return the principal or <code>null</code> if not logged in
+	 * Get the currently logged in user's principal. If not authenticated and the
+	 * AnonymousAuthenticationFilter is active (true by default) then the anonymous
+	 * user's name will be returned ('anonymousUser' unless overridden).
+	 *
+	 * @return the principal
 	 */
 	def getPrincipal() { getAuthentication()?.principal }
 
 	/**
-	 * Get the currently logged in user's <code>Authentication</code>.
-	 * @return the authentication or <code>null</code> if not logged in
+	 * Get the currently logged in user's <code>Authentication</code>. If not authenticated
+	 * and the AnonymousAuthenticationFilter is active (true by default) then the anonymous
+	 * user's auth will be returned (AnonymousAuthenticationToken with username 'anonymousUser'
+	 * unless overridden).
+	 *
+	 * @return the authentication
 	 */
 	Authentication getAuthentication() { SCH.context?.authentication }
 
