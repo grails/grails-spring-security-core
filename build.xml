@@ -79,12 +79,8 @@
 		<delete dir='grails-app/i18n'/>
 		<delete dir='grails-app/utils'/>
 		<delete dir='grails-app/views'/>
-		<delete dir='web-app/css'/>
-		<delete dir='web-app/images'/>
-		<delete dir='web-app/js'/>
-		<delete dir='web-app/plugins'/>
-		<delete dir='web-app/META-INF'/>
-		<delete dir='web-app/WEB-INF'/>
+		<delete dir='lib'/>
+		<delete dir='web-app'/>
 	</target>
 
 </project>
