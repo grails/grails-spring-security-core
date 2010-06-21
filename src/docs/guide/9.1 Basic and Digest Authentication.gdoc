@@ -1,0 +1,45 @@
+
+To use [HTTP Basic Authentication|http://en.wikipedia.org/wiki/Basic_access_authentication] in your application, set the @useBasicAuth@ attribute to @true@. Also change the @basic.realmName@ default value to one that suits your application, for example:
+
+{code}
+grails.plugins.springsecurity.useBasicAuth = true
+grails.plugins.springsecurity.basic.realmName = "Ralph's Bait and Tackle"
+{code}
+
+{table}
+*Property* | *Default* | *Description*
+useBasicAuth | @false@ | Whether to use basic authentication.
+basic.realmName | 'Grails Realm' | Realm name displayed in the browser authentication popup.
+{table}
+
+With this authentication in place, users are prompted with the standard browser login dialog instead of being redirected to a login page.
+
+[Digest Authentication|http://en.wikipedia.org/wiki/Digest_access_authentication] is similar to Basic but is more secure because it does not send your password in obfuscated cleartext. Digest resembles Basic in practice - you get the same browser popup dialog when you authenticate. But because the credential transfer is genuinely encrypted (instead of just Base64-encoded as with Basic authentication) you do not need SSL to guard your logins.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+useDigestAuth | @false@ | Whether to use Digest authentication. 
+digest.realmName | 'Grails Realm' | Realm name displayed in the browser popup
+digest.key | 'changeme' | Key used to build the nonce for authentication; it should be changed but that's not required.
+digest.nonceValiditySeconds | 300 | How long a nonce stays valid.
+digest.passwordAlreadyEncoded | @false@ | Whether you are managing the password encryption yourself.
+digest.createAuthenticatedToken | @false@ | If @true@, creates an authenticated @UsernamePasswordAuthenticationToken@ to avoid loading the user from the database twice. However, this process skips the isAccountNonExpired(), isAccountNonLocked(), isCredentialsNonExpired(), isEnabled() checks, so it is not advised.
+digest.useCleartextPasswords | @false@ | If @true@, a cleartext password encoder is used (not recommended). If @false@, passwords encrypted by @DigestAuthPasswordEncoder@ are stored in the database.
+{table}
+
+Digest authentication has a problem in that by default you store cleartext passwords in your database. This is because the browser encrypts your password along with the username and Realm name, and this is compared to the password encrypted using the same algorithm during authentication. The browser does not know about your @MessageDigest@ algorithm or salt source, so to encrypt them the same way you need to load a cleartext password from the database.
+
+The plugin does provide an alternative, although it has no configuration options (in particular the digest algorithm cannot be changed). If @digest.useCleartextPasswords@ is @false@ (the default), then the @passwordEncoder@ bean is replaced with an instance of @grails.plugins.springsecurity.DigestAuthPasswordEncoder@. This encoder uses the same approach as the browser, that is, it combines your password along with your username and Realm name essentially as a salt, and encrypts with MD5. MD5 is not recommended in general, but given the typical size of the salt it is reasonably safe to use.
+
+The only required attribute is @useDigestAuth@, which you must set to @true@, but you probably also want to change the realm name:
+
+{code}
+grails.plugins.springsecurity.useDigestAuth = true
+grails.plugins.springsecurity.digest.realmName = "Ralph's Bait and Tackle"
+{code}
+
+
+
+
+
+

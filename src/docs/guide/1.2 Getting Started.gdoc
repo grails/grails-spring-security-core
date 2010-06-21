@@ -1,0 +1,7 @@
+If you will be migrating from the Acegi to the Spring Security plugin, see [Migrating from the Acegi Plugin|guide:3 Migrating from the Acegi Plugin]. 
+
+Once you install the plugin, you simply run the initialization script, [s2-quickstart|Scripts], and make any required configuration changes in @Config.groovy@. The plugin registers filters in @web.xml@, and also configures the Spring beans in the application context that implement various pieces of functionality.  Ivy determines which jar files to use. 
+
+To get started using the Spring Security plugin with your Grails application, see  [Tutorials|guide:23 Tutorials].
+
+You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See [the Spring Security documentation|http://static.springsource.org/spring-security/site/reference.html].
