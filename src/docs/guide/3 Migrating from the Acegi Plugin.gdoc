@@ -1,0 +1,9 @@
+If you formerly used the Acegi plugin, change your application configuration settings as follows.
+
+{table}
+*Setting* | *Spring Security Plugin* | *Acegi Plugin*
+Enabled by default | @true@ | @false@
+Cache UserDetails by default | @false@ | @true@
+Configuration location | @grails-app/conf/Config.groovy@ | @grails-app/conf/SecurityConfig.groovy@
+Security service | @springSecurityService@ | @authenticateService@
+{table}

@@ -1,0 +1,35 @@
+The table shows configurable URL-related properties.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+apf.filterProcessesUrl | '/j_spring_security_check' | Login form post URL, intercepted by Spring Security filter.
+apf.usernameParameter | 'j_username' | Login form username parameter.
+apf.passwordParameter | 'j_password' | Login form password parameter.
+apf.allowSessionCreation | @true@ | Whether to allow authentication to create an HTTP session.
+apf.postOnly | @true@ | Whether to allow only POST login requests.
+failureHandler.defaultFailureUrl | '/login/authfail?login_error=1' | Redirect URL for failed logins.
+failureHandler.ajaxAuthFailUrl | '/login/authfail?ajax=true' | Redirect URL for failed Ajax logins.
+failureHandler.exceptionMappings | none | Map of exception class name (subclass of [AuthenticationException|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/AuthenticationException.html]) to which the URL will redirect for that exception type after authentication failure.
+failureHandler.useForward | @false@ | Whether to render the error page (@true@) or redirect (@false@).
+successHandler.defaultTargetUrl | '/' | Default post-login URL if there is no saved request that triggered the login.
+successHandler.alwaysUseDefault | @false@ | If @true@, always redirects to the value of @successHandler.defaultTargetUrl@ after successful authentication; otherwise redirects to to originally-requested page.
+successHandler.targetUrlParameter | 'spring-security-redirect' | Name of optional login form parameter that specifies destination after successful login.
+successHandler.useReferer | @false@ | Whether to use the HTTP @Referer@ header to determine post-login destination.
+successHandler.ajaxSuccessUrl | '/login/ajaxSuccess' | URL for redirect after successful Ajax login.
+auth.loginFormUrl | '/login/auth' | URL of login page.
+auth.forceHttps | @false@ | If @true@, redirects login page requests to HTTPS.
+auth.ajaxLoginFormUrl | '/login/authAjax' | URL of Ajax login page.
+auth.useForward | false | Whether to render the login page (@true@) or redirect (@false@).
+logout.afterLogoutUrl | '/' | URL for redirect after logout.
+logout.filterProcessesUrl | '/j_spring_security_logout' | Logout URL, intercepted by Spring Security filter.
+logout.handlerNames | ['rememberMeServices', 'securityContextLogoutHandler'] | Logout handler bean names. See [Logout Handlers|guide:20 Logout Handlers]
+adh.errorPage | '/login/denied' | Location of the 403 error page.
+adh.ajaxErrorPage | '/login/ajaxDenied' | Location of the 403 error page for Ajax requests.
+ajaxHeader | 'X-Requested-With' | Header name sent by Ajax library, used to detect Ajax.
+redirectStrategy.contextRelative | @false@ | If @true@, the redirect URL will be the value after the request context path. This results in the loss of protocol information (HTTP or HTTPS), so causes problems if a redirect is being performed to change from HTTP to HTTPS or vice versa.
+switchUser URLs |   | See [Switch User|guide:15 Switch User], under *Customizing URLs*.
+{table}
+
+
+
+

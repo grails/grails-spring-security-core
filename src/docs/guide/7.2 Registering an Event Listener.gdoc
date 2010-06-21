@@ -1,0 +1,26 @@
+Create one or more Groovy or Java classes, for example:
+
+{code}
+package com.foo.bar
+
+import org.springframework.context.ApplicationListener
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent
+
+class MySecurityEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
+
+   void onApplicationEvent(AuthenticationSuccessEvent event) {
+      // handle the event
+   }
+}
+{code}
+
+Register the class in @grails-app/conf/spring/resources.groovy@:
+
+{code}
+beans = {
+   mySecurityEventListener(com.foo.bar.MySecurityEventListener)
+}
+{code}
+
+
+
