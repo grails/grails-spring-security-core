@@ -20,6 +20,7 @@ import javax.servlet.Filter
 import org.springframework.cache.ehcache.EhCacheFactoryBean
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
+import org.springframework.security.access.intercept.NullRunAsManager
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleHierarchyVoter
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker
@@ -267,6 +268,7 @@ class SpringSecurityCoreGrailsPlugin {
 			authenticationManager = ref('authenticationManager')
 			accessDecisionManager = ref('accessDecisionManager')
 			securityMetadataSource = ref('objectDefinitionSource')
+			runAsManager = ref('runAsManager')
 		}
 		if (conf.securityConfigType.name() == 'Annotation') {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
@@ -402,6 +404,9 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
+
+		// per-method run-as, defined here so it can be overridden
+		runAsManager(NullRunAsManager)
 
 		// x509
 		if (conf.useX509) {
