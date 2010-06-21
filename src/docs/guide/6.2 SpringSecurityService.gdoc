@@ -55,6 +55,7 @@ Retrieves the currently logged in user's @Principal@. If authenticated, the prin
 
 If not authenticated and the [AnonymousAuthenticationFilter|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's name will be returned ('anonymousUser' unless overridden).
 
+
 Example:
 
 {code}
