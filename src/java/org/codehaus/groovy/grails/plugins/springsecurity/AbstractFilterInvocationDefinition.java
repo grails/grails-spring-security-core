@@ -25,6 +25,7 @@ import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.expression.Expression;
+import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AuthenticatedVoter;
@@ -230,8 +231,7 @@ public abstract class AbstractFilterInvocationDefinition
 		Collection<ConfigAttribute> configAttributes = new HashSet<ConfigAttribute>();
 		for (String token : tokens) {
 			ConfigAttribute config = new SecurityConfig(token);
-			if ((_roleVoter != null && _roleVoter.supports(config)) ||
-					(_authenticatedVoter != null && _authenticatedVoter.supports(config))) {
+			if (supports(config)) {
 				configAttributes.add(config);
 			}
 			else {
@@ -240,6 +240,15 @@ public abstract class AbstractFilterInvocationDefinition
 			}
 		}
 		return configAttributes;
+	}
+
+	protected boolean supports(final ConfigAttribute config) {
+		return supports(config, _roleVoter) || supports(config, _authenticatedVoter) ||
+				config.getAttribute().startsWith("RUN_AS");
+	}
+
+	private boolean supports(final ConfigAttribute config, final AccessDecisionVoter voter) {
+		return voter != null && voter.supports(config);
 	}
 
 	protected Collection<ConfigAttribute> storeMapping(final Object key,
@@ -279,7 +288,6 @@ public abstract class AbstractFilterInvocationDefinition
 	public void setAuthenticatedVoter(final AuthenticatedVoter voter) {
 		_authenticatedVoter = voter;
 	}
-
 	protected AuthenticatedVoter getAuthenticatedVoter() {
 		return _authenticatedVoter;
 	}
@@ -291,7 +299,6 @@ public abstract class AbstractFilterInvocationDefinition
 	public void setExpressionHandler(final WebSecurityExpressionHandler handler) {
 		_expressionHandler = handler;
 	}
-
 	protected WebSecurityExpressionHandler getExpressionHandler() {
 		return _expressionHandler;
 	}

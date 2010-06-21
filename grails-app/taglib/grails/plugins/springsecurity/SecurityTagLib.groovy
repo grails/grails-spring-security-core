@@ -14,17 +14,42 @@
  */
 package grails.plugins.springsecurity
 
+import javax.servlet.FilterChain
+
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
+import org.springframework.expression.Expression
+import org.springframework.security.access.expression.ExpressionUtils
+import org.springframework.security.web.FilterInvocation
+
 /**
+ * Security tags.
+ *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class SecurityTagLib {
 
 	static namespace = 'sec'
 
+	/** Dependency injection for springSecurityService. */
 	def springSecurityService
 
+	/** Dependency injection for webExpressionHandler. */
+	def webExpressionHandler
+
+	/** Dependency injection for webInvocationPrivilegeEvaluator. */
+	def webInvocationPrivilegeEvaluator
+
+	protected static final FilterChain DUMMY_CHAIN = [
+		doFilter: { req, res -> throw new UnsupportedOperationException() }
+	] as FilterChain
+
+	protected Map<String, Expression> expressionCache = [:]
+
+	/**
+	 * Renders the body if all of the specified roles are granted to the user. Roles are
+	 * specified in the 'roles' attribute which is a comma-delimited string.
+	 */
 	def ifAllGranted = { attrs, body ->
 
 		String roles = assertAttribute('roles', attrs, 'ifAllGranted')
@@ -34,6 +59,10 @@ class SecurityTagLib {
 		}
 	}
 
+	/**
+	 * Renders the body if none of the specified roles are granted to the user. Roles are
+	 * specified in the 'roles' attribute which is a comma-delimited string.
+	 */
 	def ifNotGranted = { attrs, body ->
 
 		String roles = assertAttribute('roles', attrs, 'ifNotGranted')
@@ -43,6 +72,10 @@ class SecurityTagLib {
 		}
 	}
 
+	/**
+	 * Renders the body if any of the specified roles are granted to the user. Roles are
+	 * specified in the 'roles' attribute which is a comma-delimited string.
+	 */
 	def ifAnyGranted = { attrs, body ->
 
 		String roles = assertAttribute('roles', attrs, 'ifAnyGranted')
@@ -52,9 +85,12 @@ class SecurityTagLib {
 		}
 	}
 
-	// TODO rename
-	// TODO support 'var' and 'scope' and set the result instead of writing it
+	/**
+	 * Renders a property (specified by the 'field' attribute) from the principal.
+	 */
 	def loggedInUserInfo = { attrs, body ->
+
+		// TODO support 'var' and 'scope' and set the result instead of writing it
 
 		String field = assertAttribute('field', attrs, 'loggedInUserInfo')
 
@@ -77,51 +113,112 @@ class SecurityTagLib {
 		}
 	}
 
+	/**
+	 * Renders the user's username if logged in.
+	 */
 	def username = { attrs ->
 		if (springSecurityService.isLoggedIn()) {
 			out << springSecurityService.authentication.name
 		}
 	}
 
+	/**
+	 * Renders the body if the user is authenticated.
+	 */
 	def ifLoggedIn = { attrs, body ->
 		if (springSecurityService.isLoggedIn()) {
 			out << body()
 		}
 	}
 
+	/**
+	 * Renders the body if the user is not authenticated.
+	 */
 	def ifNotLoggedIn = { attrs, body ->
 		if (!springSecurityService.isLoggedIn()) {
 			out << body()
 		}
 	}
 
+	/**
+	 * Renders the body if the user is authenticated as another user via run-as.
+	 */
 	def ifSwitched = { attrs, body ->
 		if (SpringSecurityUtils.isSwitched()) {
 			out << body()
 		}
 	}
 
+	/**
+	 * Renders the body if the user is not authenticated as another user via run-as.
+	 */
 	def ifNotSwitched = { attrs, body ->
 		if (!SpringSecurityUtils.isSwitched()) {
 			out << body()
 		}
 	}
 
+	/**
+	 * Renders the username of the 'real' authentication when authenticated as another user via run-as.
+	 */
 	def switchedUserOriginalUsername = { attrs ->
 		if (SpringSecurityUtils.isSwitched()) {
 			out << SpringSecurityUtils.switchedUserOriginalUsername
 		}
 	}
 
-	private assertAttribute(String name, attrs, String tag) {
+	/**
+	 * Renders the body if the specified expression (a String; the 'expression' attribute)
+	 * evaluates to <code>true</code>.
+	 */
+	def access = { attrs, body ->
+		if (hasAccess(attrs, 'access')) {
+			out << body()
+		}
+	}
+
+	/**
+	 * Renders the body if the specified expression (a String; the 'expression' attribute)
+	 * evaluates to <code>false</code>.
+	 */
+	def noAccess = { attrs, body ->
+		if (!hasAccess(attrs, 'noAccess')) {
+			out << body()
+		}
+	}
+
+	protected boolean hasAccess(attrs, String tagName) {
+
+		if (!springSecurityService.isLoggedIn()) {
+			return false
+		}
+
+		def auth = springSecurityService.authentication
+		String expressionText = attrs.remove('expression')
+		if (expressionText) {
+			Expression expression = findOrCreateExpression(expressionText)
+			FilterInvocation fi = new FilterInvocation(request, response, DUMMY_CHAIN)
+			def ctx = webExpressionHandler.createEvaluationContext(auth, fi)
+			return ExpressionUtils.evaluateAsBoolean(expression, ctx)
+		}
+
+		String url = attrs.remove('url')
+		if (!url) {
+			throwTagError "Tag [$tagName] requires either an expression or a URL"
+		}
+		String method = attrs.remove('method') ?: 'GET'
+
+		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
+	}
+
+	protected assertAttribute(String name, attrs, String tag) {
 		if (!attrs.containsKey(name)) {
 			throwTagError "Tag [$tag] is missing required attribute [$name]"
 		}
 		attrs.remove name
 	}
 
-	// TODO not supporting getDomainClass?
-	private determineSource() {
+	protected determineSource() {
 		def principal = springSecurityService.principal
 
 		// check to see if it's a GrailsUser/GrailsUserImpl/subclass,
@@ -131,5 +228,14 @@ class SecurityTagLib {
 		}
 
 		principal
+	}
+
+	protected synchronized Expression findOrCreateExpression(String text) {
+		Expression expression = expressionCache.get(text);
+		if (!expression) {
+			expression = webExpressionHandler.expressionParser.parseExpression(text)
+			expressionCache[text] = expression
+		}
+		return expression
 	}
 }

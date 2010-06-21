@@ -119,3 +119,26 @@ h4. switchedUserOriginalUsername
 
 Renders the original user's username if the current user switched from another user.
 
+h4. access
+
+Renders the body if the specified expression evaluates to @true@.
+
+{code}
+<sec:access expression="hasRole('ROLE_USER')">
+
+You're a user
+
+</sec:access>
+{code}
+
+h4. noAccess
+
+Renders the body if the specified expression evaluates to @false@.
+
+{code}
+<sec:noAccess expression="hasRole('ROLE_USER')">
+
+You're not a user
+
+</sec:noAccess>
+{code}

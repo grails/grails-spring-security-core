@@ -41,6 +41,7 @@ import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
+import org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.channel.ChannelDecisionManagerImpl
 import org.springframework.security.web.access.channel.ChannelProcessingFilter
@@ -309,6 +310,9 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
+
+		webInvocationPrivilegeEvaluator(DefaultWebInvocationPrivilegeEvaluator,
+				ref('filterInvocationInterceptor'))
 
 		// voters
 		configureVoters.delegate = delegate

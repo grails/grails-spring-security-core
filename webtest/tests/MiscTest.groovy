@@ -172,4 +172,91 @@ class MiscTest extends AbstractSecurityWebTest {
 		get '/secureAnnotated/userAction'
 		assertContentContains 'you have ROLE_USER'
 	}
+
+	void testTaglibsUnauthenticated() {
+
+		get '/tagLibTest/test'
+
+		assertContentDoesNotContain 'user and admin'
+		assertContentDoesNotContain 'user and admin and foo'
+		assertContentContains 'not user and not admin'
+		assertContentDoesNotContain 'user or admin'
+		assertContentContains 'accountNonExpired: "not logged in"'
+		assertContentContains 'id: "not logged in"'
+		assertContentContains 'Username is ""'
+		assertContentDoesNotContain 'logged in true'
+		assertContentContains 'logged in false'
+		assertContentDoesNotContain 'switched true'
+		assertContentContains 'switched false'
+		assertContentContains 'switched original username ""'
+		assertContentDoesNotContain 'access with role user: true'
+		assertContentDoesNotContain 'access with role admin: true'
+		assertContentContains 'access with role user: false'
+		assertContentContains 'access with role admin: false'
+	}
+
+	void testTaglibsUser() {
+
+		get '/login/auth'
+		assertContentContains 'Please Login'
+
+		form {
+			j_username = 'user2'
+			j_password = 'p4ssw0rd2'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
+
+		get '/tagLibTest/test'
+		assertContentDoesNotContain 'user and admin'
+		assertContentDoesNotContain 'user and admin and foo'
+		assertContentDoesNotContain 'not user and not admin'
+		assertContentContains 'user or admin'
+		assertContentContains 'accountNonExpired: "true"'
+		assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
+		assertContentContains 'Username is "user2"'
+		assertContentContains 'logged in true'
+		assertContentDoesNotContain 'logged in false'
+		assertContentDoesNotContain 'switched true'
+		assertContentContains 'switched false'
+		assertContentContains 'switched original username ""'
+
+		assertContentContains 'access with role user: true'
+		assertContentDoesNotContain 'access with role admin: true'
+		assertContentDoesNotContain 'access with role user: false'
+		assertContentContains 'access with role admin: false'
+	}
+
+	void testTaglibsAdmin() {
+
+		get '/login/auth'
+		assertContentContains 'Please Login'
+
+		form {
+			j_username = 'user1'
+			j_password = 'p4ssw0rd'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
+
+		get '/tagLibTest/test'
+		assertContentContains 'user and admin'
+		assertContentDoesNotContain 'user and admin and foo'
+		assertContentDoesNotContain 'not user and not admin'
+		assertContentContains 'user or admin'
+		assertContentContains 'accountNonExpired: "true"'
+		assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
+		assertContentContains 'Username is "user1"'
+
+		assertContentContains 'logged in true'
+		assertContentDoesNotContain 'logged in false'
+		assertContentDoesNotContain 'switched true'
+		assertContentContains 'switched false'
+		assertContentContains 'switched original username ""'
+
+		assertContentContains 'access with role user: true'
+		assertContentContains 'access with role admin: true'
+		assertContentDoesNotContain 'access with role user: false'
+		assertContentDoesNotContain 'access with role admin: false'
+	}
 }

@@ -9,6 +9,7 @@ appName = null
 pluginVersion = null
 pluginZip = null
 testprojectRoot = null
+deleteAll = false
 
 target(createS2TestApp: 'Creates test apps for functional tests') {
 
@@ -67,8 +68,12 @@ private void copySampleFiles() {
 		fileset(dir: projectfiles.path) {
 			include name: 'Secure*Controller.groovy'
 			include name: 'HackController.groovy'
+			include name: 'TagLibTestController.groovy'
 		}
 	}
+
+	ant.mkdir dir: "${testprojectRoot}/grails-app/views/tagLibTest"
+	ant.copy file: "${projectfiles.path}/test.gsp", todir: "${testprojectRoot}/grails-app/views/tagLibTest"
 
 	ant.copy(todir: "${testprojectRoot}/grails-app/services") {
 		fileset(dir: projectfiles.path) {
@@ -102,12 +107,9 @@ private void copySampleFiles() {
 }
 
 private void copyTests() {
-
 	ant.copy(todir: "${testprojectRoot}/test/functional") {
 		fileset(dir: "$basedir/webtest/tests")
 	}
-
-	ant.copy file: "${projectfiles.path}/FuncTest.groovy", todir: "${testprojectRoot}/scripts"
 }
 
 private void generateArtifacts() {
@@ -136,11 +138,14 @@ private void createApp() {
 }
 
 private void deleteDir(String path) {
-	if (new File(path).exists()) {
+	if (new File(path).exists() && !deleteAll) {
 		String code = "confirm.delete.$path"
-		ant.input message: "$path exists, ok to delete?", addproperty: code, validargs: 'y,n'
+		ant.input message: "$path exists, ok to delete?", addproperty: code, validargs: 'y,n,a'
 		def result = ant.antProject.properties[code]
-		if (!'y'.equalsIgnoreCase(result)) {
+		if ('a'.equalsIgnoreCase(result)) {
+			deleteAll = true
+		}
+		else if (!'y'.equalsIgnoreCase(result)) {
 			ant.echo "\nNot deleting $path"
 			exit 1
 		}

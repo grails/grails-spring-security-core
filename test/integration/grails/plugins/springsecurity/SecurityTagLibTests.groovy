@@ -192,6 +192,17 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		assertOutputEquals 'username1', "<sec:switchedUserOriginalUsername/>"
 	}
 
+	void testAccess() {
+		String body = 'the_content'
+
+		assertOutputEquals '', """<sec:access expression="hasRole('role1')">${body}</sec:access>"""
+		assertOutputEquals body, """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
+
+		authenticate 'role1'
+		assertOutputEquals body, """<sec:access expression="hasRole('role1')">${body}</sec:access>"""
+		assertOutputEquals '', """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
+	}
+
 	private void switchUser() {
 		def filter = new SwitchUserFilter()
 		def request = new MockHttpServletRequest('POST', '/j_spring_security_switch_user')
