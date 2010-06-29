@@ -272,7 +272,7 @@ class SpringSecurityCoreGrailsPlugin {
 			securityMetadataSource = ref('objectDefinitionSource')
 			runAsManager = ref('runAsManager')
 		}
-		if (conf.securityConfigType.name() == 'Annotation') {
+		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -289,7 +289,7 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
-		else if (conf.securityConfigType.name() == 'Requestmap') {
+		else if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
 			objectDefinitionSource(RequestmapFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -300,7 +300,7 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
-		else if (conf.securityConfigType.name() == 'InterceptUrlMap') {
+		else if (SpringSecurityUtils.securityConfigType == 'InterceptUrlMap') {
 			objectDefinitionSource(InterceptUrlMapFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -468,7 +468,7 @@ class SpringSecurityCoreGrailsPlugin {
 			addControllerMethods controllerClass.metaClass, ctx
 		}
 
-		if (conf.securityConfigType.name() == 'Annotation') {
+		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
 			ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 				ctx.grailsUrlMappingsHolder, application.controllerClasses
 		}
@@ -545,7 +545,7 @@ class SpringSecurityCoreGrailsPlugin {
 
 		if (event.source && application.isControllerClass(event.source)) {
 
-			if (conf.securityConfigType.name() == 'Annotation') {
+			if (SpringSecurityUtils.securityConfigType == 'Annotation') {
 				event.ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 					event.ctx.grailsUrlMappingsHolder, application.controllerClasses
 			}
@@ -561,7 +561,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		if (conf.securityConfigType.name() == 'Annotation') {
+		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
 			// might have changed controllerAnnotations.staticRules
 			event.ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 				event.ctx.grailsUrlMappingsHolder, application.controllerClasses

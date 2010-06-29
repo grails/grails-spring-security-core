@@ -391,6 +391,14 @@ public final class SpringSecurityUtils {
 	}
 
 	/**
+	 * Lookup the security type as a String to avoid dev mode reload issues.
+	 * @return the name of the <code>SecurityConfigType</code>
+	 */
+	public static String getSecurityConfigType() {
+		return getSecurityConfig().get("securityConfigType").toString();
+	}
+
+	/**
 	 * Merge in a secondary config (provided by a plugin as defaults) into the main config.
 	 * @param currentConfig  the current configuration
 	 * @param className  the name of the config class to load

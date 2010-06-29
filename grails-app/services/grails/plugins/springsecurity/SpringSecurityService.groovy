@@ -107,7 +107,7 @@ class SpringSecurityService {
 		String authorityFieldName = conf.authority.nameField
 
 		role.getClass().withTransaction { status ->
-			if (conf.securityConfigType == SecurityConfigType.Requestmap) {
+			if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
 				String roleName = role."$authorityFieldName"
 				def requestmaps = findRequestmapsByRole(roleName, role.getClass(), conf)
 				for (rm in requestmaps) {
@@ -153,7 +153,7 @@ class SpringSecurityService {
 			return false
 		}
 
-		if (conf.securityConfigType == SecurityConfigType.Requestmap) {
+		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
 			String newRoleName = role."$authorityFieldName"
 			if (newRoleName != oldRoleName) {
 				def requestmaps = findRequestmapsByRole(oldRoleName, role.getClass(), conf)

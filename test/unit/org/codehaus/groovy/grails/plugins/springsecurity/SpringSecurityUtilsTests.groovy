@@ -14,6 +14,8 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import grails.plugins.springsecurity.SecurityConfigType
+
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
@@ -242,6 +244,35 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 
 	void testPrivateConstructor() {
 		SecurityTestUtils.testPrivateConstructor SpringSecurityUtils
+	}
+
+	void testGetSecurityConfigType() {
+		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation
+		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()
+		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = 'Annotation'
+		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
+		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap.name()
+		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = 'InterceptUrlMap'
+		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap
+		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap.name()
+		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
+
+		CH.config.grails.plugins.springsecurity.securityConfigType = 'Requestmap'
+		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 	}
 
 	/**

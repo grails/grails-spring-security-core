@@ -17,7 +17,7 @@ authenticationDetails.authClass | [WebAuthenticationDetails|http://static.spring
 roleHierarchy | none | Hierarchical role definition. See [Hierarchical Role Definition|guide:14 Hierarchical Roles].
 voterNames | ['authenticatedVoter', 'roleVoter'] | Bean names of voters. See [Voters|guide:21 Voters].
 providerNames | ['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'] | Bean names of authentication providers. See [Authentication Providers|guide:10 Authentication Providers].
-securityConfigType | Type of request mapping to use | One of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@. See [Configuring Request Mappings to Secure URLs|guide:5 Configuring Request Mappings to Secure URLs].
+securityConfigType | Type of request mapping to use | One of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@ (or the corresponding names as Strings). See [Configuring Request Mappings to Secure URLs|guide:5 Configuring Request Mappings to Secure URLs].
 controllerAnnotations.matcher | 'ant' | Use an Ant-style URL matcher ('ant') or Regex ('regex').
 controllerAnnotations.lowercase | @true@ | Whether to do URL comparisons using lowercase.
 controllerAnnotations.staticRules | none | Extra rules that cannot be mapped using annotations.
