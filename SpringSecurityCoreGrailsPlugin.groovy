@@ -13,7 +13,6 @@
  * limitations under the License.
  */
 import grails.plugins.springsecurity.DigestAuthPasswordEncoder
-import grails.plugins.springsecurity.SecurityConfigType
 
 import javax.servlet.Filter
 
@@ -26,6 +25,7 @@ import org.springframework.security.access.vote.RoleHierarchyVoter
 import org.springframework.security.authentication.AccountStatusUserDetailsChecker
 import org.springframework.security.authentication.AnonymousAuthenticationProvider
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl
+import org.springframework.security.authentication.DefaultAuthenticationEventPublisher
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.RememberMeAuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
@@ -90,6 +90,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
 import org.codehaus.groovy.grails.plugins.springsecurity.MutableLogoutFilter
+import org.codehaus.groovy.grails.plugins.springsecurity.NullAuthenticationEventPublisher
 import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestmapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestHolderAuthenticationFilter
@@ -104,7 +105,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.4'
+	String version = '0.4.1'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -112,7 +113,7 @@ class SpringSecurityCoreGrailsPlugin {
 	List pluginExcludes = [
 		'grails-app/domain/**',
 		'scripts/_Events.groovy',
-		'scripts/CreateTestApp.groovy',
+		'scripts/CreateS2TestApps.groovy',
 		'docs/**',
 		'src/docs/**'
 	]
@@ -374,6 +375,11 @@ class SpringSecurityCoreGrailsPlugin {
 		// SecurityEventListener
 		if (conf.useSecurityEventListener) {
 			securityEventListener(SecurityEventListener)
+
+			authenticationEventPublisher(DefaultAuthenticationEventPublisher)
+		}
+		else {
+			authenticationEventPublisher(NullAuthenticationEventPublisher)
 		}
 
 		// Basic Auth
@@ -462,7 +468,7 @@ class SpringSecurityCoreGrailsPlugin {
 			addControllerMethods controllerClass.metaClass, ctx
 		}
 
-		if (conf.securityConfigType == SecurityConfigType.Annotation) {
+		if (conf.securityConfigType.name() == 'Annotation') {
 			ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 				ctx.grailsUrlMappingsHolder, application.controllerClasses
 		}
@@ -539,7 +545,7 @@ class SpringSecurityCoreGrailsPlugin {
 
 		if (event.source && application.isControllerClass(event.source)) {
 
-			if (conf.securityConfigType == SecurityConfigType.Annotation) {
+			if (conf.securityConfigType.name() == 'Annotation') {
 				event.ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 					event.ctx.grailsUrlMappingsHolder, application.controllerClasses
 			}
@@ -555,7 +561,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		if (conf.securityConfigType == SecurityConfigType.Annotation) {
+		if (conf.securityConfigType.name() == 'Annotation') {
 			// might have changed controllerAnnotations.staticRules
 			event.ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 				event.ctx.grailsUrlMappingsHolder, application.controllerClasses
@@ -669,6 +675,7 @@ class SpringSecurityCoreGrailsPlugin {
 		/** authenticationManager */
 		authenticationManager(ProviderManager) {
 			providers = providerRefs
+			authenticationEventPublisher = ref('authenticationEventPublisher')
 		}
 	}
 
