@@ -1,4 +1,4 @@
-The typical pattern of using web site authentication to access restricted pages involves intercepting access requests for secure pages, redirecting to a login page (possibly off-site), and redirecting back to the originally-requested page after a successful login. Each page can also have a login link to allow explicit logins at any time.
+The typical pattern of using web site authentication to access restricted pages involves intercepting access requests for secure pages, redirecting to a login page (possibly off-site, for example when using [OpenID|http://grails.org/plugin/spring-security-openid] or a Single Sign-on implementation such as [CAS|http://grails.org/plugin/spring-security-cas]), and redirecting back to the originally-requested page after a successful login. Each page can also have a login link to allow explicit logins at any time.
 
 Another option is to also have a login link on each page and to use Ajax and DHTML to present a login form within the current page in a popup. The form submits the authentication request through Ajax and displays success or error messages as appropriate.
 
@@ -187,12 +187,12 @@ function authAjax() {
 
 The important aspects of this code are:
 
-* The form posts to the same URL as the regular form, @j_spring_security_check@. In fact, the form is identical, including the rememberMe checkbox, except that the submit button is replaced with a hyperlink.
+* The form posts to the same URL as the regular form, @j_spring_security_check@. In fact, the form is identical, including the remember-me checkbox, except that the submit button is replaced with a hyperlink.
 * Error messages are displayed within the popup <div>.
 * Because there is no page redirect after successful login, the Javascript replaces the login link to give a visual indication that the user is logged in.
 * Details of logout are not shown; you do this by redirecting the user to @/j_spring_security_logout@.
 
-h4. How Does Ajax Work?
+h4. How Does Ajax login Work?
 
 Most Ajax libraries (Prototype, JQuery, and Dojo as of v2.1) include an @X-Requested-With@ header that indicates that the request was made by @XMLHttpRequest@ instead of being triggered by clicking a regular hyperlink or form submit button. The plugin uses this header to detect Ajax login requests, and uses subclasses of some of Spring Security's classes to use different redirect urls for Ajax requests than regular requests. Instead of showing full pages, @LoginController@ has JSON-generating methods @ajaxSuccess()@, @ajaxDenied()@, and @authfail()@ that generate JSON that the login Javascript code can use to appropriately display success or error messages.
 

@@ -1,6 +1,6 @@
 With this approach you use the @Requestmap@ domain class to store mapping entries in the database. @Requestmap@ has a @url@ property that contains the secured URL pattern and a @configAttribute@ property containing a comma-delimited list of required roles and/or tokens such as @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, and @IS_AUTHENTICATED_ANONYMOUSLY@.
 
-To use @Requestmap@ entries, specify @SecurityConfigType.Requestmap@:
+To use @Requestmap@ entries, specify @securityConfigType=SecurityConfigType.Requestmap@:
 
 {code}
 import grails.plugins.springsecurity.SecurityConfigType

@@ -1,4 +1,4 @@
-You can use an @\@Secured@ annotation in your controllers to configure which roles are required for which actions. To use annotations, specify @SecurityConfigType.Annotation@, or leave it unspecified because it's the default:
+You can use an @\@Secured@ annotation in your controllers to configure which roles are required for which actions. To use annotations, specify @securityConfigType=SecurityConfigType.Annotation@, or leave it unspecified because it's the default:
 
 {code}
 import grails.plugins.springsecurity.SecurityConfigType

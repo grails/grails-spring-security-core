@@ -1,4 +1,4 @@
-To use the @Config.groovy@ Map to secure URLs, first specify @SecurityConfigType.InterceptUrlMap@:
+To use the @Config.groovy@ Map to secure URLs, first specify @securityConfigType=SecurityConfigType.InterceptUrlMap@:
 
 {code}
 import grails.plugins.springsecurity.SecurityConfigType

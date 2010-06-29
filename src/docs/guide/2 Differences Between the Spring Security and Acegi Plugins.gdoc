@@ -23,132 +23,17 @@ and adds several new features:
 * Hierarchical roles
 * Account locking and forcing password change
 
-
 h4. Features Not Included in the Spring Security Plugin
 
-The following features are not included in the Spring Security plugin, but will be available in secondary plugins that will extend and depend on the core plugin:
+The following features are not included in the Spring Security plugin, but are (or will be) available in secondary plugins that extend and depend on the core plugin:
+* [OpenID|http://grails.org/plugin/spring-security-openid]
+* [ACL|http://grails.org/plugin/spring-security-acl]
+* [LDAP|http://grails.org/plugin/spring-security-ldap]
+* [CAS|http://grails.org/plugin/spring-security-cas]
+* User registration
 * Facebook
-* OpenID
-* LDAP
-* CAS
 * NTLM
 * Kerberos
-* User registration
-
-h4. Configuration Property Names
-The table shows names of corresponding configuration properties.
-
-{table}
-*Acegi Plugin* | *Spring Security Plugin*
-active | active
-loginUserDomainClass | userLookup.userDomainClassName
-userName | userLookup.usernamePropertyName
-enabled | userLookup.enabledPropertyName
-password | userLookup.passwordPropertyName
-relationalAuthorities | userLookup.authoritiesPropertyName
-getAuthoritiesMethod | N/A
-authorityDomainClass | authority.className
-authorityField | authority.nameField
-authenticationFailureUrl | failureHandler.defaultFailureUrl
-ajaxAuthenticationFailureUrl | failureHandler.ajaxAuthFailUrl
-defaultTargetUrl | successHandler.defaultTargetUrl
-alwaysUseDefaultTargetUrl | successHandler.alwaysUseDefault
-filterProcessesUrl | apf.filterProcessesUrl
-key | anon.key
-userAttribute | anon.userAttribute
-loginFormUrl | auth.loginFormUrl
-forceHttps | auth.forceHttps
-ajaxLoginFormUrl | auth.ajaxLoginFormUrl
-afterLogoutUrl | 	logout.afterLogoutUrl
-errorPage | adh.errorPage
-ajaxErrorPage | adh.ajaxErrorPage
-ajaxHeader | ajaxHeader
-algorithm | password.algorithm
-encodeHashAsBase64 | password.encodeHashAsBase64
-cookieName | rememberMe.cookieName
-alwaysRemember | rememberMe.alwaysRemember
-tokenValiditySeconds | rememberMe.tokenValiditySeconds
-parameter | rememberMe.parameter
-rememberMeKey | rememberMe.key
-useLogger | registerLoggerListener
-useRequestMapDomainClass | securityConfigType = @SecurityConfigType.Requestmap@
-requestMapClass | requestMap.className
-requestMapPathField | requestMap.urlField
-requestMapConfigAttributeField | requestMap.configAttributeField
-useControllerAnnotations | securityConfigType = @SecurityConfigType.Annotation@
-controllerAnnotationsMatcher | controllerAnnotations.matcher
-controllerAnnotationsMatchesLowercase | controllerAnnotations.lowercase
-controllerAnnotationStaticRules | controllerAnnotations.staticRules
-controllerAnnotationsRejectIfNoRule | rejectIfNoRule
-requestMapString | N/A - securityConfigType = @SecurityConfigType.InterceptUrlMap@ is very similar
-realmName | basic.realmName
-basicProcessingFilter | useBasicAuth
-switchUserProcessingFilter | useSwitchUserFilter
-swswitchUserUrl | switchUser.switchUserUrl
-swexitUserUrl | switchUser.exitUserUrl
-swtargetUrl | switchUser.targetUrl
-useMail | N/A - registration will be supported in the UI plugin
-mailHost | N/A - registration will be supported in the UI plugin
-mailUsername | N/A - registration will be supported in the UI plugin
-mailPassword | N/A - registration will be supported in the UI plugin
-mailProtocol | N/A - registration will be supported in the UI plugin
-mailFrom | N/A - registration will be supported in the UI plugin
-mailPort | N/A - registration will be supported in the UI plugin
-defaultRole | N/A - registration will be supported in the UI plugin
-useOpenId | N/A - will be supported in the OpenID plugin
-openIdNonceMaxSeconds | N/A - will be supported in the OpenID plugin
-useLdap | N/A - will be supported in the LDAP plugin
-ldapRetrieveGroupRoles | N/A - will be supported in the LDAP plugin
-ldapRetrieveDatabaseRoles | N/A - will be supported in the LDAP plugin
-ldapSearchSubtree | N/A - will be supported in the LDAP plugin
-ldapGroupRoleAttribute | N/A - will be supported in the LDAP plugin
-ldapPasswordAttributeName | N/A - will be supported in the LDAP plugin
-ldapServer | N/A - will be supported in the LDAP plugin
-ldapManagerDn | N/A - will be supported in the LDAP plugin
-ldapManagerPassword | N/A - will be supported in the LDAP plugin
-ldapSearchBase | N/A - will be supported in the LDAP plugin
-ldapSearchFilter | N/A - will be supported in the LDAP plugin
-ldapGroupSearchBase | N/A - will be supported in the LDAP plugin
-ldapGroupSearchFilter | N/A - will be supported in the LDAP plugin
-ldapUsePassword | N/A - will be supported in the LDAP plugin
-useKerberos | N/A - will be supported in a secondary plugin
-kerberosLoginConfigFile | N/A - will be supported in a secondary plugin
-kerberosRealm | N/A - will be supported in a secondary plugin
-kerberosKdc | N/A - will be supported in a secondary plugin
-kerberosRetrieveDatabaseRoles | N/A - will be supported in a secondary plugin
-useHttpSessionEventPublisher | useHttpSessionEventPublisher
-cacheUsers | cacheUsers
-useCAS | N/A - will be supported in the CAS plugin
-cas.casServer | N/A - will be supported in the CAS plugin
-cas.casServerPort | N/A - will be supported in the CAS plugin
-cas.casServerSecure | N/A - will be supported in the CAS plugin
-cas.localhostSecure | N/A - will be supported in the CAS plugin
-cas.failureURL | N/A - will be supported in the CAS plugin
-cas.defaultTargetURL | N/A - will be supported in the CAS plugin
-cas.fullLoginURL | N/A - will be supported in the CAS plugin
-cas.fullServiceURL | N/A - will be supported in the CAS plugin
-cas.authenticationProviderKey | N/A - will be supported in the CAS plugin
-cas.userDetailsService | N/A - will be supported in the CAS plugin
-cas.sendRenew | N/A - will be supported in the CAS plugin
-cas.proxyReceptorUrl | N/A - will be supported in the CAS plugin
-cas.filterProcessesUrl | N/A - will be supported in the CAS plugin
-useNtlm | N/A - will be supported in a secondary plugin
-ntlm.stripDomain | N/A - will be supported in a secondary plugin
-ntlm.retryOnAuthFailure | N/A - will be supported in a secondary plugin
-ntlm.forceIdentification | N/A - will be supported in a secondary plugin
-ntlm.defaultDomain | N/A - will be supported in a secondary plugin
-ntlm.netbiosWINS | N/A - will be supported in a secondary plugin
-httpPort | portMapper.httpPort
-httpsPort | portMapper.httpsPort
-secureChannelDefinitionSource | N/A, use secureChannel.definition
-channelConfig | secureChannel.definition
-ipRestrictions | ipRestrictions
-useFacebook | N/A - will be supported in the Facebook plugin
-facebook.filterProcessesUrl | N/A - will be supported in the Facebook plugin
-facebook.authenticationUrlRoot | N/A - will be supported in the Facebook plugin
-facebook.apiKey | N/A - will be supported in the Facebook plugin
-facebook.secretKey | N/A - will be supported in the Facebook plugin
-{table}
 
 h4. Script Differences
 
@@ -157,10 +42,9 @@ To initialize the Acegi plugin, you run @create-auth-domains@. This initializati
 
 The Spring Security plugin uses only one script, [s2-quickstart|Scripts]. It is similar to @create-auth-domains@ because it creates domain classes and login and logout bcontrollers, but it appends files to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There is no equivalent to @generate-manager@ or @generate-registration@ because an optional UI plugin  generates domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages, you can use the standard Grails @generate-all@ script. Various sections of this documentation discuss required changes to the generated source files, for example, encrypting passwords before saving or updating a user.
  
-h4. domainClass Differences
+h4. UserDetails Differences
 
 The Acegi plugin extends the @UserDetails@ instance and adds an accessor for the person domain class instance that is used to populate the @UserDetails@. Because the @Authentication@ is kept in the HTTP session and the @UserDetails@ is attached to that, it is easy to access non-security data such as full name, email, and so on without hitting the database.
-
 
 However, with this approach, if the domain class has a lot of data, you increase the size of the session payload, which is exacerbated by clustered sessions. Further, any lazy-loaded collections fail to load after retrieving the person from the session because it would have become a detached Hibernate object. This problem is addressed by a call to @person.attach()@ or by reloading by id, for example:
 

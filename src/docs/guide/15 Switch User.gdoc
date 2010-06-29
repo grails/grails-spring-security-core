@@ -74,7 +74,8 @@ switchUser.targetUrl | Same as @successHandler.defaultTargetUrl@ | URL for redir
 switchUser.switchFailureUrl | Same as @failureHandler.defaultFailureUrl@ | URL for redirect after an error during an attempt to switch.
 {table}
 
-h4. Adding Code
+h4. GSP Code
+
 One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the @sec:ifSwitched@ tag) then a 'resume' link is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:
 
 {code}

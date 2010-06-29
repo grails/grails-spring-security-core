@@ -7,3 +7,118 @@ Cache UserDetails by default | @false@ | @true@
 Configuration location | @grails-app/conf/Config.groovy@ | @grails-app/conf/SecurityConfig.groovy@
 Security service | @springSecurityService@ | @authenticateService@
 {table}
+
+The table shows names of corresponding configuration properties.
+
+{table}
+*Acegi Plugin* | *Spring Security Plugin*
+active | active
+loginUserDomainClass | userLookup.userDomainClassName
+userName | userLookup.usernamePropertyName
+enabled | userLookup.enabledPropertyName
+password | userLookup.passwordPropertyName
+relationalAuthorities | userLookup.authoritiesPropertyName
+getAuthoritiesMethod | N/A
+authorityDomainClass | authority.className
+authorityField | authority.nameField
+authenticationFailureUrl | failureHandler.defaultFailureUrl
+ajaxAuthenticationFailureUrl | failureHandler.ajaxAuthFailUrl
+defaultTargetUrl | successHandler.defaultTargetUrl
+alwaysUseDefaultTargetUrl | successHandler.alwaysUseDefault
+filterProcessesUrl | apf.filterProcessesUrl
+key | anon.key
+userAttribute | anon.userAttribute
+loginFormUrl | auth.loginFormUrl
+forceHttps | auth.forceHttps
+ajaxLoginFormUrl | auth.ajaxLoginFormUrl
+afterLogoutUrl | 	logout.afterLogoutUrl
+errorPage | adh.errorPage
+ajaxErrorPage | adh.ajaxErrorPage
+ajaxHeader | ajaxHeader
+algorithm | password.algorithm
+encodeHashAsBase64 | password.encodeHashAsBase64
+cookieName | rememberMe.cookieName
+alwaysRemember | rememberMe.alwaysRemember
+tokenValiditySeconds | rememberMe.tokenValiditySeconds
+parameter | rememberMe.parameter
+rememberMeKey | rememberMe.key
+useLogger | registerLoggerListener
+useRequestMapDomainClass | securityConfigType = @SecurityConfigType.Requestmap@
+requestMapClass | requestMap.className
+requestMapPathField | requestMap.urlField
+requestMapConfigAttributeField | requestMap.configAttributeField
+useControllerAnnotations | securityConfigType = @SecurityConfigType.Annotation@
+controllerAnnotationsMatcher | controllerAnnotations.matcher
+controllerAnnotationsMatchesLowercase | controllerAnnotations.lowercase
+controllerAnnotationStaticRules | controllerAnnotations.staticRules
+controllerAnnotationsRejectIfNoRule | rejectIfNoRule
+requestMapString | N/A - securityConfigType = @SecurityConfigType.InterceptUrlMap@ is very similar
+realmName | basic.realmName
+basicProcessingFilter | useBasicAuth
+switchUserProcessingFilter | useSwitchUserFilter
+swswitchUserUrl | switchUser.switchUserUrl
+swexitUserUrl | switchUser.exitUserUrl
+swtargetUrl | switchUser.targetUrl
+useMail | N/A - registration will be supported in the UI plugin
+mailHost | N/A - registration will be supported in the UI plugin
+mailUsername | N/A - registration will be supported in the UI plugin
+mailPassword | N/A - registration will be supported in the UI plugin
+mailProtocol | N/A - registration will be supported in the UI plugin
+mailFrom | N/A - registration will be supported in the UI plugin
+mailPort | N/A - registration will be supported in the UI plugin
+defaultRole | N/A - registration will be supported in the UI plugin
+useOpenId | N/A - supported in the [OpenID|http://grails.org/plugin/spring-security-openid] plugin
+openIdNonceMaxSeconds | N/A - supported in the [OpenID|http://grails.org/plugin/spring-security-openid] plugin
+useLdap | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapRetrieveGroupRoles | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapRetrieveDatabaseRoles | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapSearchSubtree | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapGroupRoleAttribute | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapPasswordAttributeName | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapServer | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapManagerDn | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapManagerPassword | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapSearchBase | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapSearchFilter | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapGroupSearchBase | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapGroupSearchFilter | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+ldapUsePassword | N/A - supported in the [LDAP|http://grails.org/plugin/spring-security-ldap] plugin
+useKerberos | N/A - will be supported in a secondary plugin
+kerberosLoginConfigFile | N/A - will be supported in a secondary plugin
+kerberosRealm | N/A - will be supported in a secondary plugin
+kerberosKdc | N/A - will be supported in a secondary plugin
+kerberosRetrieveDatabaseRoles | N/A - will be supported in a secondary plugin
+useHttpSessionEventPublisher | useHttpSessionEventPublisher
+cacheUsers | cacheUsers
+useCAS | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.casServer | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.casServerPort | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.casServerSecure | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.localhostSecure | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.failureURL | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.defaultTargetURL | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.fullLoginURL | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.fullServiceURL | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.authenticationProviderKey | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.userDetailsService | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.sendRenew | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.proxyReceptorUrl | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+cas.filterProcessesUrl | N/A - supported in the [CAS|http://grails.org/plugin/spring-security-cas] plugin
+useNtlm | N/A - will be supported in a secondary plugin
+ntlm.stripDomain | N/A - will be supported in a secondary plugin
+ntlm.retryOnAuthFailure | N/A - will be supported in a secondary plugin
+ntlm.forceIdentification | N/A - will be supported in a secondary plugin
+ntlm.defaultDomain | N/A - will be supported in a secondary plugin
+ntlm.netbiosWINS | N/A - will be supported in a secondary plugin
+httpPort | portMapper.httpPort
+httpsPort | portMapper.httpsPort
+secureChannelDefinitionSource | N/A, use secureChannel.definition
+channelConfig | secureChannel.definition
+ipRestrictions | ipRestrictions
+useFacebook | N/A - will be supported in the Facebook plugin
+facebook.filterProcessesUrl | N/A - will be supported in the Facebook plugin
+facebook.authenticationUrlRoot | N/A - will be supported in the Facebook plugin
+facebook.apiKey | N/A - will be supported in the Facebook plugin
+facebook.secretKey | N/A - will be supported in the Facebook plugin
+{table}
+

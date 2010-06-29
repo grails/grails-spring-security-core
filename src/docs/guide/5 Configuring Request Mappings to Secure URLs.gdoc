@@ -18,7 +18,7 @@ Any requested URL that does not have a corresponding rule will be denied to all 
 
 h4. URLs and Authorities
 
-In each approach you configure a mapping for a URL pattern to the role(s) that are required to access those URLs, for example, @/admin/user/\*\*@ requires @ROLE_ADMIN@. In addition, you can combine the role(s) with tokens such as IS_AUTHENTICATED_ANONYMOUSLY, IS_AUTHENTICATED_REMEMBERED, and IS_AUTHENTICATED_FULLY. One or more [@Voters@|guide:21 Voters] will process any tokens and enforce a rule based on them:
+In each approach you configure a mapping for a URL pattern to the role(s) that are required to access those URLs, for example, @/admin/user/\*\*@ requires @ROLE_ADMIN@. In addition, you can combine the role(s) with tokens such as IS_AUTHENTICATED_ANONYMOUSLY, IS_AUTHENTICATED_REMEMBERED, and IS_AUTHENTICATED_FULLY. One or more [Voter|guide:21 Voters]s will process any tokens and enforce a rule based on them:
 * @IS_AUTHENTICATED_ANONYMOUSLY@
 ** signifies that anyone can access this URL. By default the @AnonymousAuthenticationFilter@ ensures an 'anonymous' @Authentication@ with no roles so that every user has an authentication. The token accepts any authentication, even anonymous.
 * @IS_AUTHENTICATED_REMEMBERED@
