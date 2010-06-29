@@ -75,17 +75,17 @@ public final class SpringSecurityUtils {
 	/**
 	 * Default voter names. Here to let plugins add or remove them. Can be overridden by config.
 	 */
-	public static final Set<String> VOTER_NAMES = new HashSet<String>();
+	public static final List<String> VOTER_NAMES = new ArrayList<String>();
 
 	/**
 	 * Default authentication provider names. Here to let plugins add or remove them. Can be overridden by config.
 	 */
-	public static final Set<String> PROVIDER_NAMES = new HashSet<String>();
+	public static final List<String> PROVIDER_NAMES = new ArrayList<String>();
 
 	/**
 	 * Default logout handler names. Here to let plugins add or remove them. Can be overridden by config.
 	 */
-	public static final Set<String> LOGOUT_HANDLER_NAMES = new HashSet<String>();
+	public static final List<String> LOGOUT_HANDLER_NAMES = new ArrayList<String>();
 
 	static {
 		VOTER_NAMES.add("authenticatedVoter");
@@ -290,7 +290,7 @@ public final class SpringSecurityUtils {
 	 * @param beanName  the Spring bean name of the provider
 	 */
 	public static void registerProvider(final String beanName) {
-		PROVIDER_NAMES.add(beanName);
+		PROVIDER_NAMES.add(0, beanName);
 	}
 
 	/**
