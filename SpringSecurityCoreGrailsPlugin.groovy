@@ -101,7 +101,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith, Beverley Talbott</a>
  */
 class SpringSecurityCoreGrailsPlugin {
 
@@ -118,7 +118,7 @@ class SpringSecurityCoreGrailsPlugin {
 		'src/docs/**'
 	]
 
-	String author = 'Burt Beckwith'
+	String author = 'Burt Beckwith, Beverley Talbott'
 	String authorEmail = 'beckwithb@vmware.com'
 	String title = 'Spring Security Core Plugin'
 	String description = 'Spring Security Core plugin'
