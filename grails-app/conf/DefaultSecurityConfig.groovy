@@ -114,6 +114,7 @@ security {
 
 	/** daoAuthenticationProvider **/
 	dao.reflectionSaltSourceProperty = null // if null, don't use salt source
+	dao.hideUserNotFoundExceptions = true
 
 	/** anonymousProcessingFilter */
 	anon.key = 'foo'
