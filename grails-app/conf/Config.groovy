@@ -46,5 +46,6 @@ grails {
 	}
 }
 
-grails.doc.authors = 'Burt Beckwith'
+grails.doc.authors = 'Burt Beckwith, Beverley Talbott'
 grails.doc.license = 'Apache License 2.0'
+grails.doc.title = 'Spring Security Core Plugin'
