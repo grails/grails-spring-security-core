@@ -346,6 +346,7 @@ class SpringSecurityCoreGrailsPlugin {
 			passwordEncoder = ref('passwordEncoder')
 			userCache = ref('userCache')
 			saltSource = ref('saltSource')
+			hideUserNotFoundExceptions = conf.dao.hideUserNotFoundExceptions // true
 		}
 
 		/** passwordEncoder */

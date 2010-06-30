@@ -11,6 +11,7 @@ useHttpSessionEventPublisher | @false@ | If @true@, an [HttpSessionEventPublishe
 cacheUsers | @false@ | If @true@, logins are cached using an @EhCache@. See [Account Locking and Forcing Password Change, under User Cache|guide:12.3 Account Locking and Forcing Password Change].
 useSecurityEventListener | @false@ | If @true@, configure @SecurityEventListener@. See [Events|guide:7 Events].
 dao.reflectionSaltSourceProperty | none | Which property to use for the reflection-based salt source. See [Salted Passwords|guide:12.2 Salted Passwords]
+dao.hideUserNotFoundExceptions | @true@ | if @true@, throws a new @BadCredentialsException@ if a username is not found or the password is incorrect, but if @false@ re-throws the @UsernameNotFoundException@ thrown by @UserDetailsService@ (considered less secure than throwing @BadCredentialsException@ for both exceptions)
 requestCache.onlyOnGet | @false@ | Whether to cache only a [SavedRequest|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/savedrequest/SavedRequest.html] on GET requests.
 requestCache.createSession | @true@ | Whether caching @SavedRequest@ can trigger the creation of a session.
 authenticationDetails.authClass | [WebAuthenticationDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/WebAuthenticationDetails.html] | The @Authentication@ details class to use.
