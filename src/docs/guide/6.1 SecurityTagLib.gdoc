@@ -109,9 +109,17 @@ Displays the inner body content only if the current user has not switched from a
 h4. switchedUserOriginalUsername
 Renders the original user's username if the current user switched from another user.
 
+{code}
+<sec:ifSwitched>
+<a href='${request.contextPath}/j_spring_security_exit_user'>
+   Resume as <sec:switchedUserOriginalUsername/>
+</a>
+</sec:ifSwitched>
+{code}
+
 h4. access
 
-Renders the body if the specified expression evaluates to @true@.
+Renders the body if the specified expression evaluates to @true@ or specified URL is allowed.
 
 {code}
 <sec:access expression="hasRole('ROLE_USER')">
@@ -121,9 +129,17 @@ You're a user
 </sec:access>
 {code}
 
+{code}
+<sec:access url="/admin/user">
+
+<g:link controller='admin' action='user'>Manage Users</g:link>
+
+</sec:access>
+{code}
+
 h4. noAccess
 
-Renders the body if the specified expression evaluates to @false@.
+Renders the body if the specified expression evaluates to @false@ or URL isn't allowed.
 
 {code}
 <sec:noAccess expression="hasRole('ROLE_USER')">

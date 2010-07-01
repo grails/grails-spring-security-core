@@ -41,7 +41,6 @@ import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
-import org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.channel.ChannelDecisionManagerImpl
 import org.springframework.security.web.access.channel.ChannelProcessingFilter
@@ -87,6 +86,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.AuthenticatedVetoableDe
 import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepository
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
+import org.codehaus.groovy.grails.plugins.springsecurity.GrailsWebInvocationPrivilegeEvaluator
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
 import org.codehaus.groovy.grails.plugins.springsecurity.MutableLogoutFilter
@@ -105,7 +105,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '0.4.1'
+	String version = '0.4.2'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -118,7 +118,7 @@ class SpringSecurityCoreGrailsPlugin {
 		'src/docs/**'
 	]
 
-	String author = 'Burt Beckwith, Beverley Talbott'
+	String author = 'Burt Beckwith'
 	String authorEmail = 'beckwithb@vmware.com'
 	String title = 'Spring Security Core Plugin'
 	String description = 'Spring Security Core plugin'
@@ -312,7 +312,7 @@ class SpringSecurityCoreGrailsPlugin {
 			}
 		}
 
-		webInvocationPrivilegeEvaluator(DefaultWebInvocationPrivilegeEvaluator,
+		webInvocationPrivilegeEvaluator(GrailsWebInvocationPrivilegeEvaluator,
 				ref('filterInvocationInterceptor'))
 
 		// voters
