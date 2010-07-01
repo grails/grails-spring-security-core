@@ -23,27 +23,49 @@ package org.codehaus.groovy.grails.plugins.springsecurity;
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public enum SecurityFilterPosition {
+	/** First */
 	FIRST(Integer.MIN_VALUE),
+	/** HTTP/HTTPS channel filter */
 	CHANNEL_FILTER,
+	/** Concurrent Sessions */
 	CONCURRENT_SESSION_FILTER,
+	/** Populates the SecurityContextHolder */
 	SECURITY_CONTEXT_FILTER,
+	/** Logout */
 	LOGOUT_FILTER,
+	/** x509 certs */
 	X509_FILTER,
+	/** Pre-auth */
 	PRE_AUTH_FILTER,
+	/** CAS */
 	CAS_FILTER,
+	/** UsernamePasswordAuthenticationFilter */
 	FORM_LOGIN_FILTER,
+	/** OpenID */
 	OPENID_FILTER,
+	/** Not used, generates a dynamic login form */
 	LOGIN_PAGE_FILTER,
+	/** Digest auth */
 	DIGEST_AUTH_FILTER,
+	/** Basic Auth */
 	BASIC_AUTH_FILTER,
+	/** saved request filter */
 	REQUEST_CACHE_FILTER,
+	/** SecurityContextHolderAwareRequestFilter */
 	SERVLET_API_SUPPORT_FILTER,
+	/** Remember-me cookie */
 	REMEMBER_ME_FILTER,
+	/** Anonymous auth */
 	ANONYMOUS_FILTER,
+	/** SessionManagementFilter */
 	SESSION_MANAGEMENT_FILTER,
+	/** ExceptionTranslationFilter */
 	EXCEPTION_TRANSLATION_FILTER,
+	/** FilterSecurityInterceptor */
 	FILTER_SECURITY_INTERCEPTOR,
+	/** Switch user */
 	SWITCH_USER_FILTER,
+	/** Last */
 	LAST(Integer.MAX_VALUE);
 
 	private static final int INTERVAL = 100;
@@ -57,6 +79,10 @@ public enum SecurityFilterPosition {
 		_order = order;
 	}
 
+	/**
+	 * The position in the chain.
+	 * @return  the order
+	 */
 	public int getOrder() {
 		return _order;
 	}

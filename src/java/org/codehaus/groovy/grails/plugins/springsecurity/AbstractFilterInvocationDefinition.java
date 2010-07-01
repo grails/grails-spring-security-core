@@ -260,6 +260,11 @@ public abstract class AbstractFilterInvocationDefinition
 		_compiled.clear();
 	}
 
+	/**
+	 * For admin/debugging - find all config attributes that apply to the specified URL.
+	 * @param url  the URL
+	 * @return  matching attributes
+	 */
 	public Collection<ConfigAttribute> findMatchingAttributes(final String url) {
 		for (Map.Entry<Object, Collection<ConfigAttribute>> entry : _compiled.entrySet()) {
 			if (_urlMatcher.pathMatchesUrl(entry.getKey(), url)) {
