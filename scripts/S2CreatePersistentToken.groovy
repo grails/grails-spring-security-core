@@ -16,6 +16,8 @@ import groovy.text.SimpleTemplateEngine
 
 includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groovy")
 
+fullClassName = null
+
 USAGE = """
 	Usage: grails s2-create-persistent-token <domain-class-name>
 
@@ -34,7 +36,7 @@ target(s2CreatePersistentToken: 'Creates the persistent token domain class for t
 
 private void configure() {
 
-	String fullClassName = parseArgs()
+	fullClassName = parseArgs()
 	String packageName
 	String className
 	(packageName, className) = splitClassName(fullClassName)
