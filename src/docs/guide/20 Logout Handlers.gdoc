@@ -6,7 +6,7 @@ To customize this list, you define a @logout.handlerNames@ attribute with a list
 
 {table}
 *Property* | *Default Value* | *Meaning*
-logout.handlerNames | ['rememberMeServices', 'securityContextLogoutHandler'] | Logout handler bean names.
+logout.handlerNames | \['rememberMeServices', 'securityContextLogoutHandler'\] | Logout handler bean names.
 {table}
 
 The beans must be declared either by the plugin or by you in @resources.groovy@ or @resources.xml@. For example, suppose you have a custom @MyLogoutHandler@ in @resources.groovy@:

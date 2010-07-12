@@ -16,8 +16,8 @@ requestCache.onlyOnGet | @false@ | Whether to cache only a [SavedRequest|http://
 requestCache.createSession | @true@ | Whether caching @SavedRequest@ can trigger the creation of a session.
 authenticationDetails.authClass | [WebAuthenticationDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/WebAuthenticationDetails.html] | The @Authentication@ details class to use.
 roleHierarchy | none | Hierarchical role definition. See [Hierarchical Role Definition|guide:14 Hierarchical Roles].
-voterNames | ['authenticatedVoter', 'roleVoter'] | Bean names of voters. See [Voters|guide:21 Voters].
-providerNames | ['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'] | Bean names of authentication providers. See [Authentication Providers|guide:10 Authentication Providers].
+voterNames | \['authenticatedVoter', 'roleVoter'\] | Bean names of voters. See [Voters|guide:21 Voters].
+providerNames | \['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'\] | Bean names of authentication providers. See [Authentication Providers|guide:10 Authentication Providers].
 securityConfigType | Type of request mapping to use | One of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@ (or the corresponding names as Strings). See [Configuring Request Mappings to Secure URLs|guide:5 Configuring Request Mappings to Secure URLs].
 controllerAnnotations.matcher | 'ant' | Use an Ant-style URL matcher ('ant') or Regex ('regex').
 controllerAnnotations.lowercase | @true@ | Whether to do URL comparisons using lowercase.

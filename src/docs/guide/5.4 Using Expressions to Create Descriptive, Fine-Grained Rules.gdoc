@@ -46,8 +46,8 @@ The Spring Security docs have a [table listing the standard expressions|http://s
 
 {table}
 *Expression* | *Description*
-@hasRole([role])@ | Returns true if the current principal has the specified role.
-@hasAnyRole([role1,role2])@ | Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)
+@hasRole(role)@ | Returns true if the current principal has the specified role.
+@hasAnyRole(\[role1,role2\])@ | Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)
 @principal@ | Allows direct access to the principal object representing the current user
 @authentication@ | Allows direct access to the current Authentication object obtained from the SecurityContext
 @permitAll@ | Always evaluates to true

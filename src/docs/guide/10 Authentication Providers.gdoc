@@ -2,7 +2,7 @@ The plugin registers authentication providers that perform authentication by imp
 
 {table}
 *Property* | *Default Value* | *Meaning*
-providerNames | ['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'] | Bean names of authentication providers.
+providerNames | \['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'\] | Bean names of authentication providers.
 {table}
 
 Use @daoAuthenticationProvider@ to authenticate using the User and Role database tables, @rememberMeAuthenticationProvider@ to log in with a rememberMe cookie, and @anonymousAuthenticationProvider@ to create an 'anonymous' authentication if no other provider authenticates.

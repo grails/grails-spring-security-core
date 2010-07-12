@@ -2,7 +2,7 @@ You can register a list of voters by implementing the [AccessDecisionVoter|http:
 
 {table}
 *Property* | *Default Value* | *Meaning*
-voterNames | ['authenticatedVoter', 'roleVoter'] | Bean names of voters.
+voterNames | \['authenticatedVoter', 'roleVoter'\] | Bean names of voters.
 {table}
 
 By default a @roleVoter@ bean is registered to ensure users have the required roles for the request, and an @authenticatedVoter@ bean is registered to support @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, and @IS_AUTHENTICATED_ANONYMOUSLY@ tokens.

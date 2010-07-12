@@ -22,7 +22,7 @@ auth.ajaxLoginFormUrl | '/login/authAjax' | URL of Ajax login page.
 auth.useForward | false | Whether to render the login page (@true@) or redirect (@false@).
 logout.afterLogoutUrl | '/' | URL for redirect after logout.
 logout.filterProcessesUrl | '/j_spring_security_logout' | Logout URL, intercepted by Spring Security filter.
-logout.handlerNames | ['rememberMeServices', 'securityContextLogoutHandler'] | Logout handler bean names. See [Logout Handlers|guide:20 Logout Handlers]
+logout.handlerNames | \['rememberMeServices', 'securityContextLogoutHandler'\] | Logout handler bean names. See [Logout Handlers|guide:20 Logout Handlers]
 adh.errorPage | '/login/denied' | Location of the 403 error page.
 adh.ajaxErrorPage | '/login/ajaxDenied' | Location of the 403 error page for Ajax requests.
 ajaxHeader | 'X-Requested-With' | Header name sent by Ajax library, used to detect Ajax.
