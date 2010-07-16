@@ -18,5 +18,5 @@ grails.plugins.springsecurity.secureChannel.definition = [
 ]
 {code}
 
-URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, @/images/login/**@ is more specific than @/images/**@, so it appears first in the configuration.
+URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, @/images/login/\*\*@ is more specific than @/images/\*\*@, so it appears first in the configuration.
 

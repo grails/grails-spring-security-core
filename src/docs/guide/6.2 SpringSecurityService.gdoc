@@ -127,7 +127,7 @@ class RoleController {
 {code}
 
 h4. deleteRole()
-Deletes a role and, if you use @Requestmap@ instances to secure URLs, removes the role from all affected @Requestmap@ definitions. If a @Requestmap@'s config attribute is only the role name (for example, "/foo/bar/**=ROLE_FOO"), it is deleted.
+Deletes a role and, if you use @Requestmap@ instances to secure URLs, removes the role from all affected @Requestmap@ definitions. If a @Requestmap@'s config attribute is only the role name (for example, "/foo/bar/\*\*=ROLE_FOO"), it is deleted.
 
 Example:
 

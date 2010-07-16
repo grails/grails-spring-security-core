@@ -66,7 +66,7 @@ Here you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureCla
 
 h4. controllerAnnotations.staticRules
 
-You can also define 'static' mappings that cannot be expressed in the controllers, such as '/**' or for JavaScript, CSS, or image URLs. Use the @controllerAnnotations.staticRules@ property, for example:
+You can also define 'static' mappings that cannot be expressed in the controllers, such as '/\*\*' or for JavaScript, CSS, or image URLs. Use the @controllerAnnotations.staticRules@ property, for example:
 
 {code}
 grails.plugins.springsecurity.controllerAnnotations.staticRules = [
