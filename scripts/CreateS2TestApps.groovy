@@ -57,8 +57,7 @@ private void installPlugins() {
 
 private void runQuickstart() {
 	callGrails(grailsHome, testprojectRoot, 'dev', 's2-quickstart') {
-		ant.arg value: 'com.testapp'
-		ant.arg value: 'TestUser TestRole TestRequestmap'
+		['com.testapp', 'TestUser', 'TestRole', 'TestRequestmap'].each { ant.arg value: it }
 	}
 }
 
