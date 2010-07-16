@@ -29,9 +29,20 @@ grails.plugins.springsecurity.filterChain.chainMap = [
 ]
 {code}
 
-In this example, four filters are applied to URLs matching @/urlpattern1/**@ and three different filters are applied to URLs matching @/urlpattern2/**@. In addition the special token @JOINED_FILTERS@ is applied to all URLs. This is a conventient way to specify that all defined filters (configured either with configuration rules like @useSwitchUserFilter@ or explicitly using @filterNames@) should apply to this pattern.
+In this example, four filters are applied to URLs matching @/urlpattern1/\*\*@ and three different filters are applied to URLs matching @/urlpattern2/\*\*@. In addition the special token @JOINED_FILTERS@ is applied to all URLs. This is a conventient way to specify that all defined filters (configured either with configuration rules like @useSwitchUserFilter@ or explicitly using @filterNames@) should apply to this pattern.
 
-The order of the mappings is important. Each URL will be tested in order from top to bottom to find the first matching one. So you need a @/**@ catch-all rule at the end for URLs that do not match one of the earlier rules.
+The order of the mappings is important. Each URL will be tested in order from top to bottom to find the first matching one. So you need a @/\*\*@ catch-all rule at the end for URLs that do not match one of the earlier rules.
+
+There's also a filter negation syntax that can be very convenient. Rather than specifying all of the filter names (and risking forgetting one or putting them in the wrong order), you can use the @JOINED_FILTERS@ keyword and one or more filter names prefixed with a @-@. This means to use all configured filters except for the excluded ones. For example, if you had a web service that uses Basic Auth for @/webservice/\*\*@ URLs, you would configure that using:
+
+{code}
+grails.plugins.springsecurity.filterChain.chainMap = [
+   '/webservice/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+   '/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+]
+{code}
+
+For the @/webservice/\*\*@ URLs, we want all filters except for the standard @ExceptionTranslationFilter@ since we want to use just the one configured for Basic Auth. And for the @/\*\*@ URLs (everything else) we want everything except for the Basic Auth filter and its configured @ExceptionTranslationFilter@.
 
 h4. clientRegisterFilter
 An alternative to setting the @filterNames@ property is @org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils.clientRegisterFilter()@. This property allows you to add a custom filter to the chain at a specified position. Each standard filter has a corresponding position in the chain (see @org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition@ for details). So if you have created an application-specific filter, register it in @grails-app/conf/spring/resources.groovy@:
