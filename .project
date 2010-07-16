@@ -16,4 +16,11 @@
 		<nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>code-coverage-1.1.8-grails-app-i18n</name>
+			<type>2</type>
+			<locationURI>DOTGRAILS/1.3.3/projects/grails-spring-security-core/plugins/code-coverage-1.1.8/grails-app/i18n</locationURI>
+		</link>
+	</linkedResources>
 </projectDescription>
