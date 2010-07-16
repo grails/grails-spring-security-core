@@ -86,14 +86,18 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 		get '/logout'
 		assertContentContains 'Welcome to Grails'
 
+		// secureAnnotated is form auth
+
 		get '/secureAnnotated'
-		assertStatus 401
+		assertContentContains 'Please Login'
 
 		get '/secureAnnotated/index'
-		assertStatus 401
+		assertContentContains 'Please Login'
 
 		get '/secureAnnotated/adminEither'
-		assertStatus 401
+		assertContentContains 'Please Login'
+
+		// secureAnnotated is basic auth
 
 		get '/secureClassAnnotated'
 		assertStatus 401
@@ -110,51 +114,107 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 
 	private void checkSecuredUrlsVisibleWithAuth() {
 		// Check with admin1 auth, some @Secure actions are accessible
-		getWithAuth '/secureAnnotated', 'admin1', 'password1'
-		assertContentContains 'you have ROLE_ADMIN'
 
-		getWithAuth '/secureAnnotated/index', 'admin1', 'password1'
+		get '/secureAnnotated'
+		assertContentContains 'Please Login'
+		form {
+			j_username = 'admin1'
+			j_password = 'password1'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
-		getWithAuth '/secureAnnotated/adminEither', 'admin1', 'password1'
+		get '/secureAnnotated/index'
+		assertContentContains 'Please Login'
+		form {
+			j_username = 'admin1'
+			j_password = 'password1'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
+
+		get '/secureAnnotated/adminEither'
+		assertContentContains 'Please Login'
+		form {
+			j_username = 'admin1'
+			j_password = 'password1'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
+		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated', 'admin1', 'password1'
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated/index', 'admin1', 'password1'
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated/otherAction', 'admin1', 'password1'
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated/admin2', 'admin1', 'password1'
-		assertContentContains "Sorry, you're not authorized to view this page."
-
-		// login as admin2
+		assertStatus 403
 		get '/logout'
-		assertContentContains 'Welcome to Grails'
+
+		// now as admin2
 
 		// Check that with admin2 auth, some @Secure actions are accessible
-		getWithAuth '/secureAnnotated', 'admin2', 'password2'
-		assertContentContains 'you have ROLE_ADMIN'
 
-		getWithAuth '/secureAnnotated/index', 'admin2', 'password2'
+		get '/secureAnnotated'
+		assertContentContains 'Please Login'
+		form {
+			j_username = 'admin2'
+			j_password = 'password2'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
-		getWithAuth '/secureAnnotated/adminEither', 'admin2', 'password2'
+		get '/secureAnnotated/index'
+		assertContentContains 'Please Login'
+		form {
+			j_username = 'admin2'
+			j_password = 'password2'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
 		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
+
+		get '/secureAnnotated/adminEither'
+		assertContentContains 'Please Login'
+		form {
+			j_username = 'admin2'
+			j_password = 'password2'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
+		assertContentContains 'you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated', 'admin2', 'password2'
 		assertContentContains 'index: you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated/index', 'admin2', 'password2'
 		assertContentContains 'index: you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated/otherAction', 'admin2', 'password2'
 		assertContentContains 'otherAction: you have ROLE_ADMIN'
+		get '/logout'
 
 		getWithAuth '/secureClassAnnotated/admin2', 'admin2', 'password2'
 		assertContentContains 'admin2: you have ROLE_ADMIN2'
+		get '/logout'
 	}
 }

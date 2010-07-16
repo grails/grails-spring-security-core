@@ -41,6 +41,7 @@ import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
+import org.springframework.security.web.access.AccessDeniedHandlerImpl
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.channel.ChannelDecisionManagerImpl
 import org.springframework.security.web.access.channel.ChannelProcessingFilter
@@ -255,7 +256,7 @@ class SpringSecurityCoreGrailsPlugin {
 			rememberMeClass = conf.atr.rememberMeClass
 		}
 
-		// default 'authenticationEntryPoint' unless overridden with basic auth, digest, or x509
+		// default 'authenticationEntryPoint'
 		authenticationEntryPoint(AjaxAwareAuthenticationEntryPoint) {
 			loginFormUrl = conf.auth.loginFormUrl // '/login/auth'
 			forceHttps = conf.auth.forceHttps // 'false'
@@ -487,29 +488,44 @@ class SpringSecurityCoreGrailsPlugin {
 		Map<String, List<Filter>> filterChainMap = [:]
 
 		SortedMap<Integer, String> filterNames = findFilterChainNames(conf)
-		def allConfiguredFilters = []
+		def allConfiguredFilters = [:]
 		filterNames.each { int order, String name ->
 			def filter = ctx.getBean(name)
-			allConfiguredFilters << filter
+			allConfiguredFilters[name] = filter
 			SpringSecurityUtils.CONFIGURED_ORDERED_FILTERS[order] = filter
 		}
 
 		if (conf.filterChain.chainMap) {
 			conf.filterChain.chainMap.each { key, value ->
+				value = value.toString()
 				def filters
-				if (value == 'JOINED_FILTERS') {
+				if (value.contains('JOINED_FILTERS')) {
 					// special case to use either the filters defined by
-					// conf.filterChain.filterNames or the filters defined by config settings
-					filters = allConfiguredFilters
+					// conf.filterChain.filterNames or the filters defined by config settings;
+					// can also remove one or more with a prefix of -
+					def copy = new LinkedHashMap(allConfiguredFilters)
+					for (item in value.split(',')) {
+						item = item.toString().trim()
+						if (item == 'JOINED_FILTERS') continue
+						if (item.startsWith('-')) {
+							item = item.substring(1)
+							copy.remove(item)
+						}
+						else {
+							throw new RuntimeException("Cannot add a filter to JOINED_FILTERS, can only remove: $item")
+						}
+					}
+					filters = new ArrayList(copy.values())
 				}
 				else {
+					// explicit filter names
 					filters = value.toString().split(',').collect { name -> ctx.getBean(name) }
 				}
 				filterChainMap[key] = filters
 			}
 		}
 		else {
-			filterChainMap[filterChain.matcher.universalMatchPattern] = allConfiguredFilters // /**
+			filterChainMap[filterChain.matcher.universalMatchPattern] = new ArrayList(allConfiguredFilters.values()) // /**
 		}
 
 		filterChain.filterChainMap = filterChainMap
@@ -599,13 +615,22 @@ class SpringSecurityCoreGrailsPlugin {
 
 	private configureBasicAuth = { conf ->
 
-		authenticationEntryPoint(BasicAuthenticationEntryPoint) {
+		basicAuthenticationEntryPoint(BasicAuthenticationEntryPoint) {
 			realmName = conf.basic.realmName // 'Grails Realm'
 		}
 
 		basicAuthenticationFilter(BasicAuthenticationFilter) {
 			authenticationManager = ref('authenticationManager')
-			authenticationEntryPoint = ref('authenticationEntryPoint')
+			authenticationEntryPoint = ref('basicAuthenticationEntryPoint')
+		}
+
+		basicAccessDeniedHandler(AccessDeniedHandlerImpl)
+
+		basicExceptionTranslationFilter(ExceptionTranslationFilter) {
+			accessDeniedHandler = ref('basicAccessDeniedHandler')
+			authenticationTrustResolver = ref('authenticationTrustResolver')
+			requestCache = ref('requestCache')
+			authenticationEntryPoint = ref('basicAuthenticationEntryPoint')
 		}
 	}
 
@@ -622,7 +647,7 @@ class SpringSecurityCoreGrailsPlugin {
 			}
 		}
 
-		authenticationEntryPoint(DigestAuthenticationEntryPoint) {
+		digestAuthenticationEntryPoint(DigestAuthenticationEntryPoint) {
 			realmName = conf.digest.realmName // 'Grails Realm'
 			key = conf.digest.key // 'changeme'
 			nonceValiditySeconds = conf.digest.nonceValiditySeconds // 300
@@ -630,11 +655,20 @@ class SpringSecurityCoreGrailsPlugin {
 
 		digestAuthenticationFilter(DigestAuthenticationFilter) {
 			authenticationDetailsSource = ref('authenticationDetailsSource')
-			authenticationEntryPoint = ref('authenticationEntryPoint')
+			authenticationEntryPoint = ref('digestAuthenticationEntryPoint')
 			userCache = ref('userCache')
 			userDetailsService = ref('userDetailsService')
 			passwordAlreadyEncoded = conf.digest.passwordAlreadyEncoded // false
 			createAuthenticatedToken = conf.digest.createAuthenticatedToken // false
+		}
+
+		digestAccessDeniedHandler(AccessDeniedHandlerImpl)
+
+		digestExceptionTranslationFilter(ExceptionTranslationFilter) {
+			accessDeniedHandler = ref('digestAccessDeniedHandler')
+			authenticationTrustResolver = ref('authenticationTrustResolver')
+			requestCache = ref('requestCache')
+			authenticationEntryPoint = ref('digestAuthenticationEntryPoint')
 		}
 	}
 
@@ -733,10 +767,12 @@ class SpringSecurityCoreGrailsPlugin {
 
 			if (conf.useDigestAuth) {
 				orderedNames[SecurityFilterPosition.DIGEST_AUTH_FILTER.order] = 'digestAuthenticationFilter'
+				orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order + 1] = 'digestExceptionTranslationFilter'
 			}
 
 			if (conf.useBasicAuth) {
 				orderedNames[SecurityFilterPosition.BASIC_AUTH_FILTER.order] = 'basicAuthenticationFilter'
+				orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order + 1] = 'basicExceptionTranslationFilter'
 			}
 
 			// REQUEST_CACHE_FILTER

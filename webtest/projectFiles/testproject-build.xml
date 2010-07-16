@@ -33,6 +33,7 @@ grails.plugins.springsecurity.interceptUrlMap = [
 
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
+grails.plugins.springsecurity.filterChain.chainMap = [:]
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
@@ -54,6 +55,7 @@ grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity
 
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
+grails.plugins.springsecurity.filterChain.chainMap = [:]
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
@@ -73,6 +75,7 @@ grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity
 
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
+grails.plugins.springsecurity.filterChain.chainMap = [:]
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
@@ -92,6 +95,10 @@ grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity
 
 grails.plugins.springsecurity.useBasicAuth = true
 grails.plugins.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
+grails.plugins.springsecurity.filterChain.chainMap = [
+	'/secureclassannotated/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+	'/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+]
 
 // reset settings from other test runs
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
@@ -126,6 +133,7 @@ grails.plugins.springsecurity.failureHandler.exceptionMappings = [
 
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
+grails.plugins.springsecurity.filterChain.chainMap = [:]
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
