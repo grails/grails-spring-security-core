@@ -43,6 +43,7 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#encodePassword(
 	 * 	java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public String encodePassword(final String rawPass, final Object salt) {
 		Assert.notNull(salt, "Salt is required and must be the username");
 		String username = salt.toString();
@@ -54,6 +55,7 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#isPasswordValid(
 	 * 	java.lang.String, java.lang.String, java.lang.Object)
 	 */
+	@Override
 	public boolean isPasswordValid(final String encPass, final String rawPass, final Object salt) {
 		// the 'raw' password will already be encrypted, so compare directly
 		return encPass != null && rawPass != null ? rawPass.equals(encPass) : false;
@@ -72,6 +74,7 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
+	@Override
 	public void afterPropertiesSet() {
 		Assert.hasLength(_realm, "realm is required");
 	}

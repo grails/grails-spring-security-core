@@ -30,6 +30,7 @@ public class NullSaltSource implements SaltSource {
 	 * @see org.springframework.security.authentication.dao.SaltSource#getSalt(
 	 * 	org.springframework.security.core.userdetails.UserDetails)
 	 */
+	@Override
 	public Object getSalt(final UserDetails user) {
 		return null;
 	}

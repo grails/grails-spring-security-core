@@ -40,6 +40,7 @@ public class WebExpressionVoter implements AccessDecisionVoter {
 	 * @see org.springframework.security.access.AccessDecisionVoter#vote(
 	 * 	org.springframework.security.core.Authentication, java.lang.Object, java.util.Collection)
 	 */
+	@Override
 	public int vote(final Authentication authentication, final Object object,
 			final Collection<ConfigAttribute> attributes) {
 
@@ -73,6 +74,7 @@ public class WebExpressionVoter implements AccessDecisionVoter {
 	 * @see org.springframework.security.access.AccessDecisionVoter#supports(
 	 * 	org.springframework.security.access.ConfigAttribute)
 	 */
+	@Override
 	public boolean supports(ConfigAttribute attribute) {
 		return attribute instanceof WebExpressionConfigAttribute;
 	}
@@ -81,6 +83,7 @@ public class WebExpressionVoter implements AccessDecisionVoter {
 	 * {@inheritDoc}
 	 * @see org.springframework.security.access.AccessDecisionVoter#supports(java.lang.Class)
 	 */
+	@Override
 	public boolean supports(Class<?> clazz) {
 		return clazz.isAssignableFrom(FilterInvocation.class);
 	}

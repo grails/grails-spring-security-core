@@ -44,6 +44,7 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
 	 */
+	@Override
 	public FilterInvocationSecurityMetadataSource getObject() {
 		return _source;
 	}
@@ -52,6 +53,7 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.FactoryBean#getObjectType()
 	 */
+	@Override
 	public Class<DefaultFilterInvocationSecurityMetadataSource> getObjectType() {
 		return DefaultFilterInvocationSecurityMetadataSource.class;
 	}
@@ -60,6 +62,7 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
 	 */
+	@Override
 	public boolean isSingleton() {
 		return true;
 	}
@@ -68,6 +71,7 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
+	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(_definition, "definition map is required");
 		Assert.notNull(_urlMatcher, "urlMatcher is required");
