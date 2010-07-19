@@ -91,27 +91,6 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 		assertTrue _service.isLoggedIn()
 	}
 
-	void testReauthenticate() {
-		_service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
-		assertFalse _service.isLoggedIn()
-		authenticate 'role1'
-		assertTrue _service.isLoggedIn()
-
-		assertTrue _service.authentication instanceof TestingAuthenticationToken
-
-		boolean removedFromCache = false
-		def user = new User('username', 'password', true, true, true, true,
-				[new GrantedAuthorityImpl('ROLE_USER')])
-
-		_service.userDetailsService = [loadUserByUsername: { String username -> user }]
-		_service.userCache = [removeUserFromCache: { String username -> removedFromCache = true }]
-
-		_service.reauthenticate 'username'
-
-		assertTrue _service.authentication instanceof UsernamePasswordAuthenticationToken
-		assertTrue removedFromCache
-	}
-
 	private void authenticate(roles) {
 		def authorities = SpringSecurityUtils.parseAuthoritiesString(roles)
 		def principal = new User('username', 'password', true, true, true, true, authorities)

@@ -21,6 +21,7 @@ import javax.servlet.ServletResponse
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.support.AbstractBeanDefinition
 import org.springframework.beans.factory.support.GenericBeanDefinition
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter
@@ -29,6 +30,10 @@ import org.springframework.security.web.authentication.rememberme.RememberMeAuth
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
+
+import test.TestRole
+import test.TestUser
+import test.TestUserRole
 
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
@@ -39,6 +44,28 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 
 	def grailsApplication
 	def springSecurityFilterChain
+	def springSecurityService
+
+	private String username = 'username'
+
+	@Override
+	protected void setUp() {
+		super.setUp()
+		def user = new TestUser(loginName: username, enabld: true,
+			passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+		def role = new TestRole(auth: 'ROLE_ADMIN', description: 'admin').save(failOnError: true)
+		TestUserRole.create user, role, true
+
+		user = new TestUser(loginName: 'other', enabld: true,
+			passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+		TestUserRole.create user, role, true
+	}
+
+	@Override
+	protected void tearDown() {
+		super.tearDown()
+		SecurityContextHolder.clearContext() // logout
+	}
 
 	void testClientRegisterFilter() {
 
@@ -89,6 +116,82 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 		assertTrue filters[6] instanceof AnonymousAuthenticationFilter
 		assertTrue filters[7] instanceof ExceptionTranslationFilter
 		assertTrue filters[8] instanceof FilterSecurityInterceptor
+	}
+
+	void testReauthenticate() {
+
+		assertFalse springSecurityService.loggedIn
+
+		SpringSecurityUtils.reauthenticate username, null
+
+		assertTrue springSecurityService.loggedIn
+		def principal = springSecurityService.principal
+		assertTrue principal instanceof GrailsUser
+		assertEquals(['ROLE_ADMIN'], principal.authorities.authority)
+		assertEquals username, principal.username
+	}
+
+	void testDoWithAuth_CurrentAuth() {
+
+		assertFalse springSecurityService.loggedIn
+		SpringSecurityUtils.reauthenticate username, null
+		assertTrue springSecurityService.loggedIn
+
+		Thread.start {
+
+			assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
+
+			SpringSecurityUtils.doWithAuth {
+				assertTrue springSecurityService.loggedIn
+				assertEquals username, springSecurityService.principal.username
+			}
+
+			assertFalse "should have reset auth", springSecurityService.loggedIn
+		}.join()
+
+		assertTrue "should still be authenticated in main thread", springSecurityService.loggedIn
+	}
+
+	void testDoWithAuth_NewAuth() {
+
+		assertFalse springSecurityService.loggedIn
+
+		Thread.start {
+
+			assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
+
+			SpringSecurityUtils.doWithAuth username, {
+				assertTrue springSecurityService.loggedIn
+				assertEquals username, springSecurityService.principal.username
+			}
+
+			assertFalse "should have reset auth", springSecurityService.loggedIn
+		}.join()
+
+		assertFalse "should still be unauthenticated in main thread", springSecurityService.loggedIn
+	}
+
+	void testDoWithAuth_NewAuth_WithExisting() {
+
+		assertFalse springSecurityService.loggedIn
+		SpringSecurityUtils.reauthenticate username, null
+		assertTrue springSecurityService.loggedIn
+
+		Thread.start {
+
+			assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
+
+			SpringSecurityUtils.doWithAuth 'other', {
+				assertTrue springSecurityService.loggedIn
+				assertEquals 'other', springSecurityService.principal.username
+			}
+
+			assertTrue 'should still be authenticated', springSecurityService.loggedIn
+			assertEquals 'should have reset auth to previous', username, springSecurityService.principal.username
+		}.join()
+
+		assertTrue 'should still be authenticated', springSecurityService.loggedIn
+		assertEquals 'should still be unauthenticated in main thread', username, springSecurityService.principal.username
 	}
 }
 

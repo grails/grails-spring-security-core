@@ -177,10 +177,7 @@ class SpringSecurityService {
 	 * @param password  optional
 	 */
 	void reauthenticate(String username, String password = null) {
-		def userDetails = userDetailsService.loadUserByUsername(username)
-		SCH.context.authentication = new UsernamePasswordAuthenticationToken(
-				userDetails, password ?: userDetails.password, userDetails.authorities)
-		userCache.removeUserFromCache username
+		SpringSecurityUtils.reauthenticate username, password
 	}
 
 	/**

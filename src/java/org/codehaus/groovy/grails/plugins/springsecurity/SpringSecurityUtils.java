@@ -15,6 +15,7 @@
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
 import grails.util.Environment;
+import groovy.lang.Closure;
 import groovy.lang.GroovyClassLoader;
 import groovy.util.ConfigObject;
 import groovy.util.ConfigSlurper;
@@ -33,16 +34,23 @@ import java.util.TreeMap;
 
 import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserCache;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
@@ -396,6 +404,84 @@ public final class SpringSecurityUtils {
 	 */
 	public static String getSecurityConfigType() {
 		return getSecurityConfig().get("securityConfigType").toString();
+	}
+
+	/**
+	 * Rebuild an Authentication for the given username and register it in the security context.
+	 * Typically used after updating a user's authorities or other auth-cached info.
+	 * <p/>
+	 * Also removes the user from the user cache to force a refresh at next login.
+	 *
+	 * @param username  the user's login name
+	 * @param password  optional
+	 */
+	public static void reauthenticate(final String username, final String password) {
+		UserDetailsService userDetailsService = getBean("userDetailsService");
+		UserCache userCache = getBean("userCache");
+
+		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
+				userDetails, password == null ? userDetails.getPassword() : password, userDetails.getAuthorities()));
+		userCache.removeUserFromCache(username);
+	}
+
+	/**
+	 * Execute a closure with the current authentication. Assumes that there's an authentication in the
+	 * http session and that the closure is running in a separate thread from the web request, so the
+	 * context and authentication aren't available to the standard ThreadLocal.
+	 *
+	 * @param closure  the code to run
+	 * @return  the closure's return value
+	 */
+	public static Object doWithAuth(final Closure closure) {
+		boolean set = false;
+		if (SecurityContextHolder.getContext().getAuthentication() == null) {
+			HttpSession httpSession = SecurityRequestHolder.getRequest().getSession(false);
+			SecurityContext context = null;
+			if (httpSession != null) {
+				context = (SecurityContext)httpSession.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+				if (context != null) {
+					SecurityContextHolder.setContext(context);
+					set = true;
+				}
+			}
+		}
+
+		try {
+			return closure.call();
+		}
+		finally {
+			if (set) {
+				SecurityContextHolder.clearContext();
+			}
+		}
+	}
+
+	/**
+	 * Authenticate as the specified user and execute the closure with that authentication. Restores
+	 * the authentication to the one that was active if it exists, or clears the context otherwise.
+	 * <p/>
+	 * This is similar to run-as and switch-user but is only local to a Closure.
+	 *
+	 * @param username the username to authenticate as
+	 * @param closure  the code to run
+	 * @return  the closure's return value
+	 */
+	public static Object doWithAuth(final String username, final Closure closure) {
+		Authentication previousAuth = SecurityContextHolder.getContext().getAuthentication();
+		reauthenticate(username, null);
+
+		try {
+			return closure.call();
+		}
+		finally {
+			if (previousAuth == null) {
+				SecurityContextHolder.clearContext();
+			}
+			else {
+				SecurityContextHolder.getContext().setAuthentication(previousAuth);
+			}
+		}
 	}
 
 	/**
