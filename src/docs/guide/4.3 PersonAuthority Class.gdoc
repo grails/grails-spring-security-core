@@ -74,7 +74,7 @@ Revoking a role is similar:
 {code}
 User user = ...
 Role role = ...
-UserRole.revoke user, role
+UserRole.remove user, role
 {code}
 
 Or:
@@ -82,7 +82,7 @@ Or:
 {code}
 User user = ...
 Role role = ...
-UserRole.revoke user, role, true
+UserRole.remove user, role, true
 {code}
 
 The class name is the only configurable attribute:

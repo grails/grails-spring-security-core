@@ -71,8 +71,13 @@ You can also define 'static' mappings that cannot be expressed in the controller
 {code}
 grails.plugins.springsecurity.controllerAnnotations.staticRules = [
    '/js/admin/**': ['ROLE_ADMIN'],
-   '/somePlugin/**': ['ROLE_ADMIN']
+   '/someplugin/**': ['ROLE_ADMIN']
 ]
 {code}
 
-This example maps all URLs associated with 'somePlugin' to @ROLE_ADMIN@; annotations are not an option here because you would not edit plugin code for a change like this.
+This example maps all URLs associated with @SomePluginController@, which has URLs of the form @/somePlugin/...@, to @ROLE_ADMIN@; annotations are not an option here because you would not edit plugin code for a change like this.
+
+{note}
+When mapping URLs for controllers that are mapped in @UrlMappings.groovy@, you need to secure the un-url-mapped URLs. For example if you have a FooBarController that you map to @/foo/bar/$action@, you must register that in @controllerAnnotations.staticRules@ as @/foobar/\*\*@. This is different than the mapping you would use for the other two approaches and is necessary because @controllerAnnotations.staticRules@ entries are treated as if they were annotations on the corresponding controller.
+{note}
+
