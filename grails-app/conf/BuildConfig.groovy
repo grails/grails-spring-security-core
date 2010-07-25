@@ -5,7 +5,7 @@ grails.project.docs.output.dir = 'docs' // for backwards-compatibility, the docs
 
 grails.project.dependency.resolution = {
 
-	inherits('global')
+	inherits 'global'
 
 	log 'warn'
 
@@ -18,7 +18,7 @@ grails.project.dependency.resolution = {
 	}
 
 	dependencies {
-		runtime('org.springframework.security:org.springframework.security.core:3.0.2.RELEASE') {
+		runtime('org.springframework.security:org.springframework.security.core:3.0.3.RELEASE') {
 			excludes 'com.springsource.org.aopalliance',
 			         'com.springsource.org.apache.commons.logging',
 			         'org.springframework.beans',
@@ -26,7 +26,7 @@ grails.project.dependency.resolution = {
 			         'org.springframework.core'
 		}
 
-		runtime('org.springframework.security:org.springframework.security.web:3.0.2.RELEASE') {
+		runtime('org.springframework.security:org.springframework.security.web:3.0.3.RELEASE') {
 			excludes 'com.springsource.javax.servlet',
 			         'com.springsource.org.aopalliance',
 			         'com.springsource.org.apache.commons.logging',
