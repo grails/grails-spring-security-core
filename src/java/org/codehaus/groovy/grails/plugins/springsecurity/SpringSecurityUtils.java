@@ -48,10 +48,10 @@ import org.springframework.security.core.userdetails.UserCache;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.FilterChainProxy;
+import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest;
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.StringUtils;
 
@@ -281,8 +281,7 @@ public final class SpringSecurityUtils {
 		}
 
 		// check the SavedRequest's headers
-		SavedRequest savedRequest = (SavedRequest)request.getSession().getAttribute(
-				DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY);
+		SavedRequest savedRequest = (SavedRequest)request.getSession().getAttribute(WebAttributes.SAVED_REQUEST);
 		if (savedRequest != null) {
 			return !savedRequest.getHeaderValues(ajaxHeaderName).isEmpty();
 		}
@@ -299,6 +298,28 @@ public final class SpringSecurityUtils {
 	 */
 	public static void registerProvider(final String beanName) {
 		PROVIDER_NAMES.add(0, beanName);
+	}
+
+	/**
+	 * Register a logout handler bean name.
+	 * <p/>
+	 * Note - only for use by plugins during bean building.
+	 *
+	 * @param beanName  the Spring bean name of the handler
+	 */
+	public static void registerLogoutHandler(final String beanName) {
+		LOGOUT_HANDLER_NAMES.add(0, beanName);
+	}
+
+	/**
+	 * Register a voter bean name.
+	 * <p/>
+	 * Note - only for use by plugins during bean building.
+	 *
+	 * @param beanName  the Spring bean name of the voter
+	 */
+	public static void registerVoter(final String beanName) {
+		VOTER_NAMES.add(0, beanName);
 	}
 
 	/**
