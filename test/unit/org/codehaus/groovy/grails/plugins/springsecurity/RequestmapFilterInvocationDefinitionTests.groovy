@@ -62,7 +62,8 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	}
 
 	void testSplit() {
-		assertEquals(['a', 'b', 'c', 'd', 'e'], _fid.split('a, b,,,c ,d,e'))
+		assertEquals(['ROLE_1', 'ROLE_2', 'ROLE_3', 'ROLE_4', 'ROLE_5'], _fid.split('ROLE_1, ROLE_2,,,ROLE_3 ,ROLE_4,ROLE_5'))
+		assertEquals(['hasAnyRole("ROLE_1","ROLE_2")'], _fid.split('hasAnyRole("ROLE_1","ROLE_2")'))
 	}
 
 	void testLoadRequestmaps() {

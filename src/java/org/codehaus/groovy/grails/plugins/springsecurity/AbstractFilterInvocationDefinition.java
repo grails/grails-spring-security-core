@@ -205,6 +205,11 @@ public abstract class AbstractFilterInvocationDefinition
 
 	// fixes extra spaces, trailing commas, etc.
 	protected List<String> split(final String value) {
+		if (!value.startsWith("ROLE_")) {
+			// an expression
+			return Collections.singletonList(value);
+		}
+
 		String[] parts = StringUtils.commaDelimitedListToStringArray(value);
 		List<String> cleaned = new ArrayList<String>();
 		for (String part : parts) {
