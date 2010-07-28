@@ -1,4 +1,4 @@
-@grails.plugins.springsecurity.SpringSecurityService@ provides security utility functions. It is a regular Grails service, so you can use dependency injection to inject it into a controller, service, taglib, and so on:
+@grails.plugins.springsecurity.SpringSecurityService@ provides security utility functions. It is a regular Grails service, so you use dependency injection to inject it into a controller, service, taglib, and so on:
 
 {code}
 def springSecurityService
