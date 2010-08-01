@@ -64,7 +64,6 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(_ajaxAuthenticationFailureUrl, "ajaxAuthenticationFailureUrl is required");
 	}

@@ -30,7 +30,6 @@ public class NullLogoutHandlerRememberMeServices extends NullRememberMeServices 
 	 * {@inheritDoc}
 	 * @see org.springframework.security.web.authentication.logout.LogoutHandler#logout(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.springframework.security.core.Authentication)
 	 */
-	@Override
 	public void logout(final HttpServletRequest request, final HttpServletResponse response,
 			final Authentication authentication) {
 		// no-op

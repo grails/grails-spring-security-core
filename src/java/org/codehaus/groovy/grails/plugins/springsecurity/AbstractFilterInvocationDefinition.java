@@ -69,7 +69,6 @@ public abstract class AbstractFilterInvocationDefinition
 	 * {@inheritDoc}
 	 * @see org.springframework.security.access.SecurityMetadataSource#getAttributes(java.lang.Object)
 	 */
-	@Override
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		Assert.isTrue(object != null && supports(object.getClass()), "Object must be a FilterInvocation");
 
@@ -137,7 +136,6 @@ public abstract class AbstractFilterInvocationDefinition
 	 * {@inheritDoc}
 	 * @see org.springframework.security.access.SecurityMetadataSource#supports(java.lang.Class)
 	 */
-	@Override
 	public boolean supports(Class<?> clazz) {
 		return FilterInvocation.class.isAssignableFrom(clazz);
 	}
@@ -146,7 +144,6 @@ public abstract class AbstractFilterInvocationDefinition
 	 * {@inheritDoc}
 	 * @see org.springframework.security.access.SecurityMetadataSource#getAllConfigAttributes()
 	 */
-	@Override
 	public Collection<ConfigAttribute> getAllConfigAttributes() {
 		Collection<ConfigAttribute> all = new HashSet<ConfigAttribute>();
 		for (Collection<ConfigAttribute> configs : _compiled.values()) {
@@ -320,7 +317,6 @@ public abstract class AbstractFilterInvocationDefinition
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
-	@Override
 	public void afterPropertiesSet() {
 		Assert.notNull(_urlMatcher, "url matcher is required");
 	}

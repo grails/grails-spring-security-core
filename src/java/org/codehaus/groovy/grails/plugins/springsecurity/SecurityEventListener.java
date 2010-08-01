@@ -66,7 +66,6 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
 	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(
 	 * 	org.springframework.context.ApplicationEvent)
 	 */
-	@Override
 	public void onApplicationEvent(final ApplicationEvent e) {
 		if (e instanceof AbstractAuthenticationEvent) {
 			if (e instanceof InteractiveAuthenticationSuccessEvent) {
@@ -101,7 +100,6 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
  	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(
  	 * 	org.springframework.context.ApplicationContext)
  	 */
-	@Override
  	public void setApplicationContext(final ApplicationContext applicationContext) {
  		_applicationContext = applicationContext;
  	}

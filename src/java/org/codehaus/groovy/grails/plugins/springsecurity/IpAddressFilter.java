@@ -60,7 +60,6 @@ public class IpAddressFilter extends GenericFilterBean {
 	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
 	 * 	javax.servlet.FilterChain)
 	 */
-	@Override
 	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 				throws IOException, ServletException {
 

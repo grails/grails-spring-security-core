@@ -92,7 +92,6 @@ public class MutableLogoutFilter extends LogoutFilter {
 	 * The real handlers will be after construction.
 	 */
 	private static class DummyLogoutHandler implements LogoutHandler {
-		@Override
 		public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 			// do nothing
 		}

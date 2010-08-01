@@ -15,7 +15,6 @@ public class NullAuthenticationEventPublisher implements AuthenticationEventPubl
 	 * 	org.springframework.security.core.AuthenticationException,
 	 * 	org.springframework.security.core.Authentication)
 	 */
-	@Override
 	public void publishAuthenticationFailure(AuthenticationException e, Authentication a) {
 		// do nothing
 	}
@@ -25,7 +24,6 @@ public class NullAuthenticationEventPublisher implements AuthenticationEventPubl
 	 * @see org.springframework.security.authentication.AuthenticationEventPublisher#publishAuthenticationSuccess(
 	 * 	org.springframework.security.core.Authentication)
 	 */
-	@Override
 	public void publishAuthenticationSuccess(Authentication a) {
 		// do nothing
 	}

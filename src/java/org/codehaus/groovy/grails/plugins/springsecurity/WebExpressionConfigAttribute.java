@@ -50,7 +50,6 @@ public class WebExpressionConfigAttribute implements ConfigAttribute {
 	 * {@inheritDoc}
 	 * @see org.springframework.security.access.ConfigAttribute#getAttribute()
 	 */
-	@Override
 	public String getAttribute() {
 		return null;
 	}

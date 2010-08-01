@@ -55,7 +55,6 @@ import org.springframework.util.Assert;
 public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationPrivilegeEvaluator {
 
 	private static final FilterChain DUMMY_CHAIN = new FilterChain() {
-		@Override
 		public void doFilter(ServletRequest req, ServletResponse res) throws IOException, ServletException {
 			throw new UnsupportedOperationException("GrailsWebInvocationPrivilegeEvaluator does not support filter chains");
 		}
@@ -126,95 +125,95 @@ class DummyRequest implements HttpServletRequest {
 		_requestURI = requestURI;
 	}
 
-	@Override public String getContextPath() { return _contextPath; }
-	@Override public String getMethod() { return _method; }
-	@Override public String getRequestURI() { return _requestURI; }
-	@Override public void setAttribute(String name, Object o) { _attributes.put(name, o); }
-	@Override public Object getAttribute(String name) { return _attributes.get(name); }
+	public String getContextPath() { return _contextPath; }
+	public String getMethod() { return _method; }
+	public String getRequestURI() { return _requestURI; }
+	public void setAttribute(String name, Object o) { _attributes.put(name, o); }
+	public Object getAttribute(String name) { return _attributes.get(name); }
 
-	@Override public Map getParameterMap() { return Collections.emptyMap(); }
-	@Override public String getCharacterEncoding() { return null; }
-	@Override public Enumeration getParameterNames() { return Collections.enumeration(Collections.emptySet()); }
-	@Override public String getServletPath() { return null; }
-	@Override public String getPathInfo() { return null; }
-	@Override public String getQueryString() { return null; }
-	@Override public String getAuthType() { return null; }
-	@Override public Cookie[] getCookies() { return null; }
-	@Override public String getHeader(String name) { return null; }
-	@Override public Enumeration getHeaderNames() { return Collections.enumeration(Collections.emptySet()); }
-	@Override public Enumeration getHeaders(String name) { return Collections.enumeration(Collections.emptySet()); }
-	@Override public String getPathTranslated() { return null; }
-	@Override public String getRemoteUser() { return null; }
-	@Override public String getRequestedSessionId() { return null; }
-	@Override public Principal getUserPrincipal() { return null; }
-	@Override public boolean isRequestedSessionIdFromCookie() { return false; }
-	@Override public boolean isRequestedSessionIdFromURL() { return false; }
-	@Override public boolean isRequestedSessionIdFromUrl() { return false; }
-	@Override public boolean isRequestedSessionIdValid() { return false; }
-	@Override public boolean isUserInRole(String role) { return false; }
-	@Override public Enumeration getAttributeNames() { return Collections.enumeration(Collections.emptySet()); }
-	@Override public String getContentType() { return null; }
-	@Override public String getLocalAddr() { return null; }
-	@Override public String getLocalName() { return null; }
-	@Override public Locale getLocale() { return null; }
-	@Override public Enumeration getLocales() { return Collections.enumeration(Collections.emptySet()); }
-	@Override public String getParameter(String name) { return null; }
-	@Override public String[] getParameterValues(String name) { return null; }
-	@Override public String getProtocol() { return "http"; }
-	@Override public String getRemoteAddr() { return null; }
-	@Override public String getRemoteHost() { return null; }
-	@Override public String getScheme() { return "http"; }
-	@Override public String getServerName() { return "localhost"; }
-	@Override public int getServerPort() { return 8080; }
-	@Override public boolean isSecure() { return false; }
-	@Override public void removeAttribute(String name) { /* do nothing */ }
-	@Override public void setCharacterEncoding(String env) { /* do nothing */ }
+	public Map getParameterMap() { return Collections.emptyMap(); }
+	public String getCharacterEncoding() { return null; }
+	public Enumeration getParameterNames() { return Collections.enumeration(Collections.emptySet()); }
+	public String getServletPath() { return null; }
+	public String getPathInfo() { return null; }
+	public String getQueryString() { return null; }
+	public String getAuthType() { return null; }
+	public Cookie[] getCookies() { return null; }
+	public String getHeader(String name) { return null; }
+	public Enumeration getHeaderNames() { return Collections.enumeration(Collections.emptySet()); }
+	public Enumeration getHeaders(String name) { return Collections.enumeration(Collections.emptySet()); }
+	public String getPathTranslated() { return null; }
+	public String getRemoteUser() { return null; }
+	public String getRequestedSessionId() { return null; }
+	public Principal getUserPrincipal() { return null; }
+	public boolean isRequestedSessionIdFromCookie() { return false; }
+	public boolean isRequestedSessionIdFromURL() { return false; }
+	public boolean isRequestedSessionIdFromUrl() { return false; }
+	public boolean isRequestedSessionIdValid() { return false; }
+	public boolean isUserInRole(String role) { return false; }
+	public Enumeration getAttributeNames() { return Collections.enumeration(Collections.emptySet()); }
+	public String getContentType() { return null; }
+	public String getLocalAddr() { return null; }
+	public String getLocalName() { return null; }
+	public Locale getLocale() { return null; }
+	public Enumeration getLocales() { return Collections.enumeration(Collections.emptySet()); }
+	public String getParameter(String name) { return null; }
+	public String[] getParameterValues(String name) { return null; }
+	public String getProtocol() { return "http"; }
+	public String getRemoteAddr() { return null; }
+	public String getRemoteHost() { return null; }
+	public String getScheme() { return "http"; }
+	public String getServerName() { return "localhost"; }
+	public int getServerPort() { return 8080; }
+	public boolean isSecure() { return false; }
+	public void removeAttribute(String name) { /* do nothing */ }
+	public void setCharacterEncoding(String env) { /* do nothing */ }
 
-	@Override public long getDateHeader(String name)                     { throw new UnsupportedOperationException(); }
-	@Override public int getIntHeader(String name)                       { throw new UnsupportedOperationException(); }
-	@Override public StringBuffer getRequestURL()                        { throw new UnsupportedOperationException(); }
-	@Override public HttpSession getSession()                            { throw new UnsupportedOperationException(); }
-	@Override public HttpSession getSession(boolean create)              { throw new UnsupportedOperationException(); }
-	@Override public int getContentLength()                              { throw new UnsupportedOperationException(); }
-	@Override public ServletInputStream getInputStream()                 { throw new UnsupportedOperationException(); }
-	@Override public int getLocalPort()                                  { throw new UnsupportedOperationException(); }
-	@Override public BufferedReader getReader()                          { throw new UnsupportedOperationException(); }
-	@Override public String getRealPath(String path)                     { throw new UnsupportedOperationException(); }
-	@Override public int getRemotePort()                                 { throw new UnsupportedOperationException(); }
-	@Override public RequestDispatcher getRequestDispatcher(String path) { throw new UnsupportedOperationException(); }
+	public long getDateHeader(String name)                     { throw new UnsupportedOperationException(); }
+	public int getIntHeader(String name)                       { throw new UnsupportedOperationException(); }
+	public StringBuffer getRequestURL()                        { throw new UnsupportedOperationException(); }
+	public HttpSession getSession()                            { throw new UnsupportedOperationException(); }
+	public HttpSession getSession(boolean create)              { throw new UnsupportedOperationException(); }
+	public int getContentLength()                              { throw new UnsupportedOperationException(); }
+	public ServletInputStream getInputStream()                 { throw new UnsupportedOperationException(); }
+	public int getLocalPort()                                  { throw new UnsupportedOperationException(); }
+	public BufferedReader getReader()                          { throw new UnsupportedOperationException(); }
+	public String getRealPath(String path)                     { throw new UnsupportedOperationException(); }
+	public int getRemotePort()                                 { throw new UnsupportedOperationException(); }
+	public RequestDispatcher getRequestDispatcher(String path) { throw new UnsupportedOperationException(); }
 }
 
 class DummyResponse implements HttpServletResponse {
-	@Override public void addCookie(Cookie cookie)              { throw new UnsupportedOperationException(); }
-	@Override public void addDateHeader(String name, long date) { throw new UnsupportedOperationException(); }
-	@Override public void addHeader(String name, String value)  { throw new UnsupportedOperationException(); }
-	@Override public void addIntHeader(String name, int value)  { throw new UnsupportedOperationException(); }
-	@Override public boolean containsHeader(String name)        { throw new UnsupportedOperationException(); }
-	@Override public String encodeRedirectURL(String url)       { throw new UnsupportedOperationException(); }
-	@Override public String encodeRedirectUrl(String url)       { throw new UnsupportedOperationException(); }
-	@Override public String encodeURL(String url)               { throw new UnsupportedOperationException(); }
-	@Override public String encodeUrl(String url)               { throw new UnsupportedOperationException(); }
-	@Override public void sendError(int sc)                     { throw new UnsupportedOperationException(); }
-	@Override public void sendError(int sc, String msg)         { throw new UnsupportedOperationException(); }
-	@Override public void sendRedirect(String location)         { throw new UnsupportedOperationException(); }
-	@Override public void setDateHeader(String name, long date) { throw new UnsupportedOperationException(); }
-	@Override public void setHeader(String name, String value)  { throw new UnsupportedOperationException(); }
-	@Override public void setIntHeader(String name, int value)  { throw new UnsupportedOperationException(); }
-	@Override public void setStatus(int sc)                     { throw new UnsupportedOperationException(); }
-	@Override public void setStatus(int sc, String sm)          { throw new UnsupportedOperationException(); }
-	@Override public void flushBuffer()                         { throw new UnsupportedOperationException(); }
-	@Override public int getBufferSize()                        { throw new UnsupportedOperationException(); }
-	@Override public String getCharacterEncoding()              { throw new UnsupportedOperationException(); }
-	@Override public String getContentType()                    { throw new UnsupportedOperationException(); }
-	@Override public Locale getLocale()                         { throw new UnsupportedOperationException(); }
-	@Override public ServletOutputStream getOutputStream()      { throw new UnsupportedOperationException(); }
-	@Override public PrintWriter getWriter()                    { throw new UnsupportedOperationException(); }
-	@Override public boolean isCommitted()                      { throw new UnsupportedOperationException(); }
-	@Override public void reset()                               { throw new UnsupportedOperationException(); }
-	@Override public void resetBuffer()                         { throw new UnsupportedOperationException(); }
-	@Override public void setBufferSize(int size)               { throw new UnsupportedOperationException(); }
-	@Override public void setCharacterEncoding(String charset)  { throw new UnsupportedOperationException(); }
-	@Override public void setContentLength(int len)             { throw new UnsupportedOperationException(); }
-	@Override public void setContentType(String type)           { throw new UnsupportedOperationException(); }
-	@Override public void setLocale(Locale loc)                 { throw new UnsupportedOperationException(); }
+	public void addCookie(Cookie cookie)              { throw new UnsupportedOperationException(); }
+	public void addDateHeader(String name, long date) { throw new UnsupportedOperationException(); }
+	public void addHeader(String name, String value)  { throw new UnsupportedOperationException(); }
+	public void addIntHeader(String name, int value)  { throw new UnsupportedOperationException(); }
+	public boolean containsHeader(String name)        { throw new UnsupportedOperationException(); }
+	public String encodeRedirectURL(String url)       { throw new UnsupportedOperationException(); }
+	public String encodeRedirectUrl(String url)       { throw new UnsupportedOperationException(); }
+	public String encodeURL(String url)               { throw new UnsupportedOperationException(); }
+	public String encodeUrl(String url)               { throw new UnsupportedOperationException(); }
+	public void sendError(int sc)                     { throw new UnsupportedOperationException(); }
+	public void sendError(int sc, String msg)         { throw new UnsupportedOperationException(); }
+	public void sendRedirect(String location)         { throw new UnsupportedOperationException(); }
+	public void setDateHeader(String name, long date) { throw new UnsupportedOperationException(); }
+	public void setHeader(String name, String value)  { throw new UnsupportedOperationException(); }
+	public void setIntHeader(String name, int value)  { throw new UnsupportedOperationException(); }
+	public void setStatus(int sc)                     { throw new UnsupportedOperationException(); }
+	public void setStatus(int sc, String sm)          { throw new UnsupportedOperationException(); }
+	public void flushBuffer()                         { throw new UnsupportedOperationException(); }
+	public int getBufferSize()                        { throw new UnsupportedOperationException(); }
+	public String getCharacterEncoding()              { throw new UnsupportedOperationException(); }
+	public String getContentType()                    { throw new UnsupportedOperationException(); }
+	public Locale getLocale()                         { throw new UnsupportedOperationException(); }
+	public ServletOutputStream getOutputStream()      { throw new UnsupportedOperationException(); }
+	public PrintWriter getWriter()                    { throw new UnsupportedOperationException(); }
+	public boolean isCommitted()                      { throw new UnsupportedOperationException(); }
+	public void reset()                               { throw new UnsupportedOperationException(); }
+	public void resetBuffer()                         { throw new UnsupportedOperationException(); }
+	public void setBufferSize(int size)               { throw new UnsupportedOperationException(); }
+	public void setCharacterEncoding(String charset)  { throw new UnsupportedOperationException(); }
+	public void setContentLength(int len)             { throw new UnsupportedOperationException(); }
+	public void setContentType(String type)           { throw new UnsupportedOperationException(); }
+	public void setLocale(Locale loc)                 { throw new UnsupportedOperationException(); }
 }
