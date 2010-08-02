@@ -103,13 +103,3 @@ h4. Security tags
 * use @<sec:username/>@ instead of @<g:loggedInUserInfo(field:'username')}/>@ - use @<sec:loggedInUserInfo>@ to render other @GrailsUser@ attributes
 
 See more details about the taglibs in [Section 6|guide:6 Helper Classes].
-
-
-
-
-
-
-* Replace @Secured(['ROLE_ANONYMOUS']) with
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
-
-
