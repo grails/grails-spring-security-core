@@ -15,6 +15,7 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import org.apache.log4j.Logger
+import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.UserDetails
@@ -75,20 +76,14 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 	protected loadUser(String username, session) {
 		def conf = SpringSecurityUtils.securityConfig
-		String userDomainClassName = conf.userLookup.userDomainClassName
-		String usernamePropertyName = conf.userLookup.usernamePropertyName
-
-		List<?> users = session.createQuery(
-				"FROM $userDomainClassName WHERE $usernamePropertyName = :username")
-				.setString('username', username)
-				.list()
-
-		if (!users) {
+		def grailsApplication = AH.application // not using DI for backwards compatibility
+		Class<?> User = grailsApplication.getDomainClass(conf.userLookup.userDomainClassName).clazz
+		def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
+		if (!user) {
 			log.warn "User not found: $username"
 			throw new UsernameNotFoundException('User not found', username)
 		}
-
-		users[0]
+		user
 	}
 
 	protected Collection<GrantedAuthority> loadAuthorities(user, String username, boolean loadRoles) {
