@@ -1,5 +1,7 @@
 import grails.converters.JSON
 
+import javax.servlet.http.HttpServletResponse
+
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 
 import org.springframework.security.authentication.AccountExpiredException
@@ -50,6 +52,14 @@ class LoginController {
 		String postUrl = "${request.contextPath}${config.apf.filterProcessesUrl}"
 		render view: view, model: [postUrl: postUrl,
 		                           rememberMeParameter: config.rememberMe.parameter]
+	}
+
+	/**
+	 * The redirect action for Ajax requests. 
+	 */
+	def authAjax = {
+		response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
+		response.sendError HttpServletResponse.SC_UNAUTHORIZED
 	}
 
 	/**

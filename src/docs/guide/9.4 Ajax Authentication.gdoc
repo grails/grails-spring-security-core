@@ -197,3 +197,55 @@ h4. How Does Ajax login Work?
 Most Ajax libraries (Prototype, JQuery, and Dojo as of v2.1) include an @X-Requested-With@ header that indicates that the request was made by @XMLHttpRequest@ instead of being triggered by clicking a regular hyperlink or form submit button. The plugin uses this header to detect Ajax login requests, and uses subclasses of some of Spring Security's classes to use different redirect urls for Ajax requests than regular requests. Instead of showing full pages, @LoginController@ has JSON-generating methods @ajaxSuccess()@, @ajaxDenied()@, and @authfail()@ that generate JSON that the login Javascript code can use to appropriately display success or error messages.
 
 You can see the Ajax-aware actions in @LoginController@, specifically @ajaxSuccess@ and @ajaxDenied@, which send JSON responses that can be used by client JavaScript code. Also @authfail@ will check whether the authentication request used Ajax and will render a JSON error response if it did.
+
+To summarize, the typical flow would be
+* click the link to display the login form
+* enter authentication details and click login
+* the form is submitted using an Ajax request
+* if the authentication succeeds:
+** a redirect to @/login/ajaxSuccess@ occurs (this URL is configurable)
+** the rendered response is JSON and it contains two values, a boolean value @success@ with the value @true@ and a string value @username@ with the authenticated user's login name
+** the client determines that the login was successful and updates the page to indicate the the user is logged in; this is necessary since there's no page redirect like there would be for a non-Ajax login
+* if the authentication fails:
+** a redirect to @/login/authfail?ajax=true@ occurs (this URL is configurable)
+** the rendered response is JSON and it contains one value, a string value @error@ with the displayable error message; this will be different depending on why the login was unsuccessful (bad username or password, account locked, etc.)
+** the client determines that the login was not successful and displays the error message
+* note that both a successful and an unsuccessful login will trigger the @onSuccess@ Ajax callback; the @onError@ callback will only be triggered if there's an exception or network issue
+
+h4. Triggering an Ajax login
+
+So far we've discussed explicit Ajax logins where the user can view some of the site's pages but you've added a link to an in-page login form. An attempt to load a secure page will trigger a redirect to the standard login page. But if you're using Ajax in your pages you should handle the case where the request is secure and requires being logged in. This will also handle session timeouts where the user doesn't have a remember-me cookie; you can pop up a login dialog in the page.
+
+For example consider this Ajax form:
+
+{code}
+<g:form action="ajaxAdd">
+   <g:textArea id='postContent' name="content"
+               rows="3" cols="50" onkeydown="updateCounter()" />
+   <br/>
+   <g:submitToRemote value="Post"
+      url="[controller: 'post', action: 'addPostAjax']"
+      update="[success: 'firstPost']"
+      onSuccess="clearPost(e)"
+      onLoading="showSpinner(true)"
+      onComplete="showSpinner(false)"
+      on401="showLogin();"/>
+      <img id="spinner" style="display: none"
+           src="<g:createLinkTo dir='/images' file='spinner.gif'/>"
+   />
+</g:form>
+{code}
+
+Most of the attributes are typical, but the @on401@ attribute is the key to making Ajax logins work. As long as the @LoginController@ sends a 401 error code the need to authenticate can be easily handled.
+
+Note that depending on the version of the plugin that you're using, you may need to add the @authAjax@ method to your @LoginController@:
+
+{code}
+def authAjax = {
+   response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
+   response.sendError HttpServletResponse.SC_UNAUTHORIZED
+}
+{code}
+
+and this requires an import for @javax.servlet.http.HttpServletResponse@.
+
