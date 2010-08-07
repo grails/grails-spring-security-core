@@ -45,6 +45,7 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 			final AuthenticationException exception) throws IOException, ServletException {
 
 		if (SpringSecurityUtils.isAjax(request)) {
+			saveException(request, exception);
 			getRedirectStrategy().sendRedirect(request, response, _ajaxAuthenticationFailureUrl);
 		}
 		else {
