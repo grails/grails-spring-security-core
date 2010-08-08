@@ -106,7 +106,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.0.1'
+	String version = '1.1'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -573,6 +573,8 @@ class SpringSecurityCoreGrailsPlugin {
 
 	def onConfigChange = { event ->
 
+		SpringSecurityUtils.resetSecurityConfig()
+
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {
 			return
@@ -582,6 +584,9 @@ class SpringSecurityCoreGrailsPlugin {
 			// might have changed controllerAnnotations.staticRules
 			event.ctx.objectDefinitionSource.initialize conf.controllerAnnotations.staticRules,
 				event.ctx.grailsUrlMappingsHolder, application.controllerClasses
+		}
+		else if (SpringSecurityUtils.securityConfigType == 'InterceptUrlMap') {
+			event.ctx.objectDefinitionSource.reset()
 		}
 	}
 

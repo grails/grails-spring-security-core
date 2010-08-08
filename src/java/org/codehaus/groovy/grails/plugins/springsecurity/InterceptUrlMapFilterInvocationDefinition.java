@@ -35,18 +35,25 @@ public class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInv
 		return lowercaseAndStripQuerystring(requestUrl);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	protected void initialize() {
 		if (_initialized) {
 			return;
 		}
 
+		reset();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public void reset() {
 		Object map = ReflectionUtils.getConfigProperty("interceptUrlMap");
 		if (!(map instanceof Map)) {
 			_log.warn("interceptUrlMap config property isn't a Map");
 			return;
 		}
+
+		resetConfigs();
 
 		Map<String, List<String>> data = ReflectionUtils.splitMap((Map<String, Object>)map);
 		for (Map.Entry<String, List<String>> entry : data.entrySet()) {

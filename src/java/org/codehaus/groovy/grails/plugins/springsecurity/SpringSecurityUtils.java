@@ -240,7 +240,7 @@ public final class SpringSecurityUtils {
 	}
 
 	/**
-	 * Reset the config for testing.
+	 * Reset the config for testing or after a dev mode Config.groovy change.
 	 */
 	public static synchronized void resetSecurityConfig() {
 		securityConfig = null;
