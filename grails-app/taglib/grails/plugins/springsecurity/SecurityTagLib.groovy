@@ -106,7 +106,7 @@ class SecurityTagLib {
 		}
 
 		if (source) {
-			out << source
+			out << source.encodeAsHTML()
 		}
 		else {
 			out << body()
@@ -118,7 +118,7 @@ class SecurityTagLib {
 	 */
 	def username = { attrs ->
 		if (springSecurityService.isLoggedIn()) {
-			out << springSecurityService.authentication.name
+			out << springSecurityService.authentication.name.encodeAsHTML()
 		}
 	}
 
@@ -163,7 +163,7 @@ class SecurityTagLib {
 	 */
 	def switchedUserOriginalUsername = { attrs ->
 		if (SpringSecurityUtils.isSwitched()) {
-			out << SpringSecurityUtils.switchedUserOriginalUsername
+			out << SpringSecurityUtils.switchedUserOriginalUsername.encodeAsHTML()
 		}
 	}
 
