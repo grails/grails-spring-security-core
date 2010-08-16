@@ -36,9 +36,11 @@ class MyUserDetails extends GrailsUser {
 {code}
 package com.mycompany.myapp
 
+import org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser
+import org.codehaus.groovy.grails.plugins.springsecurity.GrailsUserDetailsService
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 class MyUserDetailsService implements GrailsUserDetailsService {
 
@@ -49,18 +51,18 @@ class MyUserDetailsService implements GrailsUserDetailsService {
 
    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-      User.withTransaction { status -> 
+      User.withTransaction { status ->
 
-         User user = User.findByUsername(username) 
-         if (!user) throw new UsernameNotFoundException('User not found', username) 
+         User user = User.findByUsername(username)
+         if (!user) throw new UsernameNotFoundException('User not found', username)
 
-         def authorities = user.authorities.collect { new GrantedAuthorityImpl(it.authority) } 
+         def authorities = user.authorities.collect { new GrantedAuthorityImpl(it.authority) }
 
-         return new MyUserDetails(user.username, user.password, user.enabled, 
-            !user.accountExpired, !user.passwordExpired, 
-            !user.accountLocked, authorities, user.id, 
-            user.firstName + " " + user.lastName) 
-      } 
+         return new MyUserDetails(user.username, user.password, user.enabled,
+            !user.accountExpired, !user.passwordExpired,
+            !user.accountLocked, authorities, user.id,
+            user.firstName + " " + user.lastName)
+      }
    }
 }
 {code}
