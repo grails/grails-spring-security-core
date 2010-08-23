@@ -225,6 +225,11 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertContentDoesNotContain 'access with role admin: true'
 		assertContentDoesNotContain 'access with role user: false'
 		assertContentContains 'access with role admin: false'
+
+		assertContentContains 'Can access /login/auth'
+		assertContentDoesNotContain 'Can access /secureAnnotated'
+		assertContentDoesNotContain 'Cannot access /login/auth'
+		assertContentContains 'Cannot access /secureAnnotated'
 	}
 
 	void testTaglibsAdmin() {
@@ -258,5 +263,42 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertContentContains 'access with role admin: true'
 		assertContentDoesNotContain 'access with role user: false'
 		assertContentDoesNotContain 'access with role admin: false'
+
+		assertContentContains 'Can access /login/auth'
+		assertContentContains 'Can access /secureAnnotated'
+		assertContentDoesNotContain 'Cannot access /login/auth'
+		assertContentDoesNotContain 'Cannot access /secureAnnotated'
+	}
+
+	void testMetaclassMethodsUnauthenticated() {
+		get '/tagLibTest/testMetaclassMethods'
+		assertContentContains 'getPrincipal: anonymousUser'
+		assertContentContains 'principal: anonymousUser'
+		assertContentContains 'isLoggedIn: false'
+		assertContentContains 'loggedIn: false'
+		assertContentContains 'getAuthenticatedUser: null'
+		assertContentContains 'authenticatedUser: null'
+	}
+
+	void testMetaclassMethodsAuthenticated() {
+
+		get '/login/auth'
+		assertContentContains 'Please Login'
+
+		form {
+			j_username = 'user1'
+			j_password = 'p4ssw0rd'
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
+
+		get '/tagLibTest/testMetaclassMethods'
+		assertContentContains 'getPrincipal: org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser'
+		assertContentContains 'principal: org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser'
+		assertContentContains 'Username: user1'
+		assertContentContains 'isLoggedIn: true'
+		assertContentContains 'loggedIn: true'
+		assertContentContains 'getAuthenticatedUser: com.testapp.TestUser : '
+		assertContentContains 'authenticatedUser: com.testapp.TestUser : '
 	}
 }

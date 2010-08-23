@@ -24,4 +24,9 @@
 	<sec:noAccess expression="hasRole('ROLE_USER')">access with role user: false</sec:noAccess><br/>
 	<sec:noAccess expression="hasRole('ROLE_ADMIN')">access with role admin: false</sec:noAccess><br/>
 
+	<sec:access url="/login/auth">Can access /login/auth</sec:access><br/>
+	<sec:access url="/secureAnnotated">Can access /secureAnnotated</sec:access><br/>
+	<sec:noAccess url="/login/auth">Cannot access /login/auth</sec:noAccess><br/>
+	<sec:noAccess url="/secureAnnotated">Cannot access /secureAnnotated</sec:noAccess><br/>
+
 </body>

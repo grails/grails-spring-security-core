@@ -591,8 +591,23 @@ class SpringSecurityCoreGrailsPlugin {
 	}
 
 	private void addControllerMethods(MetaClass mc, ctx) {
-		mc.getPrincipal = { -> SCH.context?.authentication?.principal }
-		mc.isLoggedIn = { -> ctx.springSecurityService.isLoggedIn() }
+
+		if (!mc.respondsTo(null, 'getPrincipal')) {
+			mc.getPrincipal = { -> SCH.context?.authentication?.principal }
+		}
+
+		if (!mc.respondsTo(null, 'isLoggedIn')) {
+			mc.isLoggedIn = { -> ctx.springSecurityService.isLoggedIn() }
+		}
+
+		if (!mc.respondsTo(null, 'getAuthenticatedUser')) {
+			mc.getAuthenticatedUser = { ->
+				if (!ctx.springSecurityService.isLoggedIn()) return null
+				String userClassName = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
+				Class User = ctx.grailsApplication.getDomainClass(userClassName).clazz
+				User.get SCH.context.authentication.principal.id
+			}
+		}
 	}
 
 	private createRefList = { names -> names.collect { name -> ref(name) } }
