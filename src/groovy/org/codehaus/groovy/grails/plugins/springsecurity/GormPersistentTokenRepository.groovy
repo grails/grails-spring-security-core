@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  */
 class GormPersistentTokenRepository implements PersistentTokenRepository {
 
-	private final Logger _log = Logger.getLogger(getClass())
+	private final Logger log = Logger.getLogger(getClass())
 
 	/**
 	 * {@inheritDoc}
