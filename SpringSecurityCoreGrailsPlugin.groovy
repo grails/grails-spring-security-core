@@ -173,6 +173,7 @@ class SpringSecurityCoreGrailsPlugin {
 		}
 
 		println '\nConfiguring Spring Security ...'
+		SpringSecurityUtils.reset()
 
 		createRefList.delegate = delegate
 

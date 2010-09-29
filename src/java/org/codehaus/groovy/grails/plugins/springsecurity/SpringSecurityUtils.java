@@ -119,6 +119,12 @@ public final class SpringSecurityUtils {
 		// static only
 	}
 
+	public static void reset()
+	{
+		ORDERED_FILTERS.clear();
+		CONFIGURED_ORDERED_FILTERS.clear();
+	}
+	
 	/**
 	 * Extract the role names from authorities.
 	 * @param authorities  the authorities (a collection or array of {@link GrantedAuthority}).
