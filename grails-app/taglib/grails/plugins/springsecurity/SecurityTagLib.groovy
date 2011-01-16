@@ -49,6 +49,8 @@ class SecurityTagLib {
 	/**
 	 * Renders the body if all of the specified roles are granted to the user. Roles are
 	 * specified in the 'roles' attribute which is a comma-delimited string.
+	 *
+	 * @attr roles REQUIRED the role name(s)
 	 */
 	def ifAllGranted = { attrs, body ->
 
@@ -62,6 +64,8 @@ class SecurityTagLib {
 	/**
 	 * Renders the body if none of the specified roles are granted to the user. Roles are
 	 * specified in the 'roles' attribute which is a comma-delimited string.
+	 *
+	 * @attr roles REQUIRED the role name(s)
 	 */
 	def ifNotGranted = { attrs, body ->
 
@@ -75,6 +79,8 @@ class SecurityTagLib {
 	/**
 	 * Renders the body if any of the specified roles are granted to the user. Roles are
 	 * specified in the 'roles' attribute which is a comma-delimited string.
+	 *
+	 * @attr roles REQUIRED the role name(s)
 	 */
 	def ifAnyGranted = { attrs, body ->
 
@@ -87,6 +93,8 @@ class SecurityTagLib {
 
 	/**
 	 * Renders a property (specified by the 'field' attribute) from the principal.
+	 *
+	 * @attr field REQUIRED the field name
 	 */
 	def loggedInUserInfo = { attrs, body ->
 
@@ -169,7 +177,11 @@ class SecurityTagLib {
 
 	/**
 	 * Renders the body if the specified expression (a String; the 'expression' attribute)
-	 * evaluates to <code>true</code>.
+	 * evaluates to <code>true</code> or if the specified URL is allowed.
+	 *
+	 * @attr expression the expression to evaluate
+	 * @attr url the URL to check
+	 * @attr method the method of the URL, defaults to 'GET'
 	 */
 	def access = { attrs, body ->
 		if (hasAccess(attrs, 'access')) {
@@ -179,7 +191,11 @@ class SecurityTagLib {
 
 	/**
 	 * Renders the body if the specified expression (a String; the 'expression' attribute)
-	 * evaluates to <code>false</code>.
+	 * evaluates to <code>false</code> or if the specified URL is not allowed.
+	 *
+	 * @attr expression the expression to evaluate
+	 * @attr url the URL to check
+	 * @attr method the method of the URL, defaults to 'GET'
 	 */
 	def noAccess = { attrs, body ->
 		if (!hasAccess(attrs, 'noAccess')) {
