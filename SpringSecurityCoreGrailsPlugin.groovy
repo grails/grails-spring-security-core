@@ -276,7 +276,19 @@ class SpringSecurityCoreGrailsPlugin {
 			securityMetadataSource = ref('objectDefinitionSource')
 			runAsManager = ref('runAsManager')
 		}
-		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
+		String securityConfigType = SpringSecurityUtils.securityConfigType
+		if (securityConfigType != 'Annotation' &&
+				securityConfigType != 'Requestmap' &&
+				securityConfigType != 'InterceptUrlMap') {
+			println """
+ERROR: the 'securityConfigType' property must be one of
+'Annotation', 'Requestmap', or 'InterceptUrlMap' or left unspecified
+to default to 'Annotation'; setting value to 'Annotation'
+"""
+			securityConfigType = 'Annotation'
+		}
+
+		if (securityConfigType == 'Annotation') {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -293,7 +305,7 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
-		else if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
+		else if (securityConfigType == 'Requestmap') {
 			objectDefinitionSource(RequestmapFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
@@ -304,7 +316,7 @@ class SpringSecurityCoreGrailsPlugin {
 				}
 			}
 		}
-		else if (SpringSecurityUtils.securityConfigType == 'InterceptUrlMap') {
+		else if (securityConfigType == 'InterceptUrlMap') {
 			objectDefinitionSource(InterceptUrlMapFilterInvocationDefinition) {
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
