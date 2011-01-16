@@ -4,6 +4,23 @@
 def springSecurityService
 {code}
 
+h4. getCurrentUser()
+Retrieves a domain class instance for the currently authenticated user. During authentication a user/person domain class instance is loaded to get the user's password, roles, etc. and the id of the instance is saved. This method uses the id and the domain class to re-load the instance.
+
+Example:
+
+{code}
+class SomeController {
+
+   def springSecurityService
+
+   def someAction = {
+      def user = springSecurityService.currentUser
+      ...
+   }
+}
+{code}
+
 h4. isLoggedIn()
 Checks whether there is a currently logged-in user.
 

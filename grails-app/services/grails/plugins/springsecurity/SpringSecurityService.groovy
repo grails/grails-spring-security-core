@@ -16,10 +16,7 @@ package grails.plugins.springsecurity
 
 import javax.servlet.http.HttpServletRequest
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource
@@ -69,6 +66,19 @@ class SpringSecurityService {
 	 * @return the authentication
 	 */
 	Authentication getAuthentication() { SCH.context?.authentication }
+
+	/**
+	 * Get the domain class instance associated with the current authentication.
+	 * @return the user
+	 */
+	Object getCurrentUser() {
+		if (!isLoggedIn()) {
+			return null
+		}
+
+		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
+		grailsApplication.getClassForName(className).get(principal.id)
+	}
 
 	/**
 	 * Encode the password using the configured PasswordEncoder.

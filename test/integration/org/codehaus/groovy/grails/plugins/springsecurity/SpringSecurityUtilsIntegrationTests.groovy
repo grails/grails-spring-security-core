@@ -47,12 +47,14 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 	def springSecurityService
 
 	private String username = 'username'
+	private TestUser testUser
 
 	@Override
 	protected void setUp() {
 		super.setUp()
 		def user = new TestUser(loginName: username, enabld: true,
 			passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+		testUser = user
 		def role = new TestRole(auth: 'ROLE_ADMIN', description: 'admin').save(failOnError: true)
 		TestUserRole.create user, role, true
 
@@ -192,6 +194,20 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 
 		assertTrue 'should still be authenticated', springSecurityService.loggedIn
 		assertEquals 'should still be unauthenticated in main thread', username, springSecurityService.principal.username
+	}
+
+	void testGetCurrentUser_NotLoggedIn() {
+		assertFalse springSecurityService.loggedIn
+		assertNull springSecurityService.currentUser
+	}
+
+	void testGetCurrentUser_LoggedIn() {
+		SpringSecurityUtils.reauthenticate username, null
+		assertTrue springSecurityService.loggedIn
+
+		def currentUser = springSecurityService.currentUser
+		assertNotNull currentUser
+		assertEquals currentUser.id, testUser.id
 	}
 }
 
