@@ -153,6 +153,7 @@ security {
 	rememberMe.persistentToken.domainClassName = 'PersistentLogin'
 	rememberMe.persistentToken.seriesLength = 16
 	rememberMe.persistentToken.tokenLength = 16
+	rememberMe.useSecureCookie = false
 
 	/** URL <-> Role mapping */
 

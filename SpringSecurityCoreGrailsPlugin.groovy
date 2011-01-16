@@ -209,6 +209,7 @@ class SpringSecurityCoreGrailsPlugin {
 				alwaysRemember = conf.rememberMe.alwaysRemember
 				tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
 				parameter = conf.rememberMe.parameter
+				useSecureCookie = conf.rememberMe.useSecureCookie // false
 
 				tokenRepository = ref('tokenRepository')
 				seriesLength = conf.rememberMe.persistentToken.seriesLength // 16
@@ -225,6 +226,7 @@ class SpringSecurityCoreGrailsPlugin {
 				alwaysRemember = conf.rememberMe.alwaysRemember
 				tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
 				parameter = conf.rememberMe.parameter
+				useSecureCookie = conf.rememberMe.useSecureCookie // false
 			}
 
 			// register a lightweight impl so there's a bean in either case

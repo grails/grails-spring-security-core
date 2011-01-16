@@ -8,6 +8,7 @@ rememberMe.alwaysRemember | @false@ | If @true@, create a remember-me cookie eve
 rememberMe.tokenValiditySeconds | 1209600 (14 days) | Max age of the cookie in seconds.
 rememberMe.parameter | '_spring_security_remember_me' | Login form remember-me checkbox name.
 rememberMe.key | 'grailsRocks' | Value used to encode cookies; should be unique per application.
+rememberMe.useSecureCookie | false | Whether to use a secure cookie or not
 rememberMe.persistent | @false@ | If @true@, stores persistent login information in the database.
 rememberMe.persistentToken.domainClassName | 'PersistentLogin' | Domain class used to manage persistent logins.
 rememberMe.persistentToken.seriesLength | 16 | Number of characters in the cookie's @series@ attribute.
