@@ -9,7 +9,7 @@ To define custom filters, to remove a core filter from the chain (not recommende
 For example:
 
 {code}
-grails.plugins.springsecurity.filterNames = [
+grails.plugins.springsecurity.filterChain.filterNames = [
    'httpSessionContextIntegrationFilter', 'logoutFilter', 'authenticationProcessingFilter',
    'myCustomProcessingFilter', 'rememberMeProcessingFilter', 'anonymousProcessingFilter',
    'exceptionTranslationFilter', 'filterInvocationInterceptor'
