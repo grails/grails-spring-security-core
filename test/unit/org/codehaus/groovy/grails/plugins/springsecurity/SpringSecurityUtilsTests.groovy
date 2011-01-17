@@ -287,6 +287,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
 		def ctx = [getBean: { String name -> roleHierarchy }] as ApplicationContext
 		AH.application = new DefaultGrailsApplication(mainContext: ctx)
+		SpringSecurityUtils.application = AH.application
 	}
 
 	/**
@@ -300,10 +301,10 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		CH.config = null
 		SpringSecurityUtils.securityConfig = null
 		AH.application = null
+		SpringSecurityUtils.application = null
 	}
 }
 
 class FakeAuthority implements GrantedAuthority {
 	String authority
 }
-

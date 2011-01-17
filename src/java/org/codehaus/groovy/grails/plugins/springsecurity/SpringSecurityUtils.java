@@ -20,6 +20,9 @@ import groovy.lang.GroovyClassLoader;
 import groovy.util.ConfigObject;
 import groovy.util.ConfigSlurper;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,7 +39,7 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder;
+import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -63,6 +66,13 @@ import org.springframework.util.StringUtils;
 public final class SpringSecurityUtils {
 
 	private static ConfigObject securityConfig;
+	private static GrailsApplication _application;
+	private static final Map<String, Object> _context = new HashMap<String, Object>();
+	private static final String VOTER_NAMES_KEY = "VOTER_NAMES";
+	private static final String PROVIDER_NAMES_KEY = "PROVIDER_NAMES";
+	private static final String LOGOUT_HANDLER_NAMES_KEY = "LOGOUT_HANDLER_NAMES";
+	private static final String ORDERED_FILTERS_KEY = "ORDERED_FILTERS";
+	private static final String CONFIGURED_ORDERED_FILTERS_KEY = "CONFIGURED_ORDERED_FILTERS";
 
 	/**
 	 * Default value for the name of the Ajax header.
@@ -70,43 +80,49 @@ public final class SpringSecurityUtils {
 	public static final String AJAX_HEADER = "X-Requested-With";
 
 	/**
-	 * Default ordered filter names. Here to let plugins add or remove them. Can be overridden by config.
+	 * @deprecated use {@link #getOrderedFilters()}
 	 */
-	public static final Map<Integer, String> ORDERED_FILTERS = new HashMap<Integer, String>();
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public static final Map<Integer, String> ORDERED_FILTERS =
+		(Map<Integer, String>)createDelegate(
+			ORDERED_FILTERS_KEY, Map.class, HashMap.class);
 
 	/**
-	 * Set by SpringSecurityCoreGrailsPlugin; contains the actual filter beans in order.
+	 * @deprecated use {@link #getConfiguredOrderedFilters()}
 	 */
+	@SuppressWarnings("unchecked")
+	@Deprecated
 	public static final SortedMap<Integer, Filter> CONFIGURED_ORDERED_FILTERS =
-		new TreeMap<Integer, Filter>();
+		(SortedMap<Integer, Filter>)createDelegate(
+				CONFIGURED_ORDERED_FILTERS_KEY, SortedMap.class, TreeMap.class);
 
 	/**
-	 * Default voter names. Here to let plugins add or remove them. Can be overridden by config.
+	 * @deprecated use {@link #getVoterNames()}
 	 */
-	public static final List<String> VOTER_NAMES = new ArrayList<String>();
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public static final List<String> VOTER_NAMES =
+		(List<String>)createDelegate(
+			VOTER_NAMES_KEY, List.class, ArrayList.class);
 
 	/**
-	 * Default authentication provider names. Here to let plugins add or remove them. Can be overridden by config.
+	 * @deprecated use {@link #getProviderNames()}
 	 */
-	public static final List<String> PROVIDER_NAMES = new ArrayList<String>();
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public static final List<String> PROVIDER_NAMES =
+		(List<String>)createDelegate(
+				PROVIDER_NAMES_KEY, List.class, ArrayList.class);
 
 	/**
-	 * Default logout handler names. Here to let plugins add or remove them. Can be overridden by config.
+	 * @deprecated use {@link #getLogoutHandlerNames()}
 	 */
-	public static final List<String> LOGOUT_HANDLER_NAMES = new ArrayList<String>();
-
-	static {
-		VOTER_NAMES.add("authenticatedVoter");
-		VOTER_NAMES.add("roleVoter");
-		VOTER_NAMES.add("webExpressionVoter");
-
-		PROVIDER_NAMES.add("daoAuthenticationProvider");
-		PROVIDER_NAMES.add("anonymousAuthenticationProvider");
-		PROVIDER_NAMES.add("rememberMeAuthenticationProvider");
-
-		LOGOUT_HANDLER_NAMES.add("rememberMeServices");
-		LOGOUT_HANDLER_NAMES.add("securityContextLogoutHandler");
-	}
+	@SuppressWarnings("unchecked")
+	@Deprecated
+	public static final List<String> LOGOUT_HANDLER_NAMES =
+		(List<String>)createDelegate(
+				LOGOUT_HANDLER_NAMES_KEY, List.class, ArrayList.class);
 
 	/**
 	 * Used to ensure that all authenticated users have at least one granted authority to work
@@ -117,6 +133,15 @@ public final class SpringSecurityUtils {
 
 	private SpringSecurityUtils() {
 		// static only
+	}
+
+	/**
+	 * Set at startup by plugin.
+	 * @param application the application
+	 */
+	public static void setApplication(GrailsApplication application) {
+		_application = application;
+		initializeContext();
 	}
 
 	/**
@@ -297,7 +322,16 @@ public final class SpringSecurityUtils {
 	 * @param beanName  the Spring bean name of the provider
 	 */
 	public static void registerProvider(final String beanName) {
-		PROVIDER_NAMES.add(0, beanName);
+		getProviderNames().add(0, beanName);
+	}
+
+	/**
+	 * Authentication provider names. Plugins add or remove them, and can be overridden by config.
+	 * @return the names
+	 */
+	@SuppressWarnings("unchecked")
+	public static synchronized List<String> getProviderNames() {
+		return (List<String>)getFromContext(PROVIDER_NAMES_KEY);
 	}
 
 	/**
@@ -308,7 +342,16 @@ public final class SpringSecurityUtils {
 	 * @param beanName  the Spring bean name of the handler
 	 */
 	public static void registerLogoutHandler(final String beanName) {
-		LOGOUT_HANDLER_NAMES.add(0, beanName);
+		getLogoutHandlerNames().add(0, beanName);
+	}
+
+	/**
+	 * Logout handler names. Plugins add or remove them, and can be overridden by config.
+	 * @return the names
+	 */
+	@SuppressWarnings("unchecked")
+	public static synchronized List<String> getLogoutHandlerNames() {
+		return (List<String>)getFromContext(LOGOUT_HANDLER_NAMES_KEY);
 	}
 
 	/**
@@ -319,7 +362,16 @@ public final class SpringSecurityUtils {
 	 * @param beanName  the Spring bean name of the voter
 	 */
 	public static void registerVoter(final String beanName) {
-		VOTER_NAMES.add(0, beanName);
+		getVoterNames().add(0, beanName);
+	}
+
+	/**
+	 * Voter names. Plugins add or remove them and can be overridden by config.
+	 * @return the names
+	 */
+	@SuppressWarnings("unchecked")
+	public static List<String> getVoterNames() {
+		return (List<String>)getFromContext(VOTER_NAMES_KEY);
 	}
 
 	/**
@@ -345,13 +397,22 @@ public final class SpringSecurityUtils {
 	 * @param order  the position (see {@link SecurityFilterPosition})
 	 */
 	public static void registerFilter(final String beanName, final int order) {
-		String oldName = ORDERED_FILTERS.get(order);
+		String oldName = getOrderedFilters().get(order);
 		if (oldName != null) {
 			throw new IllegalArgumentException("Cannot register filter '" + beanName +
 					"' at position " + order + "; '" + oldName +
 					"' is already registered in that position");
 		}
-		ORDERED_FILTERS.put(order, beanName);
+		getOrderedFilters().put(order, beanName);
+	}
+
+	/**
+	 * Ordered filter names. Plugins add or remove them, and can be overridden by config.
+	 * @return the names
+	 */
+	@SuppressWarnings("unchecked")
+	public static Map<Integer, String> getOrderedFilters() {
+		return (Map<Integer, String>)getFromContext(ORDERED_FILTERS_KEY);
 	}
 
 	/**
@@ -380,7 +441,7 @@ public final class SpringSecurityUtils {
 	 */
 	public static void clientRegisterFilter(final String beanName, final int order) {
 
-		Filter oldFilter = CONFIGURED_ORDERED_FILTERS.get(order);
+		Filter oldFilter = getConfiguredOrderedFilters().get(order);
 		if (oldFilter != null) {
 			throw new IllegalArgumentException("Cannot register filter '" + beanName +
 					"' at position " + order + "; '" + oldFilter +
@@ -388,11 +449,20 @@ public final class SpringSecurityUtils {
 		}
 
 		Filter filter = getBean(beanName);
-		CONFIGURED_ORDERED_FILTERS.put(order, filter);
+		getConfiguredOrderedFilters().put(order, filter);
 		FilterChainProxy filterChain = getBean("springSecurityFilterChain");
 		filterChain.setFilterChainMap(Collections.singletonMap(
 				filterChain.getMatcher().getUniversalMatchPattern(),
-				new ArrayList<Filter>(CONFIGURED_ORDERED_FILTERS.values())));
+				new ArrayList<Filter>(getConfiguredOrderedFilters().values())));
+	}
+
+	/**
+	 * Set by SpringSecurityCoreGrailsPlugin; contains the actual filter beans in order.
+	 * @return the filters
+	 */
+	@SuppressWarnings("unchecked")
+	public static SortedMap<Integer, Filter> getConfiguredOrderedFilters() {
+		return (SortedMap<Integer, Filter>)getFromContext(CONFIGURED_ORDERED_FILTERS_KEY);
 	}
 
 	/**
@@ -559,6 +629,60 @@ public final class SpringSecurityUtils {
 
 	@SuppressWarnings("unchecked")
 	private static  <T> T getBean(final String name) {
-		return (T)ApplicationHolder.getApplication().getMainContext().getBean(name);
+		return (T)_application.getMainContext().getBean(name);
+	}
+
+	private static Object createDelegate(final String configKey,
+			Class<?> interfaceClass, Class<?> implClass) {
+
+		try {
+			storeInContext(configKey, implClass.newInstance());
+		}
+		catch (InstantiationException impossible) {
+			// impossible with regular java.util classes
+		}
+		catch (IllegalAccessException impossible) {
+			// impossible with regular java.util classes
+		}
+
+		return Proxy.newProxyInstance(implClass.getClassLoader(),
+				new Class[] { interfaceClass }, new InvocationHandler() {
+			@Override
+			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+				return method.invoke(getFromContext(configKey), args);
+			}
+		});
+	}
+
+	/**
+	 * Called each time doWithApplicationContext() is invoked, so it's important to reset
+	 * to default values when running integration and functional tests together.
+	 */
+	private static void initializeContext() {
+		getVoterNames().clear();
+		getVoterNames().add("authenticatedVoter");
+		getVoterNames().add("roleVoter");
+		getVoterNames().add("webExpressionVoter");
+
+		getLogoutHandlerNames().clear();
+		getLogoutHandlerNames().add("rememberMeServices");
+		getLogoutHandlerNames().add("securityContextLogoutHandler");
+
+		getProviderNames().clear();
+		getProviderNames().add("daoAuthenticationProvider");
+		getProviderNames().add("anonymousAuthenticationProvider");
+		getProviderNames().add("rememberMeAuthenticationProvider");
+
+		getOrderedFilters().clear();
+
+		getConfiguredOrderedFilters().clear();
+	}
+
+	private static Object getFromContext(String key) {
+		return _context.get(key);
+	}
+
+	private static void storeInContext(String key, Object value) {
+		_context.put(key, value);
 	}
 }

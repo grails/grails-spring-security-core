@@ -166,6 +166,8 @@ class SpringSecurityCoreGrailsPlugin {
 
 	def doWithSpring = {
 
+		SpringSecurityUtils.application = application
+
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {
 			println '\n\nSpring Security is disabled, not loading\n\n'
@@ -276,6 +278,7 @@ class SpringSecurityCoreGrailsPlugin {
 			securityMetadataSource = ref('objectDefinitionSource')
 			runAsManager = ref('runAsManager')
 		}
+
 		String securityConfigType = SpringSecurityUtils.securityConfigType
 		if (securityConfigType != 'Annotation' &&
 				securityConfigType != 'Requestmap' &&
@@ -507,7 +510,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		filterNames.each { int order, String name ->
 			def filter = ctx.getBean(name)
 			allConfiguredFilters[name] = filter
-			SpringSecurityUtils.CONFIGURED_ORDERED_FILTERS[order] = filter
+			SpringSecurityUtils.getConfiguredOrderedFilters()[order] = filter
 		}
 
 		if (conf.filterChain.chainMap) {
@@ -546,7 +549,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		filterChain.filterChainMap = filterChainMap
 
 		// build voters list here to give dependent plugins a chance to register some
-		def voterNames = conf.voterNames ?: SpringSecurityUtils.VOTER_NAMES
+		def voterNames = conf.voterNames ?: SpringSecurityUtils.getVoterNames()
 		ctx.accessDecisionManager.decisionVoters = createBeanList(voterNames, ctx)
 
 		// build providers list here to give dependent plugins a chance to register some
@@ -555,7 +558,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			providerNames.addAll conf.providerNames
 		}
 		else {
-			providerNames.addAll SpringSecurityUtils.PROVIDER_NAMES
+			providerNames.addAll SpringSecurityUtils.getProviderNames()
 			if (conf.useX509) {
 				providerNames << 'x509AuthenticationProvider'
 			}
@@ -728,7 +731,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		// create the default list here, will be replaced in doWithApplicationContext
-		def voters = createRefList(SpringSecurityUtils.VOTER_NAMES)
+		def voters = createRefList(SpringSecurityUtils.getVoterNames())
 
 		/** accessDecisionManager */
 		accessDecisionManager(AuthenticatedVetoableDecisionManager) {
@@ -740,7 +743,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private configureAuthenticationManager = { conf ->
 
 		// create the default list here, will be replaced in doWithApplicationContext
-		def providerRefs = createRefList(SpringSecurityUtils.PROVIDER_NAMES)
+		def providerRefs = createRefList(SpringSecurityUtils.getProviderNames())
 
 		/** authenticationManager */
 		authenticationManager(ProviderManager) {
@@ -829,7 +832,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			}
 
 			// add in filters contributed by secondary plugins
-			orderedNames.putAll SpringSecurityUtils.ORDERED_FILTERS
+			orderedNames.putAll SpringSecurityUtils.getOrderedFilters()
 		}
 
 		orderedNames

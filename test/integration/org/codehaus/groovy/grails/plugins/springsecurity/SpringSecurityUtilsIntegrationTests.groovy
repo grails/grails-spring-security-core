@@ -71,7 +71,7 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 
 	void testClientRegisterFilter() {
 
-		def map = SpringSecurityUtils.CONFIGURED_ORDERED_FILTERS
+		def map = SpringSecurityUtils.getConfiguredOrderedFilters()
 		assertEquals 8, map.size()
 		assertTrue map[300] instanceof SecurityContextPersistenceFilter
 		assertTrue map[400] instanceof LogoutFilter
