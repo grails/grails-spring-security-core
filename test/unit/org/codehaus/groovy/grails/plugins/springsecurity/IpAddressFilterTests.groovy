@@ -129,9 +129,8 @@ class IpAddressFilterTests extends GroovyTestCase {
 
 		request.requestURI = '/masked/bar?x=123'
 		response = new MockHttpServletResponse()
-		shouldFail(IllegalArgumentException) {
-			_filter.doFilter request, response, chain
-		}
+		_filter.doFilter request, response, chain
+		assertEquals 404, response.status
 
 		assertEquals 0, chainCount
 	}
