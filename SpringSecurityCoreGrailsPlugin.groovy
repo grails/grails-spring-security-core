@@ -85,6 +85,8 @@ import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthentication
 import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationSuccessHandler
 import org.codehaus.groovy.grails.plugins.springsecurity.AnnotationFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.AuthenticatedVetoableDecisionManager
+import org.codehaus.groovy.grails.plugins.springsecurity.DefaultPostAuthenticationChecks
+import org.codehaus.groovy.grails.plugins.springsecurity.DefaultPreAuthenticationChecks
 import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepository
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
@@ -360,11 +362,17 @@ to default to 'Annotation'; setting value to 'Annotation'
 		else {
 			saltSource(NullSaltSource)
 		}
+
+		preAuthenticationChecks(DefaultPreAuthenticationChecks)
+		postAuthenticationChecks(DefaultPostAuthenticationChecks)
+
 		daoAuthenticationProvider(DaoAuthenticationProvider) {
 			userDetailsService = ref('userDetailsService')
 			passwordEncoder = ref('passwordEncoder')
 			userCache = ref('userCache')
 			saltSource = ref('saltSource')
+			preAuthenticationChecks = ref('preAuthenticationChecks')
+			postAuthenticationChecks = ref('postAuthenticationChecks')
 			hideUserNotFoundExceptions = conf.dao.hideUserNotFoundExceptions // true
 		}
 
