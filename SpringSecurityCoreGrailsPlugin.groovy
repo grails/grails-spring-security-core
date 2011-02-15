@@ -109,7 +109,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.1'
+	String version = '1.2'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -385,8 +385,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		/** userDetailsService */
 		userDetailsService(GormUserDetailsService) {
-			sessionFactory = ref('sessionFactory')
-			transactionManager = ref('transactionManager')
+			grailsApplication = ref('grailsApplication')
 		}
 
 		/** authenticationUserDetailsService */

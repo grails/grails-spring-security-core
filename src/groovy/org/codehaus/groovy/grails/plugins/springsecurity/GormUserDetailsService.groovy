@@ -15,14 +15,10 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import org.apache.log4j.Logger
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.transaction.TransactionStatus
-import org.springframework.transaction.support.TransactionCallback
-import org.springframework.transaction.support.TransactionTemplate
 
 /**
  * Default implementation of <code>GrailsUserDetailsService</code> that uses
@@ -41,11 +37,8 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	 */
 	static final List NO_ROLES = [new GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)]
 
-	/** Dependency injection for Hibernate session factory. */
-	def sessionFactory
-
-	/** Dependency injection for Hibernate transaction manager. */
-	def transactionManager
+	/** Dependency injection for the application. */
+	def grailsApplication
 
 	/**
 	 * {@inheritDoc}
@@ -53,10 +46,19 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	 * 	java.lang.String, boolean)
 	 */
 	UserDetails loadUserByUsername(String username, boolean loadRoles) throws UsernameNotFoundException {
-		def callback = { TransactionStatus status ->
-			loadUserFromSession(username, sessionFactory.currentSession, loadRoles)
+		def conf = SpringSecurityUtils.securityConfig
+		Class<?> User = grailsApplication.getDomainClass(conf.userLookup.userDomainClassName).clazz
+
+		User.withTransaction { status ->
+			def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
+			if (!user) {
+				log.warn "User not found: $username"
+				throw new UsernameNotFoundException('User not found', username)
+			}
+
+			Collection<GrantedAuthority> authorities = loadAuthorities(user, username, loadRoles)
+			createUserDetails user, authorities
 		}
-		new TransactionTemplate(transactionManager).execute(callback as TransactionCallback)
 	}
 
 	/**
@@ -66,24 +68,6 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	 */
 	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		loadUserByUsername username, true
-	}
-
-	protected UserDetails loadUserFromSession(String username, session, boolean loadRoles) {
-		def user = loadUser(username, session)
-		Collection<GrantedAuthority> authorities = loadAuthorities(user, username, loadRoles)
-		createUserDetails user, authorities
-	}
-
-	protected loadUser(String username, session) {
-		def conf = SpringSecurityUtils.securityConfig
-		def grailsApplication = AH.application // not using DI for backwards compatibility
-		Class<?> User = grailsApplication.getDomainClass(conf.userLookup.userDomainClassName).clazz
-		def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
-		if (!user) {
-			log.warn "User not found: $username"
-			throw new UsernameNotFoundException('User not found', username)
-		}
-		user
 	}
 
 	protected Collection<GrantedAuthority> loadAuthorities(user, String username, boolean loadRoles) {
