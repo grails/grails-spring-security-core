@@ -202,7 +202,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	// fixes extra spaces, trailing commas, etc.
 	protected List<String> split(final String value) {
-		if (!value.startsWith("ROLE_")) {
+		if (!value.startsWith("ROLE_") && !value.startsWith("IS_")) {
 			// an expression
 			return Collections.singletonList(value);
 		}
