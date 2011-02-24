@@ -109,7 +109,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2'
+	String version = '1.1.1'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -129,6 +129,8 @@ class SpringSecurityCoreGrailsPlugin {
 	String documentation = 'http://grails.org/plugin/spring-security-core'
 
 	def doWithWebDescriptor = { xml ->
+
+		SpringSecurityUtils.resetSecurityConfig()
 
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {
@@ -167,6 +169,12 @@ class SpringSecurityCoreGrailsPlugin {
 	}
 
 	def doWithSpring = {
+
+		if (application.warDeployed) {
+			// need to reset here since web.xml was already built, so
+			// doWithWebDescriptor isn't called when deployed as war
+			SpringSecurityUtils.resetSecurityConfig()
+		}
 
 		SpringSecurityUtils.application = application
 
