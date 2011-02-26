@@ -647,7 +647,6 @@ public final class SpringSecurityUtils {
 
 		return Proxy.newProxyInstance(implClass.getClassLoader(),
 				new Class[] { interfaceClass }, new InvocationHandler() {
-			@Override
 			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 				return method.invoke(getFromContext(configKey), args);
 			}
