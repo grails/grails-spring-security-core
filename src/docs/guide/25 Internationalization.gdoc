@@ -1,0 +1,11 @@
+If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:
+
+{table}
+*Message* | *Default Value* | *Exception*
+springSecurity.errors.login.expired | "Sorry, your account is disabled." | AccountExpiredException
+springSecurity.errors.login.passwordExpired | "Sorry, your account has expired." | CredentialsExpiredException
+springSecurity.errors.login.disabled | "Sorry, your password has expired." | DisabledException
+springSecurity.errors.login.locked | "Sorry, your account is locked." | LockedException
+springSecurity.errors.login.fail | "Sorry, we were not able to find a user with that username and password." | Other exceptions
+{table}
+
