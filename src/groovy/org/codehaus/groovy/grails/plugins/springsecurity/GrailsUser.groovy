@@ -25,6 +25,8 @@ import org.springframework.security.core.userdetails.User
  */
 class GrailsUser extends User {
 
+	static final long serialVersionUID = 1L
+
 	private final Object _id
 
 	GrailsUser(String username, String password, boolean enabled, boolean accountNonExpired,
