@@ -202,6 +202,19 @@ class SecurityTagLib {
 			out << body()
 		}
 	}
+	
+	/**
+	* Renders the body if user has authority
+	*
+	* @attr value REQUIRED the field value
+	**/
+	def ifModifyAuthority = { attrs, body ->
+		def instance = assertAttribute('value', attrs, 'ifModifyAccess')
+		
+		if (springSecurityService.hasModifyAuthority(instance)) {
+			out << body()
+		}
+	}
 
 	protected boolean hasAccess(attrs, String tagName) {
 

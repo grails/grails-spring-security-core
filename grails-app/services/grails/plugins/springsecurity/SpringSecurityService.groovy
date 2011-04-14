@@ -207,4 +207,24 @@ class SpringSecurityService {
 				"WHERE rm.$configAttributeName LIKE :roleName",
 				[roleName: "%$roleName%"])
 	}
+	
+	/**
+	* Determines whether the current user has the authority to edit the instance
+	*
+	* @attr instance the instance to evaluate
+	**/
+	boolean hasModifyAuthority(instance) {
+	   def modifyAuthProp = SpringSecurityUtils.securityConfig.modifyAuthority.property
+	   def modifyAuthRoles = SpringSecurityUtils.securityConfig.modifyAuthority.roles
+
+	   if (modifyAuthProp) {
+		   if (getCurrentUser().id == instance."$modifyAuthProp".id) return true
+	   }
+
+	   if (modifyAuthRoles) {
+		   if (SpringSecurityUtils.ifAnyGranted(modifyAuthRoles)) return true
+	   }
+
+	   return false
+	}
 }
