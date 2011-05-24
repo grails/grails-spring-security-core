@@ -15,10 +15,7 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import org.apache.log4j.Logger
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
 
@@ -30,6 +27,9 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 class GormPersistentTokenRepository implements PersistentTokenRepository {
 
 	private final Logger log = Logger.getLogger(getClass())
+
+	/** Dependency injection for grailsApplication */
+	GrailsApplication grailsApplication
 
 	/**
 	 * {@inheritDoc}
@@ -77,9 +77,10 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 
 		// join an existing transaction if one is active
 		clazz.withTransaction { status ->
-			clazz.executeUpdate(
-					"DELETE FROM $clazz.name pl WHERE pl.username=:username",
-					[username: username])
+			// was using HQL but it breaks with NoSQL, so using a less efficient impl:
+			for (instance in clazz.findAllByUsername(username)) {
+				instance.delete()
+			}
 		}
 	}
 
@@ -103,7 +104,7 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 	protected Class lookupDomainClass() {
 		def conf = SpringSecurityUtils.securityConfig
 		String domainClassName = conf.rememberMe.persistentToken.domainClassName ?: ''
-		def clazz = AH.application.getClassForName(domainClassName)
+		def clazz = grailsApplication.getClassForName(domainClassName)
 		if (!clazz) {
 			log.error "Persistent token class not found: '${domainClassName}'"
 		}
