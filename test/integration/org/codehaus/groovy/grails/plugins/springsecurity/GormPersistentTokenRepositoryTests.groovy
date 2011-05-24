@@ -30,7 +30,7 @@ import test.TestPersistentLogin
  */
 class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 
-	private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+	private static final String DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss'
 	private static final Date DATE = new SimpleDateFormat(DATE_FORMAT).parse(
 			'2007-10-09 18:19:25')
 
@@ -38,6 +38,7 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 	private _sql
 
 	def dataSource
+	def grailsApplication
 	def sessionFactory
 
 	// can't use sql to verify results with regular transaction-based tests
@@ -47,12 +48,13 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 	protected void setUp() {
 		super.setUp()
 		_sql = new Sql(dataSource)
+		_repo.grailsApplication = grailsApplication
 	}
 
 	@Override
 	protected void tearDown() {
 		sessionFactory.currentSession.clear()
-		_sql.executeUpdate "delete from persistent_logins"
+		_sql.executeUpdate 'delete from persistent_logins'
 		assertEquals 0, TestPersistentLogin.count()
 	}
 
@@ -63,7 +65,7 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 
 		assertEquals 1, TestPersistentLogin.count()
 
-		def row = _sql.firstRow("select * from persistent_logins")
+		def row = _sql.firstRow('select * from persistent_logins')
 
 		assertEquals currentDate.time, row.last_used.time
 		assertEquals 'joeuser', row.username

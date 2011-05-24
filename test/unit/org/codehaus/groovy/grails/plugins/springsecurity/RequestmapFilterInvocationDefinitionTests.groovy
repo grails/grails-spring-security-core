@@ -16,8 +16,6 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 
 import grails.test.GrailsUnitTestCase
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 
 import org.springframework.mock.web.MockFilterChain
@@ -38,6 +36,8 @@ import test.TestRequestmap
 class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 
 	private _fid = new RequestmapFilterInvocationDefinition()
+	private final _application = new FakeApplication([TestRequestmap] as Class[],
+	                                                 new GroovyClassLoader())
 
 	/**
 	 * {@inheritDoc}
@@ -46,7 +46,7 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		CH.config = new ConfigObject()
+		ReflectionUtils.application = _application
 	}
 
 	/**
@@ -56,9 +56,8 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		CH.config = null
+		ReflectionUtils.application = null
 		SpringSecurityUtils.securityConfig = null
-		AH.application = null
 	}
 
 	void testSplit() {
@@ -72,9 +71,6 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 		requestMapConfig.className = TestRequestmap.name
 		requestMapConfig.urlField = 'urlPattern'
 		requestMapConfig.configAttributeField = 'rolePattern'
-
-		AH.application = new DefaultGrailsApplication([TestRequestmap] as Class[],
-		                                              new GroovyClassLoader())
 
 		def instances = [new TestRequestmap(urlPattern: 'path1', rolePattern: 'config1'),
 		                 new TestRequestmap(urlPattern: 'path2', rolePattern: 'config2'),

@@ -1,4 +1,4 @@
-/* Copyright 2006-2010 the original author or authors.
+/* Copyright 2006-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,12 +23,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.WordUtils;
-import org.codehaus.groovy.grails.commons.ApplicationHolder;
 import org.codehaus.groovy.grails.commons.ControllerArtefactHandler;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.commons.GrailsClass;
@@ -55,13 +53,12 @@ import org.springframework.util.StringUtils;
 public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
 
 	private UrlMappingsHolder _urlMappingsHolder;
+	private GrailsApplication _application;
 
 	@Override
 	protected String determineUrl(final FilterInvocation filterInvocation) {
 		HttpServletRequest request = filterInvocation.getHttpRequest();
 		HttpServletResponse response = filterInvocation.getHttpResponse();
-		ServletContext servletContext = ServletContextHolder.getServletContext();
-		GrailsApplication application = ApplicationHolder.getApplication();
 
 		GrailsWebRequest existingRequest = WebUtils.retrieveGrailsWebRequest();
 
@@ -69,7 +66,8 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		String url = null;
 		try {
-			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response, servletContext);
+			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,
+					ServletContextHolder.getServletContext());
 			WebUtils.storeGrailsWebRequest(grailsRequest);
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
@@ -77,7 +75,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			for (UrlMappingInfo mapping : _urlMappingsHolder.matchAll(requestUrl)) {
 				configureMapping(mapping, grailsRequest, savedParams);
 
-				url = findGrailsUrl(mapping, application);
+				url = findGrailsUrl(mapping);
 				if (url != null) {
 					break;
 				}
@@ -100,7 +98,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		return lowercaseAndStripQuerystring(url);
 	}
 
-	protected String findGrailsUrl(final UrlMappingInfo mapping, final GrailsApplication application) {
+	protected String findGrailsUrl(final UrlMappingInfo mapping) {
 
 		String actionName = mapping.getActionName();
 		if (!StringUtils.hasLength(actionName)) {
@@ -109,7 +107,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		String controllerName = mapping.getControllerName();
 
-		if (isController(controllerName, actionName, application)) {
+		if (isController(controllerName, actionName)) {
 			if (!StringUtils.hasLength(actionName) || "null".equals(actionName)) {
 				actionName = "index";
 			}
@@ -119,9 +117,8 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		return null;
 	}
 
-	private boolean isController(final String controllerName, final String actionName,
-			final GrailsApplication application) {
-		return application.getArtefactForFeature(ControllerArtefactHandler.TYPE,
+	private boolean isController(final String controllerName, final String actionName) {
+		return _application.getArtefactForFeature(ControllerArtefactHandler.TYPE,
 				"/" + controllerName + "/" + actionName) != null;
 	}
 
@@ -147,11 +144,11 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	 * Reinitialize by calling <code>ctx.objectDefinitionSource.initialize(
 	 * 	ctx.authenticateService.securityConfig.security.annotationStaticRules,
 	 * 	ctx.grailsUrlMappingsHolder,
-	 * 	ApplicationHolder.application.controllerClasses)</code>
+	 * 	grailsApplication.controllerClasses)</code>
 	 *
-	 * @param staticRules  keys are URL patterns, values are role or token names for that pattern
-	 * @param urlMappingsHolder  mapping holder
-	 * @param controllerClasses  all controllers
+	 * @param staticRules keys are URL patterns, values are role or token names for that pattern
+	 * @param urlMappingsHolder mapping holder
+	 * @param controllerClasses all controllers
 	 */
 	public void initialize(final Map<String, Collection<String>> staticRules,
 			final UrlMappingsHolder urlMappingsHolder, final GrailsClass[] controllerClasses) {
@@ -273,5 +270,13 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			set.add(string);
 		}
 		return set;
+	}
+
+	/**
+	 * Dependency injection for the application.
+	 * @param application the application
+	 */
+	public void setApplication(GrailsApplication application) {
+		_application = application;
 	}
 }

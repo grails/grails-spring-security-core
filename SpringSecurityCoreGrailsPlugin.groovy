@@ -1,4 +1,4 @@
-/* Copyright 2006-2010 the original author or authors.
+/* Copyright 2006-2011 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -98,6 +98,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.NullAuthenticationEvent
 import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestmapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.RequestHolderAuthenticationFilter
+import org.codehaus.groovy.grails.plugins.springsecurity.ReflectionUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityEventListener
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityRequestHolder
@@ -131,6 +132,8 @@ class SpringSecurityCoreGrailsPlugin {
 	def doWithWebDescriptor = { xml ->
 
 		SpringSecurityUtils.resetSecurityConfig()
+
+		ReflectionUtils.application = application
 
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {
@@ -169,6 +172,8 @@ class SpringSecurityCoreGrailsPlugin {
 	}
 
 	def doWithSpring = {
+
+		ReflectionUtils.application = application
 
 		if (application.warDeployed) {
 			// need to reset here since web.xml was already built, so
@@ -228,7 +233,9 @@ class SpringSecurityCoreGrailsPlugin {
 				tokenLength = conf.rememberMe.persistentToken.tokenLength // 16
 			}
 
-			tokenRepository(GormPersistentTokenRepository)
+			tokenRepository(GormPersistentTokenRepository) {
+				grailsApplication = ref('grailsApplication')
+			}
 		}
 		else {
 			rememberMeServices(TokenBasedRememberMeServices) {
@@ -303,6 +310,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		if (securityConfigType == 'Annotation') {
 			objectDefinitionSource(AnnotationFilterInvocationDefinition) {
+				application = ref('grailsApplication')
 				roleVoter = ref('roleVoter')
 				authenticatedVoter = ref('authenticatedVoter')
 				expressionHandler = ref('webExpressionHandler')
@@ -494,6 +502,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 	def doWithDynamicMethods = { ctx ->
 
+		ReflectionUtils.application = application
+
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {
 			return
@@ -510,6 +520,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 	}
 
 	def doWithApplicationContext = { ctx ->
+
+		ReflectionUtils.application = application
 
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {

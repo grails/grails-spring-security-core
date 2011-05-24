@@ -31,6 +31,7 @@ import org.springframework.security.web.util.AntUrlPathMatcher
 class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 
 	private _fid = new InterceptUrlMapFilterInvocationDefinition()
+	private final _application = new FakeApplication()
 
 	/**
 	 * {@inheritDoc}
@@ -39,7 +40,7 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		CH.config = new ConfigObject()
+		ReflectionUtils.application = _application
 		_fid.urlMatcher = new AntUrlPathMatcher()
 	}
 
@@ -114,7 +115,7 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		CH.config = null
+		ReflectionUtils.application = null
 		SpringSecurityUtils.securityConfig = null
 	}
 }

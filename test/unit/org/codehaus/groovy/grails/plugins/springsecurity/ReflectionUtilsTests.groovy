@@ -14,12 +14,12 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class ReflectionUtilsTests extends GroovyTestCase {
+
+	private final application = new FakeApplication()
 
 	/**
 	 * {@inheritDoc}
@@ -28,16 +28,17 @@ class ReflectionUtilsTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		CH.config = new ConfigObject()
+		ReflectionUtils.application = application
 	}
 
 	void testSetConfigProperty() {
-		def foo = CH.config.grails.plugins.springsecurity.foo
+		def foo = application.config.grails.plugins.springsecurity.foo
 		assertTrue foo instanceof ConfigObject
 		assertEquals 0, foo.size()
 
 		ReflectionUtils.setConfigProperty 'foo', 'bar'
-		assertEquals 'bar', CH.config.grails.plugins.springsecurity.foo
+		println application.config.flatten()
+		assertEquals 'bar', application.config.grails.plugins.springsecurity.foo
 	}
 
 	void testGetConfigProperty() {
@@ -47,7 +48,7 @@ class ReflectionUtilsTests extends GroovyTestCase {
 
 		ReflectionUtils.setConfigProperty 'a.b.c', 'd'
 		assertEquals 'd', ReflectionUtils.getConfigProperty('a.b.c')
-		assertEquals 'd', CH.config.grails.plugins.springsecurity.a.b.c
+		assertEquals 'd', application.config.grails.plugins.springsecurity.a.b.c
 	}
 
 	void testGetRoleAuthority() {
@@ -102,7 +103,7 @@ class ReflectionUtilsTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		CH.config = null
 		SpringSecurityUtils.resetSecurityConfig()
+		ReflectionUtils.application = null
 	}
 }

@@ -14,7 +14,6 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.AccessDeniedException
@@ -30,6 +29,7 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest
 class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 	private final _handler = new AjaxAwareAccessDeniedHandler()
+	private final _application = new FakeApplication()
 
 	/**
 	 * {@inheritDoc}
@@ -42,7 +42,7 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 		_handler.ajaxErrorPage = '/ajaxFail'
 		_handler.portResolver = new PortResolverImpl()
 		_handler.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
-		CH.config = new ConfigObject()
+		ReflectionUtils.application = _application
 		ReflectionUtils.setConfigProperty 'ajaxHeader', SpringSecurityUtils.AJAX_HEADER
 	}
 
@@ -87,6 +87,6 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SCH.context.authentication = null
-		CH.config = null
+		ReflectionUtils.application = null
 	}
 }

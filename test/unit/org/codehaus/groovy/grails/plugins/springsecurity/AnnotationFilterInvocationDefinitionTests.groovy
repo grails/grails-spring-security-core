@@ -15,19 +15,13 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import grails.plugins.springsecurity.Secured
-import grails.test.GrailsUnitTestCase
 
 import javax.servlet.ServletContext
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.commons.GrailsClass
-import org.codehaus.groovy.grails.commons.GrailsControllerClass
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
@@ -35,7 +29,6 @@ import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
 import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.codehaus.groovy.grails.web.util.WebUtils
-
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -54,10 +47,10 @@ import org.springframework.web.context.request.RequestContextHolder
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
+class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
 	private _fid
-	private _application
+	private final _application = new TestApplication()
 
 	/**
 	 * {@inheritDoc}
@@ -66,7 +59,7 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		_application = ApplicationHolder.application
+		ReflectionUtils.application = _application
 		_fid = new AnnotationFilterInvocationDefinition()
 	}
 
@@ -106,7 +99,7 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 
 		def matcher = new AntUrlPathMatcher()
 
-		_fid = new MockAnnotationFilterInvocationDefinition(null)
+		_fid = new MockAnnotationFilterInvocationDefinition()
 		_fid.urlMatcher = matcher
 
 		def urlMappingsHolder = [matchAll: { String uri -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
@@ -145,7 +138,7 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 
 		request.requestURI = 'requestURI'
 
-		_fid = new MockAnnotationFilterInvocationDefinition(null)
+		_fid = new MockAnnotationFilterInvocationDefinition()
 		_fid.urlMatcher = new AntUrlPathMatcher()
 
 		def urlMappingsHolder = [matchAll: { String uri -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
@@ -164,8 +157,9 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 
 		request.requestURI = 'requestURI'
 
-		_fid = new MockAnnotationFilterInvocationDefinition('FOO?x=1')
-		_fid.urlMatcher = new AntUrlPathMatcher()
+		_fid = new MockAnnotationFilterInvocationDefinition(
+			url: 'FOO?x=1', application: _application,
+			urlMatcher: new AntUrlPathMatcher())
 
 		UrlMappingInfo[] mappings = [[getControllerName: { -> 'foo' },
 		                              getActionName: { -> 'bar' },
@@ -198,8 +192,6 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 		}
 
 		ServletContext servletContext = new MockServletContext()
-		ConfigObject config = new ConfigObject()
-		CH.config = config
 
 		def app = new DefaultGrailsApplication()
 		def beans = [(GrailsApplication.APPLICATION_ID): app]
@@ -264,24 +256,19 @@ class AnnotationFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		ApplicationHolder.application = _application
+		ReflectionUtils.application = null
 		RequestContextHolder.resetRequestAttributes()
 		ServletContextHolder.servletContext = null
-		CH.config = null
 	}
 }
 
-class TestApplication extends DefaultGrailsApplication {
+class TestApplication extends FakeApplication {
 	GrailsClass getArtefactForFeature(String artefactType, Object featureID) { [:] as GrailsClass }
 }
 
 class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocationDefinition {
-
 	String url
-
-	MockAnnotationFilterInvocationDefinition(String url) { this.url = url }
-
-	protected String findGrailsUrl(UrlMappingInfo mapping, GrailsApplication application) { url }
+	protected String findGrailsUrl(UrlMappingInfo mapping) { url }
 }
 
 @Secured(['ROLE_ADMIN'])

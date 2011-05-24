@@ -14,8 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 /**
  * Helper methods in Groovy.
@@ -23,6 +22,9 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class ReflectionUtils {
+
+	// set at startup
+	static GrailsApplication application
 
 	private ReflectionUtils() {
 		// static only
@@ -62,7 +64,7 @@ class ReflectionUtils {
 
 	static List loadAllRequestmaps() {
 		String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
-		def Requestmap = AH.application.getClassForName(requestMapClassName)
+		def Requestmap = application.getClassForName(requestMapClassName)
 		if (!Requestmap) {
 			throw new IllegalStateException(
 					'Cannot load Requestmaps, "requestMap.className" property is not set')
@@ -72,8 +74,8 @@ class ReflectionUtils {
 
 	static List asList(o) { o ? o as List : [] }
 
-	static ConfigObject getSecurityConfig() { CH.config.grails.plugins.springsecurity }
-	static void setSecurityConfig(ConfigObject c) { CH.config.grails.plugins.springsecurity = c }
+	static ConfigObject getSecurityConfig() { application.config.grails.plugins.springsecurity }
+	static void setSecurityConfig(ConfigObject c) { application.config.grails.plugins.springsecurity = c }
 
 	static Map<String, List<String>> splitMap(Map<String, Object> m) {
 		Map<String, List<String>> split = [:]

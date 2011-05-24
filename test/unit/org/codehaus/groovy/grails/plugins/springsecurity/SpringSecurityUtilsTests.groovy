@@ -17,12 +17,8 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 import grails.plugins.springsecurity.SecurityConfigType
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
-
 import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
@@ -36,6 +32,8 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest
  */
 class SpringSecurityUtilsTests extends GroovyTestCase {
 
+	private final application = new FakeApplication()
+
 	/**
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#setUp()
@@ -43,7 +41,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		CH.config = new ConfigObject()
+		ReflectionUtils.application = application
 	}
 
 	/**
@@ -247,31 +245,31 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testGetSecurityConfigType() {
-		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation
+		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation
 		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()
+		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()
 		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = 'Annotation'
+		application.config.grails.plugins.springsecurity.securityConfigType = 'Annotation'
 		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
+		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
 		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap.name()
+		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap.name()
 		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = 'InterceptUrlMap'
+		application.config.grails.plugins.springsecurity.securityConfigType = 'InterceptUrlMap'
 		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap
+		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap
 		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap.name()
+		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap.name()
 		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 
-		CH.config.grails.plugins.springsecurity.securityConfigType = 'Requestmap'
+		application.config.grails.plugins.springsecurity.securityConfigType = 'Requestmap'
 		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 	}
 
@@ -286,7 +284,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	private void initRoleHierarchy(String hierarchy) {
 		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
 		def ctx = [getBean: { String name -> roleHierarchy }] as ApplicationContext
-		AH.application = new DefaultGrailsApplication(mainContext: ctx)
+		AH.application = new FakeApplication(mainContext: ctx)
 		SpringSecurityUtils.application = AH.application
 	}
 
@@ -298,10 +296,10 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SecurityTestUtils.logout()
-		CH.config = null
 		SpringSecurityUtils.securityConfig = null
 		AH.application = null
 		SpringSecurityUtils.application = null
+		ReflectionUtils.application = null
 	}
 }
 
