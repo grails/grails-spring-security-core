@@ -18,11 +18,11 @@ authenticationDetails.authClass | [WebAuthenticationDetails|http://static.spring
 roleHierarchy | none | Hierarchical role definition. See [Hierarchical Role Definition|guide:14 Hierarchical Roles].
 voterNames | \['authenticatedVoter', 'roleVoter'\] | Bean names of voters. See [Voters|guide:21 Voters].
 providerNames | \['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'\] | Bean names of authentication providers. See [Authentication Providers|guide:10 Authentication Providers].
-securityConfigType | Type of request mapping to use | One of @SecurityConfigType.Annotation@, @SecurityConfigType.Requestmap@, or @SecurityConfigType.InterceptUrlMap@ (or the corresponding names as Strings). See [Configuring Request Mappings to Secure URLs|guide:5 Configuring Request Mappings to Secure URLs].
+securityConfigType | Type of request mapping to use | One of "Annotation", "Requestmap", or "InterceptUrlMap" (or the corresponding enum value from @SecurityConfigType@). See [Configuring Request Mappings to Secure URLs|guide:5 Configuring Request Mappings to Secure URLs].
 controllerAnnotations.matcher | 'ant' | Use an Ant-style URL matcher ('ant') or Regex ('regex').
 controllerAnnotations.lowercase | @true@ | Whether to do URL comparisons using lowercase.
 controllerAnnotations.staticRules | none | Extra rules that cannot be mapped using annotations.
-interceptUrlMap | none | Request mapping definition when using @SecurityConfigType.InterceptUrlMap@. See [Simple Map in Config.groovy|guide:5.2 Simple Map in Config.groovy].
+interceptUrlMap | none | Request mapping definition when using "InterceptUrlMap". See [Simple Map in Config.groovy|guide:5.2 Simple Map in Config.groovy].
 registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events. 
 {table}
 

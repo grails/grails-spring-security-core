@@ -53,16 +53,16 @@ tokenValiditySeconds | rememberMe.tokenValiditySeconds
 parameter | rememberMe.parameter
 rememberMeKey | rememberMe.key
 useLogger | registerLoggerListener
-useRequestMapDomainClass | securityConfigType = @SecurityConfigType.Requestmap@
+useRequestMapDomainClass | securityConfigType = "Requestmap"
 requestMapClass | requestMap.className
 requestMapPathField | requestMap.urlField
 requestMapConfigAttributeField | requestMap.configAttributeField
-useControllerAnnotations | securityConfigType = @SecurityConfigType.Annotation@
+useControllerAnnotations | securityConfigType = "Annotation"
 controllerAnnotationsMatcher | controllerAnnotations.matcher
 controllerAnnotationsMatchesLowercase | controllerAnnotations.lowercase
 controllerAnnotationStaticRules | controllerAnnotations.staticRules
 controllerAnnotationsRejectIfNoRule | rejectIfNoRule
-requestMapString | N/A - securityConfigType = @SecurityConfigType.InterceptUrlMap@ is very similar
+requestMapString | N/A - securityConfigType = "InterceptUrlMap" is very similar
 realmName | basic.realmName
 basicProcessingFilter | useBasicAuth
 switchUserProcessingFilter | useSwitchUserFilter
