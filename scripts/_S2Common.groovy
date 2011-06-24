@@ -93,13 +93,6 @@ splitClassName = { String fullName ->
 	[packageName, className]
 }
 
-checkValue = { String value, String attributeName ->
-	if (!value) {
-		ant.echo message: "\nERROR: Cannot generate; grails.plugins.springsecurity.$attributeName isn't set"
-		System.exit 1
-	}
-}
-
 copyFile = { String from, String to ->
 	if (!okToWrite(to)) {
 		return
