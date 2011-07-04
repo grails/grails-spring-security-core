@@ -206,7 +206,7 @@ class UserController {
       def userInstance = User.get(params.id)
 
       params.salt = person.salt
-      if (userInstance.password != params.password) {
+      if (params.password) {
          params.password = springSecurityService.encodePassword(params.password, salt)
          def salt = ... // e.g. randomly generated using some utility method
          params.salt = salt
