@@ -81,7 +81,7 @@ public enum SecurityFilterPosition {
 
 	/**
 	 * The position in the chain.
-	 * @return  the order
+	 * @return the order
 	 */
 	public int getOrder() {
 		return _order;

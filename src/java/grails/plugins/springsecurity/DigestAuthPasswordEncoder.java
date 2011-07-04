@@ -62,7 +62,7 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	/**
 	 * Dependency injection for the realm name.
 	 *
-	 * @param realm  the name
+	 * @param realm the name
 	 */
 	public void setRealm(final String realm) {
 		_realm = realm;

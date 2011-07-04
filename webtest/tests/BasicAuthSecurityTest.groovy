@@ -16,7 +16,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 		verifyListSize 0
 
 		click 'New TestRole'
-		assertContentContains  'Create TestRole'
+		assertContentContains 'Create TestRole'
 
 		form {
 			authority = 'ROLE_ADMIN'
@@ -29,7 +29,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 		verifyListSize 1
 
 		click 'New TestRole'
-		assertContentContains  'Create TestRole'
+		assertContentContains 'Create TestRole'
 
 		form {
 			authority = 'ROLE_ADMIN2'
@@ -49,7 +49,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 		verifyListSize 0
 
 		click 'New TestUser'
-		assertContentContains  'Create TestUser'
+		assertContentContains 'Create TestUser'
 
 		form {
 			username = 'admin1'
@@ -59,13 +59,13 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Create'
 		}
 
-		assertContentContains  'Show TestUser'
+		assertContentContains 'Show TestUser'
 		click 'TestUser List'
 
 		verifyListSize 1
 
 		click 'New TestUser'
-		assertContentContains  'Create TestUser'
+		assertContentContains 'Create TestUser'
 
 		form {
 			username = 'admin2'
@@ -76,7 +76,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Create'
 		}
 
-		assertContentContains  'Show TestUser'
+		assertContentContains 'Show TestUser'
 		click 'TestUser List'
 
 		verifyListSize 2

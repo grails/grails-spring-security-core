@@ -31,7 +31,7 @@ public interface GrailsUserDetailsService extends UserDetailsService {
 	 * Locates the user based on the username.
 	 *
 	 * @param username the username identifying the user whose data is required.
-	 * @param loadRoles  whether to load roles at the same time as loading the user
+	 * @param loadRoles whether to load roles at the same time as loading the user
 	 *
 	 * @return a fully populated user record (never <code>null</code>)
 	 *

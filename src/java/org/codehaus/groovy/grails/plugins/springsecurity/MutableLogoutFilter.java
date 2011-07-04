@@ -41,7 +41,7 @@ public class MutableLogoutFilter extends LogoutFilter {
 
 	/**
 	 * Constructor.
-	 * @param logoutSuccessHandler  the logout success handler
+	 * @param logoutSuccessHandler the logout success handler
 	 */
 	public MutableLogoutFilter(LogoutSuccessHandler logoutSuccessHandler) {
 		super(logoutSuccessHandler, new DummyLogoutHandler());
@@ -81,7 +81,7 @@ public class MutableLogoutFilter extends LogoutFilter {
 
 	/**
 	 * Dependency injection for the logout handlers.
-	 * @param handlers  the handlers
+	 * @param handlers the handlers
 	 */
 	public void setHandlers(final List<LogoutHandler> handlers) {
 		_handlers = handlers;

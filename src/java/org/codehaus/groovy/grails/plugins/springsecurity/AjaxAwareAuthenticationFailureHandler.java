@@ -55,7 +55,7 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 
 	/**
 	 * Dependency injection for the Ajax auth fail url.
-	 * @param url  the url
+	 * @param url the url
 	 */
 	public void setAjaxAuthenticationFailureUrl(final String url) {
 		_ajaxAuthenticationFailureUrl = url;

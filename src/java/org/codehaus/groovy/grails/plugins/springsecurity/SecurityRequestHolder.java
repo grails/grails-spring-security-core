@@ -41,8 +41,8 @@ public final class SecurityRequestHolder {
 
 	/**
 	 * Set the current request and response.
-	 * @param request  the request
-	 * @param response  the response
+	 * @param request the request
+	 * @param response the response
 	 */
 	public static void set(final HttpServletRequest request, final HttpServletResponse response) {
 		REQUEST_HOLDER.set(request);
@@ -51,7 +51,7 @@ public final class SecurityRequestHolder {
 
 	/**
 	 * Get the current request.
-	 * @return  the request
+	 * @return the request
 	 */
 	public static HttpServletRequest getRequest() {
 		return REQUEST_HOLDER.get();
@@ -59,7 +59,7 @@ public final class SecurityRequestHolder {
 
 	/**
 	 * Get the current response.
-	 * @return  the response
+	 * @return the response
 	 */
 	public static HttpServletResponse getResponse() {
 		return RESPONSE_HOLDER.get();

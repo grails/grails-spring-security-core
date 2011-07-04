@@ -43,14 +43,13 @@ public class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInv
 
 		reset();
 	}
-	
-	
-	@Override
-    protected boolean stopAtFirstMatch() {
-        return true;
-    }
 
-    @SuppressWarnings("unchecked")
+	@Override
+	protected boolean stopAtFirstMatch() {
+		return true;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
 	public void reset() {
 		Object map = ReflectionUtils.getConfigProperty("interceptUrlMap");

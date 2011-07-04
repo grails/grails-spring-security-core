@@ -146,8 +146,8 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Extract the role names from authorities.
-	 * @param authorities  the authorities (a collection or array of {@link GrantedAuthority}).
-	 * @return  the names
+	 * @param authorities the authorities (a collection or array of {@link GrantedAuthority}).
+	 * @return the names
 	 */
 	public static Set<String> authoritiesToRoles(final Object authorities) {
 		Set<String> roles = new HashSet<String>();
@@ -166,7 +166,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Get the current user's authorities.
-	 * @return  a list of authorities (empty if not authenticated).
+	 * @return a list of authorities (empty if not authenticated).
 	 */
 	public static Collection<GrantedAuthority> getPrincipalAuthorities() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -192,7 +192,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Split the role names and create {@link GrantedAuthority}s for each.
-	 * @param roleNames  comma-delimited role names
+	 * @param roleNames comma-delimited role names
 	 * @return authorities (possibly empty)
 	 */
 	public static List<GrantedAuthority> parseAuthoritiesString(final String roleNames) {
@@ -209,8 +209,8 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Find authorities in <code>granted</code> that are also in <code>required</code>.
-	 * @param granted  the granted authorities (a collection or array of {@link SpringSecurityUtils}).
-	 * @param required  the required authorities (a collection or array of {@link SpringSecurityUtils}).
+	 * @param granted the granted authorities (a collection or array of {@link SpringSecurityUtils}).
+	 * @param required the required authorities (a collection or array of {@link SpringSecurityUtils}).
 	 * @return the authority names
 	 */
 	public static Set<String> retainAll(final Object granted, final Object required) {
@@ -222,7 +222,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Check if the current user has all of the specified roles.
-	 * @param roles  a comma-delimited list of role names
+	 * @param roles a comma-delimited list of role names
 	 * @return <code>true</code> if the user is authenticated and has all the roles
 	 */
 	public static boolean ifAllGranted(final String roles) {
@@ -232,7 +232,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Check if the current user has none of the specified roles.
-	 * @param roles  a comma-delimited list of role names
+	 * @param roles a comma-delimited list of role names
 	 * @return <code>true</code> if the user is authenticated and has none the roles
 	 */
 	public static boolean ifNotGranted(final String roles) {
@@ -243,7 +243,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Check if the current user has any of the specified roles.
-	 * @param roles  a comma-delimited list of role names
+	 * @param roles a comma-delimited list of role names
 	 * @return <code>true</code> if the user is authenticated and has any the roles
 	 */
 	public static boolean ifAnyGranted(final String roles) {
@@ -254,7 +254,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Parse and load the security configuration.
-	 * @return  the configuration
+	 * @return the configuration
 	 */
 	public static synchronized ConfigObject getSecurityConfig() {
 		if (securityConfig == null) {
@@ -273,7 +273,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Allow a secondary plugin to add config attributes.
-	 * @param className  the name of the config class.
+	 * @param className the name of the config class.
 	 */
 	public static synchronized void loadSecondaryConfig(final String className) {
 		mergeConfig(getSecurityConfig(), className);
@@ -319,7 +319,7 @@ public final class SpringSecurityUtils {
 	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
-	 * @param beanName  the Spring bean name of the provider
+	 * @param beanName the Spring bean name of the provider
 	 */
 	public static void registerProvider(final String beanName) {
 		getProviderNames().add(0, beanName);
@@ -339,7 +339,7 @@ public final class SpringSecurityUtils {
 	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
-	 * @param beanName  the Spring bean name of the handler
+	 * @param beanName the Spring bean name of the handler
 	 */
 	public static void registerLogoutHandler(final String beanName) {
 		getLogoutHandlerNames().add(0, beanName);
@@ -359,7 +359,7 @@ public final class SpringSecurityUtils {
 	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
-	 * @param beanName  the Spring bean name of the voter
+	 * @param beanName the Spring bean name of the voter
 	 */
 	public static void registerVoter(final String beanName) {
 		getVoterNames().add(0, beanName);
@@ -380,8 +380,8 @@ public final class SpringSecurityUtils {
 	 * Note - only for use by plugins during bean building - to register at runtime
 	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
 	 *
-	 * @param beanName  the Spring bean name of the filter
-	 * @param order  the position
+	 * @param beanName the Spring bean name of the filter
+	 * @param order the position
 	 */
 	public static void registerFilter(final String beanName, final SecurityFilterPosition order) {
 		registerFilter(beanName, order.getOrder());
@@ -393,8 +393,8 @@ public final class SpringSecurityUtils {
 	 * Note - only for use by plugins during bean building - to register at runtime
 	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
 	 *
-	 * @param beanName  the Spring bean name of the filter
-	 * @param order  the position (see {@link SecurityFilterPosition})
+	 * @param beanName the Spring bean name of the filter
+	 * @param order the position (see {@link SecurityFilterPosition})
 	 */
 	public static void registerFilter(final String beanName, final int order) {
 		String oldName = getOrderedFilters().get(order);
@@ -422,8 +422,8 @@ public final class SpringSecurityUtils {
 	 * e.g. in BootStrap where you want to register a custom filter in the correct
 	 * order without dealing with the existing configured filters.
 	 *
-	 * @param beanName  the Spring bean name of the filter
-	 * @param order  the position
+	 * @param beanName the Spring bean name of the filter
+	 * @param order the position
 	 */
 	public static void clientRegisterFilter(final String beanName, final SecurityFilterPosition order) {
 		clientRegisterFilter(beanName, order.getOrder());
@@ -436,8 +436,8 @@ public final class SpringSecurityUtils {
 	 * e.g. in BootStrap where you want to register a custom filter in the correct
 	 * order without dealing with the existing configured filters.
 	 *
-	 * @param beanName  the Spring bean name of the filter
-	 * @param order  the position (see {@link SecurityFilterPosition})
+	 * @param beanName the Spring bean name of the filter
+	 * @param order the position (see {@link SecurityFilterPosition})
 	 */
 	public static void clientRegisterFilter(final String beanName, final int order) {
 
@@ -467,7 +467,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Check if the current user is switched to another user.
-	 * @return  <code>true</code> if logged in and switched
+	 * @return <code>true</code> if logged in and switched
 	 */
 	public static boolean isSwitched() {
 		return ifAllGranted(SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR);
@@ -475,7 +475,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Get the username of the original user before switching to another.
-	 * @return  the original login name
+	 * @return the original login name
 	 */
 	public static String getSwitchedUserOriginalUsername() {
 		if (isSwitched()) {
@@ -503,8 +503,8 @@ public final class SpringSecurityUtils {
 	 * <p/>
 	 * Also removes the user from the user cache to force a refresh at next login.
 	 *
-	 * @param username  the user's login name
-	 * @param password  optional
+	 * @param username the user's login name
+	 * @param password optional
 	 */
 	public static void reauthenticate(final String username, final String password) {
 		UserDetailsService userDetailsService = getBean("userDetailsService");
@@ -521,8 +521,8 @@ public final class SpringSecurityUtils {
 	 * http session and that the closure is running in a separate thread from the web request, so the
 	 * context and authentication aren't available to the standard ThreadLocal.
 	 *
-	 * @param closure  the code to run
-	 * @return  the closure's return value
+	 * @param closure the code to run
+	 * @return the closure's return value
 	 */
 	public static Object doWithAuth(final Closure closure) {
 		boolean set = false;
@@ -555,8 +555,8 @@ public final class SpringSecurityUtils {
 	 * This is similar to run-as and switch-user but is only local to a Closure.
 	 *
 	 * @param username the username to authenticate as
-	 * @param closure  the code to run
-	 * @return  the closure's return value
+	 * @param closure the code to run
+	 * @return the closure's return value
 	 */
 	public static Object doWithAuth(final String username, final Closure closure) {
 		Authentication previousAuth = SecurityContextHolder.getContext().getAuthentication();
@@ -577,8 +577,8 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Merge in a secondary config (provided by a plugin as defaults) into the main config.
-	 * @param currentConfig  the current configuration
-	 * @param className  the name of the config class to load
+	 * @param currentConfig the current configuration
+	 * @param className the name of the config class to load
 	 */
 	private static void mergeConfig(final ConfigObject currentConfig, final String className) {
 		GroovyClassLoader classLoader = new GroovyClassLoader(SpringSecurityUtils.class.getClassLoader());
@@ -601,8 +601,8 @@ public final class SpringSecurityUtils {
 	 * start with that and merge the main config on top of that. This lets the <code>secondary</code>
 	 * config act as default values but let user-supplied values in the main config override them.
 	 *
-	 * @param currentConfig  the main config, starting from Config.groovy
-	 * @param secondary  new default values
+	 * @param currentConfig the main config, starting from Config.groovy
+	 * @param secondary new default values
 	 * @return the merged configs
 	 */
 	@SuppressWarnings("unchecked")
@@ -628,7 +628,7 @@ public final class SpringSecurityUtils {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static  <T> T getBean(final String name) {
+	private static <T> T getBean(final String name) {
 		return (T)_application.getMainContext().getBean(name);
 	}
 

@@ -35,7 +35,7 @@ public @interface Secured {
 
 	/**
 	 * Defines the security configuration attributes (e.g. ROLE_USER, ROLE_ADMIN, etc.)
-	 * @return  the names of the roles
+	 * @return the names of the roles
 	 */
 	String[] value();
 }

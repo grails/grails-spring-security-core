@@ -57,9 +57,9 @@ class TestRequestmapController {
 	def update = {
 		def testRequestmapInstance = TestRequestmap.get(params.id)
 		if (!testRequestmapInstance) {
-         flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-         redirect action: list
-         return
+			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
+			redirect action: list
+			return
 		}
 
 		if (params.version) {

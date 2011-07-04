@@ -89,7 +89,7 @@ public class IpAddressFilter extends GenericFilterBean {
 	 * are either single <code>String</code>s or <code>List</code>s of <code>String</code>s
 	 * representing IP address patterns to allow for the specified URLs.
 	 *
-	 * @param restrictions  the map
+	 * @param restrictions the map
 	 */
 	public void setIpRestrictions(final Map<String, Object> restrictions) {
 		_restrictions = ReflectionUtils.splitMap(restrictions);

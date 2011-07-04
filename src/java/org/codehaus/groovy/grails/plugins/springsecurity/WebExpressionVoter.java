@@ -87,7 +87,7 @@ public class WebExpressionVoter implements AccessDecisionVoter {
 
 	/**
 	 * Dependency injection for the expression handler.
-	 * @param expressionHandler  the handler
+	 * @param expressionHandler the handler
 	 */
 	public void setExpressionHandler(final WebSecurityExpressionHandler expressionHandler) {
 		_expressionHandler = expressionHandler;

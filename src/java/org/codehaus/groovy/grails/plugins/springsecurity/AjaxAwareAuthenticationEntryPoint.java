@@ -41,7 +41,7 @@ public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEnt
 
 	/**
 	 * Dependency injection for the Ajax login form url, e.g. '/login/authAjax'.
-	 * @param url  the url
+	 * @param url the url
 	 */
 	public void setAjaxLoginFormUrl(final String url) {
 		Assert.isTrue(url == null || url.startsWith("/"), "ajaxLoginFormUrl must begin with '/'");

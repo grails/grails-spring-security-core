@@ -32,7 +32,7 @@ public class WebExpressionConfigAttribute implements ConfigAttribute {
 
 	/**
 	 * Constructor.
-	 * @param authorizeExpression  the expression
+	 * @param authorizeExpression the expression
 	 */
 	public WebExpressionConfigAttribute(final Expression authorizeExpression) {
 		_authorizeExpression = authorizeExpression;
@@ -40,7 +40,7 @@ public class WebExpressionConfigAttribute implements ConfigAttribute {
 
 	/**
 	 * Accessor for the expression.
-	 * @return  the expression
+	 * @return the expression
 	 */
 	public Expression getAuthorizeExpression() {
 		return _authorizeExpression;

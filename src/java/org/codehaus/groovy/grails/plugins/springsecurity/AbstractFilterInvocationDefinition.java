@@ -93,9 +93,9 @@ public abstract class AbstractFilterInvocationDefinition
 	}
 
 	protected abstract String determineUrl(FilterInvocation filterInvocation);
-	
+
 	protected boolean stopAtFirstMatch() {
-	    return false;
+		return false;
 	}
 
 	private Collection<ConfigAttribute> findConfigAttributes(final String url) throws Exception {
@@ -118,7 +118,7 @@ public abstract class AbstractFilterInvocationDefinition
 								+ "':" + configAttributes);
 					}
 					if (stopAtFirstMatch) {
-					    break;
+						break;
 					}
 				}
 			}
@@ -162,7 +162,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	/**
 	 * Dependency injection for the url matcher.
-	 * @param urlMatcher  the matcher
+	 * @param urlMatcher the matcher
 	 */
 	public void setUrlMatcher(final UrlMatcher urlMatcher) {
 		_urlMatcher = urlMatcher;
@@ -171,7 +171,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	/**
 	 * Dependency injection for whether to reject if there's no matching rule.
-	 * @param reject  if true, reject access unless there's a pattern for the specified resource
+	 * @param reject if true, reject access unless there's a pattern for the specified resource
 	 */
 	public void setRejectIfNoRule(final boolean reject) {
 		_rejectIfNoRule = reject;
@@ -275,8 +275,8 @@ public abstract class AbstractFilterInvocationDefinition
 
 	/**
 	 * For admin/debugging - find all config attributes that apply to the specified URL.
-	 * @param url  the URL
-	 * @return  matching attributes
+	 * @param url the URL
+	 * @return matching attributes
 	 */
 	public Collection<ConfigAttribute> findMatchingAttributes(final String url) {
 		for (Map.Entry<Object, Collection<ConfigAttribute>> entry : _compiled.entrySet()) {
@@ -289,7 +289,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	/**
 	 * Dependency injection for the role voter.
-	 * @param voter  the voter
+	 * @param voter the voter
 	 */
 	public void setRoleVoter(final RoleVoter voter) {
 		_roleVoter = voter;
@@ -301,7 +301,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	/**
 	 * Dependency injection for the authenticated voter.
-	 * @param voter  the voter
+	 * @param voter the voter
 	 */
 	public void setAuthenticatedVoter(final AuthenticatedVoter voter) {
 		_authenticatedVoter = voter;
@@ -312,7 +312,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	/**
 	 * Dependency injection for the expression handler.
-	 * @param handler  the handler
+	 * @param handler the handler
 	 */
 	public void setExpressionHandler(final WebSecurityExpressionHandler handler) {
 		_expressionHandler = handler;

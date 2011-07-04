@@ -32,7 +32,7 @@ class SecurityTestUtils {
 
 	/**
 	 * Register a currently authenticated user.
-	 * @return  the authentication
+	 * @return the authentication
 	 */
 	static Authentication authenticate() {
 		authenticate null, null, null
@@ -41,10 +41,10 @@ class SecurityTestUtils {
 	/**
 	 * Register a currently authenticated user.
 	 *
-	 * @param principal  the principal
-	 * @param credentials  the password
-	 * @param authorities  the roles
-	 * @return  the authentication
+	 * @param principal the principal
+	 * @param credentials the password
+	 * @param authorities the roles
+	 * @return the authentication
 	 */
 	static Authentication authenticate(principal, credentials, List<GrantedAuthority> authorities) {
 		Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities)

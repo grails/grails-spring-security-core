@@ -5,7 +5,7 @@ h2. Purpose
 Creates a persistent token domain class for storing remember-me cookie information in the database. The general format is:
 
 bc.
-   grails s2-create-persistent-token <classname>
+grails s2-create-persistent-token <classname>
 
 h2. Example
 

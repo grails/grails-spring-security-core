@@ -109,7 +109,7 @@ class SpringSecurityService {
 	 * from all Requestmap definitions. If a Requestmap's config attribute is this role,
 	 * it will be deleted.
 	 *
-	 * @param role  the role to delete
+	 * @param role the role to delete
 	 */
 	void deleteRole(role) {
 		def conf = SpringSecurityUtils.securityConfig
@@ -146,8 +146,8 @@ class SpringSecurityService {
 	 * Update a role, and if Requestmap class is used to store roles, replace the new role
 	 * name in all Requestmap definitions that use it if the name was changed.
 	 *
-	 * @param role  the role to update
-	 * @param newProperties  the new role attributes ('params' from the calling controller)
+	 * @param role the role to update
+	 * @param newProperties the new role attributes ('params' from the calling controller)
 	 */
 	boolean updateRole(role, newProperties) {
 
@@ -183,8 +183,8 @@ class SpringSecurityService {
 	 * <p/>
 	 * Also removes the user from the user cache to force a refresh at next login.
 	 *
-	 * @param username  the user's login name
-	 * @param password  optional
+	 * @param username the user's login name
+	 * @param password optional
 	 */
 	void reauthenticate(String username, String password = null) {
 		SpringSecurityUtils.reauthenticate username, password

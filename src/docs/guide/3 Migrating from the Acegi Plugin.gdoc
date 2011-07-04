@@ -41,7 +41,7 @@ userAttribute | anon.userAttribute
 loginFormUrl | auth.loginFormUrl
 forceHttps | auth.forceHttps
 ajaxLoginFormUrl | auth.ajaxLoginFormUrl
-afterLogoutUrl | 	logout.afterLogoutUrl
+afterLogoutUrl | logout.afterLogoutUrl
 errorPage | adh.errorPage
 ajaxErrorPage | adh.ajaxErrorPage
 ajaxHeader | ajaxHeader

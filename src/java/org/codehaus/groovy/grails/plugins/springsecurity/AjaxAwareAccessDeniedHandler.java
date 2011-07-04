@@ -106,7 +106,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 
 	/**
 	 * Dependency injection for the error page, e.g. '/login/denied'.
-	 * @param page  the page
+	 * @param page the page
 	 */
 	public void setErrorPage(final String page) {
 		Assert.isTrue(page == null || page.startsWith("/"), "ErrorPage must begin with '/'");
@@ -115,7 +115,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 
 	/**
 	 * Dependency injection for the Ajax error page, e.g. '/login/ajaxDenied'.
-	 * @param page  the page
+	 * @param page the page
 	 */
 	public void setAjaxErrorPage(final String page) {
 		Assert.isTrue(page == null || page.startsWith("/"), "Ajax ErrorPage must begin with '/'");
@@ -124,7 +124,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 
 	/**
 	 * Dependency injection for the port resolver.
-	 * @param resolver  the resolver
+	 * @param resolver the resolver
 	 */
 	public void setPortResolver(final PortResolver resolver) {
 		portResolver = resolver;
@@ -132,7 +132,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 
 	/**
 	 * Dependency injection for the {@link AuthenticationTrustResolver}.
-	 * @param resolver  the resolver
+	 * @param resolver the resolver
 	 */
 	public void setAuthenticationTrustResolver(final AuthenticationTrustResolver resolver) {
 		authenticationTrustResolver = resolver;

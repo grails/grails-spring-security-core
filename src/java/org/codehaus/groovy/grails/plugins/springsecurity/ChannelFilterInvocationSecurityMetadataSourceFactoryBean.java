@@ -109,7 +109,7 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	/**
 	 * Dependency injection for the definition map.
 	 *
-	 * @param definition  keys are URL patterns, values are ANY_CHANNEL, REQUIRES_SECURE_CHANNEL, or REQUIRES_INSECURE_CHANNEL
+	 * @param definition keys are URL patterns, values are ANY_CHANNEL, REQUIRES_SECURE_CHANNEL, or REQUIRES_INSECURE_CHANNEL
 	 */
 	public void setDefinition(Map<String, String> definition) {
 		_definition = definition;
