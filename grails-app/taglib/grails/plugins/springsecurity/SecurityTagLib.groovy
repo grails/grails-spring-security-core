@@ -220,10 +220,21 @@ class SecurityTagLib {
 
 		String url = attrs.remove('url')
 		if (!url) {
-			throwTagError "Tag [$tagName] requires either an expression or a URL"
+			String controller = attrs.remove('controller')
+			String mapping = attrs.remove('mapping')
+			if (!controller && !mapping) {
+				throwTagError "Tag [$tagName] requires an expression, a URL, or controller/action/mapping attributes to create a URL"
+			}
+			if (mapping) {
+				url = g.createLink(mapping: mapping).toString()
+			}
+			else {
+				String action = attrs.remove('action')
+				url = g.createLink(controller: controller, action: action, base: '/').toString()
+			}
 		}
-		String method = attrs.remove('method') ?: 'GET'
 
+		String method = attrs.remove('method') ?: 'GET'
 		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
 	}
 

@@ -137,6 +137,38 @@ You're a user
 </sec:access>
 {code}
 
+You can also guard access to links generated from controller and action names or named URL mappings instead of hard-coding the values, for example
+
+{code}
+<sec:access controller='admin' action='user'>
+
+<g:link controller='admin' action='user'>Manage Users</g:link>
+
+</sec:access>
+{code}
+
+or if you have a named URL mapping you can refer to that:
+
+{code}
+<sec:access mapping='manageUsers'>
+
+<g:link mapping='manageUsers'>Manage Users</g:link>
+
+</sec:access>
+{code}
+
+For even more control of the generated URL (still avoiding hard-coding) you can use @createLink@ to build the URL, for example
+
+{code}
+<sec:access url='${createLink(controller: 'admin', action: 'user', base: "/")}'>
+
+<g:link controller='admin' action='user'>Manage Users</g:link>
+
+</sec:access>
+{code}
+
+Be sure to include the @base: "/"@ attribute in this case to avoid appending the context name to the URL.
+
 h4. noAccess
 
 Renders the body if the specified expression evaluates to @false@ or URL isn't allowed.
