@@ -17,8 +17,8 @@ package org.codehaus.groovy.grails.plugins.springsecurity;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -51,7 +51,7 @@ public abstract class AbstractFilterInvocationDefinition
 	private AuthenticatedVoter _authenticatedVoter;
 	private WebSecurityExpressionHandler _expressionHandler;
 
-	private final Map<Object, Collection<ConfigAttribute>> _compiled = new HashMap<Object, Collection<ConfigAttribute>>();
+	private final Map<Object, Collection<ConfigAttribute>> _compiled = new LinkedHashMap<Object, Collection<ConfigAttribute>>();
 
 	protected final Logger _log = Logger.getLogger(getClass());
 
@@ -93,6 +93,10 @@ public abstract class AbstractFilterInvocationDefinition
 	}
 
 	protected abstract String determineUrl(FilterInvocation filterInvocation);
+	
+	protected boolean stopAtFirstMatch() {
+	    return false;
+	}
 
 	private Collection<ConfigAttribute> findConfigAttributes(final String url) throws Exception {
 
@@ -101,6 +105,7 @@ public abstract class AbstractFilterInvocationDefinition
 		Collection<ConfigAttribute> configAttributes = null;
 		Object configAttributePattern = null;
 
+		boolean stopAtFirstMatch = stopAtFirstMatch();
 		for (Map.Entry<Object, Collection<ConfigAttribute>> entry : _compiled.entrySet()) {
 			Object pattern = entry.getKey();
 			if (_urlMatcher.pathMatchesUrl(pattern, url)) {
@@ -111,6 +116,9 @@ public abstract class AbstractFilterInvocationDefinition
 					if (_log.isTraceEnabled()) {
 						_log.trace("new candidate for '" + url + "': '" + pattern
 								+ "':" + configAttributes);
+					}
+					if (stopAtFirstMatch) {
+					    break;
 					}
 				}
 			}
