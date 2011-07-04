@@ -5,3 +5,9 @@ stacktrace.log
 /grails-spring-security-core-*.zip
 /testapps.config.groovy
 /plugin.xml
+/.classpath.backup
+/.classpath.sts
+/.classpath.groovy
+/.project.sts
+/.project.groovy
+/.project.backup
