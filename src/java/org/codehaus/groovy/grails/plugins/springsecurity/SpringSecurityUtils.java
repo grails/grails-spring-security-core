@@ -135,6 +135,12 @@ public final class SpringSecurityUtils {
 		// static only
 	}
 
+	public static void reset()
+	{
+		ORDERED_FILTERS.clear();
+		CONFIGURED_ORDERED_FILTERS.clear();
+	}
+	
 	/**
 	 * Set at startup by plugin.
 	 * @param application the application
