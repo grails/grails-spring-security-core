@@ -1,10 +1,10 @@
 <head>
 <meta name='layout' content='main' />
-<title>Denied</title>
+<title><g:message code="springSecurity.denied.title" /></title>
 </head>
 
 <body>
 <div class='body'>
-	<div class='errors'>Sorry, you're not authorized to view this page.</div>
+	<div class='errors'><g:message code="springSecurity.denied.message" /></div>
 </div>
 </body>
