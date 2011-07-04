@@ -107,7 +107,12 @@ class UserRole implements Serializable {
 
    static boolean remove(User user, Role role, boolean flush = false) {
       UserRole instance = UserRole.findByUserAndRole(user, role)
-      instance ? instance.delete(flush: flush) : false
+		if (!instance) {
+			return false
+		}
+
+		instance.delete(flush: flush)
+		true
    }
 
    static void removeAll(User user) {
@@ -312,7 +317,7 @@ def update = {
          def version = params.version.toLong()
          ...
       }
-      if (userInstance.password != params.password) {
+      if (params.password) {
          params.password = springSecurityService.encodePassword(params.password)
       }
       userInstance.properties = params

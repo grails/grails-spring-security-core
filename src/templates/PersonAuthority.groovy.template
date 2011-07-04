@@ -34,7 +34,12 @@ class ${userClassName}${roleClassName} implements Serializable {
 
 	static boolean remove(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
 		${userClassName}${roleClassName} instance = ${userClassName}${roleClassName}.findBy${userClassName}And${roleClassName}(${userClassProperty}, ${roleClassProperty})
-		instance ? instance.delete(flush: flush) : false
+		if (!instance) {
+			return false
+		}
+
+		instance.delete(flush: flush)
+		true
 	}
 
 	static void removeAll(${userClassName} ${userClassProperty}) {
