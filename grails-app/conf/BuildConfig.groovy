@@ -14,15 +14,15 @@ grails.project.dependency.resolution = {
 		grailsHome()
 		grailsCentral()
 
-		ebr() // SpringSource  http://www.springsource.com/repository
+		mavenCentral()
 	}
 
 	dependencies {
-		runtime('org.springframework.security:org.springframework.security.core:3.0.4.RELEASE') {
+		compile('org.springframework.security:spring-security-core:3.0.5.RELEASE') {
 			transitive = false
 		}
-
-		runtime('org.springframework.security:org.springframework.security.web:3.0.4.RELEASE') {
+  
+		compile('org.springframework.security:spring-security-web:3.0.5.RELEASE') {
 			transitive = false
 		}
 	}
