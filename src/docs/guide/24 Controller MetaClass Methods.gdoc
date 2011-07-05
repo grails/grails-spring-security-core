@@ -19,7 +19,7 @@ class MyController {
       }
 
       // or
-      
+
       if (loggedIn) {
          ...
       }

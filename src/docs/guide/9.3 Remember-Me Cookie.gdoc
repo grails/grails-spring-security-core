@@ -1,10 +1,9 @@
 Spring Security supports creating a remember-me cookie so that users are not required to log in with a username and password for each session. This is optional and is usually implemented as a checkbox on the login form; the default @auth.gsp@ supplied by the plugin has this feature.
 
-
 {table}
 *Property* | *Default Value* | *Meaning*
 rememberMe.cookieName | 'grails_remember_me' | remember-me cookie name; should be unique per application.
-rememberMe.alwaysRemember | @false@ | If @true@, create a remember-me cookie even if no checkbox is on the form. 
+rememberMe.alwaysRemember | @false@ | If @true@, create a remember-me cookie even if no checkbox is on the form.
 rememberMe.tokenValiditySeconds | 1209600 (14 days) | Max age of the cookie in seconds.
 rememberMe.parameter | '_spring_security_remember_me' | Login form remember-me checkbox name.
 rememberMe.key | 'grailsRocks' | Value used to encode cookies; should be unique per application.

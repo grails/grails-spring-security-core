@@ -22,7 +22,7 @@ grails.plugins.springsecurity.filterChain.chainMap = [
 ]
 {code}
 
-In this example we're using the @JOINED_FILTERS@ keyword instead of explicitly listing the filter names. Specifying @JOINED_FILTERS@ means to use all of the filters that were configured using the various config options. In each case we also specify that we want to exclude one or more filters by prefixing their names with @-@. 
+In this example we're using the @JOINED_FILTERS@ keyword instead of explicitly listing the filter names. Specifying @JOINED_FILTERS@ means to use all of the filters that were configured using the various config options. In each case we also specify that we want to exclude one or more filters by prefixing their names with @-@.
 
 For the @/webservice/\*\*@ URLs, we want all filters except for the standard @ExceptionTranslationFilter@ since we want to use just the one configured for Basic Auth. And for the @/\*\*@ URLs (everything else) we want everything except for the Basic Auth filter and its configured @ExceptionTranslationFilter@.
 
@@ -30,7 +30,7 @@ For the @/webservice/\*\*@ URLs, we want all filters except for the standard @Ex
 
 {table}
 *Property* | *Default Value* | *Meaning*
-useDigestAuth | @false@ | Whether to use Digest authentication. 
+useDigestAuth | @false@ | Whether to use Digest authentication.
 digest.realmName | 'Grails Realm' | Realm name displayed in the browser popup
 digest.key | 'changeme' | Key used to build the nonce for authentication; it should be changed but that's not required.
 digest.nonceValiditySeconds | 300 | How long a nonce stays valid.

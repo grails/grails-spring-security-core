@@ -14,7 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder;
+import org.codehaus.groovy.grails.commons.ApplicationHolder
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 /**

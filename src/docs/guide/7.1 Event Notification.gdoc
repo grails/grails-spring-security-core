@@ -5,7 +5,7 @@ You can set up event notifications in two ways. The sections that follow describ
 
 h4. AuthenticationEventPublisher
 
-Spring Security publishes events using an [AuthenticationEventPublisher|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AuthenticationEventPublisher.html] which in turn fire events using the [ApplicationEventPublisher|http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationEventPublisher.html]. By default no events are fired since the @AuthenticationEventPublisher@ instance registered is a @org.codehaus.groovy.grails.plugins.springsecurity.NullAuthenticationEventPublisher@. But you can enable event publishing by setting @grails.plugins.springsecurity.useSecurityEventListener = true@ in @grails-app/conf/Config.groovy@. 
+Spring Security publishes events using an [AuthenticationEventPublisher|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AuthenticationEventPublisher.html] which in turn fire events using the [ApplicationEventPublisher|http://static.springsource.org/spring/docs/3.0.x/javadoc-api/org/springframework/context/ApplicationEventPublisher.html]. By default no events are fired since the @AuthenticationEventPublisher@ instance registered is a @org.codehaus.groovy.grails.plugins.springsecurity.NullAuthenticationEventPublisher@. But you can enable event publishing by setting @grails.plugins.springsecurity.useSecurityEventListener = true@ in @grails-app/conf/Config.groovy@.
 
 You can use the @useSecurityEventListener@ setting to temporarily disable and enable the callbacks, or enable them per-environment.
 

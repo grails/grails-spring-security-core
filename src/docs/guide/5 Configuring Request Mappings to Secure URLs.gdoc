@@ -1,4 +1,4 @@
-You can choose among the following approaches to configuring request mappings for secure application URLs. The goal is to map URL patterns to the roles required to access those URLs. 
+You can choose among the following approaches to configuring request mappings for secure application URLs. The goal is to map URL patterns to the roles required to access those URLs.
 * [@\@Secured@ annotations (default approach)|guide:5.1 Defining Secured Annotations]
 * [A simple Map in @Config.groovy@|guide:5.2 Simple Map in Config.groovy]
 * [@Requestmap@ domain class instances stored in the database|guide:5.3 Requestmap Instances Stored in the Database]
@@ -6,7 +6,7 @@ You can choose among the following approaches to configuring request mappings fo
 You can only use one method at a time. You configure it with the @securityConfigType@ attribute; the value has to be an @SecurityConfigType@ enum value or the name of the enum as a String.
 
 h4. Pessimistic Lockdown
-Most applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it makes more sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role configuration. 
+Most applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it makes more sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role configuration.
 
 To use the pessimistic approach, add this line to @grails-app/conf/Config.groovy@:
 
