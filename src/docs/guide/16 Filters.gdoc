@@ -10,8 +10,8 @@ For example:
 
 {code}
 grails.plugins.springsecurity.filterChain.filterNames = [
-   'httpSessionContextIntegrationFilter', 'logoutFilter', 'authenticationProcessingFilter',
-   'myCustomProcessingFilter', 'rememberMeProcessingFilter', 'anonymousProcessingFilter',
+   'securityContextPersistenceFilter', 'logoutFilter', 'authenticationProcessingFilter',
+   'myCustomProcessingFilter', 'rememberMeAuthenticationFilter', 'anonymousAuthenticationFilter',
    'exceptionTranslationFilter', 'filterInvocationInterceptor'
 ]
 {code}
