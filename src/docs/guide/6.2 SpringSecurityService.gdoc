@@ -72,7 +72,6 @@ Retrieves the currently logged in user's @Principal@. If authenticated, the prin
 
 If not authenticated and the [AnonymousAuthenticationFilter|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's name will be returned ('anonymousUser' unless overridden).
 
-
 Example:
 
 {code}
@@ -91,8 +90,10 @@ class SomeController {
 {code}
 
 h4. encodePassword()
-Encrypts a password with the configured encryption scheme. By default the plugin uses SHA-256, but you can configure the scheme with the @grails.plugins.springsecurity.password.algorithm@ attribute in @Config.groovy@. You can use any message digest algorithm that is supported in your JDK; see [this Java page|http://java.sun.com/j2se/1.5.0/docs/guide/security/CryptoSpec.html#AppA]. 
-*Warning:* You are *strongly* discouraged from using MD5 or SHA-1 algorithms because of their have well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See [Salted Passwords|guide:12.2 Salted Passwords].
+Encrypts a password with the configured encryption scheme. By default the plugin uses SHA-256, but you can configure the scheme with the @grails.plugins.springsecurity.password.algorithm@ attribute in @Config.groovy@. You can use any message digest algorithm that is supported in your JDK; see [this Java page|http://java.sun.com/j2se/1.5.0/docs/guide/security/CryptoSpec.html#AppA].
+{warning}
+You are *strongly* discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See [Salted Passwords|guide:12.2 Salted Passwords].
+{warning}
 
 Example:
 
@@ -119,6 +120,10 @@ class PersonController {
    }
 }
 {code}
+
+{note}
+If you are encoding the password in the User domain class (using @beforeInsert@ and @encodePassword@) then don't call @springSecurityService.encodePassword()@ in your controller since you'll double-encrypt the password and users won't be able to log in. It's best to encapsulate the password handling logic in the domain class.
+{note}
 
 h4. updateRole()
 Updates a role and, if you use @Requestmap@ instances to secure URLs, updates the role name in all affected @Requestmap@ definitions if the name was changed.
@@ -227,4 +232,3 @@ class UserController {
    }
 }
 {code}
-
