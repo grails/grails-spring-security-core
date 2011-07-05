@@ -140,26 +140,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		// we add the filter(s) right after the last context-param
-		def contextParam = xml.'context-param'
-
-		// the name of the filter matches the name of the Spring bean that it delegates to
-		contextParam[contextParam.size() - 1] + {
-			'filter' {
-				'filter-name'('springSecurityFilterChain')
-				'filter-class'(DelegatingFilterProxy.name)
-			}
-		}
-
-		// add the filter-mapping after the Spring character encoding filter
-		findMappingLocation.delegate = delegate
-		def mappingLocation = findMappingLocation(xml)
-		mappingLocation + {
-			'filter-mapping'{
-				'filter-name'('springSecurityFilterChain')
-				'url-pattern'('/*')
-			}
-		}
+		// filter chain is added in _Events.groovy to ensure correct positioning
 
 		if (conf.useHttpSessionEventPublisher) {
 			def filterMapping = xml.'filter-mapping'
