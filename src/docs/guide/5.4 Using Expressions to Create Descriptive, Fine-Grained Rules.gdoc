@@ -65,7 +65,7 @@ To help you migrate traditional configurations to expressions, this table compar
 {table}
 *Traditional Config* | *Expression*
 @ROLE_ADMIN@ | @hasRole('ROLE_USER')@
-@ROLE_USER,ROLE_ADMIN@ | @hasAnyRole('ROLE_USER,ROLE_ADMIN')@
+@ROLE_USER,ROLE_ADMIN@ | @hasAnyRole('ROLE_USER','ROLE_ADMIN')@
 @ROLE_ADMIN,IS_AUTHENTICATED_FULLY@ | @hasRole('ROLE_ADMIN') and isFullyAuthenticated()@
 @IS_AUTHENTICATED_ANONYMOUSLY@ | @permitAll@
 @IS_AUTHENTICATED_REMEMBERED@ | @isAnonymous() or isRememberMe()@
