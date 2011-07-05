@@ -42,7 +42,7 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	copyControllersAndViews()
 	updateConfig()
 
-	ant.echo """
+	printMessage """
 *******************************************************
 * Created domain classes, controllers, and GSPs. Your *
 * grails-app/conf/Config.groovy has been updated with *
@@ -116,16 +116,16 @@ private parseArgs() {
 	def args = argsMap.params
 
 	if (3 == args.size()) {
-		ant.echo message: "Creating User class ${args[1]} and Role class ${args[2]} in package ${args[0]}"
+		printMessage "Creating User class ${args[1]} and Role class ${args[2]} in package ${args[0]}"
 		return args
 	}
 
 	if (4 == args.size()) {
-		ant.echo message: "Creating User class ${args[1]}, Role class ${args[2]}, and Requestmap class ${args[3]} in package ${args[0]}"
+		printMessage "Creating User class ${args[1]}, Role class ${args[2]}, and Requestmap class ${args[3]} in package ${args[0]}"
 		return args
 	}
 
-	ant.echo message: USAGE
+	errorMessage USAGE
 	null
 }
 

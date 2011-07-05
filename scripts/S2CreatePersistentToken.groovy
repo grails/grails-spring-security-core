@@ -79,11 +79,11 @@ private parseArgs() {
 	def args = argsMap.params
 
 	if (1 == args.size()) {
-		ant.echo message: "Creating persistent token class ${args[0]}"
+		printMessage "Creating persistent token class ${args[0]}"
 		return args[0]
 	}
 
-	ant.echo message: USAGE
+	errorMessage message: USAGE
 	null
 }
 

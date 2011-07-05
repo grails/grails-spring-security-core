@@ -145,7 +145,7 @@ private void deleteDir(String path) {
 			deleteAll = true
 		}
 		else if (!'y'.equalsIgnoreCase(result)) {
-			ant.echo "\nNot deleting $path"
+			printMessage "\nNot deleting $path"
 			exit 1
 		}
 	}
@@ -177,7 +177,7 @@ private void init(String name, config) {
 }
 
 private void error(String message) {
-	ant.echo "\nERROR: $message"
+	errorMessage "\nERROR: $message"
 	exit 1
 }
 
