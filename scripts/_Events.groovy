@@ -48,6 +48,9 @@ private void fixWebXml() {
 		'filter-mapping' {
 			'filter-name'('springSecurityFilterChain')
 			'url-pattern'('/*')
+			'dispatcher'('ERROR')
+			'dispatcher'('FORWARD')
+			'dispatcher'('REQUEST')
 		}
 	}
 
