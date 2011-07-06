@@ -153,6 +153,13 @@ public abstract class AbstractFilterInvocationDefinition
 	 * @see org.springframework.security.access.SecurityMetadataSource#getAllConfigAttributes()
 	 */
 	public Collection<ConfigAttribute> getAllConfigAttributes() {
+		try {
+			initialize();
+		}
+		catch (Exception e) {
+			_log.error(e.getMessage(), e);
+		}
+
 		Collection<ConfigAttribute> all = new HashSet<ConfigAttribute>();
 		for (Collection<ConfigAttribute> configs : _compiled.values()) {
 			all.addAll(configs);
