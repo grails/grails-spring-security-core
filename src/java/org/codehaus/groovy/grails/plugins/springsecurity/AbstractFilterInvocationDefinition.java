@@ -14,6 +14,8 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
+import grails.util.GrailsUtil;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -157,6 +159,7 @@ public abstract class AbstractFilterInvocationDefinition
 			initialize();
 		}
 		catch (Exception e) {
+			GrailsUtil.deepSanitize(e);
 			_log.error(e.getMessage(), e);
 		}
 

@@ -14,6 +14,8 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
+import grails.util.GrailsUtil;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -91,6 +93,7 @@ public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationP
 		}
 		catch (AccessDeniedException unauthorized) {
 			if (logger.isDebugEnabled()) {
+				GrailsUtil.deepSanitize(unauthorized);
 				logger.debug(fi + " denied for " + authentication, unauthorized);
 			}
 			return false;
