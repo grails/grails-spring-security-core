@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 import grails.util.GrailsNameUtils
+import grails.util.Metadata
 
 includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groovy")
 
@@ -72,6 +73,47 @@ private boolean configure() {
 	                      roleClassName: roleClassName,
 	                      roleClassProperty: GrailsNameUtils.getPropertyName(roleClassName),
 	                      requestmapClassName: requestmapClassName]
+
+	if (Metadata.current.getGrailsVersion().startsWith('1.2')) {
+		templateAttributes.dependencyInjections = '''\
+	transient springSecurityService
+	transient grailsApplication
+	transient sessionFactory
+'''
+		templateAttributes.dirtyMethods = '''
+
+	private boolean isDirty(String fieldName) {
+		def session = sessionFactory.currentSession
+		def entry = findEntityEntry(session)
+		if (!entry) {
+			return false
+		}
+
+		Object[] values = entry.persister.getPropertyValues(this, session.entityMode)
+		int[] dirtyProperties = entry.persister.findDirty(values, entry.loadedState, this, session)
+		int fieldIndex = entry.persister.propertyNames.findIndexOf { fieldName == it }
+		return fieldIndex in dirtyProperties
+	}
+
+	private findEntityEntry(session) {
+		def entry = session.persistenceContext.getEntry(this)
+		if (!entry) {
+			return null
+		}
+
+		if (!entry.requiresDirtyCheck(this) && entry.loadedState) {
+			return null
+		}
+
+		entry
+	}'''
+	}
+	else {
+		templateAttributes.dependencyInjections = '''\
+	transient springSecurityService
+'''
+		templateAttributes.dirtyMethods = ''
+	}
 
 	true
 }

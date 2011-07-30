@@ -2,8 +2,7 @@ package ${packageName}
 
 class ${userClassName} {
 
-	transient springSecurityService
-
+${dependencyInjections}
 	String username
 	String password
 	boolean enabled
@@ -36,5 +35,5 @@ class ${userClassName} {
 
 	protected void encodePassword() {
 		password = springSecurityService.encodePassword(password)
-	}
+	}${dirtyMethods}
 }
