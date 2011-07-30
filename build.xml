@@ -57,7 +57,6 @@
 		<delete dir='grails-app/conf/hibernate'/>
 		<delete dir='grails-app/conf/spring'/>
 		<delete dir='grails-app/controllers'/>
-		<delete dir='grails-app/i18n'/>
 		<delete dir='grails-app/utils'/>
 		<delete dir='grails-app/views'/>
 		<delete dir='lib'/>
