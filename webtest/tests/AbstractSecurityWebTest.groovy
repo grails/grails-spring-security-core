@@ -10,6 +10,7 @@ import org.springframework.util.ReflectionUtils
 abstract class AbstractSecurityWebTest extends FunctionalTestCase {
 
 	protected static final String ROW_COUNT_XPATH = "count(//div[@class='list']//tbody/tr)"
+	protected static final String ROW_COUNT_XPATH2 = "count(//div//table//tbody/tr)"
 
 	protected String sessionId
 
@@ -21,7 +22,8 @@ abstract class AbstractSecurityWebTest extends FunctionalTestCase {
 
 	protected void verifyListSize(int size) {
 		assertContentContainsStrict 'List'
-		int actual = page.getByXPath(ROW_COUNT_XPATH)[0]
+		boolean isGrails2 = response.contentAsString.contains('<link rel="apple-touch-icon"')
+		int actual = page.getByXPath(isGrails2 ? ROW_COUNT_XPATH2 : ROW_COUNT_XPATH)[0]
 		assertEquals "$size row(s) of data expected", size, actual
 	}
 

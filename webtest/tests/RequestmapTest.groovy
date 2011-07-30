@@ -21,8 +21,7 @@ class RequestmapTest extends AbstractSecurityWebTest {
 
 		verifyListSize 1
 
-		get '/testRequestmap/show/1'
-		clickButton 'Edit'
+		get '/testRequestmap/edit/1'
 		assertContentContains 'Edit TestRequestmap'
 		clickButton 'Update'
 		assertContentContains 'Show TestRequestmap'

@@ -21,8 +21,7 @@ class UserTest extends AbstractSecurityWebTest {
 
 		verifyListSize 1
 
-		get '/testUser/show/1'
-		clickButton 'Edit'
+		get '/testUser/edit/1'
 		assertContentContains 'Edit TestUser'
 
 		form {

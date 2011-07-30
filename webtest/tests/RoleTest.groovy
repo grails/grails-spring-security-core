@@ -20,8 +20,7 @@ class RoleTest extends AbstractSecurityWebTest {
 
 		verifyListSize 1
 
-		get '/testRole/show/1'
-		clickButton 'Edit'
+		get '/testRole/edit/1'
 		assertContentContains 'Edit TestRole'
 
 		form {

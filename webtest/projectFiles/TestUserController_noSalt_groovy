@@ -24,7 +24,6 @@ class TestUserController {
 	def save = {
 
 		def person = new TestUser(params)
-		person.password = springSecurityService.encodePassword(params.password)
 		if (person.save(flush: true)) {
 			addRoles(person)
 			redirect action: show, id: person.id
@@ -76,9 +75,6 @@ class TestUserController {
 
 		def oldPassword = person.password
 		person.properties = params
-		if (!params.password.equals(oldPassword)) {
-			person.password = springSecurityService.encodePassword(params.password)
-		}
 		if (person.save()) {
 			TestUserTestRole.removeAll person
 			addRoles(person)
