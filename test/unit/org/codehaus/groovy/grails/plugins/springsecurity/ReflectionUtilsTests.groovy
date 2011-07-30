@@ -37,7 +37,6 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		assertEquals 0, foo.size()
 
 		ReflectionUtils.setConfigProperty 'foo', 'bar'
-		println application.config.flatten()
 		assertEquals 'bar', application.config.grails.plugins.springsecurity.foo
 	}
 
