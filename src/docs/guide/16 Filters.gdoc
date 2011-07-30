@@ -1,10 +1,10 @@
-There are a few different approaches to configuring filter chain(s). 
+There are a few different approaches to configuring filter chain(s).
 
 h4. Default Approach to Configuring Filter Chains
 The default is to use configuration attributes to determine which extra filters to use (for example, Basic Auth, Switch User, etc.) and add these to the 'core' filters. For example, setting @grails.plugins.springsecurity.useSwitchUserFilter = true@ adds @switchUserProcessingFilter@ to the filter chain (and in the correct order). The filter chain built here is applied to all URLs. If you need more flexibility, you can use @filterChain.chainMap@ as discussed in *chainMap* below.
 
 h4. filterNames
-To define custom filters, to remove a core filter from the chain (not recommended), or to otherwise have control over the filter chain, you can specify the @filterNames@ property as a list of strings. As with the default approach, the filter chain built here is applied to all URLs. 
+To define custom filters, to remove a core filter from the chain (not recommended), or to otherwise have control over the filter chain, you can specify the @filterNames@ property as a list of strings. As with the default approach, the filter chain built here is applied to all URLs.
 
 For example:
 
@@ -16,10 +16,10 @@ grails.plugins.springsecurity.filterChain.filterNames = [
 ]
 {code}
 
-This example creates a filter chain corresponding to the Spring beans with the specified names. 
+This example creates a filter chain corresponding to the Spring beans with the specified names.
 
 h4. chainMap
-Use the @filterChain.chainMap@ attribute to define which filters are applied to different URL patterns. You define a Map that specifies one or more lists of filter bean names, each with a corresponding URL pattern. 
+Use the @filterChain.chainMap@ attribute to define which filters are applied to different URL patterns. You define a Map that specifies one or more lists of filter bean names, each with a corresponding URL pattern.
 
 {code}
 grails.plugins.springsecurity.filterChain.chainMap = [
@@ -67,7 +67,7 @@ class BootStrap {
       SpringSecurityUtils.clientRegisterFilter(
           'myFilter', SecurityFilterPosition.OPENID_FILTER.order + 10)
    }
-} 
+}
 {code}
 
 This bootstrap code registers your filter just after the Open ID filter (if it's configured). You cannot register a filter in the same position as another, so it's a good idea to add a small delta to its position to put it after or before a filter that it should be next to in the chain. The Open ID filter position is just an example - add your filter in the position that makes sense.

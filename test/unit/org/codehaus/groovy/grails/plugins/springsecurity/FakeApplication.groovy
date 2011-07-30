@@ -31,7 +31,7 @@ class FakeApplication extends DefaultGrailsApplication {
 	FakeApplication(Class[] classes, ClassLoader classLoader) {
 		super(classes, classLoader)
 	}
-	
+
 	@Override
 	ConfigObject getConfig() { this.config }
 }

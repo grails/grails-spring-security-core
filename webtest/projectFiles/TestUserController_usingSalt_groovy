@@ -75,7 +75,7 @@ class TestUserController {
 
 		def oldPassword = person.password
 		person.properties = params
-		
+
 		if (person.save()) {
 			TestUserTestRole.removeAll person
 			addRoles(person)

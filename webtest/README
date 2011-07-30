@@ -8,7 +8,7 @@ The create-test-app expects a config file in the project root directory called t
 		grailsHome = '/home/burt/dev/javalib/grails-1.2.2'
 		dotGrails = '/home/burt/.grails/1.2.2'
 	}
-	
+
 	v13 {
 		pluginVersion = '0.1'
 		projectDir = '/home/burt/workspace/testapps/spring-security-test'

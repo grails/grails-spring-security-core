@@ -23,4 +23,3 @@ h2. Description
 ** @grails-app/views/login/denied.gsp@ - shows a 403 error page
 ** @grails-app/controllers/LoginController.groovy@ - manages login workflow
 ** @grails-app/controllers/LogoutController.groovy@ - logs users out of the application
-

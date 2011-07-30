@@ -37,4 +37,3 @@ Each approach has its advantages and disadvantages. Annotations and the @Config.
 On the other hand, storing @Requestmap@ entries enables runtime-configurability. This approach gives you a core set of rules populated at application startup that you can edit, add to, and delete as needed. However, it separates the security rules from the application code, which is less convenient than having the rules defined in @grails-app/conf/Config.groovy@ or in the applicable controllers using annotations.
 
 URLs must be mapped in lowercase if you use the @Requestmap@ or @grails-app/conf/Config.groovy@ map approaches. For example, if you have a FooBarController, its urls will be of the form /fooBar/list, /fooBar/create, and so on, but these must be mapped as /foobar/, /foobar/list, /foobar/create. This mapping is handled automatically for you if you use annotations.
-

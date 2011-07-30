@@ -196,7 +196,7 @@ private void init(String name, config) {
 	projectDir = config.projectDir
 	appName = 'spring-security-core-test-' + name
 	testprojectRoot = "$projectDir/$appName"
-	
+
 	grailsVersion = config.grailsVersion
 	dotGrails = config.dotGrails + '/' + grailsVersion
 }

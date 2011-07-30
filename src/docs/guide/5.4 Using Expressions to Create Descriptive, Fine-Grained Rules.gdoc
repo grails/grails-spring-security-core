@@ -71,4 +71,3 @@ To help you migrate traditional configurations to expressions, this table compar
 @IS_AUTHENTICATED_REMEMBERED@ | @isAnonymous() or isRememberMe()@
 @IS_AUTHENTICATED_FULLY@ | @isFullyAuthenticated()@
 {table}
-

@@ -32,4 +32,3 @@ then this would fail - it wouldn't restrict access to @/secure/reallysecure/list
 '/secure/reallysecure/**': ['ROLE_SUPERUSER']
 '/secure/**':              ['ROLE_ADMIN', 'ROLE_SUPERUSER'],
 {code}
-

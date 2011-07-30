@@ -1,4 +1,4 @@
-The plugin registers authentication providers that perform authentication by implementing the [AuthenticationProvider|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html] interface. 
+The plugin registers authentication providers that perform authentication by implementing the [AuthenticationProvider|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html] interface.
 
 {table}
 *Property* | *Default Value* | *Meaning*
@@ -20,9 +20,8 @@ beans = {
 You register the provider in @grails-app/conf/Config.groovy@ as:
 
 {code}
-grails.plugins.springsecurity.providerNames = ['myAuthenticationProvider',
-                                               'anonymousAuthenticationProvider',
-                                               'rememberMeAuthenticationProvider']
+grails.plugins.springsecurity.providerNames = [
+   'myAuthenticationProvider',
+   'anonymousAuthenticationProvider',
+   'rememberMeAuthenticationProvider']
 {code}
-
-

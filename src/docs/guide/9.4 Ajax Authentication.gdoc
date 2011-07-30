@@ -248,4 +248,3 @@ def authAjax = {
 {code}
 
 and this requires an import for @javax.servlet.http.HttpServletResponse@.
-

@@ -1,4 +1,4 @@
-Use channel security to configure which URLs require HTTP and which require HTTPS. 
+Use channel security to configure which URLs require HTTP and which require HTTPS.
 
 {table}
 *Property* | *Default Value* | *Meaning*
@@ -19,4 +19,3 @@ grails.plugins.springsecurity.secureChannel.definition = [
 {code}
 
 URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, @/images/login/\*\*@ is more specific than @/images/\*\*@, so it appears first in the configuration.
-

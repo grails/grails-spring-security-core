@@ -1,5 +1,3 @@
-
-
 {table}
 *Property* | *Default Value* | *Meaning*
 active | @true@ | Whether the plugin is enabled.
@@ -23,6 +21,5 @@ controllerAnnotations.matcher | 'ant' | Use an Ant-style URL matcher ('ant') or 
 controllerAnnotations.lowercase | @true@ | Whether to do URL comparisons using lowercase.
 controllerAnnotations.staticRules | none | Extra rules that cannot be mapped using annotations.
 interceptUrlMap | none | Request mapping definition when using "InterceptUrlMap". See [Simple Map in Config.groovy|guide:5.2 Simple Map in Config.groovy].
-registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events. 
+registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events.
 {table}
-

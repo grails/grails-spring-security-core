@@ -76,4 +76,3 @@ userLookup.accountLockedPropertyName | 'accountLocked' | User class account lock
 userLookup.passwordExpiredPropertyName | 'passwordExpired' | User class password expired field
 userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name
 {table}
-

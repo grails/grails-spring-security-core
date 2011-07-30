@@ -51,4 +51,3 @@ grails.plugins.springsecurity.digest.realmName = "Ralph's Bait and Tackle"
 {code}
 
 Digest authentication cannot be applied to a subset of URLs like Basic authentication can. This is due to the password encoding issues. So you cannot use the @chainMap@ attribute here - all URLs will be guarded.
-

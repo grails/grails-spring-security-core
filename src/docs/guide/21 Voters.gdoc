@@ -24,5 +24,3 @@ grails.plugins.springsecurity.voterNames = [
    'authenticatedVoter', 'roleVoter', 'myAccessDecisionVoter'
 ]
 {code}
-
-

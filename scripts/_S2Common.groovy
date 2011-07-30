@@ -85,7 +85,7 @@ splitClassName = { String fullName ->
 		packageName = fullName[0..index-1]
 		className = fullName[index+1..-1]
 	}
-	else { 
+	else {
 		packageName = ''
 		className = fullName
 	}

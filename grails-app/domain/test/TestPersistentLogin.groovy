@@ -26,7 +26,7 @@ class TestPersistentLogin {
 		token maxSize: 64
 		id maxSize: 64
 	}
-	
+
 	static transients = ['series']
 
 	void setSeries(String series) { id = series }

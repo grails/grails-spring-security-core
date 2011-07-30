@@ -3,7 +3,7 @@ Hierarchical roles are a convenient way to reduce clutter in your request mappin
 {table}
 *Property* | *Default Value*  | *Meaning*
 roleHierarchy | none | Hierarchical role definition.
-{table} 
+{table}
 
 For example, if you have several types of 'admin' roles that can be used to access a URL pattern and you do not use hierarchical roles, you need to specify all the admin roles:
 
@@ -47,4 +47,3 @@ class SomeController {
 {code}
 
 You can also reduce the number of granted roles in the database. Where previously you had to grant @ROLE_SUPERADMIN@, @ROLE_FINANCE_ADMIN@, and @ROLE_ADMIN@, now you only need to grant @ROLE_SUPERADMIN@.
-

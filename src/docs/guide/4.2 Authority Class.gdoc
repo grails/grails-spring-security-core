@@ -29,4 +29,3 @@ The class and property names are configurable using these configuration attribut
 authority.className | 'Authority' | Role class name
 authority.nameField | 'authority' | Role class role name field
 {table}
-

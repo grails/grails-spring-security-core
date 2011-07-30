@@ -33,7 +33,7 @@ public class GrailsUser extends User {
 
 	/**
 	 * Constructor.
-	 * 
+	 *
 	 * @param username the username presented to the
 	 *        <code>DaoAuthenticationProvider</code>
 	 * @param password the password that should be presented to the

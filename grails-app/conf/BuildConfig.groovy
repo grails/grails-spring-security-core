@@ -21,7 +21,7 @@ grails.project.dependency.resolution = {
 		compile('org.springframework.security:spring-security-core:3.0.5.RELEASE') {
 			transitive = false
 		}
-  
+
 		compile('org.springframework.security:spring-security-web:3.0.5.RELEASE') {
 			transitive = false
 		}

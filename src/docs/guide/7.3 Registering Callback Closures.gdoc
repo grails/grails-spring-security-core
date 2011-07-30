@@ -29,4 +29,3 @@ grails.plugins.springsecurity.onAuthorizationEvent = { e, appCtx ->
 None of these closures are required; if none are configured, nothing will be called. Just implement the event handlers that you need.
 
 *Note:* When a user authenticates, Spring Security initially fires an @AuthenticationSuccessEvent@. This event fires before the @Authentication@ is registered in the @SecurityContextHolder@, which means that the @springSecurityService@ methods that access the logged-in user will not work. Later in the processing a second event is fired, an @InteractiveAuthenticationSuccessEvent@, and when this happens the @SecurityContextHolder@ will have the @Authentication@. Depending on your needs, you can implement a callback for either or both events.
-

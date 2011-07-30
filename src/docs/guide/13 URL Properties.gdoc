@@ -29,7 +29,3 @@ ajaxHeader | 'X-Requested-With' | Header name sent by Ajax library, used to dete
 redirectStrategy.contextRelative | @false@ | If @true@, the redirect URL will be the value after the request context path. This results in the loss of protocol information (HTTP or HTTPS), so causes problems if a redirect is being performed to change from HTTP to HTTPS or vice versa.
 switchUser URLs |   | See [Switch User|guide:15 Switch User], under *Customizing URLs*.
 {table}
-
-
-
-

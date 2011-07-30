@@ -24,4 +24,3 @@ All addresses can always be accessed from localhost regardless of IP pattern, pr
 {note}
 You cannot compare IPv4 and IPv6 addresses, so if your server supports both, you need to specify the IP patterns using the address format that is actually being used. Otherwise the filter throws exceptions. One option is to set the @java.net.preferIPv4Stack@ system property, for example, by adding it to @JAVA_OPTS@ or @GRAILS_OPTS@ as @-Djava.net.preferIPv4Stack=true@.
 {note}
-

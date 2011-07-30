@@ -76,4 +76,3 @@ This example maps all URLs associated with @SomePluginController@, which has URL
 {note}
 When mapping URLs for controllers that are mapped in @UrlMappings.groovy@, you need to secure the un-url-mapped URLs. For example if you have a FooBarController that you map to @/foo/bar/$action@, you must register that in @controllerAnnotations.staticRules@ as @/foobar/\*\*@. This is different than the mapping you would use for the other two approaches and is necessary because @controllerAnnotations.staticRules@ entries are treated as if they were annotations on the corresponding controller.
 {note}
-

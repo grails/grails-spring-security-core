@@ -11,9 +11,8 @@ Session fixation is less of a problem now that Grails by default does not includ
 The table shows configuration options for session fixation.
 
 {table}
-*Property* | *Default Value* | *Meaning* 
+*Property* | *Default Value* | *Meaning*
 useSessionFixationPrevention | @false@ | Whether to use session fixation prevention.
 sessionFixationPrevention.migrate | @true@ | Whether to copy the session attributes of the existing session to the new session after login.
 sessionFixationPrevention.alwaysCreateSession | @false@ | Whether to always create a session even if one did not exist at the start of the request.
 {table}
-

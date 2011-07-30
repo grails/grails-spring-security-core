@@ -162,7 +162,7 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		// login as user1
 		get '/logout'
 		assertContentContains 'Welcome to Grails'
-	
+
 		get '/login/auth'
 		assertContentContains 'Please Login'
 

@@ -31,7 +31,7 @@ ${dependencyInjections}
 		if (isDirty('password')) {
 			encodePassword()
 		}
-	} 
+	}
 
 	protected void encodePassword() {
 		password = springSecurityService.encodePassword(password)

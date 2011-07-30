@@ -39,12 +39,12 @@ class UserRole implements Serializable {
 
    static boolean remove(User user, Role role, boolean flush = false) {
       UserRole instance = UserRole.findByUserAndRole(user, role)
-		if (!instance) {
-			return false
-		}
+      if (!instance) {
+         return false
+      }
 
-		instance.delete(flush: flush)
-		true
+      instance.delete(flush: flush)
+      true
    }
 
    static void removeAll(User user) {
@@ -96,4 +96,3 @@ The class name is the only configurable attribute:
 *Property* | *Default Value* | *Meaning*
 userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name
 {table}
-

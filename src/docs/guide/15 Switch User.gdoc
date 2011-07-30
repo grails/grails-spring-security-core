@@ -100,4 +100,3 @@ Logged in as <sec:username/>
    </sec:ifAllGranted>
 </sec:ifNotSwitched>
 {code}
-

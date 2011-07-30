@@ -1,4 +1,1 @@
 Spring Security fires application events after various security-related actions such as successful login, unsuccessful login, and so on. Spring Security uses two main event classes, [AbstractAuthenticationEvent|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/event/AbstractAuthenticationEvent.html] and [AbstractAuthorizationEvent|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/AbstractAuthorizationEvent.html].
-
-
-

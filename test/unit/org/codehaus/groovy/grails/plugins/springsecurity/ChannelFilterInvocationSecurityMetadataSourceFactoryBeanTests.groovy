@@ -21,13 +21,13 @@ import org.springframework.security.web.util.AntUrlPathMatcher
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanTests extends GroovyTestCase {
-	
+
 	private _factory = new ChannelFilterInvocationSecurityMetadataSourceFactoryBean()
 
 	void testGetObjectType() {
 		assertSame DefaultFilterInvocationSecurityMetadataSource, _factory.objectType
 	}
-	
+
 	void testIsSingleton() {
 		assertTrue _factory.singleton
 	}

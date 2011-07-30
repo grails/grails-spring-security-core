@@ -46,7 +46,7 @@ private boolean configure() {
 	String packageName
 	String className
 	(packageName, className) = splitClassName(fullClassName)
-	
+
 	String packageDeclaration = ''
 	if (packageName) {
 		packageDeclaration = "package $packageName"
