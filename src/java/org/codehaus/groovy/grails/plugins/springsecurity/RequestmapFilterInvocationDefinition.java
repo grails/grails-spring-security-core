@@ -37,9 +37,18 @@ public class RequestmapFilterInvocationDefinition extends AbstractFilterInvocati
 
 	@Override
 	protected void initialize() {
-		if (!_initialized) {
+		if (_initialized) {
+			return;
+		}
+
+		try {
 			reset();
 			_initialized = true;
+		}
+		catch (RuntimeException e) {
+			_log.warn("Exception initializing; this is ok if it's at startup and due " +
+					"to GORM not being initialized yet since the first web request will " +
+					"re-initialize. Error message is: " + e.getMessage());
 		}
 	}
 
