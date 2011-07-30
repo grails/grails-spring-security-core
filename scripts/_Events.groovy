@@ -1,3 +1,5 @@
+import grails.util.GrailsUtil
+
 import org.springframework.web.filter.DelegatingFilterProxy
 
 eventWebXmlEnd = { String filename ->
@@ -5,6 +7,7 @@ eventWebXmlEnd = { String filename ->
 		fixWebXml()
 	}
 	catch (e) {
+		GrailsUtil.deepSanitize e
 		e.printStackTrace()
 	}
 }
@@ -37,14 +40,15 @@ private void fixWebXml() {
 	indexesToMove.removeAll positions
 
 	def mappingPosition = filterMappings[positions.max()]
-	root.filter[0] + {
+
+	addNode root.filter[0], {
 		'filter' {
 			'filter-name'('springSecurityFilterChain')
 			'filter-class'(DelegatingFilterProxy.name)
 		}
 	}
 
-	mappingPosition + {
+	addNode mappingPosition, {
 		'filter-mapping' {
 			'filter-name'('springSecurityFilterChain')
 			'url-pattern'('/*')
@@ -75,4 +79,21 @@ private String xmlToString(xml) {
 	printer.preserveWhitespace = true
 	printer.print xml
 	writer.toString()
+}
+
+// copy of Node.plus() method from 1.7 since it wasn't there in 1.6
+private void addNode(Node n, Closure c) {
+	List<Node> list = n.parent().children()
+	int afterIndex = list.indexOf(n)
+	List<Node> leftOvers = new ArrayList<Node>(list.subList(afterIndex + 1, list.size()))
+	list.subList(afterIndex + 1, list.size()).clear()
+
+	Node newNode = new NodeBuilder().invokeMethod('dummyNode', c)
+	for (Node child : newNode.children()) {
+		n.parent().appendNode(child.name(), child.attributes(), child.value())
+	}
+
+	for (Node child : leftOvers) {
+		n.parent().children().add(child)
+	}
 }
