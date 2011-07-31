@@ -14,6 +14,8 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
@@ -104,5 +106,6 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
+		CH.config = null
 	}
 }

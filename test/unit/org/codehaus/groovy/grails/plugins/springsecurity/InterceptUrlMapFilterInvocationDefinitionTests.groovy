@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.GrailsClass
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
@@ -171,7 +172,8 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		ReflectionUtils.application = null
-		SpringSecurityUtils.securityConfig = null
+		SpringSecurityUtils.resetSecurityConfig()
+		CH.config = null
 	}
 }
 

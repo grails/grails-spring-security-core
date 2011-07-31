@@ -16,6 +16,7 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 
 import grails.test.GrailsUnitTestCase
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 
 import org.springframework.mock.web.MockFilterChain
@@ -28,7 +29,8 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import org.springframework.security.web.util.AntUrlPathMatcher
 
 import test.TestRequestmap
-/**
+
+/**
  * Unit tests for RequestmapFilterInvocationDefinition.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -57,7 +59,8 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		ReflectionUtils.application = null
-		SpringSecurityUtils.securityConfig = null
+		SpringSecurityUtils.resetSecurityConfig()
+		CH.config = null
 	}
 
 	void testSplit() {

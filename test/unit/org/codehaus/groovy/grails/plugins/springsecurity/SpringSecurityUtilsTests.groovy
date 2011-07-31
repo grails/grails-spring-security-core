@@ -17,6 +17,7 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 import grails.plugins.springsecurity.SecurityConfigType
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
@@ -296,8 +297,9 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SecurityTestUtils.logout()
-		SpringSecurityUtils.securityConfig = null
+		SpringSecurityUtils.resetSecurityConfig()
 		AH.application = null
+		CH.config = null
 		SpringSecurityUtils.application = null
 		ReflectionUtils.application = null
 	}

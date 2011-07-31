@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 
@@ -90,6 +91,8 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
+		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
+		CH.config = null
 	}
 }

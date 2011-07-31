@@ -65,7 +65,7 @@ import org.springframework.util.StringUtils;
  */
 public final class SpringSecurityUtils {
 
-	private static ConfigObject securityConfig;
+	private static ConfigObject _securityConfig;
 	private static GrailsApplication _application;
 	private static final Map<String, Object> _context = new HashMap<String, Object>();
 	private static final String VOTER_NAMES_KEY = "VOTER_NAMES";
@@ -257,18 +257,26 @@ public final class SpringSecurityUtils {
 	 * @return the configuration
 	 */
 	public static synchronized ConfigObject getSecurityConfig() {
-		if (securityConfig == null) {
+		if (_securityConfig == null) {
 			reloadSecurityConfig();
 		}
 
-		return securityConfig;
+		return _securityConfig;
+	}
+
+	/**
+	 * For testing only.
+	 * @param config the config
+	 */
+	public static void setSecurityConfig(ConfigObject config) {
+		_securityConfig = config;
 	}
 
 	/**
 	 * Reset the config for testing or after a dev mode Config.groovy change.
 	 */
 	public static synchronized void resetSecurityConfig() {
-		securityConfig = null;
+		_securityConfig = null;
 	}
 
 	/**
@@ -592,8 +600,8 @@ public final class SpringSecurityUtils {
 			throw new RuntimeException(e);
 		}
 
-		securityConfig = mergeConfig(currentConfig, (ConfigObject)secondaryConfig.getProperty("security"));
-		ReflectionUtils.setSecurityConfig(securityConfig);
+		_securityConfig = mergeConfig(currentConfig, (ConfigObject)secondaryConfig.getProperty("security"));
+		ReflectionUtils.setSecurityConfig(_securityConfig);
 	}
 
 	/**

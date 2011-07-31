@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.security.access.event.AbstractAuthorizationEvent
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -52,7 +53,8 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		SpringSecurityUtils.securityConfig = null
+		SpringSecurityUtils.resetSecurityConfig()
+		CH.config = null
 	}
 
 	/**

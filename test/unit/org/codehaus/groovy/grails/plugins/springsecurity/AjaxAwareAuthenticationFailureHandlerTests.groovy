@@ -14,6 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
+import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.BadCredentialsException
@@ -88,6 +89,7 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		SpringSecurityUtils.securityConfig = null
+		SpringSecurityUtils.resetSecurityConfig()
+		CH.config = null
 	}
 }
