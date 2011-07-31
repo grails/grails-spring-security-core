@@ -1,0 +1,30 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>10 Authentication Providers</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    The plugin registers authentication providers that perform authentication by implementing the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html" target="blank">AuthenticationProvider</a> interface.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>providerNames</td><td>&#91;'daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'&#93;</td><td>Bean names of authentication providers.</td></tr></table><p class="paragraph"/>Use <code>daoAuthenticationProvider</code> to authenticate using the User and Role database tables, <code>rememberMeAuthenticationProvider</code> to log in with a rememberMe cookie, and <code>anonymousAuthenticationProvider</code> to create an 'anonymous' authentication if no other provider authenticates.<p class="paragraph"/>To customize this list, you define a <code>providerNames</code> attribute with a list of bean names. The beans must be declared either by the plugin, or yourself in <code>resources.groovy</code> or <code>resources.xml</code>. Suppose you have a custom <code>MyAuthenticationProvider</code> in <code>resources.groovy</code>:<p class="paragraph"/><div class="code"><pre>beans = &#123;
+   myAuthenticationProvider(com.foo.MyAuthenticationProvider) &#123;
+      // attributes
+   &#125;
+&#125;</pre></div><p class="paragraph"/>You register the provider in <code>grails-app/conf/Config.groovy</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.providerNames = &#91;
+   'myAuthenticationProvider',
+   'anonymousAuthenticationProvider',
+   'rememberMeAuthenticationProvider'&#93;</pre></div>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>1.1 Configuration Settings Now in Config.groovy</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    Unlike the Acegi plugin, which used its own configuration file, <code>SecurityConfig.groovy</code>, the Spring Security plugin maintains its configuration in the standard <code>Config.groovy</code> file. Default values are in the plugin's <code>grails-app/conf/DefaultSecurityConfig.groovy</code> file, and you add application-specific values to the <code>grails-app/conf/Config.groovy</code> file. The two configurations will be merged, with application values overriding the defaults.<p class="paragraph"/>This structure enables environment-specific configuration such as, for example, fewer structure-restrictive security rules during development than in production. Like any environment-specific configuration parameters, you wrap them in an <code>environments</code> block.<p class="paragraph"/><blockquote class="note">
+The plugin's configuration values all start with <code>grails.plugins.springsecurity</code> to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the <code>grails.plugins.springsecurity</code> suffix. For example, you specify the attribute <code>password.algorithm</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.password.algorithm='SHA&#45;512'</pre></div><p class="paragraph"/>in <code>Config.groovy</code>
+</blockquote>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

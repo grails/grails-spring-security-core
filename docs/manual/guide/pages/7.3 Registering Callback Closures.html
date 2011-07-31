@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>7.3 Registering Callback Closures</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    Alternatively, enable events with <code>grails.plugins.springsecurity.useSecurityEventListener = true</code> and register one or more callback closure(s) in <code>grails-app/conf/Config.groovy</code> and let <code>SecurityEventListener</code> do the filtering.<p class="paragraph"/>Implement the event handlers that you need, for example:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.useSecurityEventListener = <span class="java&#45;keyword">true</span><p class="paragraph"/>grails.plugins.springsecurity.onInteractiveAuthenticationSuccessEvent = &#123; e, appCtx &#45;&#62;
+   // handle InteractiveAuthenticationSuccessEvent
+&#125;<p class="paragraph"/>grails.plugins.springsecurity.onAbstractAuthenticationFailureEvent = &#123; e, appCtx &#45;&#62;
+   // handle AbstractAuthenticationFailureEvent
+&#125;<p class="paragraph"/>grails.plugins.springsecurity.onAuthenticationSuccessEvent = &#123; e, appCtx &#45;&#62;
+   // handle AuthenticationSuccessEvent
+&#125;<p class="paragraph"/>grails.plugins.springsecurity.onAuthenticationSwitchUserEvent = &#123; e, appCtx &#45;&#62;
+   // handle AuthenticationSwitchUserEvent
+&#125;<p class="paragraph"/>grails.plugins.springsecurity.onAuthorizationEvent = &#123; e, appCtx &#45;&#62;
+   // handle AuthorizationEvent
+&#125;</pre></div><p class="paragraph"/>None of these closures are required; if none are configured, nothing will be called. Just implement the event handlers that you need.<p class="paragraph"/><strong class="bold">Note:</strong> When a user authenticates, Spring Security initially fires an <code>AuthenticationSuccessEvent</code>. This event fires before the <code>Authentication</code> is registered in the <code>SecurityContextHolder</code>, which means that the <code>springSecurityService</code> methods that access the logged-in user will not work. Later in the processing a second event is fired, an <code>InteractiveAuthenticationSuccessEvent</code>, and when this happens the <code>SecurityContextHolder</code> will have the <code>Authentication</code>. Depending on your needs, you can implement a callback for either or both events.
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

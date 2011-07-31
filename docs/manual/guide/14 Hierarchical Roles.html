@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>14 Hierarchical Roles</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    <h1><a name="14 Hierarchical Roles">14 Hierarchical Roles</a></h1>Hierarchical roles are a convenient way to reduce clutter in your request mappings.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>roleHierarchy</td><td>none</td><td>Hierarchical role definition.</td></tr></table><p class="paragraph"/>For example, if you have several types of 'admin' roles that can be used to access a URL pattern and you do not use hierarchical roles, you need to specify all the admin roles:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugins.springsecurity.Secured<p class="paragraph"/>class SomeController &#123;<p class="paragraph"/>   @Secured(&#91;'ROLE_ADMIN', 'ROLE_FINANCE_ADMIN', 'ROLE_SUPERADMIN'&#93;)
+   def someAction = &#123;
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/>However, if you have a business rule that says <code>ROLE_FINANCE_ADMIN</code> implies being granted <code>ROLE_ADMIN</code>, and that <code>ROLE_SUPERADMIN</code> implies being granted <code>ROLE_FINANCE_ADMIN</code>, you can express that hierarchy as:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.roleHierarchy = '''
+   ROLE_SUPERADMIN &#62; ROLE_FINANCE_ADMIN
+   ROLE_FINANCE_ADMIN &#62; ROLE_ADMIN
+'''</pre></div><p class="paragraph"/>Then you can simplify your mappings by specifying only the roles that are required:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugins.springsecurity.Secured<p class="paragraph"/>class SomeController &#123;<p class="paragraph"/>   @Secured(&#91;'ROLE_ADMIN'&#93;)
+   def someAction = &#123;
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/>You can also reduce the number of granted roles in the database. Where previously you had to grant <code>ROLE_SUPERADMIN</code>, <code>ROLE_FINANCE_ADMIN</code>, and <code>ROLE_ADMIN</code>, now you only need to grant <code>ROLE_SUPERADMIN</code>.
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>5 Configuring Request Mappings to Secure URLs</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    You can choose among the following approaches to configuring request mappings for secure application URLs. The goal is to map URL patterns to the roles required to access those URLs.
+<ul class="star">
+<li><a href="../guide/single.html#5.1 Defining Secured Annotations" class="guide"><code>@Secured</code> annotations (default approach)</a></li>
+<li><a href="../guide/single.html#5.2 Simple Map in Config.groovy" class="guide">A simple Map in <code>Config.groovy</code></a></li>
+<li><a href="../guide/single.html#5.3 Requestmap Instances Stored in the Database" class="guide"><code>Requestmap</code> domain class instances stored in the database</a></li>
+</ul><p class="paragraph"/>You can only use one method at a time. You configure it with the <code>securityConfigType</code> attribute; the value has to be an <code>SecurityConfigType</code> enum value or the name of the enum as a String.<p class="paragraph"/><h4>Pessimistic Lockdown</h4>
+Most applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it makes more sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role configuration.<p class="paragraph"/>To use the pessimistic approach, add this line to <code>grails-app/conf/Config.groovy</code>:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.rejectIfNoRule = <span class="java&#45;keyword">true</span></pre></div><p class="paragraph"/>Any requested URL that does not have a corresponding rule will be denied to all users.<p class="paragraph"/><h4>URLs and Authorities</h4><p class="paragraph"/>In each approach you configure a mapping for a URL pattern to the role(s) that are required to access those URLs, for example, <code>/admin/user/&#42;&#42;</code> requires <code>ROLE_ADMIN</code>. In addition, you can combine the role(s) with tokens such as IS_AUTHENTICATED_ANONYMOUSLY, IS_AUTHENTICATED_REMEMBERED, and IS_AUTHENTICATED_FULLY. One or more <a href="../guide/single.html#21 Voters" class="guide">Voter</a>s will process any tokens and enforce a rule based on them:
+<ul class="star">
+<li><code>IS_AUTHENTICATED_ANONYMOUSLY</code></li>
+<ul class="star">
+<li>signifies that anyone can access this URL. By default the <code>AnonymousAuthenticationFilter</code> ensures an 'anonymous' <code>Authentication</code> with no roles so that every user has an authentication. The token accepts any authentication, even anonymous.</li>
+</ul>
+<li><code>IS_AUTHENTICATED_REMEMBERED</code></li>
+<ul class="star">
+<li>requires the user to be authenticated through a remember-me cookie or an explicit login.</li>
+</ul>
+<li><code>IS_AUTHENTICATED_FULLY</code></li>
+<ul class="star">
+<li>requires the user to be fully authenticated with an explicit login.</li>
+</ul></ul><p class="paragraph"/>With <code>IS_AUTHENTICATED_FULLY</code> you can implement a security scheme whereby users can check a remember-me checkbox during login and be auto-authenticated each time they return to your site, but must still log in with a password for some parts of the site. For example, allow regular browsing and adding items to a shopping cart with only a cookie, but require an explicit login to check out or view purchase history.<p class="paragraph"/>For more information on <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code>, see the Javadoc for <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/vote/AuthenticatedVoter.html" target="blank">AuthenticatedVoter</a><p class="paragraph"/><h4>Comparing the Approaches</h4><p class="paragraph"/>Each approach has its advantages and disadvantages. Annotations and the <code>Config.groovy</code> Map are less flexible because they are configured once in the code and you can update them only by restarting the application (in prod mode anyway). In practice this limitation is minor, because security mappings for most applications are unlikely to change at runtime.<p class="paragraph"/>On the other hand, storing <code>Requestmap</code> entries enables runtime-configurability. This approach gives you a core set of rules populated at application startup that you can edit, add to, and delete as needed. However, it separates the security rules from the application code, which is less convenient than having the rules defined in <code>grails-app/conf/Config.groovy</code> or in the applicable controllers using annotations.<p class="paragraph"/>URLs must be mapped in lowercase if you use the <code>Requestmap</code> or <code>grails-app/conf/Config.groovy</code> map approaches. For example, if you have a FooBarController, its urls will be of the form /fooBar/list, /fooBar/create, and so on, but these must be mapped as /foobar/, /foobar/list, /foobar/create. This mapping is handled automatically for you if you use annotations.
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

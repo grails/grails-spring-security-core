@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>1 Introduction to the Spring Security Plugin</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    <h1><a name="1 Introduction to the Spring Security Plugin">1 Introduction to the Spring Security Plugin</a></h1>The Spring Security plugin simplifies the integration of  <a href="http://static.springsource.org/spring-security/site/index.html" target="blank">Spring Security</a> (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.<p class="paragraph"/>This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.<p class="paragraph"/><h4>Release History and Acknowledgment</h4>
+<ul class="star">
+<li>July 31, 2011</li>
+<ul class="star">
+<li>1.2 release</li>
+</ul>
+<li>May 23, 2011</li>
+<ul class="star">
+<li>1.1.3 release</li>
+</ul>
+<li>February 26, 2011</li>
+<ul class="star">
+<li>1.1.2 release</li>
+</ul>
+<li>February 26, 2011</li>
+<ul class="star">
+<li>1.1.1 release</li>
+</ul>
+<li>August 8, 2010</li>
+<ul class="star">
+<li>1.1 release</li>
+</ul>
+<li>August 1, 2010</li>
+<ul class="star">
+<li>1.0.1 release</li>
+</ul>
+<li>July 27, 2010</li>
+<ul class="star">
+<li>1.0 release</li>
+</ul>
+<li>July 16, 2010</li>
+<ul class="star">
+<li>0.4.2 release</li>
+</ul>
+<li>June 29, 2010</li>
+<ul class="star">
+<li>0.4.1 release</li>
+</ul>
+<li>June 21, 2010</li>
+<ul class="star">
+<li>0.4 release</li>
+</ul>
+<li>May 12, 2010</li>
+<ul class="star">
+<li>0.3.1 release</li>
+</ul>
+<li>May 12, 2010</li>
+<ul class="star">
+<li>0.3 release</li>
+</ul>
+<li>May 2, 2010</li>
+<ul class="star">
+<li>0.2 release</li>
+</ul>
+<li>April 27, 2010</li>
+<ul class="star">
+<li>initial 0.1 release</li>
+</ul></ul><p class="paragraph"/>This plugin is based on work done for the <a href="http://grails.org/plugin/acegi/" target="blank">Acegi</a> plugin by Tsuyoshi Yamamoto.
+<h2><a name="1.1 Configuration Settings Now in Config.groovy">1.1 Configuration Settings Now in Config.groovy</a></h2>Unlike the Acegi plugin, which used its own configuration file, <code>SecurityConfig.groovy</code>, the Spring Security plugin maintains its configuration in the standard <code>Config.groovy</code> file. Default values are in the plugin's <code>grails-app/conf/DefaultSecurityConfig.groovy</code> file, and you add application-specific values to the <code>grails-app/conf/Config.groovy</code> file. The two configurations will be merged, with application values overriding the defaults.<p class="paragraph"/>This structure enables environment-specific configuration such as, for example, fewer structure-restrictive security rules during development than in production. Like any environment-specific configuration parameters, you wrap them in an <code>environments</code> block.<p class="paragraph"/><blockquote class="note">
+The plugin's configuration values all start with <code>grails.plugins.springsecurity</code> to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the <code>grails.plugins.springsecurity</code> suffix. For example, you specify the attribute <code>password.algorithm</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.password.algorithm='SHA&#45;512'</pre></div><p class="paragraph"/>in <code>Config.groovy</code>
+</blockquote>
+<h2><a name="1.2 Getting Started">1.2 Getting Started</a></h2>If you will be migrating from the Acegi to the Spring Security plugin, see <a href="../guide/single.html#3 Migrating from the Acegi Plugin" class="guide">Migrating from the Acegi Plugin</a>.<p class="paragraph"/>Once you install the plugin, you simply run the initialization script, <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a>, and make any required configuration changes in <code>Config.groovy</code>. The plugin registers filters in <code>web.xml</code>, and also configures the Spring beans in the application context that implement various pieces of functionality.  Ivy determines which jar files to use.<p class="paragraph"/>To get started using the Spring Security plugin with your Grails application, see  <a href="../guide/single.html#23 Tutorials" class="guide">Tutorials</a>.<p class="paragraph"/>You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See <a href="http://static.springsource.org/spring-security/site/reference.html" target="blank">the Spring Security documentation</a>.
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

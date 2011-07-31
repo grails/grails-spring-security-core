@@ -1,0 +1,23 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>8 User, Authority (Role), and Requestmap Properties</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    <h1><a name="8 User, Authority (Role), and Requestmap Properties">8 User, Authority (Role), and Requestmap Properties</a></h1>Properties you are most likely to be override are the <code>User</code> and <code>Authority</code> (and <code>Requestmap</code> if you use the database to store mappings) class and field names.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>userLookup.userDomainClassName</td><td>'Person'</td><td>User class name.</td></tr><tr class="table-even"><td>userLookup.usernamePropertyName</td><td>'username'</td><td>User class username field.</td></tr><tr class="table-odd"><td>userLookup.passwordPropertyName</td><td>'password'</td><td>User class password field.</td></tr><tr class="table-even"><td>userLookup.authoritiesPropertyName</td><td>'authorities'</td><td>User class role collection field.</td></tr><tr class="table-odd"><td>userLookup.enabledPropertyName</td><td>'enabled'</td><td>User class enabled field.</td></tr><tr class="table-even"><td>userLookup.accountExpiredPropertyName</td><td>'accountExpired'</td><td>User class account expired field.</td></tr><tr class="table-odd"><td>userLookup.accountLockedPropertyName</td><td>'accountLocked'</td><td>User class account locked field.</td></tr><tr class="table-even"><td>userLookup.passwordExpiredPropertyName</td><td>'passwordExpired'</td><td>User class password expired field.</td></tr><tr class="table-odd"><td>userLookup.authorityJoinClassName</td><td>'PersonAuthority'</td><td>User/Role many-many join class name.</td></tr><tr class="table-even"><td>authority.className</td><td>'Authority'</td><td>Role class name.</td></tr><tr class="table-odd"><td>authority.nameField</td><td>'authority'</td><td>Role class role name field.</td></tr><tr class="table-even"><td>requestMap.className</td><td>'Requestmap'</td><td>Requestmap class name.</td></tr><tr class="table-odd"><td>requestMap.urlField</td><td>'url'</td><td>Requestmap class URL pattern field.</td></tr><tr class="table-even"><td>requestMap.configAttributeField</td><td>'configAttribute'</td><td>Requestmap class role/token field.</td></tr></table>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

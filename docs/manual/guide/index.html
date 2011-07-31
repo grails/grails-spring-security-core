@@ -1,0 +1,46 @@
+<html>
+    <head>
+        <title>Spring Security Core Plugin 1.2 - Reference Documentation</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Style" charset="utf-8"/>
+        <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    </head>
+    <body class="body">
+        <div id="header">
+            <div class="images"><br/><br/>
+                <a href="http://grails.org" target="_blank"><img alt="The Grails Framework" src="../img/grails.png" border="0"/></a>
+                <span style="right:30px; top:20px; position:absolute;">
+                    <a href="../index.html" target="_top">Frames</a> | <a href="index.html" target="_top">No Frames</a><br/><br/>
+                    <a href="http://springsource.com" target="_blank"><img alt="SpringSource - A Division of VMware" src="../img/springsource-logo.png" border="0"/></a>
+                </span>
+            </div>
+            <div class="message">spring-security-core</div>
+            <h1>Spring Security Core Plugin - Reference Documentation</h1>
+            <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+            <p><strong>Version:</strong> 1.2</p>
+            <em></em>
+        </div>
+
+        <div id="toc">
+            <h2>Table of Contents</h2>
+            <div class="tocItem" style="margin-left:0px"><a href="1 Introduction to the Spring Security Plugin.html">1 Introduction to the Spring Security Plugin</a></div><div class="tocItem" style="margin-left:10px"><a href="1 Introduction to the Spring Security Plugin.html#1.1 Configuration Settings Now in Config.groovy">1.1 Configuration Settings Now in Config.groovy</a></div><div class="tocItem" style="margin-left:10px"><a href="1 Introduction to the Spring Security Plugin.html#1.2 Getting Started">1.2 Getting Started</a></div><div class="tocItem" style="margin-left:0px"><a href="2 Differences Between the Spring Security and Acegi Plugins.html">2 Differences Between the Spring Security and Acegi Plugins</a></div><div class="tocItem" style="margin-left:0px"><a href="3 Migrating from the Acegi Plugin.html">3 Migrating from the Acegi Plugin</a></div><div class="tocItem" style="margin-left:0px"><a href="4 Required and Optional Domain Classes.html">4 Required and Optional Domain Classes</a></div><div class="tocItem" style="margin-left:10px"><a href="4 Required and Optional Domain Classes.html#4.1 Person Class">4.1 Person Class</a></div><div class="tocItem" style="margin-left:10px"><a href="4 Required and Optional Domain Classes.html#4.2 Authority Class">4.2 Authority Class</a></div><div class="tocItem" style="margin-left:10px"><a href="4 Required and Optional Domain Classes.html#4.3 PersonAuthority Class">4.3 PersonAuthority Class</a></div><div class="tocItem" style="margin-left:10px"><a href="4 Required and Optional Domain Classes.html#4.4 Requestmap Class">4.4 Requestmap Class</a></div><div class="tocItem" style="margin-left:0px"><a href="5 Configuring Request Mappings to Secure URLs.html">5 Configuring Request Mappings to Secure URLs</a></div><div class="tocItem" style="margin-left:10px"><a href="5 Configuring Request Mappings to Secure URLs.html#5.1 Defining Secured Annotations">5.1 Defining Secured Annotations</a></div><div class="tocItem" style="margin-left:10px"><a href="5 Configuring Request Mappings to Secure URLs.html#5.2 Simple Map in Config.groovy">5.2 Simple Map in Config.groovy</a></div><div class="tocItem" style="margin-left:10px"><a href="5 Configuring Request Mappings to Secure URLs.html#5.3 Requestmap Instances Stored in the Database">5.3 Requestmap Instances Stored in the Database</a></div><div class="tocItem" style="margin-left:10px"><a href="5 Configuring Request Mappings to Secure URLs.html#5.4 Using Expressions to Create Descriptive, Fine-Grained Rules">5.4 Using Expressions to Create Descriptive, Fine-Grained Rules</a></div><div class="tocItem" style="margin-left:0px"><a href="6 Helper Classes.html">6 Helper Classes</a></div><div class="tocItem" style="margin-left:10px"><a href="6 Helper Classes.html#6.1 SecurityTagLib">6.1 SecurityTagLib</a></div><div class="tocItem" style="margin-left:10px"><a href="6 Helper Classes.html#6.2 SpringSecurityService">6.2 SpringSecurityService</a></div><div class="tocItem" style="margin-left:10px"><a href="6 Helper Classes.html#6.3 SpringSecurityUtils">6.3 SpringSecurityUtils</a></div><div class="tocItem" style="margin-left:0px"><a href="7 Events.html">7 Events</a></div><div class="tocItem" style="margin-left:10px"><a href="7 Events.html#7.1 Event Notification">7.1 Event Notification</a></div><div class="tocItem" style="margin-left:10px"><a href="7 Events.html#7.2 Registering an Event Listener">7.2 Registering an Event Listener</a></div><div class="tocItem" style="margin-left:10px"><a href="7 Events.html#7.3 Registering Callback Closures">7.3 Registering Callback Closures</a></div><div class="tocItem" style="margin-left:0px"><a href="8 User, Authority (Role), and Requestmap Properties.html">8 User, Authority (Role), and Requestmap Properties</a></div><div class="tocItem" style="margin-left:0px"><a href="9 Authentication.html">9 Authentication</a></div><div class="tocItem" style="margin-left:10px"><a href="9 Authentication.html#9.1 Basic and Digest Authentication">9.1 Basic and Digest Authentication</a></div><div class="tocItem" style="margin-left:10px"><a href="9 Authentication.html#9.2 Certificate (X509) Login Authentication">9.2 Certificate (X509) Login Authentication</a></div><div class="tocItem" style="margin-left:10px"><a href="9 Authentication.html#9.3 Remember-Me Cookie">9.3 Remember-Me Cookie</a></div><div class="tocItem" style="margin-left:10px"><a href="9 Authentication.html#9.4 Ajax Authentication">9.4 Ajax Authentication</a></div><div class="tocItem" style="margin-left:0px"><a href="10 Authentication Providers.html">10 Authentication Providers</a></div><div class="tocItem" style="margin-left:0px"><a href="11 Custom UserDetailsService.html">11 Custom UserDetailsService</a></div><div class="tocItem" style="margin-left:0px"><a href="12 Password and Account Protection.html">12 Password and Account Protection</a></div><div class="tocItem" style="margin-left:10px"><a href="12 Password and Account Protection.html#12.1 Password Encryption">12.1 Password Encryption</a></div><div class="tocItem" style="margin-left:10px"><a href="12 Password and Account Protection.html#12.2 Salted Passwords">12.2 Salted Passwords</a></div><div class="tocItem" style="margin-left:10px"><a href="12 Password and Account Protection.html#12.3 Account Locking and Forcing Password Change">12.3 Account Locking and Forcing Password Change</a></div><div class="tocItem" style="margin-left:0px"><a href="13 URL Properties.html">13 URL Properties</a></div><div class="tocItem" style="margin-left:0px"><a href="14 Hierarchical Roles.html">14 Hierarchical Roles</a></div><div class="tocItem" style="margin-left:0px"><a href="15 Switch User.html">15 Switch User</a></div><div class="tocItem" style="margin-left:0px"><a href="16 Filters.html">16 Filters</a></div><div class="tocItem" style="margin-left:0px"><a href="17 Channel Security.html">17 Channel Security</a></div><div class="tocItem" style="margin-left:0px"><a href="18 IP Address Restrictions.html">18 IP Address Restrictions</a></div><div class="tocItem" style="margin-left:0px"><a href="19 Session Fixation Prevention.html">19 Session Fixation Prevention</a></div><div class="tocItem" style="margin-left:0px"><a href="20 Logout Handlers.html">20 Logout Handlers</a></div><div class="tocItem" style="margin-left:0px"><a href="21 Voters.html">21 Voters</a></div><div class="tocItem" style="margin-left:0px"><a href="22 Miscellaneous Properties.html">22 Miscellaneous Properties</a></div><div class="tocItem" style="margin-left:0px"><a href="23 Tutorials.html">23 Tutorials</a></div><div class="tocItem" style="margin-left:10px"><a href="23 Tutorials.html#23.1 Using Controller Annotations to Secure URLs">23.1 Using Controller Annotations to Secure URLs</a></div><div class="tocItem" style="margin-left:10px"><a href="23 Tutorials.html#23.2 Migration From the Acegi Plugin">23.2 Migration From the Acegi Plugin</a></div><div class="tocItem" style="margin-left:0px"><a href="24 Controller MetaClass Methods.html">24 Controller MetaClass Methods</a></div><div class="tocItem" style="margin-left:0px"><a href="25 Internationalization.html">25 Internationalization</a></div>
+        </div>
+        <div id="content">
+            
+        </div>
+        <div id="footer">
+             
+        </div>
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

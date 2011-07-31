@@ -1,0 +1,34 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>Spring Security Core Plugin 1.2 - Reference Documentation</title>
+        <link rel="stylesheet" href="../../css/ref.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    <h1>s2-quickstart</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Creates a user and role class (and optionally a requestmap class) in the specified package. The general format is:<p class="paragraph"/><pre class="bq"><code>
+grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME &#91;REQUESTMAP_CLASS_NAME&#93;</code></pre><p class="paragraph"/><h2>Examples</h2><p class="paragraph"/><pre class="bq"><code>
+grails s2-quickstart com.yourapp User Role</code></pre><p class="paragraph"/><pre class="bq"><code>
+grails s2-quickstart com.yourapp Person Authority Requestmap</code></pre><p class="paragraph"/><h2>Description</h2>
+<ul class="star">
+<li>creates domain classes in <code>grails-app/domain</code></li>
+<li>creates example GSPs and controllers:</li>
+<ul class="star">
+<li><code>grails-app/views/login/auth.gsp</code> - shows a standard username/password login page</li>
+<li><code>grails-app/views/login/denied.gsp</code> - shows a 403 error page</li>
+<li><code>grails-app/controllers/LoginController.groovy</code> - manages login workflow</li>
+<li><code>grails-app/controllers/LogoutController.groovy</code> - logs users out of the application</li>
+</ul></ul><p class="paragraph"/>
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

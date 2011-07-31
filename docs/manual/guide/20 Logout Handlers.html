@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>20 Logout Handlers</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    <h1><a name="20 Logout Handlers">20 Logout Handlers</a></h1>You register a list of logout handlers by implementing the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/logout/LogoutHandler.html" target="blank">LogoutHandler</a> interface. The list is called when a user explicitly logs out.<p class="paragraph"/>By default, a <code>securityContextLogoutHandler</code> bean is registered to clear the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/context/SecurityContextHolder.html" target="blank">SecurityContextHolder</a>. Also, unless you are using Facebook or OpenID, <code>rememberMeServices</code> bean is registered to reset your cookie. (Facebook and OpenID authenticate externally so we don't have access to the password to create a remember-me cookie.) If you are using Facebook, a <code>facebookLogoutHandler</code> is registered to reset its session cookies.<p class="paragraph"/>To customize this list, you define a <code>logout.handlerNames</code> attribute with a list of bean names.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>logout.handlerNames</td><td>&#91;'rememberMeServices', 'securityContextLogoutHandler'&#93;</td><td>Logout handler bean names.</td></tr></table><p class="paragraph"/>The beans must be declared either by the plugin or by you in <code>resources.groovy</code> or <code>resources.xml</code>. For example, suppose you have a custom <code>MyLogoutHandler</code> in <code>resources.groovy</code>:<p class="paragraph"/><div class="code"><pre>beans = &#123;
+   myLogoutHandler(com.foo.MyLogoutHandler) &#123;
+      // attributes
+   &#125;
+&#125;</pre></div><p class="paragraph"/>You register it in <code>grails-app/conf/Config.groovy</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.logout.handlerNames = &#91;
+   'rememberMeServices', 'securityContextLogoutHandler', 'myLogoutHandler'
+&#93;</pre></div>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

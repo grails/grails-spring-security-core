@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>6.1 SecurityTagLib</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    The plugin includes GSP tags to support conditional display based on whether the user is authenticated, and/or has the required role to perform a particular action. These tags are in the <code>sec</code> namespace and are implemented in <code>grails.plugins.springsecurity.SecurityTagLib</code>.<p class="paragraph"/><h4>ifLoggedIn</h4>
+Displays the inner body content if the user is authenticated.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifLoggedIn&#62;
+Welcome Back!
+&#60;/sec:ifLoggedIn&#62;</pre></div><p class="paragraph"/><h4>ifNotLoggedIn</h4>
+Displays the inner body content if the user is not authenticated.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifNotLoggedIn&#62;
+&#60;g:link controller='login' action='auth'&#62;Login&#60;/g:link&#62;
+&#60;/sec:ifNotLoggedIn&#62;</pre></div><p class="paragraph"/><h4>ifAllGranted</h4>
+Displays the inner body content only if all of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifAllGranted roles=<span class="java&#45;quote">"ROLE_ADMIN,ROLE_SUPERVISOR"</span>&#62;secure stuff here&#60;/sec:ifAllGranted&#62;</pre></div><p class="paragraph"/><h4>ifAnyGranted</h4>
+Displays the inner body content if at least one of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifAnyGranted roles=<span class="java&#45;quote">"ROLE_ADMIN,ROLE_SUPERVISOR"</span>&#62;secure stuff here&#60;/sec:ifAnyGranted&#62;</pre></div><p class="paragraph"/><h4>ifNotGranted</h4>
+Displays the inner body content if none of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifNotGranted roles=<span class="java&#45;quote">"ROLE_USER"</span>&#62;non&#45;user stuff here&#60;/sec:ifNotGranted&#62;</pre></div><p class="paragraph"/><h4> loggedInUserInfo</h4>
+Displays the value of the specified authentication field if logged in. For example, to show the username property:<p class="paragraph"/><div class="code"><pre>&#60;sec:loggedInUserInfo field=<span class="java&#45;quote">"username"</span>/&#62;</pre></div><p class="paragraph"/>If you have customized the authentication to add a <code>fullName</code> property, you access it as follows:<p class="paragraph"/><div class="code"><pre>Welcome Back &#60;sec:loggedInUserInfo field=<span class="java&#45;quote">"fullName"</span>/&#62;</pre></div><p class="paragraph"/><h4> username</h4>
+Displays the value of the authentication <code>username</code> field if logged in.<p class="paragraph"/><div class="code"><pre>&#60;sec:ifLoggedIn&#62;
+Welcome Back &#60;sec:username/&#62;!
+&#60;/sec:ifLoggedIn&#62;
+&#60;sec:ifNotLoggedIn&#62;
+&#60;g:link controller='login' action='auth'&#62;Login&#60;/g:link&#62;
+&#60;/sec:ifNotLoggedIn&#62;</pre></div><p class="paragraph"/><h4>ifSwitched</h4>
+Displays the inner body content only if the current user switched from another user. (See also <a href="../guide/single.html#15 Switch User" class="guide">Switch User</a>.)<p class="paragraph"/><div class="code"><pre>&#60;sec:ifLoggedIn&#62;
+Logged in as &#60;sec:username/&#62;
+&#60;/sec:ifLoggedIn&#62;<p class="paragraph"/>&#60;sec:ifSwitched&#62;
+&#60;a href='$&#123;request.contextPath&#125;/j_spring_security_exit_user'&#62;
+   Resume as &#60;sec:switchedUserOriginalUsername/&#62;
+&#60;/a&#62;
+&#60;/sec:ifSwitched&#62;<p class="paragraph"/>&#60;sec:ifNotSwitched&#62;<p class="paragraph"/>   &#60;sec:ifAllGranted roles='ROLE_SWITCH_USER'&#62;<p class="paragraph"/>   &#60;form action='$&#123;request.contextPath&#125;/j_spring_security_switch_user' method='POST'&#62;<p class="paragraph"/>      Switch to user: &#60;input type='text' name='j_username'/&#62;&#60;br/&#62;<p class="paragraph"/>      &#60;input type='submit' value='Switch'/&#62; &#60;/form&#62;<p class="paragraph"/>   &#60;/sec:ifAllGranted&#62;<p class="paragraph"/>&#60;/sec:ifNotSwitched&#62;</pre></div><p class="paragraph"/><h4>ifNotSwitched</h4>
+Displays the inner body content only if the current user has not switched from another user.<p class="paragraph"/><h4>switchedUserOriginalUsername</h4>
+Renders the original user's username if the current user switched from another user.<p class="paragraph"/><div class="code"><pre>&#60;sec:ifSwitched&#62;
+&#60;a href='$&#123;request.contextPath&#125;/j_spring_security_exit_user'&#62;
+   Resume as &#60;sec:switchedUserOriginalUsername/&#62;
+&#60;/a&#62;
+&#60;/sec:ifSwitched&#62;</pre></div><p class="paragraph"/><h4>access</h4><p class="paragraph"/>Renders the body if the specified expression evaluates to <code>true</code> or specified URL is allowed.<p class="paragraph"/><div class="code"><pre>&#60;sec:access expression=<span class="java&#45;quote">"hasRole('ROLE_USER')"</span>&#62;<p class="paragraph"/>You're a user<p class="paragraph"/>&#60;/sec:access&#62;</pre></div><p class="paragraph"/><div class="code"><pre>&#60;sec:access url=<span class="java&#45;quote">"/admin/user"</span>&#62;<p class="paragraph"/>&#60;g:link controller='admin' action='user'&#62;Manage Users&#60;/g:link&#62;<p class="paragraph"/>&#60;/sec:access&#62;</pre></div><p class="paragraph"/>You can also guard access to links generated from controller and action names or named URL mappings instead of hard-coding the values, for example<p class="paragraph"/><div class="code"><pre>&#60;sec:access controller='admin' action='user'&#62;<p class="paragraph"/>&#60;g:link controller='admin' action='user'&#62;Manage Users&#60;/g:link&#62;<p class="paragraph"/>&#60;/sec:access&#62;</pre></div><p class="paragraph"/>or if you have a named URL mapping you can refer to that:<p class="paragraph"/><div class="code"><pre>&#60;sec:access mapping='manageUsers'&#62;<p class="paragraph"/>&#60;g:link mapping='manageUsers'&#62;Manage Users&#60;/g:link&#62;<p class="paragraph"/>&#60;/sec:access&#62;</pre></div><p class="paragraph"/>For even more control of the generated URL (still avoiding hard-coding) you can use <code>createLink</code> to build the URL, for example<p class="paragraph"/><div class="code"><pre>&#60;sec:access url='$&#123;createLink(controller: 'admin', action: 'user', base: <span class="java&#45;quote">"/"</span>)&#125;'&#62;<p class="paragraph"/>&#60;g:link controller='admin' action='user'&#62;Manage Users&#60;/g:link&#62;<p class="paragraph"/>&#60;/sec:access&#62;</pre></div><p class="paragraph"/>Be sure to include the <code>base: "/"</code> attribute in this case to avoid appending the context name to the URL.<p class="paragraph"/><h4>noAccess</h4><p class="paragraph"/>Renders the body if the specified expression evaluates to <code>false</code> or URL isn't allowed.<p class="paragraph"/><div class="code"><pre>&#60;sec:noAccess expression=<span class="java&#45;quote">"hasRole('ROLE_USER')"</span>&#62;<p class="paragraph"/>You're not a user<p class="paragraph"/>&#60;/sec:noAccess&#62;</pre></div>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

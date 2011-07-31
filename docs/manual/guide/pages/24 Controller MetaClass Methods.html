@@ -1,0 +1,52 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>24 Controller MetaClass Methods</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    The plugin registers some convenience methods into all controllers in your application. All are accessor methods, so they can be called as methods or properties. They include:<p class="paragraph"/><h4>isLoggedIn</h4><p class="paragraph"/>Returns <code>true</code> if there is an authenticated user.<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def someAction = &#123;
+      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         &#8230;
+      &#125;<p class="paragraph"/>      ...<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (!isLoggedIn()) &#123;
+         &#8230;
+      &#125;<p class="paragraph"/>      // or<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (loggedIn) &#123;
+         &#8230;
+      &#125;<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (!loggedIn) &#123;
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>getPrincipal</h4><p class="paragraph"/>Retrieves the current authenticated user's Principal (a <code>GrailsUser</code> instance unless you've customized this) or <code>null</code> if not authenticated.<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def someAction = &#123;
+      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> username = getPrincipal().username
+         &#8230;
+      &#125;<p class="paragraph"/>      // or<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> username = principal.username
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>getAuthenticatedUser</h4><p class="paragraph"/>Loads the user domain class instance from the database that corresponds to the currently authenticated user, or <code>null</code> if not authenticated. This is the equivalent of adding a dependency injection for <code>springSecurityService</code> and calling <code>PersonDomainClassName.get(springSecurityService.principal.id)</code> (the typical way that this is often done).<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def someAction = &#123;
+      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> email = getAuthenticatedUser().email
+         &#8230;
+      &#125;<p class="paragraph"/>      // or<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> email = authenticatedUser.email
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>

@@ -1,0 +1,59 @@
+<html>
+    <head>
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
+        <title>4.3 PersonAuthority Class</title>
+        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
+    </head>
+    <body class="body">
+    The typical approach to mapping the relationship between 'person' and 'authority' is a many-to-many. Users have multiple roles, and roles are shared by multiple users. This approach can be problematic in Grails, because a popular role, for example, <code>ROLE_USER</code>, will be granted to many users in your application. GORM uses collections to manage adding and removing related instances and maps many-to-many relationships bidirectionally. Granting a role to a user requires loading all  existing users who have that role because the collection is a <code>Set</code>. So even though no uniqueness concerns may exist, Hibernate loads them all to enforce uniqueness. The recommended approach in the plugin is to map a domain class to the join table that manages the many-to-many, and using that to grant and revoke roles to users.<p class="paragraph"/>Like the other domain classes, this class is generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>class UserRole <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   User user
+   Role role<p class="paragraph"/>   <span class="java&#45;object">boolean</span> equals(other) &#123;
+      <span class="java&#45;keyword">if</span> (!(other <span class="java&#45;keyword">instanceof</span> UserRole)) &#123;
+         <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
+      &#125;<p class="paragraph"/>      other.user?.id == user?.id &#38;&#38;
+         other.role?.id == role?.id
+   &#125;<p class="paragraph"/>   <span class="java&#45;object">int</span> hashCode() &#123;
+      def builder = <span class="java&#45;keyword">new</span> HashCodeBuilder()
+      <span class="java&#45;keyword">if</span> (user) builder.append(user.id)
+      <span class="java&#45;keyword">if</span> (role) builder.append(role.id)
+      builder.toHashCode()
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole get(<span class="java&#45;object">long</span> userId, <span class="java&#45;object">long</span> roleId) &#123;
+      find 'from UserRole where user.id=:userId and role.id=:roleId',
+         &#91;userId: userId, roleId: roleId&#93;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole create(User user, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      <span class="java&#45;keyword">new</span> UserRole(user: user, role: role).save(flush: flush, insert: <span class="java&#45;keyword">true</span>)
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User user, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      UserRole instance = UserRole.findByUserAndRole(user, role)
+      <span class="java&#45;keyword">if</span> (!instance) &#123;
+         <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
+      &#125;<p class="paragraph"/>      instance.delete(flush: flush)
+      <span class="java&#45;keyword">true</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(User user) &#123;
+      executeUpdate 'DELETE FROM UserRole WHERE user=:user', &#91;user: user&#93;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      id composite: &#91;'role', 'user'&#93;
+      version <span class="java&#45;keyword">false</span>
+   &#125;
+&#125;</pre></div><p class="paragraph"/>The helper methods make it easy to grant or revoke roles. Assuming you have already loaded a user and a role, you grant the role to the user as follows:<p class="paragraph"/><div class="code"><pre>User user = &#8230;
+Role role = &#8230;
+UserRole.create user, role</pre></div><p class="paragraph"/>Or by using the 3-parameter version to trigger a flush:<p class="paragraph"/><div class="code"><pre>User user = &#8230;
+Role role = &#8230;
+UserRole.create user, role, <span class="java&#45;keyword">true</span></pre></div><p class="paragraph"/>Revoking a role is similar:<p class="paragraph"/><div class="code"><pre>User user = &#8230;
+Role role = &#8230;
+UserRole.remove user, role</pre></div><p class="paragraph"/>Or:<p class="paragraph"/><div class="code"><pre>User user = &#8230;
+Role role = &#8230;
+UserRole.remove user, role, <span class="java&#45;keyword">true</span></pre></div><p class="paragraph"/>The class name is the only configurable attribute:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>userLookup.authorityJoinClassName</td><td>'PersonAuthority'</td><td>User/Role many-many join class name</td></tr></table>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
