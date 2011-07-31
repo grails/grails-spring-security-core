@@ -129,6 +129,13 @@ class SpringSecurityCoreGrailsPlugin {
 	String description = 'Spring Security Core plugin'
 	String documentation = 'http://grails.org/plugin/spring-security-core'
 
+	String license = 'APACHE'
+	def organization = [ name: 'SpringSource', url: 'http://www.springsource.org/' ]
+	def developers = [
+		 [ name: 'Burt Beckwith', email: 'beckwithb@vmware.com' ] ]
+	def issueManagement = [ system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE' ]
+	def scm = [ url: 'https://github.com/grails-plugins/grails-spring-security-core' ]
+
 	def doWithWebDescriptor = { xml ->
 
 		SpringSecurityUtils.resetSecurityConfig()
