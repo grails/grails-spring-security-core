@@ -1,0 +1,39 @@
+You can choose among the following approaches to configuring request mappings for secure application URLs. The goal is to map URL patterns to the roles required to access those URLs.
+* [@\@Secured@ annotations (default approach)|guide:5.1 Defining Secured Annotations]
+* [A simple Map in @Config.groovy@|guide:5.2 Simple Map in Config.groovy]
+* [@Requestmap@ domain class instances stored in the database|guide:5.3 Requestmap Instances Stored in the Database]
+
+You can only use one method at a time. You configure it with the @securityConfigType@ attribute; the value has to be an @SecurityConfigType@ enum value or the name of the enum as a String.
+
+h4. Pessimistic Lockdown
+Most applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it makes more sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role configuration.
+
+To use the pessimistic approach, add this line to @grails-app/conf/Config.groovy@:
+
+{code}
+grails.plugins.springsecurity.rejectIfNoRule = true
+{code}
+
+Any requested URL that does not have a corresponding rule will be denied to all users.
+
+h4. URLs and Authorities
+
+In each approach you configure a mapping for a URL pattern to the role(s) that are required to access those URLs, for example, @/admin/user/\*\*@ requires @ROLE_ADMIN@. In addition, you can combine the role(s) with tokens such as IS_AUTHENTICATED_ANONYMOUSLY, IS_AUTHENTICATED_REMEMBERED, and IS_AUTHENTICATED_FULLY. One or more [Voter|guide:21 Voters]s will process any tokens and enforce a rule based on them:
+* @IS_AUTHENTICATED_ANONYMOUSLY@
+** signifies that anyone can access this URL. By default the @AnonymousAuthenticationFilter@ ensures an 'anonymous' @Authentication@ with no roles so that every user has an authentication. The token accepts any authentication, even anonymous.
+* @IS_AUTHENTICATED_REMEMBERED@
+** requires the user to be authenticated through a remember-me cookie or an explicit login.
+* @IS_AUTHENTICATED_FULLY@
+** requires the user to be fully authenticated with an explicit login.
+
+With @IS_AUTHENTICATED_FULLY@ you can implement a security scheme whereby users can check a remember-me checkbox during login and be auto-authenticated each time they return to your site, but must still log in with a password for some parts of the site. For example, allow regular browsing and adding items to a shopping cart with only a cookie, but require an explicit login to check out or view purchase history.
+
+For more information on @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, and @IS_AUTHENTICATED_ANONYMOUSLY@, see the Javadoc for [AuthenticatedVoter|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/vote/AuthenticatedVoter.html]
+
+h4. Comparing the Approaches
+
+Each approach has its advantages and disadvantages. Annotations and the @Config.groovy@ Map are less flexible because they are configured once in the code and you can update them only by restarting the application (in prod mode anyway). In practice this limitation is minor, because security mappings for most applications are unlikely to change at runtime.
+
+On the other hand, storing @Requestmap@ entries enables runtime-configurability. This approach gives you a core set of rules populated at application startup that you can edit, add to, and delete as needed. However, it separates the security rules from the application code, which is less convenient than having the rules defined in @grails-app/conf/Config.groovy@ or in the applicable controllers using annotations.
+
+URLs must be mapped in lowercase if you use the @Requestmap@ or @grails-app/conf/Config.groovy@ map approaches. For example, if you have a FooBarController, its urls will be of the form /fooBar/list, /fooBar/create, and so on, but these must be mapped as /foobar/, /foobar/list, /foobar/create. This mapping is handled automatically for you if you use annotations.

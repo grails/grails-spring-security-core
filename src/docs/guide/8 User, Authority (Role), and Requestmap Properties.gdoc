@@ -1,0 +1,19 @@
+Properties you are most likely to be override are the @User@ and @Authority@ (and @Requestmap@ if you use the database to store mappings) class and field names.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+userLookup.userDomainClassName | 'Person' | User class name.
+userLookup.usernamePropertyName | 'username' | User class username field.
+userLookup.passwordPropertyName | 'password' | User class password field.
+userLookup.authoritiesPropertyName | 'authorities' | User class role collection field.
+userLookup.enabledPropertyName | 'enabled' | User class enabled field.
+userLookup.accountExpiredPropertyName | 'accountExpired' | User class account expired field.
+userLookup.accountLockedPropertyName | 'accountLocked' | User class account locked field.
+userLookup.passwordExpiredPropertyName | 'passwordExpired' | User class password expired field.
+userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name.
+authority.className | 'Authority' | Role class name.
+authority.nameField | 'authority' | Role class role name field.
+requestMap.className | 'Requestmap' | Requestmap class name.
+requestMap.urlField | 'url' | Requestmap class URL pattern field.
+requestMap.configAttributeField | 'configAttribute' | Requestmap class role/token field.
+{table}

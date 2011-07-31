@@ -1,0 +1,26 @@
+Ordinarily you can guard URLs sufficiently with roles, but the plugin provides an extra layer of security with its ability to restrict by IP address.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+ipRestrictions | none | Map of URL patterns to IP address patterns.
+{table}
+
+For example, make an admin-only part of your site accessible only from IP addresses of the local LAN or VPN, such as 192.168.1.xxx or 10.xxx.xxx.xxx. You can also set this up at your firewall and/or routers, but it is convenient to encapsulate it within your application.
+
+To use this feature, specify an @ipRestrictions@ configuration map, where the keys are URL patterns, and the values are IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use [CIDR|http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
+
+{code}
+grails.plugins.springsecurity.ipRestrictions = [
+   '/pattern1/**': '123.234.345.456',
+   '/pattern2/**': '10.0.0.0/8',
+   '/pattern3/**': ['10.10.200.42', '10.10.200.63']
+]
+{code}
+
+@pattern1@ URLs can be accessed only from the external address 123.234.345.456, @pattern2@ URLs can be accessed only from a 10.xxx.xxx.xxx intranet address, and @pattern3@ URLs can be accessed only from 10.10.200.42 or 10.10.200.63. All other URL patterns are accessible from any IP address.
+
+All addresses can always be accessed from localhost regardless of IP pattern, primarily to support local development mode.
+
+{note}
+You cannot compare IPv4 and IPv6 addresses, so if your server supports both, you need to specify the IP patterns using the address format that is actually being used. Otherwise the filter throws exceptions. One option is to set the @java.net.preferIPv4Stack@ system property, for example, by adding it to @JAVA_OPTS@ or @GRAILS_OPTS@ as @-Djava.net.preferIPv4Stack=true@.
+{note}

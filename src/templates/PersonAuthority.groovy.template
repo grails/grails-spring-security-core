@@ -1,0 +1,57 @@
+package ${packageName}
+
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+class ${userClassName}${roleClassName} implements Serializable {
+
+	${userClassName} ${userClassProperty}
+	${roleClassName} ${roleClassProperty}
+
+	boolean equals(other) {
+		if (!(other instanceof ${userClassName}${roleClassName})) {
+			return false
+		}
+
+		other.${userClassProperty}?.id == ${userClassProperty}?.id &&
+			other.${roleClassProperty}?.id == ${roleClassProperty}?.id
+	}
+
+	int hashCode() {
+		def builder = new HashCodeBuilder()
+		if ($userClassProperty) builder.append(${userClassProperty}.id)
+		if ($roleClassProperty) builder.append(${roleClassProperty}.id)
+		builder.toHashCode()
+	}
+
+	static ${userClassName}${roleClassName} get(long ${userClassProperty}Id, long ${roleClassProperty}Id) {
+		find 'from ${userClassName}${roleClassName} where ${userClassProperty}.id=:${userClassProperty}Id and ${roleClassProperty}.id=:${roleClassProperty}Id',
+			[${userClassProperty}Id: ${userClassProperty}Id, ${roleClassProperty}Id: ${roleClassProperty}Id]
+	}
+
+	static ${userClassName}${roleClassName} create(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
+		new ${userClassName}${roleClassName}(${userClassProperty}: ${userClassProperty}, ${roleClassProperty}: ${roleClassProperty}).save(flush: flush, insert: true)
+	}
+
+	static boolean remove(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
+		${userClassName}${roleClassName} instance = ${userClassName}${roleClassName}.findBy${userClassName}And${roleClassName}(${userClassProperty}, ${roleClassProperty})
+		if (!instance) {
+			return false
+		}
+
+		instance.delete(flush: flush)
+		true
+	}
+
+	static void removeAll(${userClassName} ${userClassProperty}) {
+		executeUpdate 'DELETE FROM ${userClassName}${roleClassName} WHERE ${userClassProperty}=:${userClassProperty}', [${userClassProperty}: ${userClassProperty}]
+	}
+
+	static void removeAll(${roleClassName} ${roleClassProperty}) {
+		executeUpdate 'DELETE FROM ${userClassName}${roleClassName} WHERE ${roleClassProperty}=:${roleClassProperty}', [${roleClassProperty}: ${roleClassProperty}]
+	}
+
+	static mapping = {
+		id composite: ['${roleClassProperty}', '${userClassProperty}']
+		version false
+	}
+}

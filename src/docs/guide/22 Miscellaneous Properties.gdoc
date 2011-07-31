@@ -1,0 +1,25 @@
+{table}
+*Property* | *Default Value* | *Meaning*
+active | @true@ | Whether the plugin is enabled.
+rejectIfNoRule | @false@ | 'strict' mode where an explicit grant is required to access any resource; if @true@ make sure to allow @IS_AUTHENTICATED_ANONYMOUSLY@ for '/', '/js/\*\*', '/css/\*\*', '/images/\*\*', '/login/\*\*', '/logout/\*\*', and so on.
+anon.key | 'foo' | anonymousProcessingFilter key.
+anon.userAttribute | 'anonymousUser, ROLE_ANONYMOUS' | anonymousProcessingFilter username and role.
+atr.anonymousClass | [AnonymousAuthenticationToken|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/AnonymousAuthenticationToken.html] | Anonymous token class.
+useHttpSessionEventPublisher | @false@ | If @true@, an [HttpSessionEventPublisher|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/session/HttpSessionEventPublisher.html] will be configured.
+cacheUsers | @false@ | If @true@, logins are cached using an @EhCache@. See [Account Locking and Forcing Password Change, under User Cache|guide:12.3 Account Locking and Forcing Password Change].
+useSecurityEventListener | @false@ | If @true@, configure @SecurityEventListener@. See [Events|guide:7 Events].
+dao.reflectionSaltSourceProperty | none | Which property to use for the reflection-based salt source. See [Salted Passwords|guide:12.2 Salted Passwords]
+dao.hideUserNotFoundExceptions | @true@ | if @true@, throws a new @BadCredentialsException@ if a username is not found or the password is incorrect, but if @false@ re-throws the @UsernameNotFoundException@ thrown by @UserDetailsService@ (considered less secure than throwing @BadCredentialsException@ for both exceptions)
+requestCache.onlyOnGet | @false@ | Whether to cache only a [SavedRequest|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/savedrequest/SavedRequest.html] on GET requests.
+requestCache.createSession | @true@ | Whether caching @SavedRequest@ can trigger the creation of a session.
+authenticationDetails.authClass | [WebAuthenticationDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/web/authentication/WebAuthenticationDetails.html] | The @Authentication@ details class to use.
+roleHierarchy | none | Hierarchical role definition. See [Hierarchical Role Definition|guide:14 Hierarchical Roles].
+voterNames | \['authenticatedVoter', 'roleVoter'\] | Bean names of voters. See [Voters|guide:21 Voters].
+providerNames | \['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'\] | Bean names of authentication providers. See [Authentication Providers|guide:10 Authentication Providers].
+securityConfigType | Type of request mapping to use | One of "Annotation", "Requestmap", or "InterceptUrlMap" (or the corresponding enum value from @SecurityConfigType@). See [Configuring Request Mappings to Secure URLs|guide:5 Configuring Request Mappings to Secure URLs].
+controllerAnnotations.matcher | 'ant' | Use an Ant-style URL matcher ('ant') or Regex ('regex').
+controllerAnnotations.lowercase | @true@ | Whether to do URL comparisons using lowercase.
+controllerAnnotations.staticRules | none | Extra rules that cannot be mapped using annotations.
+interceptUrlMap | none | Request mapping definition when using "InterceptUrlMap". See [Simple Map in Config.groovy|guide:5.2 Simple Map in Config.groovy].
+registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events.
+{table}

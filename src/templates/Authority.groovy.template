@@ -1,0 +1,14 @@
+package ${packageName}
+
+class ${roleClassName} {
+
+	String authority
+
+	static mapping = {
+		cache true
+	}
+
+	static constraints = {
+		authority blank: false, unique: true
+	}
+}

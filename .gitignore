@@ -1,0 +1,7 @@
+/cobertura.ser
+stacktrace.log
+/target
+/docs
+/grails-spring-security-core-*.zip
+/testapps.config.groovy
+/plugin.xml

@@ -1,0 +1,6 @@
+The project assumes that jar files are available in the Ivy cache. Run 'ant' to package the plugin and this will resolved dependencies.
+
+STS:
+- you'll need to create the IVY_CACHE variable to point at your ~/.ivy2/cache folder so the classpath jars resolve
+- if you have the Spring Security distro you can set the SPRING_SECURITY_SOURCE variable to point at the dist folder so the source path resolves correctly for the classpath jars
+

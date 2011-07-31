@@ -1,0 +1,21 @@
+Use channel security to configure which URLs require HTTP and which require HTTPS.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+portMapper.httpPort | 8080 | HTTP port your application uses.
+portMapper.httpsPort | 8443 | HTTPS port your application uses.
+secureChannel.definition | none | Map of URL pattern to channel rule
+{table}
+
+Build a Map under the @secureChannel.definition@ key, where the keys are URL patterns, and the values are one of @REQUIRES_SECURE_CHANNEL@, @REQUIRES_INSECURE_CHANNEL@, or @ANY_CHANNEL@:
+
+{code}
+grails.plugins.springsecurity.secureChannel.definition = [
+   '/login/**':         'REQUIRES_SECURE_CHANNEL',
+   '/maps/**':          'REQUIRES_INSECURE_CHANNEL',
+   '/images/login/**':  'REQUIRES_SECURE_CHANNEL'
+   '/images/**':        'ANY_CHANNEL'
+]
+{code}
+
+URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, @/images/login/\*\*@ is more specific than @/images/\*\*@, so it appears first in the configuration.
