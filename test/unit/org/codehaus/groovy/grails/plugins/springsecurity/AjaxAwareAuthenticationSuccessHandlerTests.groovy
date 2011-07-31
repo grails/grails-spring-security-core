@@ -15,10 +15,9 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.RedirectStrategy
 import org.springframework.security.web.savedrequest.RequestCache

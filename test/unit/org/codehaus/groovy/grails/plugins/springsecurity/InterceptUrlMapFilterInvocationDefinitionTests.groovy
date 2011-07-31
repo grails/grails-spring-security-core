@@ -15,11 +15,7 @@
 package org.codehaus.groovy.grails.plugins.springsecurity
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-import org.codehaus.groovy.grails.commons.GrailsClass
-import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
-import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
-import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.springframework.mock.web.MockFilterChain

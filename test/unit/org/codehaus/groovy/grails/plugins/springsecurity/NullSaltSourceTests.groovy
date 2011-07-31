@@ -14,7 +14,6 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.User
 
