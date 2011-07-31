@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import grails.plugins.springsecurity.BCryptPasswordEncoder
 import grails.plugins.springsecurity.DigestAuthPasswordEncoder
 
 import javax.servlet.Filter
@@ -374,9 +375,14 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		/** passwordEncoder */
-		passwordEncoder(MessageDigestPasswordEncoder, conf.password.algorithm) {
+		if (conf.password.algorithm == 'bcrypt') {
+			passwordEncoder(BCryptPasswordEncoder)
+		}
+		else {
+			passwordEncoder(MessageDigestPasswordEncoder, conf.password.algorithm) {
 			if (conf.password.encodeHashAsBase64) {
-				encodeHashAsBase64 = true
+					encodeHashAsBase64 = true
+				}
 			}
 		}
 

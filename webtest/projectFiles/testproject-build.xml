@@ -9,11 +9,12 @@
 		<exec executable='${grails}' failonerror='true'><arg value='clean'/></exec>
 	</target>
 
-	<target name='test-static'     description='Run Static tests'     depends='clean, init-static, test-app' />
+	<target name='test-static'     description='Run Static tests'     depends='clean, init-static,     test-app' />
 	<target name='test-annotation' description='Run Annotation tests' depends='clean, init-annotation, test-app' />
 	<target name='test-requestmap' description='Run Requestmap tests' depends='clean, init-requestmap, test-app' />
-	<target name='test-basic'      description='Run BasicAuth tests'  depends='clean, init-basic, test-app' />
-	<target name='test-misc'       description='Run misc tests'       depends='clean, init-misc, test-app' />
+	<target name='test-basic'      description='Run BasicAuth tests'  depends='clean, init-basic,      test-app' />
+	<target name='test-misc'       description='Run misc tests'       depends='clean, init-misc,       test-app' />
+	<target name='test-bcrypt'     description='Run BCrypt tests'     depends='clean, init-bcrypt,     test-app' />
 
 	<target name='init-static'>
 
@@ -37,6 +38,7 @@ grails.plugins.springsecurity.filterChain.chainMap = [:]
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
+grails.plugins.springsecurity.password.algorithm = 'SHA-256'
 
 ]]></echo>
 
@@ -59,6 +61,7 @@ grails.plugins.springsecurity.filterChain.chainMap = [:]
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
+grails.plugins.springsecurity.password.algorithm = 'SHA-256'
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -79,6 +82,7 @@ grails.plugins.springsecurity.filterChain.chainMap = [:]
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
+grails.plugins.springsecurity.password.algorithm = 'SHA-256'
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -104,6 +108,7 @@ grails.plugins.springsecurity.filterChain.chainMap = [
 grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
 grails.plugins.springsecurity.roleHierarchy = ''
 grails.plugins.springsecurity.useSwitchUserFilter = false
+grails.plugins.springsecurity.password.algorithm = 'SHA-256'
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -134,10 +139,29 @@ grails.plugins.springsecurity.failureHandler.exceptionMappings = [
 // reset settings from other test runs
 grails.plugins.springsecurity.useBasicAuth = false
 grails.plugins.springsecurity.filterChain.chainMap = [:]
+grails.plugins.springsecurity.password.algorithm = 'SHA-256'
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
 grails.testing.patterns = ["Misc", "Disable", "Taglib"]
+]]></echo>
+	</target>
+
+	<target name='init-bcrypt'>
+
+		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
+
+		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
+grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Annotation
+grails.plugins.springsecurity.password.algorithm = 'bcrypt'
+
+// reset settings from other test runs
+grails.plugins.springsecurity.useBasicAuth = false
+grails.plugins.springsecurity.filterChain.chainMap = [:]
+]]></echo>
+
+		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
+grails.testing.patterns = ["BCrypt"]
 ]]></echo>
 	</target>
 
@@ -155,6 +179,7 @@ grails.testing.patterns = ["Misc", "Disable", "Taglib"]
 		<delete dir='target/test-reports-requestmap'/>
 		<delete dir='target/test-reports-basic'/>
 		<delete dir='target/test-reports-misc'/>
+		<delete dir='target/test-reports-bcrypt'/>
 
 		<antcall target='test-static' inheritAll='false'/>
 		<move file='target/test-reports' tofile='target/test-reports-static'/>
@@ -170,6 +195,9 @@ grails.testing.patterns = ["Misc", "Disable", "Taglib"]
 
 		<antcall target='test-misc' inheritAll='false'/>
 		<move file='target/test-reports' tofile='target/test-reports-misc'/>
+
+		<antcall target='test-bcrypt' inheritAll='false'/>
+		<move file='target/test-reports' tofile='target/test-reports-bcrypt'/>
 
 	</target>
 
