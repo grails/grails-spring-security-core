@@ -47,7 +47,13 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	 */
 	UserDetails loadUserByUsername(String username, boolean loadRoles) throws UsernameNotFoundException {
 		def conf = SpringSecurityUtils.securityConfig
-		Class<?> User = grailsApplication.getDomainClass(conf.userLookup.userDomainClassName).clazz
+		String userClassName = conf.userLookup.userDomainClassName
+		def dc = grailsApplication.getDomainClass(userClassName)
+		if (!dc) {
+			throw new RuntimeException("The specified user domain class '$userClassName' is not a domain class")
+		}
+
+		Class<?> User = dc.clazz
 
 		User.withTransaction { status ->
 			def user = User.findWhere((conf.userLookup.usernamePropertyName): username)

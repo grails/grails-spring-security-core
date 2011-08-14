@@ -642,7 +642,11 @@ to default to 'Annotation'; setting value to 'Annotation'
 			mc.getAuthenticatedUser = { ->
 				if (!ctx.springSecurityService.isLoggedIn()) return null
 				String userClassName = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-				Class User = ctx.grailsApplication.getDomainClass(userClassName).clazz
+				def dc = ctx.grailsApplication.getDomainClass(userClassName)
+				if (!dc) {
+					throw new RuntimeException("The specified user domain class '$userClassName' is not a domain class")
+				}
+				Class User = dc.clazz
 				User.get SCH.context.authentication.principal.id
 			}
 		}
