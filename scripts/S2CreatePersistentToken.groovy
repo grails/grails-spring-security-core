@@ -83,7 +83,7 @@ private parseArgs() {
 		return args[0]
 	}
 
-	errorMessage message: USAGE
+	errorMessage USAGE
 	null
 }
 

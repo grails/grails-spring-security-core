@@ -47,7 +47,7 @@ private void installPlugins() {
 	if (!grailsVersion.startsWith('1')) {
 		contents = contents.replace('//mavenRepo "http://repository.jboss.com/maven2/"', """
 def localPluginResolver = new org.apache.ivy.plugins.resolver.FileSystemResolver()
-String path = new File('$testprojectRoot').absolutePath
+String path = new File('$springSecurityCorePluginDir').absolutePath
 localPluginResolver.addIvyPattern("\${path}/grails-[module]-[revision](-[classifier]).xml")
 localPluginResolver.addArtifactPattern "\${path}/grails-[module]-[revision](-[classifier]).[ext]"
 localPluginResolver.local = true
