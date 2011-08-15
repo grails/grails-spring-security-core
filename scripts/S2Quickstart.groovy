@@ -37,7 +37,7 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	depends(checkVersion, configureProxy, packageApp, classpath)
 
 	if (!configure()) {
-		return
+		return 1
 	}
 	createDomains()
 	copyControllersAndViews()
