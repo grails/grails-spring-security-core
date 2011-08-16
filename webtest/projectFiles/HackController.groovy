@@ -1,4 +1,5 @@
 import com.testapp.TestUser
+import grails.util.Metadata
 
 class HackController {
 
@@ -13,10 +14,7 @@ class HackController {
 		session.nowdate = new Date() // to test it's working
 
 		def sb = new StringBuilder()
-		session.attributeNames.each { String name ->
-			sb.append name
-			sb.append '<br/>\n'
-		}
+		session.attributeNames.each { sb.append(it).append '<br/>\n' }
 		render sb.toString()
 	}
 
@@ -32,5 +30,9 @@ class HackController {
 
 	def clearAllData = {
 		render 'ok'
+	}
+
+	def grailsVersion = {
+		render Metadata.current.getGrailsVersion()
 	}
 }

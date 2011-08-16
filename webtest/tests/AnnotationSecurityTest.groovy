@@ -1,5 +1,13 @@
 class AnnotationSecurityTest extends AbstractSecurityWebTest {
 
+	private boolean isGrails2
+
+	@Override
+	protected void setUp() {
+		super.setUp()
+		isGrails2 = !getContent('/hack/grailsVersion').startsWith('1')
+	}
+
 	void testAnnotationSecurity() {
 
 		createRoles()
@@ -107,10 +115,24 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secureClassAnnotated/admin2'
 		assertContentContains 'Please Login'
+
+		if (!isGrails2) {
+			return
+		}
+
+		get '/secureAnnotated/indexMethod'
+		assertContentContains 'Please Login'
+
+		get '/secureAnnotated/adminEitherMethod'
+		assertContentContains 'Please Login'
 	}
 
 	private void loginAndCheckAllAllowed() {
-		// login as admin1
+		loginAndCheckAllAllowedAdmin1()
+		loginAndCheckAllAllowedAdmin2()
+	}
+
+	private void loginAndCheckAllAllowedAdmin1() {
 		get '/login/auth'
 		assertContentContains 'Please Login'
 
@@ -146,7 +168,21 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		get '/secureAnnotated/expression'
 		assertContentContains 'OK'
 
-		// login as admin2
+		if (!isGrails2) {
+			return
+		}
+
+		get '/secureAnnotated/indexMethod'
+		assertContentContains 'you have ROLE_ADMIN'
+
+		get '/secureAnnotated/adminEitherMethod'
+		assertContentContains 'you have ROLE_ADMIN'
+
+		get '/secureAnnotated/expressionMethod'
+		assertContentContains 'OK'
+	}
+
+	private void loginAndCheckAllAllowedAdmin2() {
 		get '/logout'
 		assertContentContains 'Welcome to Grails'
 
@@ -183,6 +219,19 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		assertContentContains 'admin2: you have ROLE_ADMIN2'
 
 		get '/secureAnnotated/expression'
+		assertContentContains "Sorry, you're not authorized to view this page."
+
+		if (!isGrails2) {
+			return
+		}
+
+		get '/secureAnnotated/indexMethod'
+		assertContentContains 'you have ROLE_ADMIN'
+
+		get '/secureAnnotated/adminEitherMethod'
+		assertContentContains 'you have ROLE_ADMIN'
+
+		get '/secureAnnotated/expressionMethod'
 		assertContentContains "Sorry, you're not authorized to view this page."
 	}
 }

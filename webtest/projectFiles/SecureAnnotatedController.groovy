@@ -21,4 +21,24 @@ class SecureAnnotatedController {
 	def expression = {
 		render 'OK'
 	}
+
+	@Secured(['ROLE_ADMIN'])
+	def indexMethod() {
+		render 'you have ROLE_ADMIN - method'
+	}
+
+	@Secured(['ROLE_ADMIN', 'ROLE_ADMIN2'])
+	def adminEitherMethod() {
+		render 'you have ROLE_ADMIN or ROLE_ADMIN2 - method'
+	}
+
+	@Secured(['ROLE_USER'])
+	def userActionMethod() {
+		render 'you have ROLE_USER - method'
+	}
+
+	@Secured(["authentication.name == 'admin1'"])
+	def expressionMethod() {
+		render 'OK - method'
+	}
 }

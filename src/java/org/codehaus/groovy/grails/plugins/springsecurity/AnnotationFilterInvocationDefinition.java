@@ -17,6 +17,7 @@ package org.codehaus.groovy.grails.plugins.springsecurity;
 import grails.plugins.springsecurity.Secured;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -259,6 +260,12 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			Secured annotation = field.getAnnotation(Secured.class);
 			if (annotation != null) {
 				actionRoles.put(field.getName(), asSet(annotation.value()));
+			}
+		}
+		for (Method method : clazz.getDeclaredMethods()) {
+			Secured annotation = method.getAnnotation(Secured.class);
+			if (annotation != null) {
+				actionRoles.put(method.getName(), asSet(annotation.value()));
 			}
 		}
 		return actionRoles;
