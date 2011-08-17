@@ -1,15 +1,264 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Spring Security Core Plugin 1.2 Reference Documentation</title>
+        <title>Spring Security Core Plugin 1.2.1</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <link rel="stylesheet" href="./css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+        <link rel="stylesheet" href="./css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <script type="text/javascript">
+function addJsClass(el) {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
     </head>
-    <frameset cols="20%,80%">
-        <frame src="ref/menu.html" name="leftFrame" title="index for guide"/>
-        <frame src="guide/index.html" name="mainFrame" title="main guide contents" scrolling="yes"/>
 
-        <noframes>
-            <h2>Frame Alert</h2>
-            <p/>
-            This document is designed to be viewed using the frames feature. If you see this message, you are using a non-frame-capable web client.
-        </noframes>
-    </frameset>
+    <body class="body" onload="addJsClass();">
+        <div id="navigation">
+            <ul>
+                <li>
+                    <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                        <a href="./guide/index.html" class="button">Table of contents</a>
+                        <div id="nav-summary-childs" style="display:none;">
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/1%20Introduction%20to%20the%20Spring%20Security%20Plugin.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/2%20Differences%20Between%20the%20Spring%20Security%20and%20Acegi%20Plugins.html"><strong>2</strong><span>Differences Between the Spring Security and Acegi Plugins</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/3%20Migrating%20from%20the%20Acegi%20Plugin.html"><strong>3</strong><span>Migrating from the Acegi Plugin</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/4%20Required%20and%20Optional%20Domain%20Classes.html"><strong>4</strong><span>Required and Optional Domain Classes</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html"><strong>5</strong><span>Configuring Request Mappings to Secure URLs</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/6%20Helper%20Classes.html"><strong>6</strong><span>Helper Classes</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/7%20Events.html"><strong>7</strong><span>Events</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/8%20User,%20Authority%20(Role),%20and%20Requestmap%20Properties.html"><strong>8</strong><span>User, Authority (Role), and Requestmap Properties</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/9%20Authentication.html"><strong>9</strong><span>Authentication</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/10%20Authentication%20Providers.html"><strong>10</strong><span>Authentication Providers</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/11%20Custom%20UserDetailsService.html"><strong>11</strong><span>Custom UserDetailsService</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/12%20Password%20and%20Account%20Protection.html"><strong>12</strong><span>Password and Account Protection</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/13%20URL%20Properties.html"><strong>13</strong><span>URL Properties</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/14%20Hierarchical%20Roles.html"><strong>14</strong><span>Hierarchical Roles</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/15%20Switch%20User.html"><strong>15</strong><span>Switch User</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/16%20Filters.html"><strong>16</strong><span>Filters</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/17%20Channel%20Security.html"><strong>17</strong><span>Channel Security</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/18%20IP%20Address%20Restrictions.html"><strong>18</strong><span>IP Address Restrictions</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/19%20Session%20Fixation%20Prevention.html"><strong>19</strong><span>Session Fixation Prevention</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/20%20Logout%20Handlers.html"><strong>20</strong><span>Logout Handlers</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/21%20Voters.html"><strong>21</strong><span>Voters</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/22%20Miscellaneous%20Properties.html"><strong>22</strong><span>Miscellaneous Properties</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/23%20Tutorials.html"><strong>23</strong><span>Tutorials</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0"><a href="./guide/25%20Internationalization.html"><strong>25</strong><span>Internationalization</span></a></div>
+                            
+                        </div>
+                    </div>
+                </li>
+                <li class="separator selected">
+                    <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+                </li>
+            </ul>
+        </div>
+        <div id="header">
+            <div class="images clearfix">
+                
+                
+            </div>
+            <p>Spring Security Core plugin</p>
+        </div>
+
+
+        <table id="colset" border="0" cellpadding="0" cellspacing="0">
+            <tr>
+                <td id="col1">
+                    <div id="main" class="corner-all">
+
+                        <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                        <div class="project">
+                            <h1>Spring Security Core Plugin - Reference Documentation</h1>
+                            <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+                            <p><strong>Version:</strong> 1.2.1</p>
+                        </div>
+
+                        
+                        <div id="table-of-content">
+                            <h2>Table of Contents</h2>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/1%20Introduction%20to%20the%20Spring%20Security%20Plugin.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/1%20Introduction%20to%20the%20Spring%20Security%20Plugin.html#1.1%20Configuration%20Settings%20Now%20in%20Config.groovy"><strong>1.1</strong><span>Configuration Settings Now in Config.groovy</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/1%20Introduction%20to%20the%20Spring%20Security%20Plugin.html#1.2%20Getting%20Started"><strong>1.2</strong><span>Getting Started</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/2%20Differences%20Between%20the%20Spring%20Security%20and%20Acegi%20Plugins.html"><strong>2</strong><span>Differences Between the Spring Security and Acegi Plugins</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/3%20Migrating%20from%20the%20Acegi%20Plugin.html"><strong>3</strong><span>Migrating from the Acegi Plugin</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/4%20Required%20and%20Optional%20Domain%20Classes.html"><strong>4</strong><span>Required and Optional Domain Classes</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/4%20Required%20and%20Optional%20Domain%20Classes.html#4.1%20Person%20Class"><strong>4.1</strong><span>Person Class</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/4%20Required%20and%20Optional%20Domain%20Classes.html#4.2%20Authority%20Class"><strong>4.2</strong><span>Authority Class</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/4%20Required%20and%20Optional%20Domain%20Classes.html#4.3%20PersonAuthority%20Class"><strong>4.3</strong><span>PersonAuthority Class</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/4%20Required%20and%20Optional%20Domain%20Classes.html#4.4%20Requestmap%20Class"><strong>4.4</strong><span>Requestmap Class</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html"><strong>5</strong><span>Configuring Request Mappings to Secure URLs</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html#5.1%20Defining%20Secured%20Annotations"><strong>5.1</strong><span>Defining Secured Annotations</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html#5.2%20Simple%20Map%20in%20Config.groovy"><strong>5.2</strong><span>Simple Map in Config.groovy</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html#5.3%20Requestmap%20Instances%20Stored%20in%20the%20Database"><strong>5.3</strong><span>Requestmap Instances Stored in the Database</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html#5.4%20Using%20Expressions%20to%20Create%20Descriptive,%20Fine-Grained%20Rules"><strong>5.4</strong><span>Using Expressions to Create Descriptive, Fine-Grained Rules</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/6%20Helper%20Classes.html"><strong>6</strong><span>Helper Classes</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/6%20Helper%20Classes.html#6.1%20SecurityTagLib"><strong>6.1</strong><span>SecurityTagLib</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/6%20Helper%20Classes.html#6.2%20SpringSecurityService"><strong>6.2</strong><span>SpringSecurityService</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/6%20Helper%20Classes.html#6.3%20SpringSecurityUtils"><strong>6.3</strong><span>SpringSecurityUtils</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/7%20Events.html"><strong>7</strong><span>Events</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/7%20Events.html#7.1%20Event%20Notification"><strong>7.1</strong><span>Event Notification</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/7%20Events.html#7.2%20Registering%20an%20Event%20Listener"><strong>7.2</strong><span>Registering an Event Listener</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/7%20Events.html#7.3%20Registering%20Callback%20Closures"><strong>7.3</strong><span>Registering Callback Closures</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/8%20User,%20Authority%20(Role),%20and%20Requestmap%20Properties.html"><strong>8</strong><span>User, Authority (Role), and Requestmap Properties</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/9%20Authentication.html"><strong>9</strong><span>Authentication</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/9%20Authentication.html#9.1%20Basic%20and%20Digest%20Authentication"><strong>9.1</strong><span>Basic and Digest Authentication</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/9%20Authentication.html#9.2%20Certificate%20(X509)%20Login%20Authentication"><strong>9.2</strong><span>Certificate (X509) Login Authentication</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/9%20Authentication.html#9.3%20Remember-Me%20Cookie"><strong>9.3</strong><span>Remember-Me Cookie</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/9%20Authentication.html#9.4%20Ajax%20Authentication"><strong>9.4</strong><span>Ajax Authentication</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/10%20Authentication%20Providers.html"><strong>10</strong><span>Authentication Providers</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/11%20Custom%20UserDetailsService.html"><strong>11</strong><span>Custom UserDetailsService</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/12%20Password%20and%20Account%20Protection.html"><strong>12</strong><span>Password and Account Protection</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/12%20Password%20and%20Account%20Protection.html#12.1%20Password%20Encryption"><strong>12.1</strong><span>Password Encryption</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/12%20Password%20and%20Account%20Protection.html#12.2%20Salted%20Passwords"><strong>12.2</strong><span>Salted Passwords</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/12%20Password%20and%20Account%20Protection.html#12.3%20Account%20Locking%20and%20Forcing%20Password%20Change"><strong>12.3</strong><span>Account Locking and Forcing Password Change</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/13%20URL%20Properties.html"><strong>13</strong><span>URL Properties</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/14%20Hierarchical%20Roles.html"><strong>14</strong><span>Hierarchical Roles</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/15%20Switch%20User.html"><strong>15</strong><span>Switch User</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/16%20Filters.html"><strong>16</strong><span>Filters</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/17%20Channel%20Security.html"><strong>17</strong><span>Channel Security</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/18%20IP%20Address%20Restrictions.html"><strong>18</strong><span>IP Address Restrictions</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/19%20Session%20Fixation%20Prevention.html"><strong>19</strong><span>Session Fixation Prevention</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/20%20Logout%20Handlers.html"><strong>20</strong><span>Logout Handlers</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/21%20Voters.html"><strong>21</strong><span>Voters</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/22%20Miscellaneous%20Properties.html"><strong>22</strong><span>Miscellaneous Properties</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/23%20Tutorials.html"><strong>23</strong><span>Tutorials</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/23%20Tutorials.html#23.1%20Using%20Controller%20Annotations%20to%20Secure%20URLs"><strong>23.1</strong><span>Using Controller Annotations to Secure URLs</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:10px"><a href="./guide/23%20Tutorials.html#23.2%20Migration%20From%20the%20Acegi%20Plugin"><strong>23.2</strong><span>Migration From the Acegi Plugin</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span></a></div>
+                            
+                            <div class="toc-item" style="margin-left:0px"><a href="./guide/25%20Internationalization.html"><strong>25</strong><span>Internationalization</span></a></div>
+                            
+                            <div style="clear:both" ></div>
+                        </div>
+                        
+                        
+                    </div>
+                </td>
+                <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="./guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                        
+                        <div class="menu-item"><a href="./ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                        </div>
+                        
+                        <div class="menu-item"><a href="./ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                        </div>
+                        
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+            </tr>
+        </table>
+
+        <div id="footer">
+            
+            
+        </div>
+
+
+
+<script type="text/javascript" src="./js/docs.js"></script>
+
+    
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
 </html>

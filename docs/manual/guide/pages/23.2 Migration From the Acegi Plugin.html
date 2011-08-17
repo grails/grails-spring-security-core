@@ -1,14 +1,154 @@
-<html>
-    <head>
-        <meta http-equiv="Content-type" content="text/html; charset=utf-8"/>
-        <title>23.2 Migration From the Acegi Plugin</title>
-        <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen" title="Ref" charset="utf-8"/>
-    </head>
-    <body class="body">
-    In this tutorial we'll discuss the general steps required to migrate from the Acegi plugin to the Spring Security Core plugin. A lot of the material here comes from <a href="http://grails.1312388.n4.nabble.com/Migrating-Acegi-plugin-to-new-Security-plugin-td2290399.html" target="blank">an email</a> that Lubos Pochman sent to the <a href="http://www.grails.org/Mailing+lists" target="blank">User mailing list</a> documenting the steps he took to upgrade from the Acegi plugin.<p class="paragraph"/>This isn't a standard step-by-step tutorial since every application is different and the steps required will vary from project to project. Instead these are guidelines and things to keep in mind. You should also read <a href="../guide/single.html#2 Differences Between the Spring Security and Acegi Plugins" class="guide">Section 2</a> and <a href="../guide/single.html#3 Migrating from the Acegi Plugin" class="guide">Section 3</a>.<p class="paragraph"/>The first thing to do is uninstall the Acegi plugin
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>23.2 Migration From the Acegi Plugin 1.2.1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/1%20Introduction%20to%20the%20Spring%20Security%20Plugin.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/2%20Differences%20Between%20the%20Spring%20Security%20and%20Acegi%20Plugins.html"><strong>2</strong><span>Differences Between the Spring Security and Acegi Plugins</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/3%20Migrating%20from%20the%20Acegi%20Plugin.html"><strong>3</strong><span>Migrating from the Acegi Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/4%20Required%20and%20Optional%20Domain%20Classes.html"><strong>4</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html"><strong>5</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/6%20Helper%20Classes.html"><strong>6</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/7%20Events.html"><strong>7</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/8%20User,%20Authority%20(Role),%20and%20Requestmap%20Properties.html"><strong>8</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/9%20Authentication.html"><strong>9</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/10%20Authentication%20Providers.html"><strong>10</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/11%20Custom%20UserDetailsService.html"><strong>11</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/12%20Password%20and%20Account%20Protection.html"><strong>12</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/13%20URL%20Properties.html"><strong>13</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/14%20Hierarchical%20Roles.html"><strong>14</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/15%20Switch%20User.html"><strong>15</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/16%20Filters.html"><strong>16</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/17%20Channel%20Security.html"><strong>17</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/18%20IP%20Address%20Restrictions.html"><strong>18</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/19%20Session%20Fixation%20Prevention.html"><strong>19</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/20%20Logout%20Handlers.html"><strong>20</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/21%20Voters.html"><strong>21</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/22%20Miscellaneous%20Properties.html"><strong>22</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/23%20Tutorials.html"><strong>23</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/25%20Internationalization.html"><strong>25</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/22%20Miscellaneous%20Properties.html">&lt;&lt; <strong>22</strong><span>Miscellaneous Properties</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>23.2 Migration From the Acegi Plugin - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 1.2.1</p>
+                </div>
+
+                
+
+                
+
+<h2 id="23.2 Migration From the Acegi Plugin">23.2 Migration From the Acegi Plugin</h2>
+In this tutorial we'll discuss the general steps required to migrate from the Acegi plugin to the Spring Security Core plugin. A lot of the material here comes from <a href="http://grails.1312388.n4.nabble.com/Migrating-Acegi-plugin-to-new-Security-plugin-td2290399.html" target="blank">an email</a> that Lubos Pochman sent to the <a href="http://www.grails.org/Mailing+lists" target="blank">User mailing list</a> documenting the steps he took to upgrade from the Acegi plugin.<p class="paragraph"/>This isn't a standard step-by-step tutorial since every application is different and the steps required will vary from project to project. Instead these are guidelines and things to keep in mind. You should also read <a href="../guide/single.html#2%20Differences%20Between%20the%20Spring%20Security%20and%20Acegi%20Plugins" class="guide">Section 2</a> and <a href="../guide/single.html#3%20Migrating%20from%20the%20Acegi%20Plugin" class="guide">Section 3</a>.<p class="paragraph"/>The first thing to do is uninstall the Acegi plugin
 <div class="code"><pre>$ grails uninstall&#45;plugin acegi</pre></div>
 and install Spring Security Core
-<div class="code"><pre>$ grails install&#45;plugin spring&#45;security&#45;core</pre></div><p class="paragraph"/>If this were a new project the next step would be to run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script but you wouldn't do this for an existing project where you already have a User and Role class, so it's a good idea to work through the <a href="../guide/single.html#23.1 Using Controller Annotations to Secure URLs" class="guide">bookstore tutorial</a> and use the files generated in that project. The files that the script generates are
+<div class="code"><pre>$ grails install&#45;plugin spring&#45;security&#45;core</pre></div><p class="paragraph"/>If this were a new project the next step would be to run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script but you wouldn't do this for an existing project where you already have a User and Role class, so it's a good idea to work through the <a href="../guide/single.html#23.1%20Using%20Controller%20Annotations%20to%20Secure%20URLs" class="guide">bookstore tutorial</a> and use the files generated in that project. The files that the script generates are
 <ul class="star">
 <li><code>grails-app/domain/com/testapp/User.groovy</code></li>
 <li><code>grails-app/domain/com/testapp/Role.groovy</code></li>
@@ -34,16 +174,60 @@ role.removeFromPeople(user)</pre></div><p class="paragraph"/>In Spring Security 
 User user = &#8230;
 UserRole.create user, role</pre></div><p class="paragraph"/>and<p class="paragraph"/><div class="code"><pre>Role role = &#8230;
 User user = &#8230;
-UserRole.remove user, role</pre></div><p class="paragraph"/>which directly insert or delete rows in the User/Role join table.<p class="paragraph"/><h4>SecurityConfig.groovy</h4><p class="paragraph"/>Configuration settings are now stored in <code>grails-app/conf/Config.groovy</code> along with the rest of the application configuration. The primary motiviation for this change is to easily support environment-specific security settings. Migrate settings from <code>SecurityConfig.groovy</code> to <code>Config.groovy</code> (see <a href="../guide/single.html#3 Migrating from the Acegi Plugin" class="guide">this summary</a> for the new names.<p class="paragraph"/>In particular it's important that the following properties be configured (replace class and package names to match your domain classes):
+UserRole.remove user, role</pre></div><p class="paragraph"/>which directly insert or delete rows in the User/Role join table.<p class="paragraph"/><h4>SecurityConfig.groovy</h4><p class="paragraph"/>Configuration settings are now stored in <code>grails-app/conf/Config.groovy</code> along with the rest of the application configuration. The primary motiviation for this change is to easily support environment-specific security settings. Migrate settings from <code>SecurityConfig.groovy</code> to <code>Config.groovy</code> (see <a href="../guide/single.html#3%20Migrating%20from%20the%20Acegi%20Plugin" class="guide">this summary</a> for the new names.<p class="paragraph"/>In particular it's important that the following properties be configured (replace class and package names to match your domain classes):
 <div class="code"><pre>grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.yourcompany.yourapp.User'
 grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.yourcompany.yourapp.UserRole'
-grails.plugins.springsecurity.authority.className = 'com.yourcompany.yourapp.Role'</pre></div><p class="paragraph"/>Delete <code>SecurityConfig.groovy</code> when you're finished.<p class="paragraph"/><h4>Controller annotations</h4><p class="paragraph"/>The <code>Secured</code> annotation changed from <code>org.codehaus.groovy.grails.plugins.springsecurity.Secured</code> to <code>grails.plugins.springsecurity.Secured</code>. Consider using <a href="../guide/single.html#5.4 Using Expressions to Create Descriptive, Fine-Grained Rules" class="guide">SpEL expressions</a> since they're a lot more powerful and expressive than simple role names.<p class="paragraph"/><h4>Security tags</h4>
+grails.plugins.springsecurity.authority.className = 'com.yourcompany.yourapp.Role'</pre></div><p class="paragraph"/>Delete <code>SecurityConfig.groovy</code> when you're finished.<p class="paragraph"/><h4>Controller annotations</h4><p class="paragraph"/>The <code>Secured</code> annotation changed from <code>org.codehaus.groovy.grails.plugins.springsecurity.Secured</code> to <code>grails.plugins.springsecurity.Secured</code>. Consider using <a href="../guide/single.html#5.4%20Using%20Expressions%20to%20Create%20Descriptive,%20Fine-Grained%20Rules" class="guide">SpEL expressions</a> since they're a lot more powerful and expressive than simple role names.<p class="paragraph"/><h4>Security tags</h4>
 <ul class="star">
 <li>tag names now start with 'if' instead of 'is', and the <code>role</code> attribute changed to <code>roles</code>, so for example change <code>&#60;g:ifAnyGranted role='...'&#62;</code> to <code>&#60;sec:ifAnyGranted roles='...'&#62;</code></li>
 <li>use <code>&#60;sec:username/&#62;</code> instead of <code>&#60;g:loggedInUserInfo(field:'username')}/&#62;</code> - use <code>&#60;sec:loggedInUserInfo&#62;</code> to render other <code>GrailsUser</code> attributes</li>
-</ul><p class="paragraph"/>See more details about the taglibs in <a href="../guide/single.html#6 Helper Classes" class="guide">Section 6</a>.
+</ul><p class="paragraph"/>See more details about the taglibs in <a href="../guide/single.html#6%20Helper%20Classes" class="guide">Section 6</a>.
 
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/22%20Miscellaneous%20Properties.html">&lt;&lt; <strong>22</strong><span>Miscellaneous Properties</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
     
+    
+</div>
+
+<script type="text/javascript" src="../../js/docs.js"></script>
+
+
 <script type="text/javascript">
 	var _gaq = _gaq || [];
 	_gaq.push(['_setAccount', 'UA-16219500-1']);
