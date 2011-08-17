@@ -111,7 +111,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2'
+	String version = '1.2.1'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -642,7 +642,11 @@ to default to 'Annotation'; setting value to 'Annotation'
 			mc.getAuthenticatedUser = { ->
 				if (!ctx.springSecurityService.isLoggedIn()) return null
 				String userClassName = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-				Class User = ctx.grailsApplication.getDomainClass(userClassName).clazz
+				def dc = ctx.grailsApplication.getDomainClass(userClassName)
+				if (!dc) {
+					throw new RuntimeException("The specified user domain class '$userClassName' is not a domain class")
+				}
+				Class User = dc.clazz
 				User.get SCH.context.authentication.principal.id
 			}
 		}
@@ -982,39 +986,5 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		authenticationEntryPoint(Http403ForbiddenEntryPoint)
-	}
-
-	private findMappingLocation = { xml ->
-
-		// find the location to insert the filter-mapping; needs to be after the 'charEncodingFilter'
-		// which may not exist. should also be before the sitemesh filter.
-		// thanks to the JSecurity plugin for the logic.
-
-		def mappingLocation = xml.'filter-mapping'.find { it.'filter-name'.text() == 'charEncodingFilter' }
-		if (mappingLocation) {
-			return mappingLocation
-		}
-
-		// no 'charEncodingFilter'; try to put it before sitemesh
-		int i = 0
-		int siteMeshIndex = -1
-		xml.'filter-mapping'.each {
-			if (it.'filter-name'.text().equalsIgnoreCase('sitemesh')) {
-				siteMeshIndex = i
-			}
-			i++
-		}
-		if (siteMeshIndex > 0) {
-			return xml.'filter-mapping'[siteMeshIndex - 1]
-		}
-
-		if (siteMeshIndex == 0 || xml.'filter-mapping'.size() == 0) {
-			def filters = xml.'filter'
-			return filters[filters.size() - 1]
-		}
-
-		// neither filter found
-		def filters = xml.'filter'
-		return filters[filters.size() - 1]
 	}
 }

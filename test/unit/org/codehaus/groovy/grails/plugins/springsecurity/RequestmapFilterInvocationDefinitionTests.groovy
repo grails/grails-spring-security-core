@@ -17,8 +17,6 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 import grails.test.GrailsUnitTestCase
 
 import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
-import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
-
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
