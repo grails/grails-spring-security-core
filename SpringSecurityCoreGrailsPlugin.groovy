@@ -773,6 +773,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		authenticationManager(ProviderManager) {
 			providers = providerRefs
 			authenticationEventPublisher = ref('authenticationEventPublisher')
+			eraseCredentialsAfterAuthentication = conf.providerManager.eraseCredentialsAfterAuthentication // false
 		}
 	}
 

@@ -211,4 +211,7 @@ security {
 	// authenticationTrustResolver
 	atr.anonymousClass = AnonymousAuthenticationToken
 	atr.rememberMeClass = RememberMeAuthenticationToken
+
+	// providerManager
+	providerManager.eraseCredentialsAfterAuthentication = false
 }
