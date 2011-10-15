@@ -111,7 +111,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2.1'
+	String version = '1.2.3'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -773,6 +773,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		authenticationManager(ProviderManager) {
 			providers = providerRefs
 			authenticationEventPublisher = ref('authenticationEventPublisher')
+			eraseCredentialsAfterAuthentication = conf.providerManager.eraseCredentialsAfterAuthentication // false
 		}
 	}
 
