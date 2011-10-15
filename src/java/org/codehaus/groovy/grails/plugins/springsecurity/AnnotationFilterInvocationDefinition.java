@@ -100,6 +100,11 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 	protected String findGrailsUrl(final UrlMappingInfo mapping) {
 
+		String uri = mapping.getURI();
+		if (StringUtils.hasLength(uri)) {
+			return uri;
+		}
+
 		String actionName = mapping.getActionName();
 		if (!StringUtils.hasLength(actionName)) {
 			actionName = "";
