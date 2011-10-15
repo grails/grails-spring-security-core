@@ -532,7 +532,7 @@ public final class SpringSecurityUtils {
 	 * @param closure the code to run
 	 * @return the closure's return value
 	 */
-	public static Object doWithAuth(final Closure closure) {
+	public static Object doWithAuth(@SuppressWarnings("rawtypes") final Closure closure) {
 		boolean set = false;
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 			HttpSession httpSession = SecurityRequestHolder.getRequest().getSession(false);
@@ -566,7 +566,7 @@ public final class SpringSecurityUtils {
 	 * @param closure the code to run
 	 * @return the closure's return value
 	 */
-	public static Object doWithAuth(final String username, final Closure closure) {
+	public static Object doWithAuth(final String username, @SuppressWarnings("rawtypes") final Closure closure) {
 		Authentication previousAuth = SecurityContextHolder.getContext().getAuthentication();
 		reauthenticate(username, null);
 
