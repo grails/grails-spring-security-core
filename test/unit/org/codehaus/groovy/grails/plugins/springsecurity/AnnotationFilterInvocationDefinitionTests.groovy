@@ -195,7 +195,8 @@ class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
 		def app = new DefaultGrailsApplication()
 		def beans = [(GrailsApplication.APPLICATION_ID): app]
-		def ctx = [getBean: { String name -> beans[name] }] as WebApplicationContext
+		def ctx = [getBean: { String name, Class<?> c = null -> beans[name] },
+		           containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
 		servletContext.setAttribute WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx
 
 		def mappingEvaluator = new DefaultUrlMappingEvaluator(servletContext)
