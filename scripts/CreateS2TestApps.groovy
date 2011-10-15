@@ -20,7 +20,7 @@ target(createS2TestApp: 'Creates test apps for functional tests') {
 	}
 
 	new ConfigSlurper().parse(configFile.text).each { name, config ->
-		echo "\nCreating app based on configuration $name: ${config.flatten()}\n"
+		printMessage "\nCreating app based on configuration $name: ${config.flatten()}\n"
 		init name, config
 		createApp()
 		installPlugins()
