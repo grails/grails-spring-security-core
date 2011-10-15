@@ -32,7 +32,6 @@ import org.codehaus.groovy.grails.commons.ControllerArtefactHandler;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.commons.GrailsClass;
 import org.codehaus.groovy.grails.commons.GrailsControllerClass;
-import org.codehaus.groovy.grails.web.context.ServletContextHolder;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
@@ -68,7 +67,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		String url = null;
 		try {
 			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,
-					ServletContextHolder.getServletContext());
+					request.getServletContext());
 			WebUtils.storeGrailsWebRequest(grailsRequest);
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
@@ -172,7 +171,9 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		compileClassMap(classRoleMap);
 		compileStaticRules(staticRules);
 
-		if (_log.isTraceEnabled()) _log.trace("configs: " + getConfigAttributeMap());
+		if (_log.isTraceEnabled()) {
+			_log.trace("configs: " + getConfigAttributeMap());
+		}
 	}
 
 	private void compileActionMap(final Map<String, Map<String, Set<String>>> map) {
