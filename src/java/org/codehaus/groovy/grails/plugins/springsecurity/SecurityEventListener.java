@@ -88,10 +88,11 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	private void call(final ApplicationEvent e, final String closureName) {
 		Object closure = SpringSecurityUtils.getSecurityConfig().get(closureName);
 		if (closure instanceof Closure) {
-			((Closure<?>)closure).call(new Object[] { e, _applicationContext });
+			((Closure)closure).call(new Object[] { e, _applicationContext });
 		}
 	}
 
