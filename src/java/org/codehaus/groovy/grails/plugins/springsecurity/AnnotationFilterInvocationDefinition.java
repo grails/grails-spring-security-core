@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,6 +43,7 @@ import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.WebApplicationContext;
 
 /**
  * A {@link FilterInvocationSecurityMetadataSource} that uses rules defined with Controller annotations
@@ -54,6 +56,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 	private UrlMappingsHolder _urlMappingsHolder;
 	private GrailsApplication _application;
+	private ServletContext _servletContext;
 
 	@Override
 	protected String determineUrl(final FilterInvocation filterInvocation) {
@@ -66,8 +69,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		String url = null;
 		try {
-			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,
-					request.getServletContext());
+			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response, _servletContext);
 			WebUtils.storeGrailsWebRequest(grailsRequest);
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
@@ -283,6 +285,13 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			set.add(string);
 		}
 		return set;
+	}
+
+	protected ServletContext getServletContext() {
+		if (_servletContext == null) {
+			_servletContext = ((WebApplicationContext)_application.getMainContext()).getServletContext();
+		}
+		return _servletContext;
 	}
 
 	/**
