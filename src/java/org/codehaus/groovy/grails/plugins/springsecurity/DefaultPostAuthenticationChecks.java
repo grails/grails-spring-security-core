@@ -14,7 +14,8 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.core.SpringSecurityMessageSource;
@@ -30,7 +31,7 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 public class DefaultPostAuthenticationChecks implements UserDetailsChecker {
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
-	protected final Logger log = Logger.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	public void check(UserDetails user) {
 		if (!user.isCredentialsNonExpired()) {

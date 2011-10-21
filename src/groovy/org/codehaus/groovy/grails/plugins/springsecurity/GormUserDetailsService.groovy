@@ -14,11 +14,12 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.apache.log4j.Logger
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 
 /**
  * Default implementation of <code>GrailsUserDetailsService</code> that uses
@@ -28,7 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
  */
 class GormUserDetailsService implements GrailsUserDetailsService {
 
-	private Logger _log = Logger.getLogger(getClass())
+	private Logger _log = LoggerFactory.getLogger(getClass())
 
 	/**
 	 * Some Spring Security classes (e.g. RoleHierarchyVoter) expect at least one role, so

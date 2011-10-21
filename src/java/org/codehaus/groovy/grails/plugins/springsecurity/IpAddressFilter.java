@@ -27,7 +27,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.codehaus.groovy.grails.web.util.WebUtils;
 import org.springframework.security.web.util.IpAddressMatcher;
 import org.springframework.util.AntPathMatcher;
@@ -46,7 +47,7 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 public class IpAddressFilter extends GenericFilterBean {
 
-	private final Logger _log = Logger.getLogger(getClass());
+	private final Logger _log = LoggerFactory.getLogger(getClass());
 
 	private final AntPathMatcher _pathMatcher = new AntPathMatcher();
 
