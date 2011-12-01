@@ -18,11 +18,11 @@ grails.project.dependency.resolution = {
 	}
 
 	dependencies {
-		compile('org.springframework.security:spring-security-core:3.0.5.RELEASE') {
+		compile('org.springframework.security:spring-security-core:3.0.7.RELEASE') {
 			transitive = false
 		}
 
-		compile('org.springframework.security:spring-security-web:3.0.5.RELEASE') {
+		compile('org.springframework.security:spring-security-web:3.0.7.RELEASE') {
 			transitive = false
 		}
 	}
