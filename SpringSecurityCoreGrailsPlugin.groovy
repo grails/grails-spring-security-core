@@ -130,11 +130,15 @@ class SpringSecurityCoreGrailsPlugin {
 	String documentation = 'http://grails.org/plugin/spring-security-core'
 
 	String license = 'APACHE'
-	def organization = [ name: 'SpringSource', url: 'http://www.springsource.org/' ]
-	def developers = [
-		 [ name: 'Burt Beckwith', email: 'beckwithb@vmware.com' ] ]
-	def issueManagement = [ system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE' ]
-	def scm = [ url: 'https://github.com/grails-plugins/grails-spring-security-core' ]
+	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
+	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE']
+	def scm = [url: 'https://github.com/grails-plugins/grails-spring-security-core']
+
+	// make sure the filter chain filter is after the Grails filter
+	def getWebXmlFilterOrder() {
+		def FilterManager = getClass().getClassLoader().loadClass('grails.plugin.webxml.FilterManager')
+		[springSecurityFilterChain: FilterManager.GRAILS_WEB_REQUEST_POSITION + 100]
+	}
 
 	def doWithWebDescriptor = { xml ->
 
@@ -147,7 +151,29 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		// filter chain is added in _Events.groovy to ensure correct positioning
+		// we add the filter(s) right after the last context-param
+		def contextParam = xml.'context-param'
+
+		// the name of the filter matches the name of the Spring bean that it delegates to
+		contextParam[contextParam.size() - 1] + {
+			'filter' {
+				'filter-name'('springSecurityFilterChain')
+				'filter-class'(DelegatingFilterProxy.name)
+			}
+		}
+
+		// add the filter-mapping after the last filter; order isn't
+		// important since it'll be sorted by the webxml plugin
+		def filters = xml.'filter'
+		filters[filters.size() - 1] + {
+			'filter-mapping' {
+				'filter-name'('springSecurityFilterChain')
+				'url-pattern'('/*')
+				'dispatcher'('ERROR')
+				'dispatcher'('FORWARD')
+				'dispatcher'('REQUEST')
+			}
+		}
 
 		if (conf.useHttpSessionEventPublisher) {
 			def filterMapping = xml.'filter-mapping'
@@ -177,7 +203,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		println '\nConfiguring Spring Security ...'
+		println '\nConfiguring Spring Security Core ...'
 
 		createRefList.delegate = delegate
 
@@ -491,6 +517,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 		if (conf.registerLoggerListener) {
 			loggerListener(LoggerListener)
 		}
+
+		println 'Finished configuring Spring Security Core\n'
 	}
 
 	def doWithDynamicMethods = { ctx ->
