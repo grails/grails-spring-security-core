@@ -162,10 +162,10 @@ class SpringSecurityCoreGrailsPlugin {
 			}
 		}
 
-		// add the filter-mapping after the last filter; order isn't
-		// important since it'll be sorted by the webxml plugin
-		def filters = xml.'filter'
-		filters[filters.size() - 1] + {
+		// add the filter-mapping after the Spring character encoding filter
+		findMappingLocation.delegate = delegate
+		def mappingLocation = findMappingLocation(xml)
+		mappingLocation + {
 			'filter-mapping' {
 				'filter-name'('springSecurityFilterChain')
 				'url-pattern'('/*')
@@ -518,7 +518,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			loggerListener(LoggerListener)
 		}
 
-		println 'Finished configuring Spring Security Core\n'
+		println '... finished configuring Spring Security Core\n'
 	}
 
 	def doWithDynamicMethods = { ctx ->
@@ -1015,5 +1015,39 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		authenticationEntryPoint(Http403ForbiddenEntryPoint)
+	}
+
+	private findMappingLocation = { xml ->
+
+		// find the location to insert the filter-mapping; needs to be after the 'charEncodingFilter'
+		// which may not exist. should also be before the sitemesh filter.
+		// thanks to the JSecurity plugin for the logic.
+
+		def mappingLocation = xml.'filter-mapping'.find { it.'filter-name'.text() == 'charEncodingFilter' }
+		if (mappingLocation) {
+			return mappingLocation
+		}
+
+		// no 'charEncodingFilter'; try to put it before sitemesh
+		int i = 0
+		int siteMeshIndex = -1
+		xml.'filter-mapping'.each {
+			if (it.'filter-name'.text().equalsIgnoreCase('sitemesh')) {
+				siteMeshIndex = i
+			}
+			i++
+		}
+		if (siteMeshIndex > 0) {
+			return xml.'filter-mapping'[siteMeshIndex - 1]
+		}
+
+		if (siteMeshIndex == 0 || xml.'filter-mapping'.size() == 0) {
+			def filters = xml.'filter'
+			return filters[filters.size() - 1]
+		}
+
+		// neither filter found
+		def filters = xml.'filter'
+		return filters[filters.size() - 1]
 	}
 }
