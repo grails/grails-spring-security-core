@@ -56,13 +56,12 @@ resolver localPluginResolver
 """)
 	}
 
-	buildConfig.withWriter {
-		it.writeLine contents
-		// install plugins in local dir to make optional STS setup easier
-		it.writeLine 'grails.project.plugins.dir = "plugins"'
-	}
+	contents = contents.replace('grails.project.class.dir = "target/classes"', "grails.project.work.dir = 'target'")
+	contents = contents.replace('grails.project.test.class.dir = "target/test-classes"', '')
+	contents = contents.replace('grails.project.test.reports.dir = "target/test-reports"', '')
 
-	ant.mkdir dir: "$testprojectRoot/plugins"
+	buildConfig.withWriter { it.writeLine contents }
+
 	callGrails(grailsHome, testprojectRoot, 'dev', 'install-plugin') {
 		ant.arg value: "functional-test $functionalTestPluginVersion"
 	}
