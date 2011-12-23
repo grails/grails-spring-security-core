@@ -49,7 +49,7 @@ import org.springframework.web.context.request.RequestContextHolder
  */
 class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
-	private _fid
+	private AnnotationFilterInvocationDefinition _fid
 	private final _application = new TestApplication()
 
 	/**
