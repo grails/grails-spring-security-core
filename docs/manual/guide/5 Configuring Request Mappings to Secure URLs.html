@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5 Configuring Request Mappings to Secure URLs 1.2.6</title>
+    <title>5 Configuring Request Mappings to Secure URLs 1.2.7</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -137,7 +137,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 1.2.6</p>
+                    <p><strong>Version:</strong> 1.2.7</p>
 
                     
                 </div>
@@ -188,7 +188,7 @@ Most applications are mostly public, with some pages only accessible to authenti
 
 
 <h2 id="5.1 Defining Secured Annotations">5.1 Defining Secured Annotations</h2>
-You can use an <code>&#64;Secured</code> annotation in your controllers to configure which roles are required for which actions. To use annotations, specify <code>securityConfigType="Annotation"</code>, or leave it unspecified because it's the default:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.securityConfigType = <span class="java&#45;quote">"Annotation"</span></pre></div><p class="paragraph"/>You can define the annotation at the class level, meaning that the specified roles are required for all actions, or at the action level, or both. If the class and an action are annotated then the action annotation values will be used since they're more specific.<p class="paragraph"/>For example, given this controller:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugins.springsecurity.Secured<p class="paragraph"/>class SecureAnnotatedController &#123;<p class="paragraph"/>   @Secured(&#91;'ROLE_ADMIN'&#93;)
+You can use an <code>&#64;Secured</code> annotation (either the standard <code>org.springframework.security.access.annotation.Secured</code> or the plugin's <code>grails.plugins.springsecurity.Secured</code> which also works on controller closure actions) in your controllers to configure which roles are required for which actions. To use annotations, specify <code>securityConfigType="Annotation"</code>, or leave it unspecified because it's the default:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.securityConfigType = <span class="java&#45;quote">"Annotation"</span></pre></div><p class="paragraph"/>You can define the annotation at the class level, meaning that the specified roles are required for all actions, or at the action level, or both. If the class and an action are annotated then the action annotation values will be used since they're more specific.<p class="paragraph"/>For example, given this controller:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugins.springsecurity.Secured<p class="paragraph"/>class SecureAnnotatedController &#123;<p class="paragraph"/>   @Secured(&#91;'ROLE_ADMIN'&#93;)
    def index = &#123;
       render 'you have ROLE_ADMIN'
    &#125;<p class="paragraph"/>   @Secured(&#91;'ROLE_ADMIN', 'ROLE_SUPERUSER'&#93;)

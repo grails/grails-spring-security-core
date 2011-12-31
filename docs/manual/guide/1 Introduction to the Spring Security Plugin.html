@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>1 Introduction to the Spring Security Plugin 1.2.6</title>
+    <title>1 Introduction to the Spring Security Plugin 1.2.7</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -135,7 +135,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 1.2.6</p>
+                    <p><strong>Version:</strong> 1.2.7</p>
 
                     
                 </div>
@@ -158,9 +158,15 @@ function addJsClass() {
 <h1 id="1 Introduction to the Spring Security Plugin">1 Introduction to the Spring Security Plugin</h1>
 The Spring Security plugin simplifies the integration of  <a href="http://static.springsource.org/spring-security/site/index.html" target="blank">Spring Security</a> (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.<p class="paragraph"/>This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.<p class="paragraph"/><h4>Release History and Acknowledgment</h4>
 <ul class="star">
+<li>December 30, 2011</li>
+<ul class="star">
+<li>1.2.7 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=13025" target="blank">JIRA Issues</a></li>
+</ul>
 <li>December 2, 2011</li>
 <ul class="star">
 <li>1.2.6 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=13024" target="blank">JIRA Issues</a></li>
 </ul>
 <li>December 1, 2011</li>
 <ul class="star">
@@ -177,18 +183,22 @@ The Spring Security plugin simplifies the integration of  <a href="http://static
 <li>October 15, 2011</li>
 <ul class="star">
 <li>1.2.2 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=12907" target="blank">JIRA Issues</a></li>
 </ul>
 <li>August 17, 2011</li>
 <ul class="star">
 <li>1.2.1 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=12811" target="blank">JIRA Issues</a></li>
 </ul>
 <li>July 31, 2011</li>
 <ul class="star">
 <li>1.2 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=12503" target="blank">JIRA Issues</a></li>
 </ul>
 <li>May 23, 2011</li>
 <ul class="star">
 <li>1.1.3 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=12502" target="blank">JIRA Issues</a></li>
 </ul>
 <li>February 26, 2011</li>
 <ul class="star">
@@ -197,10 +207,12 @@ The Spring Security plugin simplifies the integration of  <a href="http://static
 <li>February 26, 2011</li>
 <ul class="star">
 <li>1.1.1 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11909" target="blank">JIRA Issues</a></li>
 </ul>
 <li>August 8, 2010</li>
 <ul class="star">
 <li>1.1 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11908" target="blank">JIRA Issues</a></li>
 </ul>
 <li>August 1, 2010</li>
 <ul class="star">
@@ -209,26 +221,32 @@ The Spring Security plugin simplifies the integration of  <a href="http://static
 <li>July 27, 2010</li>
 <ul class="star">
 <li>1.0 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11907" target="blank">JIRA Issues</a></li>
 </ul>
 <li>July 16, 2010</li>
 <ul class="star">
 <li>0.4.2 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11906" target="blank">JIRA Issues</a></li>
 </ul>
 <li>June 29, 2010</li>
 <ul class="star">
 <li>0.4.1 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11905" target="blank">JIRA Issues</a></li>
 </ul>
 <li>June 21, 2010</li>
 <ul class="star">
 <li>0.4 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11904" target="blank">JIRA Issues</a></li>
 </ul>
 <li>May 12, 2010</li>
 <ul class="star">
 <li>0.3.1 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11903" target="blank">JIRA Issues</a></li>
 </ul>
 <li>May 12, 2010</li>
 <ul class="star">
 <li>0.3 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&version=11902" target="blank">JIRA Issues</a></li>
 </ul>
 <li>May 2, 2010</li>
 <ul class="star">
