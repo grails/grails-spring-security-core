@@ -14,13 +14,14 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity;
 
-import grails.plugins.springsecurity.Secured;
-
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -52,6 +53,10 @@ import org.springframework.util.StringUtils;
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
+
+	private static final List<String> ANNOTATION_CLASS_NAMES = Arrays.asList(
+			grails.plugins.springsecurity.Secured.class.getName(),
+			org.springframework.security.access.annotation.Secured.class.getName());
 
 	private UrlMappingsHolder _urlMappingsHolder;
 	private GrailsApplication _application;
@@ -248,9 +253,9 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		Class<?> clazz = controllerClass.getClazz();
 		String controllerName = WordUtils.uncapitalize(controllerClass.getName());
 
-		Secured annotation = clazz.getAnnotation(Secured.class);
+		Annotation annotation = findAnnotation(clazz.getAnnotations());
 		if (annotation != null) {
-			classRoleMap.put(controllerName, asSet(annotation.value()));
+			classRoleMap.put(controllerName, asSet(getValue(annotation)));
 		}
 
 		Map<String, Set<String>> annotatedClosureNames = findActionRoles(clazz);
@@ -264,18 +269,34 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		// fields, but they end up as private
 		Map<String, Set<String>> actionRoles = new HashMap<String, Set<String>>();
 		for (Field field : clazz.getDeclaredFields()) {
-			Secured annotation = field.getAnnotation(Secured.class);
+			Annotation annotation = findAnnotation(field.getAnnotations());
 			if (annotation != null) {
-				actionRoles.put(field.getName(), asSet(annotation.value()));
+				actionRoles.put(field.getName(), asSet(getValue(annotation)));
 			}
 		}
 		for (Method method : clazz.getDeclaredMethods()) {
-			Secured annotation = method.getAnnotation(Secured.class);
+			Annotation annotation = findAnnotation(method.getAnnotations());
 			if (annotation != null) {
-				actionRoles.put(method.getName(), asSet(annotation.value()));
+				actionRoles.put(method.getName(), asSet(getValue(annotation)));
 			}
 		}
 		return actionRoles;
+	}
+
+	private Annotation findAnnotation(Annotation[] annotations) {
+		for (Annotation annotation : annotations) {
+			if (ANNOTATION_CLASS_NAMES.contains(annotation.annotationType().getName())) {
+				return annotation;
+			}
+		}
+		return null;
+	}
+
+	private String[] getValue(Annotation annotation) {
+		if (annotation instanceof grails.plugins.springsecurity.Secured) {
+			return ((grails.plugins.springsecurity.Secured)annotation).value();
+		}
+		return ((org.springframework.security.access.annotation.Secured)annotation).value();
 	}
 
 	private Set<String> asSet(final String[] strings) {
