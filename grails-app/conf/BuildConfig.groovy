@@ -36,10 +36,10 @@ grails.project.dependency.resolution = {
 
 		build(':release:1.0.0') { export = false }
 
-		build(":hibernate:$grailsVersion") {
-			export = false
-			if (Metadata.current.getGrailsVersion()[0] != '1') {
-				excludes 'dom4j'
+		if (Metadata.current.getGrailsVersion()[0] != '1') {
+			build(":hibernate:$grailsVersion") {
+				export = false
+					excludes 'dom4j'
 			}
 		}
 
