@@ -26,7 +26,7 @@ Creates a user and role class (and optionally a requestmap class) in the specifi
 Example: grails s2-quickstart com.yourapp User Role
 Example: grails s2-quickstart com.yourapp Person Authority Requestmap
 
-Create login and logout controllers
+Create login and logout controllers (useful with LDAP, Mock, Shibboleth, etc...)
 
 Example: grails s2-quickstart --controllers-only
 """
