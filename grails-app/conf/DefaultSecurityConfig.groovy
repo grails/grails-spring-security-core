@@ -66,6 +66,7 @@ security {
 	userLookup.accountLockedPropertyName = 'accountLocked'
 	userLookup.passwordExpiredPropertyName = 'passwordExpired'
 	userLookup.authorityJoinClassName = 'PersonAuthority'
+	userLookup.enabled = true
 	authority.className = 'Authority'
 	authority.nameField = 'authority'
 
