@@ -670,7 +670,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 			mc.getAuthenticatedUser = { ->
 				if (!ctx.springSecurityService.isLoggedIn()) return null
 				String userClassName = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-				Boolean userLookupEnabled = 
 				if (! SpringSecurityUtils.securityConfig.userLookup.enabled) { return null }
 				def dc = ctx.grailsApplication.getDomainClass(userClassName)
 				if (!dc) {
