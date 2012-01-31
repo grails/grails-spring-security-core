@@ -4,9 +4,10 @@ Enable events with @grails.plugins.springsecurity.useSecurityEventListener = tru
 package com.foo.bar
 
 import org.springframework.context.ApplicationListener
-import org.springframework.security.authentication.event.AuthenticationSuccessEvent
+import org.springframework.security.authentication.event. AuthenticationSuccessEvent
 
-class MySecurityEventListener implements ApplicationListener<AuthenticationSuccessEvent> {
+class MySecurityEventListener
+      implements ApplicationListener<AuthenticationSuccessEvent> {
 
    void onApplicationEvent(AuthenticationSuccessEvent event) {
       // handle the event

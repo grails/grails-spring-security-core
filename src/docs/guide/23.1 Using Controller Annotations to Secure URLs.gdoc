@@ -166,7 +166,7 @@ h4. 4. Create a controller that will be restricted by role.
 $ grails create-controller com.testapp.Secure
 {code}
 
-This command creates @grails-app/controllers/com/testapp/SecureController.groovy@. Add some output so you can verify that things are working:
+This command creates @grails-app/controllers/com/testapp/ SecureController.groovy@. Add some output so you can verify that things are working:
 
 {code}
 package com.testapp

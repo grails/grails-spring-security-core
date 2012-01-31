@@ -1,4 +1,4 @@
-/* Copyright 2006-2010 the original author or authors.
+/* Copyright 2006-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -258,7 +258,7 @@ class SecurityTagLib {
 	}
 
 	protected synchronized Expression findOrCreateExpression(String text) {
-		Expression expression = expressionCache.get(text);
+		Expression expression = expressionCache.get(text)
 		if (!expression) {
 			expression = webExpressionHandler.expressionParser.parseExpression(text)
 			expressionCache[text] = expression
