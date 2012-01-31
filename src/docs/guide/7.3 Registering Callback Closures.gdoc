@@ -5,23 +5,23 @@ Implement the event handlers that you need, for example:
 {code}
 grails.plugins.springsecurity.useSecurityEventListener = true
 
-grails.plugins.springsecurity.onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
+grails.plugins.springsecurity. onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
    // handle InteractiveAuthenticationSuccessEvent
 }
 
-grails.plugins.springsecurity.onAbstractAuthenticationFailureEvent = { e, appCtx ->
+grails.plugins.springsecurity. onAbstractAuthenticationFailureEvent = { e, appCtx ->
    // handle AbstractAuthenticationFailureEvent
 }
 
-grails.plugins.springsecurity.onAuthenticationSuccessEvent = { e, appCtx ->
+grails.plugins.springsecurity. onAuthenticationSuccessEvent = { e, appCtx ->
    // handle AuthenticationSuccessEvent
 }
 
-grails.plugins.springsecurity.onAuthenticationSwitchUserEvent = { e, appCtx ->
+grails.plugins.springsecurity. onAuthenticationSwitchUserEvent = { e, appCtx ->
    // handle AuthenticationSwitchUserEvent
 }
 
-grails.plugins.springsecurity.onAuthorizationEvent = { e, appCtx ->
+grails.plugins.springsecurity. onAuthorizationEvent = { e, appCtx ->
    // handle AuthorizationEvent
 }
 {code}

@@ -1,6 +1,6 @@
-When you authenticate users from a database using [DaoAuthenticationProvider|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html] (the default mode in the plugin if you have not enabled OpenID, LDAP, and so on), an implementation of [UserDetailsService|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html] is required. This class is responsible for returning a concrete implementation of [UserDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html]. The plugin provides @org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService@ as its @UserDetailsService@ implementation and @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@ (which extends Spring Security's [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html]) as its @UserDetails@ implementation.
+When you authenticate users from a database using [DaoAuthenticationProvider|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html] (the default mode in the plugin if you have not enabled OpenID, LDAP, and so on), an implementation of [UserDetailsService|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html] is required. This class is responsible for returning a concrete implementation of [UserDetails|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html]. The plugin provides @org.codehaus.groovy.grails.plugins.springsecurity. GormUserDetailsService@ as its @UserDetailsService@ implementation and @org.codehaus.groovy.grails.plugins.springsecurity. GrailsUser@ (which extends Spring Security's [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html]) as its @UserDetails@ implementation.
 
-You can extend or replace @GormUserDetailsService@ with your own implementation by defining a bean in @grails-app/conf/spring/resources.groovy@ (or @resources.xml@) with the same bean name, @userDetailsService@. This works because application beans are configured after plugin beans and there can only be one bean for each name. The plugin uses an extension of @UserDetailsService@, @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUserDetailsService@, which adds the method @UserDetails loadUserByUsername(String username, boolean loadRoles)@ to support use cases like in LDAP where you often infer all roles from LDAP but might keep application-specific user details in the database.
+You can extend or replace @GormUserDetailsService@ with your own implementation by defining a bean in @grails-app/conf/spring/resources.groovy@ (or @resources.xml@) with the same bean name, @userDetailsService@. This works because application beans are configured after plugin beans and there can only be one bean for each name. The plugin uses an extension of @UserDetailsService@, @org.codehaus.groovy.grails.plugins.springsecurity. GrailsUserDetailsService@, which adds the method @UserDetails loadUserByUsername(String username, boolean loadRoles)@ to support use cases like in LDAP where you often infer all roles from LDAP but might keep application-specific user details in the database.
 
 In the following example, the @UserDetails@ and @GrailsUserDetailsService@ implementation adds the full name of the user domain class in addition to the standard information. If you extract extra data from your domain class, you are less likely to need to reload the user from the database. Most of your common data can be kept along with your security credentials.
 
@@ -46,9 +46,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 class MyUserDetailsService implements GrailsUserDetailsService {
 
    /**
-    * Some Spring Security classes (e.g. RoleHierarchyVoter) expect at least one role, so
-    * we give a user with no granted roles this one which gets past that restriction but
-    * doesn't grant anything.
+    * Some Spring Security classes (e.g. RoleHierarchyVoter) expect at least
+    * one role, so we give a user with no granted roles this one which gets
+    * past that restriction but doesn't grant anything.
     */
    static final List NO_ROLES = [new GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)]
 
@@ -62,9 +62,12 @@ class MyUserDetailsService implements GrailsUserDetailsService {
       User.withTransaction { status ->
 
          User user = User.findByUsername(username)
-         if (!user) throw new UsernameNotFoundException('User not found', username)
+         if (!user) throw new UsernameNotFoundException(
+                      'User not found', username)
 
-         def authorities = user.authorities.collect {new GrantedAuthorityImpl(it.authority)}
+         def authorities = user.authorities.collect {
+             new GrantedAuthorityImpl(it.authority)
+         }
 
          return new MyUserDetails(user.username, user.password, user.enabled,
             !user.accountExpired, !user.passwordExpired,
@@ -85,7 +88,7 @@ beans = {
 }
 {code}
 
-Another option for loading users and roles from the database is to subclass @org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService@ - the methods are all protected so you can override as needed.
+Another option for loading users and roles from the database is to subclass @org.codehaus.groovy.grails.plugins.springsecurity. GormUserDetailsService@ - the methods are all protected so you can override as needed.
 
 This approach works with all beans defined in @SpringSecurityCoreGrailsPlugin.doWithSpring()@ - you can replace or subclass any of the Spring beans to provide your own functionality when the standard extension mechanisms are insufficient.
 

@@ -3,15 +3,15 @@ Spring Security supports creating a remember-me cookie so that users are not req
 {table}
 *Property* | *Default Value* | *Meaning*
 rememberMe.cookieName | 'grails_remember_me' | remember-me cookie name; should be unique per application.
-rememberMe.alwaysRemember | @false@ | If @true@, create a remember-me cookie even if no checkbox is on the form.
-rememberMe.tokenValiditySeconds | 1209600 (14 days) | Max age of the cookie in seconds.
+rememberMe. alwaysRemember | @false@ | If @true@, create a remember-me cookie even if no checkbox is on the form.
+rememberMe. tokenValiditySeconds | 1209600 (14 days) | Max age of the cookie in seconds.
 rememberMe.parameter | '_spring_security_remember_me' | Login form remember-me checkbox name.
 rememberMe.key | 'grailsRocks' | Value used to encode cookies; should be unique per application.
 rememberMe.useSecureCookie | false | Whether to use a secure cookie or not
 rememberMe.persistent | @false@ | If @true@, stores persistent login information in the database.
-rememberMe.persistentToken.domainClassName | 'PersistentLogin' | Domain class used to manage persistent logins.
-rememberMe.persistentToken.seriesLength | 16 | Number of characters in the cookie's @series@ attribute.
-rememberMe.persistentToken.tokenLength | 16 | Number of characters in the cookie's @token@ attribute.
+rememberMe.persistentToken. domainClassName | 'PersistentLogin' | Domain class used to manage persistent logins.
+rememberMe.persistentToken. seriesLength | 16 | Number of characters in the cookie's @series@ attribute.
+rememberMe.persistentToken. tokenLength | 16 | Number of characters in the cookie's @token@ attribute.
 atr.rememberMeClass | [RememberMeAuthenticationToken|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html] | remember-me authentication class.
 {table}
 
