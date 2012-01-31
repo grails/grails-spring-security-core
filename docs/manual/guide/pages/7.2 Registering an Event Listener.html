@@ -148,7 +148,8 @@ function addJsClass() {
 
 <h2 id="7.2 Registering an Event Listener">7.2 Registering an Event Listener</h2>
 Enable events with <code>grails.plugins.springsecurity.useSecurityEventListener = true</code> and create one or more Groovy or Java classes, for example:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.foo.bar<p class="paragraph"/><span class="java&#45;keyword">import</span> org.springframework.context.ApplicationListener
-<span class="java&#45;keyword">import</span> org.springframework.security.authentication.event.AuthenticationSuccessEvent<p class="paragraph"/>class MySecurityEventListener <span class="java&#45;keyword">implements</span> ApplicationListener&#60;AuthenticationSuccessEvent&#62; &#123;<p class="paragraph"/>   void onApplicationEvent(AuthenticationSuccessEvent event) &#123;
+<span class="java&#45;keyword">import</span> org.springframework.security.authentication.event. AuthenticationSuccessEvent<p class="paragraph"/>class MySecurityEventListener
+      <span class="java&#45;keyword">implements</span> ApplicationListener&#60;AuthenticationSuccessEvent&#62; &#123;<p class="paragraph"/>   void onApplicationEvent(AuthenticationSuccessEvent event) &#123;
       // handle the event
    &#125;
 &#125;</pre></div><p class="paragraph"/>Register the class in <code>grails-app/conf/spring/resources.groovy</code>:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.foo.bar.MySecurityEventListener<p class="paragraph"/>beans = &#123;
