@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Spring Security Core Plugin 1.2.7.1</title>
+        <title>Spring Security Core Plugin 1.2.7.2</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
@@ -100,7 +100,7 @@ function addJsClass(el) {
                         <div class="project">
                             <h1>Spring Security Core Plugin - Reference Documentation</h1>
                             <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
-                            <p><strong>Version:</strong> 1.2.7.1</p>
+                            <p><strong>Version:</strong> 1.2.7.2</p>
                             
                         </div>
 
@@ -216,6 +216,11 @@ function addJsClass(el) {
 <h1 id="1 Introduction to the Spring Security Plugin">1 Introduction to the Spring Security Plugin</h1>
 The Spring Security plugin simplifies the integration of  <a href="http://static.springsource.org/spring-security/site/index.html" target="blank">Spring Security</a> (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.<p class="paragraph"/>This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.<p class="paragraph"/><h4>Release History and Acknowledgment</h4>
 <ul class="star">
+<li>February 2, 2012</li>
+<ul class="star">
+<li>1.2.7.2 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13062" target="blank">JIRA Issues</a></li>
+</ul>
 <li>January 18, 2012</li>
 <ul class="star">
 <li>1.2.7.1 release</li>
@@ -1306,8 +1311,10 @@ Use channel security to configure which URLs require HTTP and which require HTTP
    '/maps/&#42;&#42;':          'REQUIRES_INSECURE_CHANNEL',
    '/images/login/&#42;&#42;':  'REQUIRES_SECURE_CHANNEL'
    '/images/&#42;&#42;':        'ANY_CHANNEL'
-&#93;</pre></div><p class="paragraph"/>URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, <code>/images/login/&#42;&#42;</code> is more specific than <code>/images/&#42;&#42;</code>, so it appears first in the configuration.
-
+&#93;</pre></div><p class="paragraph"/>URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, <code>/images/login/&#42;&#42;</code> is more specific than <code>/images/&#42;&#42;</code>, so it appears first in the configuration.<p class="paragraph"/><h4>Header checking</h4><p class="paragraph"/>The default implementation of channel security is fairly simple; if you're using HTTP but HTTPS is required, you get redirected to the corresponding SSL URL and vice versa. But when using a load balancer such as an F5 BIG-IP it's not possible to just check secure/insecure. In that case you can configure the load balancer to set a request header indicating the current state. To use this approach, set the <code>useHeaderCheckChannelSecurity</code> configuration property to <code>true</code> and optionally change the header names or values:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.secureChannel.useHeaderCheckChannelSecurity = <span class="java&#45;keyword">true</span></pre></div><p class="paragraph"/>By default the header name is "X-Forwarded-Proto" and the secure header value is "http" (i.e. if you're not secure, redirect to secure) and the insecure header value is "https" (i.e. if you're secure, redirect to insecure). You can change any or all of these default values though:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.secureChannel.secureHeaderName = '...'
+grails.plugins.springsecurity.secureChannel.secureHeaderValue = '...'
+grails.plugins.springsecurity.secureChannel.insecureHeaderName = '...'
+grails.plugins.springsecurity.secureChannel.insecureHeaderValue = '...'</pre></div><p class="paragraph"/>
 
 
 <h1 id="18 IP Address Restrictions">18 IP Address Restrictions</h1>
