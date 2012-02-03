@@ -199,6 +199,11 @@ security {
 
 	// secure channel filter (http/https)
 	secureChannel.definition = [:]
+	secureChannel.useHeaderCheckChannelSecurity = false
+	secureChannel.secureHeaderName = 'X-Forwarded-Proto'
+	secureChannel.secureHeaderValue = 'http'
+	secureChannel.insecureHeaderName = 'X-Forwarded-Proto'
+	secureChannel.insecureHeaderValue = 'https'
 
 	// X509
 	useX509 = false

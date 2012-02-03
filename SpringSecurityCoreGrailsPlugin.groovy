@@ -92,6 +92,8 @@ import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocation
 import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepository
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
 import org.codehaus.groovy.grails.plugins.springsecurity.GrailsWebInvocationPrivilegeEvaluator
+import org.codehaus.groovy.grails.plugins.springsecurity.HeaderCheckSecureChannelProcessor
+import org.codehaus.groovy.grails.plugins.springsecurity.HeaderCheckInsecureChannelProcessor
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
 import org.codehaus.groovy.grails.plugins.springsecurity.MutableLogoutFilter
@@ -111,7 +113,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2.7.1'
+	String version = '1.2.7.2'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -903,16 +905,31 @@ to default to 'Annotation'; setting value to 'Annotation'
 			portResolver = ref('portResolver')
 		}
 
-		secureChannelProcessor(SecureChannelProcessor) {
-			entryPoint = retryWithHttpsEntryPoint
-		}
+		if (conf.secureChannel.useHeaderCheckChannelSecurity) {
+			secureChannelProcessor(HeaderCheckSecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpsEntryPoint')
+				headerName = conf.secureChannel.secureHeaderName // 'X-Forwarded-Proto'
+				headerValue = conf.secureChannel.secureHeaderValue // 'http'
+			}
 
-		insecureChannelProcessor(InsecureChannelProcessor) {
-			entryPoint = retryWithHttpEntryPoint
+			insecureChannelProcessor(HeaderCheckInsecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpEntryPoint')
+				headerName = conf.secureChannel.insecureHeaderName // 'X-Forwarded-Proto'
+				headerValue = conf.secureChannel.insecureHeaderValue // 'https'
+			}
+		}
+		else {
+			secureChannelProcessor(SecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpsEntryPoint')
+			}
+
+			insecureChannelProcessor(InsecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpEntryPoint')
+			}
 		}
 
 		channelDecisionManager(ChannelDecisionManagerImpl) {
-			channelProcessors = [insecureChannelProcessor, secureChannelProcessor]
+			channelProcessors = [ref('insecureChannelProcessor'), ref('secureChannelProcessor')]
 		}
 
 		channelFilterInvocationSecurityMetadataSource(ChannelFilterInvocationSecurityMetadataSourceFactoryBean) {
