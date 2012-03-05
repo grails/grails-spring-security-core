@@ -2,10 +2,13 @@ h1. s2-quickstart
 
 h2. Purpose
 
-Creates a user and role class (and optionally a requestmap class) in the specified package. The general format is:
+Creates login and logout crontrollers, views and a user and role class (and optionally a requestmap class) in the specified package. The general format is:
+Alternativly, creates only login and logout controllers and their associated views.
 
 bc.
 grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME \[REQUESTMAP_CLASS_NAME\]
+or
+grails s2-quickstart --controllers-only
 
 h2. Examples
 
@@ -15,9 +18,21 @@ grails s2-quickstart com.yourapp User Role
 bc.
 grails s2-quickstart com.yourapp Person Authority Requestmap
 
+bc.
+grails s2-quickstart --controllers-only
+
+
 h2. Description
 
+Standard format (DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME \[REQUESTMAP_CLASS_NAME\])
 * creates domain classes in @grails-app/domain@
+* creates example GSPs and controllers:
+** @grails-app/views/login/auth.gsp@ - shows a standard username/password login page
+** @grails-app/views/login/denied.gsp@ - shows a 403 error page
+** @grails-app/controllers/LoginController.groovy@ - manages login workflow
+** @grails-app/controllers/LogoutController.groovy@ - logs users out of the application
+
+Controllers only format, useful for plugins that provide their own useri details classes. (LDAP, Mock, Shibboleth, etc...)
 * creates example GSPs and controllers:
 ** @grails-app/views/login/auth.gsp@ - shows a standard username/password login page
 ** @grails-app/views/login/denied.gsp@ - shows a 403 error page

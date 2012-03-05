@@ -19,11 +19,16 @@ includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groov
 
 USAGE = """
 Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name]
+   or: grails s2-quickstart --controllers-only
 
 Creates a user and role class (and optionally a requestmap class) in the specified package
 
 Example: grails s2-quickstart com.yourapp User Role
 Example: grails s2-quickstart com.yourapp Person Authority Requestmap
+
+Create login and logout controllers (useful with LDAP, Mock, Shibboleth, etc...)
+
+Example: grails s2-quickstart --controllers-only
 """
 
 includeTargets << grailsScript('_GrailsBootstrap')
@@ -32,6 +37,7 @@ packageName = ''
 userClassName = ''
 roleClassName = ''
 requestmapClassName = ''
+controllersOnly = false
 
 target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	depends(checkVersion, configureProxy, packageApp, classpath)
@@ -39,6 +45,7 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	if (!configure()) {
 		return 1
 	}
+	if (! controllersOnly) {
 	createDomains()
 	copyControllersAndViews()
 	updateConfig()
@@ -51,6 +58,14 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 * please verify that the values are correct.          *
 *******************************************************
 """
+	} else {
+		copyControllersAndViews()
+		printMessage """
+*******************************************************
+* Created controllers, and GSPs.                      * 
+*******************************************************
+"""
+	}
 }
 
 private boolean configure() {
@@ -62,8 +77,9 @@ private boolean configure() {
 
 	if (argValues.size() == 4) {
 		(packageName, userClassName, roleClassName, requestmapClassName) = argValues
-	}
-	else {
+	} else if (argValues.size() == 1 && argValues[0] == '--controllers-only') {
+		controllersOnly = true
+	} else {
 		(packageName, userClassName, roleClassName) = argValues
 	}
 
