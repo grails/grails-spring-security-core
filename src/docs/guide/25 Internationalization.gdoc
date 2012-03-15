@@ -1,4 +1,4 @@
-Spring Security Core plugin is provided with English and French i18n messages.
+Spring Security Core plugin is provided with English, French and German i18n messages.
 
 If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:
 
