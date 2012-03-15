@@ -10,8 +10,9 @@ For example:
 
 {code}
 grails.plugins.springsecurity.filterChain.filterNames = [
-   'securityContextPersistenceFilter', 'logoutFilter', 'authenticationProcessingFilter',
-   'myCustomProcessingFilter', 'rememberMeAuthenticationFilter', 'anonymousAuthenticationFilter',
+   'securityContextPersistenceFilter', 'logoutFilter',
+   'authenticationProcessingFilter', 'myCustomProcessingFilter',
+   'rememberMeAuthenticationFilter', 'anonymousAuthenticationFilter',
    'exceptionTranslationFilter', 'filterInvocationInterceptor'
 ]
 {code}
@@ -37,15 +38,15 @@ There's also a filter negation syntax that can be very convenient. Rather than s
 
 {code}
 grails.plugins.springsecurity.filterChain.chainMap = [
-   '/webservice/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
-   '/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+'/webservice/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+'/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
 ]
 {code}
 
 For the @/webservice/\*\*@ URLs, we want all filters except for the standard @ExceptionTranslationFilter@ since we want to use just the one configured for Basic Auth. And for the @/\*\*@ URLs (everything else) we want everything except for the Basic Auth filter and its configured @ExceptionTranslationFilter@.
 
 h4. clientRegisterFilter
-An alternative to setting the @filterNames@ property is @org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils.clientRegisterFilter()@. This property allows you to add a custom filter to the chain at a specified position. Each standard filter has a corresponding position in the chain (see @org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition@ for details). So if you have created an application-specific filter, register it in @grails-app/conf/spring/resources.groovy@:
+An alternative to setting the @filterNames@ property is @org.codehaus.groovy.grails.plugins.springsecurity. SpringSecurityUtils.clientRegisterFilter()@. This property allows you to add a custom filter to the chain at a specified position. Each standard filter has a corresponding position in the chain (see @org.codehaus.groovy.grails.plugins.springsecurity. SecurityFilterPosition@ for details). So if you have created an application-specific filter, register it in @grails-app/conf/spring/resources.groovy@:
 
 {code}
 beans = {

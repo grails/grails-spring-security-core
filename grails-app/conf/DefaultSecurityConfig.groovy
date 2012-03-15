@@ -1,4 +1,4 @@
-/* Copyright 2006-2010 the original author or authors.
+/* Copyright 2006-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -199,6 +199,11 @@ security {
 
 	// secure channel filter (http/https)
 	secureChannel.definition = [:]
+	secureChannel.useHeaderCheckChannelSecurity = false
+	secureChannel.secureHeaderName = 'X-Forwarded-Proto'
+	secureChannel.secureHeaderValue = 'http'
+	secureChannel.insecureHeaderName = 'X-Forwarded-Proto'
+	secureChannel.insecureHeaderValue = 'https'
 
 	// X509
 	useX509 = false

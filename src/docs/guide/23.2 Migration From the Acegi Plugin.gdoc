@@ -31,7 +31,7 @@ h4. authenticateService
 
 The utility service in Spring Security Core is @SpringSecurityService@, so you need to replace @def authenticateService@ with @def springSecurityService@. Many of the methods have the same names and signatures but there are some differences:
 * @principal()@ was renamed to @getPrincipal()@
-* @ifAllGranted()@, @ifNotGranted()@, and @ifAnyGranted()@ were removed; use @org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils.ifAllGranted()@, @ifNotGranted()@, and @ifAnyGranted()@ instead
+* @ifAllGranted()@, @ifNotGranted()@, and @ifAnyGranted()@ were removed; use @org.codehaus.groovy.grails.plugins.springsecurity. SpringSecurityUtils.ifAllGranted()@, @ifNotGranted()@, and @ifAnyGranted()@ instead
 * @getSecurityConfig()@ was removed, use @SpringSecurityUtils.getSecurityConfig()@ instead
 
 One significant change between the plugins is that the @UserDetails@ implementation (@GrailsUser@) no longer has a reference to the domain class instance. This was intended to make it easy to access User class data that's not available in the @Principal@ but it has frustrating side effects due to being a disconnected Hibernate object. Instead @GrailsUser@ stores the user's id so you can conveniently retrieve the instance when needed. So instead of
@@ -86,16 +86,19 @@ Configuration settings are now stored in @grails-app/conf/Config.groovy@ along w
 
 In particular it's important that the following properties be configured (replace class and package names to match your domain classes):
 {code}
-grails.plugins.springsecurity.userLookup.userDomainClassName = 'com.yourcompany.yourapp.User'
-grails.plugins.springsecurity.userLookup.authorityJoinClassName = 'com.yourcompany.yourapp.UserRole'
-grails.plugins.springsecurity.authority.className = 'com.yourcompany.yourapp.Role'
+grails. plugins. springsecurity. userLookup. userDomainClassName =
+         'com.yourcompany.yourapp.User'
+grails. plugins. springsecurity. userLookup. authorityJoinClassName =
+         'com.yourcompany.yourapp.UserRole'
+grails. plugins. springsecurity. authority. className =
+         'com.yourcompany.yourapp.Role'
 {code}
 
 Delete @SecurityConfig.groovy@ when you're finished.
 
 h4. Controller annotations
 
-The @Secured@ annotation changed from @org.codehaus.groovy.grails.plugins.springsecurity.Secured@ to @grails.plugins.springsecurity.Secured@. Consider using [SpEL expressions|guide:5.4 Using Expressions to Create Descriptive, Fine-Grained Rules] since they're a lot more powerful and expressive than simple role names.
+The @Secured@ annotation changed from @org.codehaus.groovy.grails.plugins. springsecurity.Secured@ to @grails.plugins.springsecurity.Secured@. Consider using [SpEL expressions|guide:5.4 Using Expressions to Create Descriptive, Fine-Grained Rules] since they're a lot more powerful and expressive than simple role names.
 
 h4. Security tags
 

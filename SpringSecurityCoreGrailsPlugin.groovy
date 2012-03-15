@@ -1,4 +1,4 @@
-/* Copyright 2006-2011 the original author or authors.
+/* Copyright 2006-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,6 +92,8 @@ import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocation
 import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepository
 import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
 import org.codehaus.groovy.grails.plugins.springsecurity.GrailsWebInvocationPrivilegeEvaluator
+import org.codehaus.groovy.grails.plugins.springsecurity.HeaderCheckSecureChannelProcessor
+import org.codehaus.groovy.grails.plugins.springsecurity.HeaderCheckInsecureChannelProcessor
 import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
 import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
 import org.codehaus.groovy.grails.plugins.springsecurity.MutableLogoutFilter
@@ -111,7 +113,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2.4'
+	String version = '1.2.7.2'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -130,11 +132,15 @@ class SpringSecurityCoreGrailsPlugin {
 	String documentation = 'http://grails.org/plugin/spring-security-core'
 
 	String license = 'APACHE'
-	def organization = [ name: 'SpringSource', url: 'http://www.springsource.org/' ]
-	def developers = [
-		 [ name: 'Burt Beckwith', email: 'beckwithb@vmware.com' ] ]
-	def issueManagement = [ system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE' ]
-	def scm = [ url: 'https://github.com/grails-plugins/grails-spring-security-core' ]
+	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
+	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE']
+	def scm = [url: 'https://github.com/grails-plugins/grails-spring-security-core']
+
+	// make sure the filter chain filter is after the Grails filter
+	def getWebXmlFilterOrder() {
+		def FilterManager = getClass().getClassLoader().loadClass('grails.plugin.webxml.FilterManager')
+		[springSecurityFilterChain: FilterManager.GRAILS_WEB_REQUEST_POSITION + 100]
+	}
 
 	def doWithWebDescriptor = { xml ->
 
@@ -147,7 +153,29 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		// filter chain is added in _Events.groovy to ensure correct positioning
+		// we add the filter(s) right after the last context-param
+		def contextParam = xml.'context-param'
+
+		// the name of the filter matches the name of the Spring bean that it delegates to
+		contextParam[contextParam.size() - 1] + {
+			'filter' {
+				'filter-name'('springSecurityFilterChain')
+				'filter-class'(DelegatingFilterProxy.name)
+			}
+		}
+
+		// add the filter-mapping after the Spring character encoding filter
+		findMappingLocation.delegate = delegate
+		def mappingLocation = findMappingLocation(xml)
+		mappingLocation + {
+			'filter-mapping' {
+				'filter-name'('springSecurityFilterChain')
+				'url-pattern'('/*')
+				'dispatcher'('ERROR')
+				'dispatcher'('FORWARD')
+				'dispatcher'('REQUEST')
+			}
+		}
 
 		if (conf.useHttpSessionEventPublisher) {
 			def filterMapping = xml.'filter-mapping'
@@ -177,7 +205,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		println '\nConfiguring Spring Security ...'
+		println '\nConfiguring Spring Security Core ...'
 
 		createRefList.delegate = delegate
 
@@ -491,6 +519,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 		if (conf.registerLoggerListener) {
 			loggerListener(LoggerListener)
 		}
+
+		println '... finished configuring Spring Security Core\n'
 	}
 
 	def doWithDynamicMethods = { ctx ->
@@ -875,16 +905,31 @@ to default to 'Annotation'; setting value to 'Annotation'
 			portResolver = ref('portResolver')
 		}
 
-		secureChannelProcessor(SecureChannelProcessor) {
-			entryPoint = retryWithHttpsEntryPoint
-		}
+		if (conf.secureChannel.useHeaderCheckChannelSecurity) {
+			secureChannelProcessor(HeaderCheckSecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpsEntryPoint')
+				headerName = conf.secureChannel.secureHeaderName // 'X-Forwarded-Proto'
+				headerValue = conf.secureChannel.secureHeaderValue // 'http'
+			}
 
-		insecureChannelProcessor(InsecureChannelProcessor) {
-			entryPoint = retryWithHttpEntryPoint
+			insecureChannelProcessor(HeaderCheckInsecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpEntryPoint')
+				headerName = conf.secureChannel.insecureHeaderName // 'X-Forwarded-Proto'
+				headerValue = conf.secureChannel.insecureHeaderValue // 'https'
+			}
+		}
+		else {
+			secureChannelProcessor(SecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpsEntryPoint')
+			}
+
+			insecureChannelProcessor(InsecureChannelProcessor) {
+				entryPoint = ref('retryWithHttpEntryPoint')
+			}
 		}
 
 		channelDecisionManager(ChannelDecisionManagerImpl) {
-			channelProcessors = [insecureChannelProcessor, secureChannelProcessor]
+			channelProcessors = [ref('insecureChannelProcessor'), ref('secureChannelProcessor')]
 		}
 
 		channelFilterInvocationSecurityMetadataSource(ChannelFilterInvocationSecurityMetadataSourceFactoryBean) {
@@ -987,5 +1032,39 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		authenticationEntryPoint(Http403ForbiddenEntryPoint)
+	}
+
+	private findMappingLocation = { xml ->
+
+		// find the location to insert the filter-mapping; needs to be after the 'charEncodingFilter'
+		// which may not exist. should also be before the sitemesh filter.
+		// thanks to the JSecurity plugin for the logic.
+
+		def mappingLocation = xml.'filter-mapping'.find { it.'filter-name'.text() == 'charEncodingFilter' }
+		if (mappingLocation) {
+			return mappingLocation
+		}
+
+		// no 'charEncodingFilter'; try to put it before sitemesh
+		int i = 0
+		int siteMeshIndex = -1
+		xml.'filter-mapping'.each {
+			if (it.'filter-name'.text().equalsIgnoreCase('sitemesh')) {
+				siteMeshIndex = i
+			}
+			i++
+		}
+		if (siteMeshIndex > 0) {
+			return xml.'filter-mapping'[siteMeshIndex - 1]
+		}
+
+		if (siteMeshIndex == 0 || xml.'filter-mapping'.size() == 0) {
+			def filters = xml.'filter'
+			return filters[filters.size() - 1]
+		}
+
+		// neither filter found
+		def filters = xml.'filter'
+		return filters[filters.size() - 1]
 	}
 }

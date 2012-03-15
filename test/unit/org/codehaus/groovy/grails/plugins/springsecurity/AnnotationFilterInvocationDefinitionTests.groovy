@@ -1,4 +1,4 @@
-/* Copyright 2006-2010 the original author or authors.
+/* Copyright 2006-2012 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,7 +49,7 @@ import org.springframework.web.context.request.RequestContextHolder
  */
 class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
-	private _fid
+	private AnnotationFilterInvocationDefinition _fid
 	private final _application = new TestApplication()
 
 	/**
