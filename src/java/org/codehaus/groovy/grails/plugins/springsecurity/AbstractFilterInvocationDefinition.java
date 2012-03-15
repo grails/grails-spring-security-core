@@ -24,7 +24,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.expression.Expression;
 import org.springframework.security.access.AccessDecisionVoter;
@@ -55,7 +56,7 @@ public abstract class AbstractFilterInvocationDefinition
 
 	private final Map<Object, Collection<ConfigAttribute>> _compiled = new LinkedHashMap<Object, Collection<ConfigAttribute>>();
 
-	protected final Logger _log = Logger.getLogger(getClass());
+	protected final Logger _log = LoggerFactory.getLogger(getClass());
 
 	protected static final Collection<ConfigAttribute> DENY = Collections.emptyList();
 
