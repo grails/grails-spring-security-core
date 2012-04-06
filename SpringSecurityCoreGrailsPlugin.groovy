@@ -113,7 +113,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2.7.2'
+	String version = '1.2.7.3'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
@@ -172,7 +172,6 @@ class SpringSecurityCoreGrailsPlugin {
 				'filter-name'('springSecurityFilterChain')
 				'url-pattern'('/*')
 				'dispatcher'('ERROR')
-				'dispatcher'('FORWARD')
 				'dispatcher'('REQUEST')
 			}
 		}
