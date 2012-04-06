@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>9.3 Remember-Me Cookie 1.2.7.2</title>
+    <title>9.3 Remember-Me Cookie 1.2.7.3</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -137,7 +137,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 1.2.7.2</p>
+                    <p><strong>Version:</strong> 1.2.7.3</p>
 
                     
                 </div>
@@ -153,7 +153,7 @@ Spring Security supports creating a remember-me cookie so that users are not req
 <li><code>rememberMe.key</code>. Part of a salt when the cookie is encrypted. Changing the default makes it harder to execute brute-force attacks.</li>
 <li><code>rememberMe.tokenValiditySeconds</code>. Default is two weeks; set it to what makes sense for your application.</li>
 </ul><p class="paragraph"/><h4>Persistent Logins</h4>
-The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/rememberMe.html" target="blank">Spring Security docs</a> for a description of the implementation.<p class="paragraph"/>Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.<p class="paragraph"/>To use this feature, run the <a href="../ref/Scripts/s2-create-persistent-token.html" class="Scripts">s2-create-persistent-token</a> script. This will create the domain class, and register its name in <code>grails-app/conf/Config.groovy</code>. It will also enable persistent logins by setting <code>rememberMe.persistent</code> to <code>true</code>.
+The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/remember-me.html" target="blank">Spring Security docs</a> for a description of the implementation.<p class="paragraph"/>Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.<p class="paragraph"/>To use this feature, run the <a href="../ref/Scripts/s2-create-persistent-token.html" class="Scripts">s2-create-persistent-token</a> script. This will create the domain class, and register its name in <code>grails-app/conf/Config.groovy</code>. It will also enable persistent logins by setting <code>rememberMe.persistent</code> to <code>true</code>.
 
 
 

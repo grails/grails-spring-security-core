@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
     <head>
-        <title>Spring Security Core Plugin 1.2.7.2</title>
+        <title>Spring Security Core Plugin 1.2.7.3</title>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
         <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
@@ -100,7 +100,7 @@ function addJsClass(el) {
                         <div class="project">
                             <h1>Spring Security Core Plugin - Reference Documentation</h1>
                             <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
-                            <p><strong>Version:</strong> 1.2.7.2</p>
+                            <p><strong>Version:</strong> 1.2.7.3</p>
                             
                         </div>
 
@@ -216,6 +216,11 @@ function addJsClass(el) {
 <h1 id="1 Introduction to the Spring Security Plugin">1 Introduction to the Spring Security Plugin</h1>
 The Spring Security plugin simplifies the integration of  <a href="http://static.springsource.org/spring-security/site/index.html" target="blank">Spring Security</a> (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.<p class="paragraph"/>This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.<p class="paragraph"/><h4>Release History and Acknowledgment</h4>
 <ul class="star">
+<li>April 6, 2012</li>
+<ul class="star">
+<li>1.2.7.3 release</li>
+<li><a href="http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13100" target="blank">JIRA Issues</a></li>
+</ul>
 <li>February 2, 2012</li>
 <ul class="star">
 <li>1.2.7.2 release</li>
@@ -836,7 +841,7 @@ Spring Security supports creating a remember-me cookie so that users are not req
 <li><code>rememberMe.key</code>. Part of a salt when the cookie is encrypted. Changing the default makes it harder to execute brute-force attacks.</li>
 <li><code>rememberMe.tokenValiditySeconds</code>. Default is two weeks; set it to what makes sense for your application.</li>
 </ul><p class="paragraph"/><h4>Persistent Logins</h4>
-The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/rememberMe.html" target="blank">Spring Security docs</a> for a description of the implementation.<p class="paragraph"/>Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.<p class="paragraph"/>To use this feature, run the <a href="../ref/Scripts/s2-create-persistent-token.html" class="Scripts">s2-create-persistent-token</a> script. This will create the domain class, and register its name in <code>grails-app/conf/Config.groovy</code>. It will also enable persistent logins by setting <code>rememberMe.persistent</code> to <code>true</code>.
+The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/remember-me.html" target="blank">Spring Security docs</a> for a description of the implementation.<p class="paragraph"/>Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.<p class="paragraph"/>To use this feature, run the <a href="../ref/Scripts/s2-create-persistent-token.html" class="Scripts">s2-create-persistent-token</a> script. This will create the domain class, and register its name in <code>grails-app/conf/Config.groovy</code>. It will also enable persistent logins by setting <code>rememberMe.persistent</code> to <code>true</code>.
 
 
 
@@ -1547,7 +1552,7 @@ The plugin registers some convenience methods into all controllers in your appli
 
 
 <h1 id="25 Internationalization">25 Internationalization</h1>
-Spring Security Core plugin is provided with English and French i18n messages.<p class="paragraph"/>If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Exception</strong></th></tr><tr class="table-odd"><td>springSecurity.errors.login.expired</td><td>"Sorry, your account is disabled."</td><td>AccountExpiredException</td></tr><tr class="table-even"><td>springSecurity.errors.login.passwordExpired</td><td>"Sorry, your account has expired."</td><td>CredentialsExpiredException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.disabled</td><td>"Sorry, your password has expired."</td><td>DisabledException</td></tr><tr class="table-even"><td>springSecurity.errors.login.locked</td><td>"Sorry, your account is locked."</td><td>LockedException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.fail</td><td>"Sorry, we were not able to find a user with that username and password."</td><td>Other exceptions</td></tr></table><p class="paragraph"/>You can customize all messages in auth.gsp and denied.gsp:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th></tr><tr class="table-odd"><td>springSecurity.login.title</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.header</td><td>Please Login..</td></tr><tr class="table-odd"><td>springSecurity.login.button</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.username.label</td><td>Login ID</td></tr><tr class="table-odd"><td>springSecurity.login.password.label</td><td>Password</td></tr><tr class="table-even"><td>springSecurity.login.remember.me.label</td><td>Remember me</td></tr><tr class="table-odd"><td>springSecurity.denied.title</td><td>Denied</td></tr><tr class="table-even"><td>springSecurity.denied.message</td><td>Sorry, you're not authorized to view this page.</td></tr></table>
+Spring Security Core plugin is provided with English, French and German i18n messages.<p class="paragraph"/>If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Exception</strong></th></tr><tr class="table-odd"><td>springSecurity.errors.login.expired</td><td>"Sorry, your account has expired."</td><td>AccountExpiredException</td></tr><tr class="table-even"><td>springSecurity.errors.login.passwordExpired</td><td>"Sorry, your password has expired."</td><td>CredentialsExpiredException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.disabled</td><td>"Sorry, your account is disabled."</td><td>DisabledException</td></tr><tr class="table-even"><td>springSecurity.errors.login.locked</td><td>"Sorry, your account is locked."</td><td>LockedException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.fail</td><td>"Sorry, we were not able to find a user with that username and password."</td><td>Other exceptions</td></tr></table><p class="paragraph"/>You can customize all messages in auth.gsp and denied.gsp:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th></tr><tr class="table-odd"><td>springSecurity.login.title</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.header</td><td>Please Login</td></tr><tr class="table-odd"><td>springSecurity.login.button</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.username.label</td><td>Username</td></tr><tr class="table-odd"><td>springSecurity.login.password.label</td><td>Password</td></tr><tr class="table-even"><td>springSecurity.login.remember.me.label</td><td>Remember me</td></tr><tr class="table-odd"><td>springSecurity.denied.title</td><td>Denied</td></tr><tr class="table-even"><td>springSecurity.denied.message</td><td>Sorry, you're not authorized to view this page.</td></tr></table>
 
 
                     </div>
