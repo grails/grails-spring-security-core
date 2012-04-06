@@ -172,7 +172,6 @@ class SpringSecurityCoreGrailsPlugin {
 				'filter-name'('springSecurityFilterChain')
 				'url-pattern'('/*')
 				'dispatcher'('ERROR')
-				'dispatcher'('FORWARD')
 				'dispatcher'('REQUEST')
 			}
 		}
