@@ -17,6 +17,8 @@ import grails.plugins.springsecurity.DigestAuthPasswordEncoder
 
 import javax.servlet.Filter
 
+import org.apache.log4j.Logger
+
 import org.springframework.cache.ehcache.EhCacheFactoryBean
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
 import org.springframework.security.access.event.LoggerListener
@@ -113,6 +115,8 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
+	private Logger log = Logger.getInstance('grails.plugin.springsecuritycore.SpringSecurityCoreGrailsPlugin')
+
 	String version = '1.2.7.3'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
@@ -200,11 +204,11 @@ class SpringSecurityCoreGrailsPlugin {
 
 		def conf = SpringSecurityUtils.securityConfig
 		if (!conf || !conf.active) {
-			println '\n\nSpring Security is disabled, not loading\n\n'
+			log.debug('Spring Security is disabled, not loading')
 			return
 		}
 
-		println '\nConfiguring Spring Security Core ...'
+		log.debug('Configuring Spring Security Core ...')
 
 		createRefList.delegate = delegate
 
@@ -315,11 +319,11 @@ class SpringSecurityCoreGrailsPlugin {
 		if (securityConfigType != 'Annotation' &&
 				securityConfigType != 'Requestmap' &&
 				securityConfigType != 'InterceptUrlMap') {
-			println """
-ERROR: the 'securityConfigType' property must be one of
+			log.error("""
+The 'securityConfigType' property must be one of
 'Annotation', 'Requestmap', or 'InterceptUrlMap' or left unspecified
 to default to 'Annotation'; setting value to 'Annotation'
-"""
+""")
 			securityConfigType = 'Annotation'
 		}
 
@@ -519,7 +523,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			loggerListener(LoggerListener)
 		}
 
-		println '... finished configuring Spring Security Core\n'
+		log.debug('... finished configuring Spring Security Core')
 	}
 
 	def doWithDynamicMethods = { ctx ->
