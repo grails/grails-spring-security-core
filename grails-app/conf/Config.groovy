@@ -5,6 +5,10 @@ import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 
+log4j = {
+    debug 'grails.plugin.springsecuritycore'
+}
+
 grails {
 	plugins {
 		springsecurity {
