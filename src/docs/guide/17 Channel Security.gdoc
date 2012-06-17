@@ -13,7 +13,7 @@ Build a Map under the @secureChannel.definition@ key, where the keys are URL pat
 grails.plugins.springsecurity.secureChannel.definition = [
    '/login/**':         'REQUIRES_SECURE_CHANNEL',
    '/maps/**':          'REQUIRES_INSECURE_CHANNEL',
-   '/images/login/**':  'REQUIRES_SECURE_CHANNEL'
+   '/images/login/**':  'REQUIRES_SECURE_CHANNEL',
    '/images/**':        'ANY_CHANNEL'
 ]
 {code}
