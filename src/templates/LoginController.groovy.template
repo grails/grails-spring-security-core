@@ -10,7 +10,6 @@ import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.WebAttributes
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
 class LoginController {
 
@@ -88,7 +87,6 @@ class LoginController {
 	 */
 	def authfail = {
 
-		def username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY]
 		String msg = ''
 		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
 		if (exception) {
