@@ -56,7 +56,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		Class<?> userClazz = dc.clazz
 
-		User.withTransaction { status ->
+		userClazz.withTransaction { status ->
 			def user = userClazz.findWhere((conf.userLookup.usernamePropertyName): username)
 			if (!user) {
 				log.warn "User not found: $username"
