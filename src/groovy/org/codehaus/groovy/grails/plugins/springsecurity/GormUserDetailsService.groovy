@@ -54,10 +54,10 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 			throw new RuntimeException("The specified user domain class '$userClassName' is not a domain class")
 		}
 
-		Class<?> User = dc.clazz
+		Class<?> userClazz = dc.clazz
 
 		User.withTransaction { status ->
-			def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
+			def user = userClazz.findWhere((conf.userLookup.usernamePropertyName): username)
 			if (!user) {
 				log.warn "User not found: $username"
 				throw new UsernameNotFoundException('User not found', username)

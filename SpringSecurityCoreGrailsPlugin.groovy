@@ -675,8 +675,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 				if (!dc) {
 					throw new RuntimeException("The specified user domain class '$userClassName' is not a domain class")
 				}
-				Class User = dc.clazz
-				User.get SCH.context.authentication.principal.id
+				Class userClaz = dc.clazz
+				userClaz.get SCH.context.authentication.principal.id
 			}
 		}
 	}
