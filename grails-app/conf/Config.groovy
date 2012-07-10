@@ -49,3 +49,5 @@ grails {
 grails.doc.authors = 'Burt Beckwith, Beverley Talbott'
 grails.doc.license = 'Apache License 2.0'
 grails.doc.title = 'Spring Security Core Plugin'
+grails.views.default.codec="none" // none, html, base64
+grails.views.gsp.encoding="UTF-8"
