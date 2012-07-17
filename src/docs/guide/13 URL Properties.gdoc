@@ -23,7 +23,7 @@ auth.useForward | false | Whether to render the login page (@true@) or redirect 
 logout.afterLogoutUrl | '/' | URL for redirect after logout.
 logout.filterProcessesUrl | '/j_spring_security_logout' | Logout URL, intercepted by Spring Security filter.
 logout.handlerNames | \['rememberMeServices', 'securityContextLogoutHandler'\] | Logout handler bean names. See [Logout Handlers|guide:20 Logout Handlers]
-adh.errorPage | '/login/denied' | Location of the 403 error page.
+adh.errorPage | '/login/denied' | Location of the 403 error page (or set to @null@ to send a 403 error and not render a page).
 adh.ajaxErrorPage | '/login/ajaxDenied' | Location of the 403 error page for Ajax requests.
 ajaxHeader | 'X-Requested-With' | Header name sent by Ajax library, used to detect Ajax.
 redirectStrategy. contextRelative | @false@ | If @true@, the redirect URL will be the value after the request context path. This results in the loss of protocol information (HTTP or HTTPS), so causes problems if a redirect is being performed to change from HTTP to HTTPS or vice versa.
