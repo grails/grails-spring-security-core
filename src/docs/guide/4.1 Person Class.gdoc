@@ -75,4 +75,5 @@ userLookup.accountExpiredPropertyName | 'accountExpired' | User class account ex
 userLookup.accountLockedPropertyName | 'accountLocked' | User class account locked field
 userLookup.passwordExpiredPropertyName | 'passwordExpired' | User class password expired field
 userLookup.authorityJoinClassName | 'PersonAuthority' | User/Role many-many join class name
+userLookup.enabled | @true@ | Enable GORM based user details lookup.  Sometimes disabled by Spring Security sub-plugins such as LDAP, Mock, or SAML when the User Details are stored in an external environment such as a SSO or LDAP server.
 {table}

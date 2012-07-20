@@ -76,8 +76,14 @@ class SpringSecurityService {
 			return null
 		}
 
-		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		grailsApplication.getClassForName(className).get(principal.id)
+		def userLookup = SpringSecurityUtils.securityConfig.userLookup
+		if (userLookup.enabled) {
+			String className = userLookup.userDomainClassName
+			grailsApplication.getClassForName(className).get(principal.id)
+		} else {
+			// Just return the principal if GORM userLookup is not enabled
+			return principal
+		}
 	}
 
 	/**
