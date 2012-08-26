@@ -22,4 +22,7 @@ controllerAnnotations. lowercase | @true@ | Whether to do URL comparisons using 
 controllerAnnotations. staticRules | none | Extra rules that cannot be mapped using annotations.
 interceptUrlMap | none | Request mapping definition when using "InterceptUrlMap". See [Simple Map in Config.groovy|guide:5.2 Simple Map in Config.groovy].
 registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events.
+scr.allowSessionCreation | @true@ | Whether to allow creating a session in the @securityContextRepository@ bean
+scr.disableUrlRewriting | @false@ | Whether to disable URL rewriting (and the jsessionid attribute)
+scpf.forceEagerSessionCreation | @false@ | Whether to eagerly create a session in the @securityContextRepository@ bean
 {table}

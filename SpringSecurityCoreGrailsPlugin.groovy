@@ -72,6 +72,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationEn
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
 import org.springframework.security.web.authentication.www.DigestAuthenticationEntryPoint
 import org.springframework.security.web.authentication.www.DigestAuthenticationFilter
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
@@ -216,8 +217,17 @@ class SpringSecurityCoreGrailsPlugin {
 		configureLogout.delegate = delegate
 		configureLogout conf
 
+		/** securityContextRepository */
+		securityContextRepository(HttpSessionSecurityContextRepository) {
+			allowSessionCreation = conf.scr.allowSessionCreation // true
+			disableUrlRewriting = conf.scr.disableUrlRewriting // false
+		}
+
 		/** securityContextPersistenceFilter */
-		securityContextPersistenceFilter(SecurityContextPersistenceFilter)
+		securityContextPersistenceFilter(SecurityContextPersistenceFilter) {
+			securityContextRepository = ref('securityContextRepository')
+			forceEagerSessionCreation = conf.scpf.forceEagerSessionCreation // false
+		}
 
 		/** authenticationProcessingFilter */
 		configureAuthenticationProcessingFilter.delegate = delegate
