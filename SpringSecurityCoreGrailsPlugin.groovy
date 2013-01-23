@@ -204,7 +204,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		log.info '\nConfiguring Spring Security Core ...'
+		log.info 'Configuring Spring Security Core ...'
 
 		createRefList.delegate = delegate
 
@@ -519,7 +519,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			loggerListener(LoggerListener)
 		}
 
-		log.info '... finished configuring Spring Security Core\n'
+		log.info '... finished configuring Spring Security Core'
 	}
 
 	def doWithDynamicMethods = { ctx ->
