@@ -204,7 +204,7 @@ class SpringSecurityCoreGrailsPlugin {
 			return
 		}
 
-		println '\nConfiguring Spring Security Core ...'
+		log.info 'Configuring Spring Security Core ...'
 
 		createRefList.delegate = delegate
 
@@ -315,7 +315,7 @@ class SpringSecurityCoreGrailsPlugin {
 		if (securityConfigType != 'Annotation' &&
 				securityConfigType != 'Requestmap' &&
 				securityConfigType != 'InterceptUrlMap') {
-			println """
+			log.error """
 ERROR: the 'securityConfigType' property must be one of
 'Annotation', 'Requestmap', or 'InterceptUrlMap' or left unspecified
 to default to 'Annotation'; setting value to 'Annotation'
@@ -519,7 +519,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			loggerListener(LoggerListener)
 		}
 
-		println '... finished configuring Spring Security Core\n'
+		log.info '... finished configuring Spring Security Core'
 	}
 
 	def doWithDynamicMethods = { ctx ->
