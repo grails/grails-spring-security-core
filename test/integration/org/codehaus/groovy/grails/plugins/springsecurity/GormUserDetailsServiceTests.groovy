@@ -93,8 +93,8 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save()
 		assertEquals 1, TestUser.count()
 
-		TestUserRole.create user, _adminRole
-		TestUserRole.create user, _superAdminRole
+		TestUserRole.create user, _adminRole, true
+		TestUserRole.create user, _superAdminRole, true
 
 		def details = userDetailsService.loadUserByUsername(loginName)
 		assertNotNull details
