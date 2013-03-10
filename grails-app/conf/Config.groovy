@@ -42,6 +42,9 @@ grails {
 					(CredentialsExpiredException.name): '/testUser/passwordExpired'
 				]
 			}
+            interceptUrlMap = [
+                '/testController/**':   ['roleInMap']
+            ]
 		}
 	}
 }
