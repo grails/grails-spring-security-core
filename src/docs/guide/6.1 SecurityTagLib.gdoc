@@ -180,3 +180,19 @@ You're not a user
 
 </sec:noAccess>
 {code}
+
+h4. link
+
+A wrapper around the standard Grails link tag that renders if the specified expression evaluates to @true@ or URL is allowed.
+
+To define the expression to evaluate within the tag itself:
+
+{code}
+<sec:link controller="myController" action="myAction" expression="hasRole('ROLE_USER')">My link text</sec:link>
+{code}
+
+To use access controls defined, for example, in the interceptUrlMap:
+
+{code}
+<sec:link controller="myController" action="myAction">My link text</sec:link>
+{code}
