@@ -69,6 +69,8 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		GrailsWebRequest existingRequest = WebUtils.retrieveGrailsWebRequest();
 
 		String requestUrl = request.getRequestURI().substring(request.getContextPath().length());
+    int indexOfPeriod = requestUrl.indexOf('.');
+    String requestUrlForMatching = (indexOfPeriod != -1) ? requestUrl.substring(0, indexOfPeriod) : requestUrl;
 
 		String url = null;
 		try {
@@ -78,7 +80,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
 
-			for (UrlMappingInfo mapping : _urlMappingsHolder.matchAll(requestUrl)) {
+			for (UrlMappingInfo mapping : _urlMappingsHolder.matchAll(requestUrlForMatching)) {
 				configureMapping(mapping, grailsRequest, savedParams);
 
 				url = findGrailsUrl(mapping);
