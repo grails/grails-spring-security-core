@@ -1,4 +1,4 @@
-/* Copyright 2006-2012 the original author or authors.
+/* Copyright 2006-2012 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,8 +93,8 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save()
 		assertEquals 1, TestUser.count()
 
-		TestUserRole.create user, _adminRole
-		TestUserRole.create user, _superAdminRole
+		TestUserRole.create user, _adminRole, true
+		TestUserRole.create user, _superAdminRole, true
 
 		def details = userDetailsService.loadUserByUsername(loginName)
 		assertNotNull details

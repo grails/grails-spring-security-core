@@ -1,7 +1,6 @@
-import grails.util.Metadata
-
 grails.project.work.dir = 'target'
 grails.project.docs.output.dir = 'docs/manual' // for backwards-compatibility, the docs are checked into gh-pages branch
+grails.project.source.level = 1.6
 
 grails.project.dependency.resolution = {
 
@@ -33,15 +32,11 @@ grails.project.dependency.resolution = {
 	}
 
 	plugins {
-
-		if (Metadata.current.getGrailsVersion()[0] != '1') {
-			build(":hibernate:$grailsVersion") {
-				export = false
-				excludes 'dom4j'
-			}
-		}
-
 		// hackish using 'provided' but 'build' doesn't put it in the pom
 		provided ':webxml:1.4.1'
+
+		build(':release:2.0.3', ':rest-client-builder:1.0.2') {
+			export = false
+		}
 	}
 }

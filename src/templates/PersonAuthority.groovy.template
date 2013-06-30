@@ -4,6 +4,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 
 class ${userClassName}${roleClassName} implements Serializable {
 
+	private static final long serialVersionUID = 1
+
 	${userClassName} ${userClassProperty}
 	${roleClassName} ${roleClassProperty}
 
