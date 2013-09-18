@@ -423,8 +423,11 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 		else {
 			passwordEncoder(MessageDigestPasswordEncoder, conf.password.algorithm) {
-			if (conf.password.encodeHashAsBase64) {
+				if (conf.password.encodeHashAsBase64) {
 					encodeHashAsBase64 = true
+				}
+				if (conf.password.iterations) {
+					iterations = conf.password.iterations
 				}
 			}
 		}

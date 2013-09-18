@@ -135,6 +135,7 @@ security {
 	// see http://java.sun.com/j2se/1.5.0/docs/guide/security/CryptoSpec.html#AppA
 	password.algorithm = 'SHA-256'
 	password.encodeHashAsBase64 = false
+	password.iterations = 1
 	password.bcrypt.logrounds = 10
 
 	/** rememberMeServices */
