@@ -14,36 +14,22 @@
  */
 package grails.plugin.springsecurity.web.access.intercept;
 
+import grails.plugin.springsecurity.InterceptedUrl;
 import grails.plugin.springsecurity.ReflectionUtils;
 
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.security.web.FilterInvocation;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
 
-	private boolean _initialized;
-
-	@Override
-	protected String determineUrl(final FilterInvocation filterInvocation) {
-		HttpServletRequest request = filterInvocation.getHttpRequest();
-		String requestUrl = request.getRequestURI().substring(request.getContextPath().length());
-		return lowercaseAndStripQuerystring(requestUrl);
-	}
-
 	@Override
 	protected void initialize() {
-		if (_initialized) {
-			return;
+		if (!initialized) {
+			reset();
 		}
-
-		reset();
 	}
 
 	@Override
@@ -55,18 +41,19 @@ public class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInv
 	@Override
 	public void reset() {
 		Object map = ReflectionUtils.getConfigProperty("interceptUrlMap");
-		if (!(map instanceof Map)) {
-			_log.warn("interceptUrlMap config property isn't a Map");
+		if (!(map instanceof Map || map instanceof List)) {
+			log.warn("interceptUrlMap config property isn't a Map or a List of Maps");
 			return;
 		}
 
 		resetConfigs();
 
-		Map<String, List<String>> data = ReflectionUtils.splitMap((Map<String, Object>)map);
-		for (Map.Entry<String, List<String>> entry : data.entrySet()) {
-			compileAndStoreMapping(entry.getKey(), entry.getValue());
+		List<InterceptedUrl> data = map instanceof Map ? ReflectionUtils.splitMap((Map<String, Object>)map) :
+		                                                 ReflectionUtils.splitMap((List<Map<String, Object>>)map);
+		for (InterceptedUrl iu : data) {
+			compileAndStoreMapping(iu);
 		}
 
-		_initialized = true;
+		initialized = true;
 	}
 }

@@ -14,43 +14,33 @@
  */
 package grails.plugin.springsecurity.web.access.intercept;
 
+import grails.plugin.springsecurity.InterceptedUrl;
 import grails.plugin.springsecurity.ReflectionUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.security.web.FilterInvocation;
+import org.springframework.http.HttpMethod;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class RequestmapFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
 
-	private boolean _initialized;
-
-	@Override
-	protected String determineUrl(final FilterInvocation filterInvocation) {
-		HttpServletRequest request = filterInvocation.getHttpRequest();
-		String requestUrl = request.getRequestURI().substring(request.getContextPath().length());
-		return lowercaseAndStripQuerystring(requestUrl);
-	}
-
 	@Override
 	protected void initialize() {
-		if (_initialized) {
+		if (initialized) {
 			return;
 		}
 
 		try {
 			reset();
-			_initialized = true;
+			initialized = true;
 		}
 		catch (RuntimeException e) {
-			_log.warn("Exception initializing; this is ok if it's at startup and due " +
+			log.warn("Exception initializing; this is ok if it's at startup and due " +
 					"to GORM not being initialized yet since the first web request will " +
-					"re-initialize. Error message is: " + e.getMessage());
+					"re-initialize. Error message is: {0}", e.getMessage());
 		}
 	}
 
@@ -59,23 +49,27 @@ public class RequestmapFilterInvocationDefinition extends AbstractFilterInvocati
 	 */
 	@Override
 	public synchronized void reset() {
-		Map<String, String> data = loadRequestmaps();
 		resetConfigs();
 
-		for (Map.Entry<String, String> entry : data.entrySet()) {
-			compileAndStoreMapping(entry.getKey(), split(entry.getValue()));
+		for (InterceptedUrl iu : loadRequestmaps()) {
+			compileAndStoreMapping(iu);
 		}
 
-		if (_log.isTraceEnabled()) _log.trace("configs: " + getConfigAttributeMap());
+		if (log.isTraceEnabled()) {
+			log.trace("configs: {0}", getConfigAttributeMap());
+		}
 	}
 
-	protected Map<String, String> loadRequestmaps() {
-		Map<String, String> data = new HashMap<String, String>();
+	protected List<InterceptedUrl> loadRequestmaps() {
+		List<InterceptedUrl> data = new ArrayList<InterceptedUrl>();
+
+		boolean supportsHttpMethod = ReflectionUtils.requestmapClassSupportsHttpMethod();
 
 		for (Object requestmap : ReflectionUtils.loadAllRequestmaps()) {
 			String urlPattern = ReflectionUtils.getRequestmapUrl(requestmap);
 			String configAttribute = ReflectionUtils.getRequestmapConfigAttribute(requestmap);
-			data.put(urlPattern, configAttribute);
+			HttpMethod method = supportsHttpMethod ? ReflectionUtils.getRequestmapHttpMethod(requestmap) : null;
+			data.add(new InterceptedUrl(urlPattern, split(configAttribute), method));
 		}
 
 		return data;

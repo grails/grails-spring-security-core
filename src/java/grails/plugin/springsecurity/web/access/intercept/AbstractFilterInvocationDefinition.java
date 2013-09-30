@@ -14,52 +14,49 @@
  */
 package grails.plugin.springsecurity.web.access.intercept;
 
-import grails.plugin.springsecurity.web.access.expression.WebExpressionConfigAttribute;
+import grails.plugin.springsecurity.InterceptedUrl;
 import grails.util.GrailsUtil;
+import grails.util.Metadata;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.expression.Expression;
-import org.springframework.security.access.AccessDecisionVoter;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
 import org.springframework.security.web.FilterInvocation;
-import org.springframework.security.web.access.expression.WebSecurityExpressionHandler;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.util.AntUrlPathMatcher;
-import org.springframework.security.web.util.UrlMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-public abstract class AbstractFilterInvocationDefinition
-       implements FilterInvocationSecurityMetadataSource, InitializingBean {
-
-	private UrlMatcher _urlMatcher;
-	private boolean _rejectIfNoRule;
-	private boolean _stripQueryStringFromUrls = true;
-	private RoleVoter _roleVoter;
-	private AuthenticatedVoter _authenticatedVoter;
-	private WebSecurityExpressionHandler _expressionHandler;
-
-	private final Map<Object, Collection<ConfigAttribute>> _compiled = new LinkedHashMap<Object, Collection<ConfigAttribute>>();
-
-	protected final Logger _log = LoggerFactory.getLogger(getClass());
+public abstract class AbstractFilterInvocationDefinition implements FilterInvocationSecurityMetadataSource, InitializingBean {
 
 	protected static final Collection<ConfigAttribute> DENY = Collections.emptyList();
+
+	protected boolean rejectIfNoRule;
+	protected RoleVoter roleVoter;
+	protected AuthenticatedVoter authenticatedVoter;
+	protected final List<InterceptedUrl> compiled = Collections.synchronizedList(new ArrayList<InterceptedUrl>());
+
+	protected AntPathMatcher urlMatcher = new AntPathMatcher();
+	protected boolean initialized;
+	protected boolean grails23Plus;
+
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	/**
 	 * Allows subclasses to be externally reset.
@@ -82,44 +79,67 @@ public abstract class AbstractFilterInvocationDefinition
 
 		Collection<ConfigAttribute> configAttributes;
 		try {
-			configAttributes = findConfigAttributes(url);
+			configAttributes = findConfigAttributes(url, filterInvocation.getRequest().getMethod());
+		}
+		catch (RuntimeException e) {
+			throw e;
 		}
 		catch (Exception e) {
-			// TODO fix this
 			throw new RuntimeException(e);
 		}
 
-		if (configAttributes == null && _rejectIfNoRule) {
+		if (configAttributes == null && rejectIfNoRule) {
 			return DENY;
 		}
 
 		return configAttributes;
 	}
 
-	protected abstract String determineUrl(FilterInvocation filterInvocation);
+	protected String determineUrl(final FilterInvocation filterInvocation) {
+		return lowercaseAndStripQuerystring(calculateUri(filterInvocation.getHttpRequest()));
+	}
 
 	protected boolean stopAtFirstMatch() {
 		return false;
 	}
 
-	private Collection<ConfigAttribute> findConfigAttributes(final String url) throws Exception {
+	// for testing
+	public InterceptedUrl getInterceptedUrl(final String url, final HttpMethod httpMethod) throws Exception {
+
+		initialize();
+
+		for (InterceptedUrl iu : compiled) {
+			if (iu.getHttpMethod() == httpMethod && iu.getPattern().equals(url)) {
+				return iu;
+			}
+		}
+
+		return null;
+	}
+
+	protected Collection<ConfigAttribute> findConfigAttributes(final String url, final String requestMethod) throws Exception {
 
 		initialize();
 
 		Collection<ConfigAttribute> configAttributes = null;
-		Object configAttributePattern = null;
+		String configAttributePattern = null;
 
 		boolean stopAtFirstMatch = stopAtFirstMatch();
-		for (Map.Entry<Object, Collection<ConfigAttribute>> entry : _compiled.entrySet()) {
-			Object pattern = entry.getKey();
-			if (_urlMatcher.pathMatchesUrl(pattern, url)) {
-				// TODO this assumes Ant matching, not valid for regex
-				if (configAttributes == null || _urlMatcher.pathMatchesUrl(configAttributePattern, (String)pattern)) {
-					configAttributes = entry.getValue();
-					configAttributePattern = pattern;
-					if (_log.isTraceEnabled()) {
-						_log.trace("new candidate for '" + url + "': '" + pattern
-								+ "':" + configAttributes);
+		for (InterceptedUrl iu : compiled) {
+
+			if (iu.getHttpMethod() != null && requestMethod != null && iu.getHttpMethod() != HttpMethod.valueOf(requestMethod)) {
+				if (log.isDebugEnabled()) {
+					log.debug("Request '{0} {1}' doesn't match '{2} {3}'", new Object[] { requestMethod, url, iu.getHttpMethod(), iu.getPattern() });
+				}
+				continue;
+			}
+
+			if (urlMatcher.match(iu.getPattern(), url)) {
+				if (configAttributes == null || urlMatcher.match(configAttributePattern, iu.getPattern())) {
+					configAttributes = iu.getConfigAttributes();
+					configAttributePattern = iu.getPattern();
+					if (log.isTraceEnabled()) {
+						log.trace("new candidate for '{0}': '{1}':{2}", new Object[] { url, iu.getPattern(), configAttributes });
 					}
 					if (stopAtFirstMatch) {
 						break;
@@ -128,12 +148,12 @@ public abstract class AbstractFilterInvocationDefinition
 			}
 		}
 
-		if (_log.isTraceEnabled()) {
+		if (log.isTraceEnabled()) {
 			if (configAttributes == null) {
-				_log.trace("no config for '" + url + "'");
+				log.trace("no config for '{0}'", url);
 			}
 			else {
-				_log.trace("config for '" + url + "' is '" + configAttributePattern + "':" + configAttributes);
+				log.trace("config for '{0}' is '{1}':{2}", new Object[] { url, configAttributePattern, configAttributes });
 			}
 		}
 
@@ -162,23 +182,14 @@ public abstract class AbstractFilterInvocationDefinition
 		}
 		catch (Exception e) {
 			GrailsUtil.deepSanitize(e);
-			_log.error(e.getMessage(), e);
+			log.error(e.getMessage(), e);
 		}
 
-		Collection<ConfigAttribute> all = new HashSet<ConfigAttribute>();
-		for (Collection<ConfigAttribute> configs : _compiled.values()) {
-			all.addAll(configs);
+		Collection<ConfigAttribute> all = new LinkedHashSet<ConfigAttribute>();
+		for (InterceptedUrl iu : compiled) {
+			all.addAll(iu.getConfigAttributes());
 		}
 		return Collections.unmodifiableCollection(all);
-	}
-
-	/**
-	 * Dependency injection for the url matcher.
-	 * @param urlMatcher the matcher
-	 */
-	public void setUrlMatcher(final UrlMatcher urlMatcher) {
-		_urlMatcher = urlMatcher;
-		_stripQueryStringFromUrls = _urlMatcher instanceof AntUrlPathMatcher;
 	}
 
 	/**
@@ -186,29 +197,29 @@ public abstract class AbstractFilterInvocationDefinition
 	 * @param reject if true, reject access unless there's a pattern for the specified resource
 	 */
 	public void setRejectIfNoRule(final boolean reject) {
-		_rejectIfNoRule = reject;
+		rejectIfNoRule = reject;
+	}
+
+	protected String calculateUri(final HttpServletRequest request) {
+		String url = request.getRequestURI().substring(request.getContextPath().length());
+		int semicolonIndex = url.indexOf(";");
+		return semicolonIndex == -1 ? url : url.substring(0, semicolonIndex);
 	}
 
 	protected String lowercaseAndStripQuerystring(final String url) {
 
-		String fixed = url;
+		String fixed = url.toLowerCase();
 
-		if (getUrlMatcher().requiresLowerCaseUrl()) {
-			fixed = fixed.toLowerCase();
-		}
-
-		if (_stripQueryStringFromUrls) {
-			int firstQuestionMarkIndex = fixed.indexOf("?");
-			if (firstQuestionMarkIndex != -1) {
-				fixed = fixed.substring(0, firstQuestionMarkIndex);
-			}
+		int firstQuestionMarkIndex = fixed.indexOf("?");
+		if (firstQuestionMarkIndex != -1) {
+			fixed = fixed.substring(0, firstQuestionMarkIndex);
 		}
 
 		return fixed;
 	}
 
-	protected UrlMatcher getUrlMatcher() {
-		return _urlMatcher;
+	protected AntPathMatcher getUrlMatcher() {
+		return urlMatcher;
 	}
 
 	/**
@@ -216,8 +227,8 @@ public abstract class AbstractFilterInvocationDefinition
 	 * @return an unmodifiable map of {@link AnnotationFilterInvocationDefinition}ConfigAttributeDefinition
 	 * keyed by compiled patterns
 	 */
-	public Map<Object, Collection<ConfigAttribute>> getConfigAttributeMap() {
-		return Collections.unmodifiableMap(_compiled);
+	public List<InterceptedUrl> getConfigAttributeMap() {
+		return Collections.unmodifiableList(compiled);
 	}
 
 	// fixes extra spaces, trailing commas, etc.
@@ -238,106 +249,58 @@ public abstract class AbstractFilterInvocationDefinition
 		return cleaned;
 	}
 
-	protected void compileAndStoreMapping(final String pattern, final List<String> tokens) {
+	protected void compileAndStoreMapping(InterceptedUrl iu) {
+		String pattern = iu.getPattern();
+		HttpMethod method = iu.getHttpMethod();
 
-		Object key = getUrlMatcher().compile(pattern);
+		String key = pattern.toLowerCase();
 
-		Collection<ConfigAttribute> configAttributes = buildConfigAttributes(tokens);
+		Collection<ConfigAttribute> configAttributes = iu.getConfigAttributes();
 
-		Collection<ConfigAttribute> replaced = storeMapping(key,
-				Collections.unmodifiableCollection(configAttributes));
+		InterceptedUrl replaced = storeMapping(key, method, Collections.unmodifiableCollection(configAttributes));
 		if (replaced != null) {
-			_log.warn("replaced rule for '" + key + "' with roles " + replaced +
-					" with roles " + configAttributes);
+			log.warn("replaced rule for '{0}' with roles {1} with roles {2}", new Object[] { key, replaced.getConfigAttributes(), configAttributes });
 		}
 	}
 
-	protected Collection<ConfigAttribute> buildConfigAttributes(final Collection<String> tokens) {
-		Collection<ConfigAttribute> configAttributes = new HashSet<ConfigAttribute>();
-		for (String token : tokens) {
-			ConfigAttribute config = new SecurityConfig(token);
-			if (supports(config)) {
-				configAttributes.add(config);
-			}
-			else {
-				Expression expression = _expressionHandler.getExpressionParser().parseExpression(token);
-				configAttributes.add(new WebExpressionConfigAttribute(expression));
-			}
-		}
-		return configAttributes;
-	}
-
-	protected boolean supports(final ConfigAttribute config) {
-		return supports(config, _roleVoter) || supports(config, _authenticatedVoter) ||
-				config.getAttribute().startsWith("RUN_AS");
-	}
-
-	private boolean supports(final ConfigAttribute config, final AccessDecisionVoter voter) {
-		return voter != null && voter.supports(config);
-	}
-
-	protected Collection<ConfigAttribute> storeMapping(final Object key,
+	protected InterceptedUrl storeMapping(final String pattern, final HttpMethod method,
 			final Collection<ConfigAttribute> configAttributes) {
-		return _compiled.put(key, configAttributes);
+
+		InterceptedUrl existing = null;
+		for (Iterator<InterceptedUrl> iter = compiled.iterator(); iter.hasNext(); ) {
+			InterceptedUrl iu = iter.next();
+			if (iu.getPattern().equals(pattern) && iu.getHttpMethod() == method) {
+				existing = iu;
+				iter.remove();
+				break;
+			}
+		}
+
+		compiled.add(new InterceptedUrl(pattern, method, configAttributes));
+
+		return existing;
 	}
 
 	protected void resetConfigs() {
-		_compiled.clear();
+		compiled.clear();
 	}
 
 	/**
-	 * For admin/debugging - find all config attributes that apply to the specified URL.
+	 * For admin/debugging - find all config attributes that apply to the specified URL (doesn't consider request method restrictions).
 	 * @param url the URL
 	 * @return matching attributes
 	 */
 	public Collection<ConfigAttribute> findMatchingAttributes(final String url) {
-		for (Map.Entry<Object, Collection<ConfigAttribute>> entry : _compiled.entrySet()) {
-			if (_urlMatcher.pathMatchesUrl(entry.getKey(), url)) {
-				return entry.getValue();
+		for (InterceptedUrl iu : compiled) {
+			if (urlMatcher.match(iu.getPattern(), url)) {
+				return iu.getConfigAttributes();
 			}
 		}
 		return Collections.emptyList();
 	}
 
-	/**
-	 * Dependency injection for the role voter.
-	 * @param voter the voter
-	 */
-	public void setRoleVoter(final RoleVoter voter) {
-		_roleVoter = voter;
-	}
-
-	protected RoleVoter getRoleVoter() {
-		return _roleVoter;
-	}
-
-	/**
-	 * Dependency injection for the authenticated voter.
-	 * @param voter the voter
-	 */
-	public void setAuthenticatedVoter(final AuthenticatedVoter voter) {
-		_authenticatedVoter = voter;
-	}
-	protected AuthenticatedVoter getAuthenticatedVoter() {
-		return _authenticatedVoter;
-	}
-
-	/**
-	 * Dependency injection for the expression handler.
-	 * @param handler the handler
-	 */
-	public void setExpressionHandler(final WebSecurityExpressionHandler handler) {
-		_expressionHandler = handler;
-	}
-	protected WebSecurityExpressionHandler getExpressionHandler() {
-		return _expressionHandler;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
 	public void afterPropertiesSet() {
-		Assert.notNull(_urlMatcher, "url matcher is required");
+		String version = Metadata.getCurrent().getGrailsVersion();
+		grails23Plus = !version.startsWith("2.0") && !version.startsWith("2.1") && !version.startsWith("2.2");
 	}
 }

@@ -14,6 +14,8 @@
  */
 package test
 
+import org.springframework.http.HttpMethod
+
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
@@ -21,9 +23,11 @@ class TestRequestmap {
 
 	String urlPattern
 	String rolePattern
+	HttpMethod httpMethod
 
 	static constraints = {
-		urlPattern blank: false, unique: true
+		urlPattern blank: false, unique: 'httpMethod'
 		rolePattern blank: false
+		httpMethod nullable: true
 	}
 }

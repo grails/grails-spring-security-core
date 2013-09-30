@@ -24,8 +24,9 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.access.intercept.RequestKey;
-import org.springframework.security.web.util.UrlMatcher;
+import org.springframework.security.web.util.AntPathRequestMatcher;
+import org.springframework.security.web.util.RequestMatcher;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 
 /**
@@ -36,16 +37,16 @@ import org.springframework.util.Assert;
 public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
        implements FactoryBean<FilterInvocationSecurityMetadataSource>, InitializingBean {
 
-	private UrlMatcher _urlMatcher;
-	private Map<String, String> _definition;
-	private DefaultFilterInvocationSecurityMetadataSource _source;
+	protected AntPathMatcher urlMatcher = new AntPathMatcher();
+	protected Map<String, String> definition;
+	protected DefaultFilterInvocationSecurityMetadataSource source;
 
 	/**
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.FactoryBean#getObject()
 	 */
 	public FilterInvocationSecurityMetadataSource getObject() {
-		return _source;
+		return source;
 	}
 
 	/**
@@ -69,15 +70,15 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
-		Assert.notNull(_definition, "definition map is required");
-		Assert.notNull(_urlMatcher, "urlMatcher is required");
+		Assert.notNull(definition, "definition map is required");
+		Assert.notNull(urlMatcher, "urlMatcher is required");
 
-		_source = new DefaultFilterInvocationSecurityMetadataSource(_urlMatcher, buildMap());
+		source = new DefaultFilterInvocationSecurityMetadataSource(buildMap());
 	}
 
-	protected LinkedHashMap<RequestKey, Collection<ConfigAttribute>> buildMap() {
-		LinkedHashMap<RequestKey, Collection<ConfigAttribute>> map = new LinkedHashMap<RequestKey, Collection<ConfigAttribute>>();
-		for (Map.Entry<String, String> entry : _definition.entrySet()) {
+	protected LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> buildMap() {
+		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> map = new LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>>();
+		for (Map.Entry<String, String> entry : definition.entrySet()) {
 			String value = entry.getValue();
 			if (value == null) {
 				throw new IllegalArgumentException("The rule for URL '" + value + "' cannot be null");
@@ -91,27 +92,17 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 						"' must be one of REQUIRES_SECURE_CHANNEL, REQUIRES_INSECURE_CHANNEL, or ANY_CHANNEL");
 			}
 
-			map.put(new RequestKey(entry.getKey()),
-					SecurityConfig.createSingleAttributeList(value));
+			map.put(new AntPathRequestMatcher(entry.getKey()), SecurityConfig.createList(value));
 		}
 		return map;
 	}
 
 	/**
-	 * Dependency injection for the url matcher.
-	 *
-	 * @param urlMatcher
-	 */
-	public void setUrlMatcher(final UrlMatcher urlMatcher) {
-		_urlMatcher = urlMatcher;
-	}
-
-	/**
 	 * Dependency injection for the definition map.
 	 *
-	 * @param definition keys are URL patterns, values are ANY_CHANNEL, REQUIRES_SECURE_CHANNEL, or REQUIRES_INSECURE_CHANNEL
+	 * @param d keys are URL patterns, values are ANY_CHANNEL, REQUIRES_SECURE_CHANNEL, or REQUIRES_INSECURE_CHANNEL
 	 */
-	public void setDefinition(Map<String, String> definition) {
-		_definition = definition;
+	public void setDefinition(Map<String, String> d) {
+		definition = d;
 	}
 }
