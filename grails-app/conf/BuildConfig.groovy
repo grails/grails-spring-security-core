@@ -40,8 +40,7 @@ grails.project.dependency.resolution = {
 	}
 
 	plugins {
-		// hackish using 'provided' but 'build' doesn't put it in the pom
-		provided ':webxml:1.4.1'
+		compile ':webxml:1.4.1'
 
 		build ':release:2.2.1', ':rest-client-builder:1.0.3', {
 			export = false
