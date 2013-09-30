@@ -15,8 +15,8 @@
 package grails.plugin.springsecurity.web.authentication
 
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.BadCredentialsException
@@ -27,61 +27,66 @@ import org.springframework.security.web.RedirectStrategy
  */
 class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 
-	private final _handler = new AjaxAwareAuthenticationFailureHandler()
+	private final AjaxAwareAuthenticationFailureHandler handler = new AjaxAwareAuthenticationFailureHandler()
+	private MockHttpServletRequest request = new MockHttpServletRequest()
+	private MockHttpServletResponse response = new MockHttpServletResponse()
 
 	void testOnAuthenticationFailureNotAjax() {
 
 		String defaultFailureUrl = '/defaultFailureUrl'
-		_handler.defaultFailureUrl = defaultFailureUrl
-		_handler.ajaxAuthenticationFailureUrl = '/ajaxAuthenticationFailureUrl'
+		handler.defaultFailureUrl = defaultFailureUrl
+		handler.ajaxAuthenticationFailureUrl = '/ajaxAuthenticationFailureUrl'
 
 		boolean redirectCalled = false
 		def sendRedirect = { req, res, url ->
 			redirectCalled = true
 			assertEquals defaultFailureUrl, url
 		}
-		_handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
+		handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
 
 		def config = new ConfigObject()
 		config.ajaxHeader = 'ajaxHeader'
 		SpringSecurityUtils.securityConfig = config
 
-		_handler.onAuthenticationFailure new MockHttpServletRequest(),
-			new MockHttpServletResponse(), new BadCredentialsException('fail')
+		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
 		assertTrue redirectCalled
 	}
 
 	void testOnAuthenticationFailureAjax() {
 
 		String ajaxAuthenticationFailureUrl = '/ajaxAuthenticationFailureUrl'
-		_handler.defaultFailureUrl = '/defaultFailureUrl'
-		_handler.ajaxAuthenticationFailureUrl = ajaxAuthenticationFailureUrl
+		handler.defaultFailureUrl = '/defaultFailureUrl'
+		handler.ajaxAuthenticationFailureUrl = ajaxAuthenticationFailureUrl
 
 		boolean redirectCalled = false
 		def sendRedirect = { req, res, url ->
 			redirectCalled = true
 			assertEquals ajaxAuthenticationFailureUrl, url
 		}
-		_handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
+		handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
 
 		def config = new ConfigObject()
 		config.ajaxHeader = 'ajaxHeader'
 		SpringSecurityUtils.securityConfig = config
 
-		def request = new MockHttpServletRequest()
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
-		_handler.onAuthenticationFailure request,
-			new MockHttpServletResponse(), new BadCredentialsException('fail')
+		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
 		assertTrue redirectCalled
 	}
 
 	void testAfterPropertiesSet() {
 		shouldFail(IllegalArgumentException) {
-			_handler.afterPropertiesSet()
+			handler.afterPropertiesSet()
 		}
 
-		_handler.ajaxAuthenticationFailureUrl = 'url'
-		_handler.afterPropertiesSet()
+		handler.ajaxAuthenticationFailureUrl = 'url'
+		handler.afterPropertiesSet()
+	}
+
+	@Override
+	protected void setUp() {
+		super.setUp()
+		SecurityRequestHolder.set request, response
 	}
 
 	/**
@@ -92,6 +97,7 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		SecurityRequestHolder.reset()
 	}
 }

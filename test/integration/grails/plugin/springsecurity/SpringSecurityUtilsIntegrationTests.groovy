@@ -16,6 +16,7 @@ package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.plugin.springsecurity.web.authentication.RequestHolderAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
 
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
@@ -27,11 +28,11 @@ import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
-import org.springframework.security.web.authentication.AnonymousAuthenticationFilter
 import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
+import org.springframework.security.web.util.AnyRequestMatcher
 import org.springframework.web.filter.GenericFilterBean
 
 import test.TestRole
@@ -81,7 +82,7 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 		assertTrue map[800] instanceof RequestHolderAuthenticationFilter
 		assertTrue map[1400] instanceof SecurityContextHolderAwareRequestFilter
 		assertTrue map[1500] instanceof RememberMeAuthenticationFilter
-		assertTrue map[1600] instanceof AnonymousAuthenticationFilter
+		assertTrue map[1600] instanceof GrailsAnonymousAuthenticationFilter
 		assertTrue map[1800] instanceof ExceptionTranslationFilter
 		assertTrue map[1900] instanceof FilterSecurityInterceptor
 
@@ -111,14 +112,14 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 		assertEquals 9, map.size()
 		assertTrue map[410] instanceof DummyFilter
 
-		def filters = springSecurityFilterChain.filterChainMap['/**']
+		def filters = springSecurityFilterChain.filterChainMap[new AnyRequestMatcher()]
 		assertTrue filters[0] instanceof SecurityContextPersistenceFilter
 		assertTrue filters[1] instanceof LogoutFilter
 		assertTrue filters[2] instanceof DummyFilter
 		assertTrue filters[3] instanceof RequestHolderAuthenticationFilter
 		assertTrue filters[4] instanceof SecurityContextHolderAwareRequestFilter
 		assertTrue filters[5] instanceof RememberMeAuthenticationFilter
-		assertTrue filters[6] instanceof AnonymousAuthenticationFilter
+		assertTrue filters[6] instanceof GrailsAnonymousAuthenticationFilter
 		assertTrue filters[7] instanceof ExceptionTranslationFilter
 		assertTrue filters[8] instanceof FilterSecurityInterceptor
 	}

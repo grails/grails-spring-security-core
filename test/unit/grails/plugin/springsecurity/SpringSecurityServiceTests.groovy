@@ -14,11 +14,14 @@
  */
 package grails.plugin.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import org.codehaus.groovy.grails.commons.ClassPropertyFetcher
+import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
+import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Unit tests for SpringSecurityService.
@@ -27,7 +30,7 @@ import org.springframework.security.core.userdetails.User
  */
 class SpringSecurityServiceTests extends GroovyTestCase {
 
-	private _service
+	private SpringSecurityService service
 
 	/**
 	 * {@inheritDoc}
@@ -36,54 +39,57 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		_service = new SpringSecurityService()
-		CH.config = new ConfigObject()
+		service = new SpringSecurityService()
+		def config = new ConfigObject()
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = config
+		ReflectionUtils.application = new DefaultGrailsApplication(config: config)
 	}
 
 	/**
 	 * Test transactional.
 	 */
 	void testTransactional() {
-		assertFalse _service.transactional
+		assertNull ClassPropertyFetcher.forClass(SpringSecurityService).getPropertyValue('transactional')
+		assertTrue SpringSecurityService.methods.any { AnnotationUtils.findAnnotation(it, Transactional) }
 	}
 
 	/**
 	 * Test getPrincipal().
 	 */
 	void testPrincipalAuthenticated() {
-		assertNull _service.principal
+		assertNull service.principal
 		authenticate 'role1'
-		assertNotNull _service.principal
+		assertNotNull service.principal
 	}
 
 	/**
 	 * Test encodePassword().
 	 */
 	void testEncodePassword() {
-		_service.passwordEncoder = [encodePassword: { String pwd, Object salt -> pwd + '_encoded' }]
-		assertEquals 'passw0rd_encoded', _service.encodePassword('passw0rd')
+		service.passwordEncoder = [encodePassword: { String pwd, Object salt -> pwd + '_encoded' }]
+		assertEquals 'passw0rd_encoded', service.encodePassword('passw0rd')
 	}
 
 	void testClearCachedRequestmaps() {
 		boolean resetCalled = false
-		_service.objectDefinitionSource = [reset: { -> resetCalled = true }]
+		service.objectDefinitionSource = [reset: { -> resetCalled = true }]
 
-		_service.clearCachedRequestmaps()
+		service.clearCachedRequestmaps()
 
 		assertTrue resetCalled
 	}
 
 	void testGetAuthentication() {
-		assertNull _service.authentication
+		assertNull service.authentication
 		authenticate 'role1'
-		assertNotNull _service.authentication
+		assertNotNull service.authentication
 	}
 
 	void testIsLoggedIn() {
-		_service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
-		assertFalse _service.isLoggedIn()
+		service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
+		assertFalse service.isLoggedIn()
 		authenticate 'role1'
-		assertTrue _service.isLoggedIn()
+		assertTrue service.isLoggedIn()
 	}
 
 	private void authenticate(roles) {
@@ -102,7 +108,8 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SecurityTestUtils.logout()
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 		SpringSecurityUtils.securityConfig = null
+		ReflectionUtils.application = null
 	}
 }

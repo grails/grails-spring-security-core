@@ -21,7 +21,7 @@ import junit.framework.Assert
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 /**
@@ -55,7 +55,7 @@ class SecurityTestUtils {
 	}
 
 	static Authentication authenticate(roleNames) {
-		def authorities = roleNames.collect { new GrantedAuthorityImpl(it) }
+		def authorities = roleNames.collect { new SimpleGrantedAuthority(it) }
 		authenticate null, null, authorities
 	}
 

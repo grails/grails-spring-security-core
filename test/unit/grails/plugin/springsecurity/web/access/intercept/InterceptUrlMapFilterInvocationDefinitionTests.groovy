@@ -14,32 +14,30 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import grails.plugin.springsecurity.FakeApplication
+import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.codehaus.groovy.grails.web.util.WebUtils
+import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.mock.web.MockServletContext
+import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-import org.springframework.security.web.util.AntUrlPathMatcher
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
+class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvocationDefinitionTests {
 
-	private _fid = new InterceptUrlMapFilterInvocationDefinition()
-	private final _application = new FakeApplication()
+	private InterceptUrlMapFilterInvocationDefinition fid = new InterceptUrlMapFilterInvocationDefinition()
 
 	/**
 	 * {@inheritDoc}
@@ -48,34 +46,21 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		ReflectionUtils.application = _application
-		_fid.urlMatcher = new AntUrlPathMatcher()
-	}
-
-	void testAfterPropertiesSet() {
-		_fid.urlMatcher = null // simulate not having set it
-
-		assertEquals 'url matcher is required', shouldFail(IllegalArgumentException) {
-			_fid.afterPropertiesSet()
-		}
-
-		_fid.urlMatcher = new AntUrlPathMatcher()
-
-		_fid.afterPropertiesSet()
+		ReflectionUtils.application = application
 	}
 
 	void testStoreMapping() {
 
-		assertEquals 0, _fid.configAttributeMap.size()
+		assertEquals 0, fid.configAttributeMap.size()
 
-		_fid.storeMapping '/foo/bar', ['ROLE_ADMIN']
-		assertEquals 1, _fid.configAttributeMap.size()
+		fid.storeMapping '/foo/bar', null, ['ROLE_ADMIN']
+		assertEquals 1, fid.configAttributeMap.size()
 
-		_fid.storeMapping '/foo/bar', ['ROLE_USER']
-		assertEquals 1, _fid.configAttributeMap.size()
+		fid.storeMapping '/foo/bar', null, ['ROLE_USER']
+		assertEquals 1, fid.configAttributeMap.size()
 
-		_fid.storeMapping '/other/path', ['ROLE_SUPERUSER']
-		assertEquals 2, _fid.configAttributeMap.size()
+		fid.storeMapping '/other/path', null, ['ROLE_SUPERUSER']
+		assertEquals 2, fid.configAttributeMap.size()
 	}
 
 	void testInitialize() {
@@ -83,19 +68,42 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 				['/foo/**': 'ROLE_ADMIN',
 				 '/bar/**': ['ROLE_BAR', 'ROLE_BAZ']])
 
-		_fid.roleVoter = new RoleVoter()
-		_fid.authenticatedVoter = new AuthenticatedVoter()
-		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
+		def ctx = initCtx()
 
-		assertEquals 0, _fid.configAttributeMap.size()
+		fid.roleVoter = ctx.getBean('roleVoter')
+		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
 
-		_fid.initialize()
-		assertEquals 2, _fid.configAttributeMap.size()
+		assertEquals 0, fid.configAttributeMap.size()
 
-		_fid.resetConfigs()
+		fid.initialize()
+		assertEquals 2, fid.configAttributeMap.size()
 
-		_fid.initialize()
-		assertEquals 0, _fid.configAttributeMap.size()
+		fid.resetConfigs()
+
+		fid.initialize()
+		assertEquals 0, fid.configAttributeMap.size()
+	}
+
+	void te2stInitializeWithNewSyntax() {
+		ReflectionUtils.setConfigProperty('interceptUrlMap',
+				[[pattern: '/foo/**', access: 'ROLE_ADMIN', httpMethod: HttpMethod.POST],
+				 [pattern: '/bar/**', access: ['ROLE_BAR', 'ROLE_BAZ']]])
+
+		fid.roleVoter = new RoleVoter()
+		fid.authenticatedVoter = new AuthenticatedVoter()
+//		fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
+
+		assertEquals 0, fid.configAttributeMap.size()
+
+		fid.initialize()
+		assertEquals 2, fid.configAttributeMap.size()
+
+		def attributes = fid.configAttributeMap[new InterceptedUrl()]
+
+		fid.resetConfigs()
+
+		fid.initialize()
+		assertEquals 0, fid.configAttributeMap.size()
 	}
 
 	void testDetermineUrl() {
@@ -106,14 +114,14 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 		request.contextPath = '/context'
 
 		request.requestURI = '/context/foo'
-		assertEquals '/foo', _fid.determineUrl(new FilterInvocation(request, response, chain))
+		assertEquals '/foo', fid.determineUrl(new FilterInvocation(request, response, chain))
 
 		request.requestURI = '/context/fOo/Bar?x=1&y=2'
-		assertEquals '/foo/bar', _fid.determineUrl(new FilterInvocation(request, response, chain))
+		assertEquals '/foo/bar', fid.determineUrl(new FilterInvocation(request, response, chain))
 	}
 
 	void testSupports() {
-		assertTrue _fid.supports(FilterInvocation)
+		assertTrue fid.supports(FilterInvocation)
 	}
 
 	void testGetAttributes() {
@@ -122,12 +130,11 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 		def chain = new MockFilterChain()
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, chain)
 
-		def matcher = new AntUrlPathMatcher()
 		MockInterceptUrlMapFilterInvocationDefinition fid
 
 		def initializeFid = {
 			fid = new MockInterceptUrlMapFilterInvocationDefinition()
-			fid.urlMatcher = matcher; fid.initialize()
+			fid.initialize()
 			WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
 			fid
 		}
@@ -141,22 +148,22 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 		def configAttribute = [new SecurityConfig('ROLE_ADMIN'), new SecurityConfig('ROLE_SUPERUSER')]
 		def moreSpecificConfigAttribute = [new SecurityConfig('ROLE_SUPERUSER')]
 		fid = initializeFid()
-		fid.storeMapping matcher.compile('/secure/**'), configAttribute
-		fid.storeMapping matcher.compile('/secure/reallysecure/**'), moreSpecificConfigAttribute
+		fid.storeMapping '/secure/**', null, configAttribute
+		fid.storeMapping '/secure/reallysecure/**', null, moreSpecificConfigAttribute
 		checkConfigAttributeForUrl(configAttribute, '/secure/reallysecure/list')
 		checkConfigAttributeForUrl(configAttribute, '/secure/list')
 
 		fid = initializeFid()
-		fid.storeMapping matcher.compile('/secure/reallysecure/**'), moreSpecificConfigAttribute
-		fid.storeMapping matcher.compile('/secure/**'), configAttribute
+		fid.storeMapping '/secure/reallysecure/**', null, moreSpecificConfigAttribute
+		fid.storeMapping '/secure/**', null, configAttribute
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/secure/reallysecure/list')
 		checkConfigAttributeForUrl(configAttribute, '/secure/list')
 
 		fid = initializeFid()
 		configAttribute = [new SecurityConfig('IS_AUTHENTICATED_FULLY')]
 		moreSpecificConfigAttribute = [new SecurityConfig('IS_AUTHENTICATED_ANONYMOUSLY')]
-		fid.storeMapping matcher.compile('/unprotected/**'), moreSpecificConfigAttribute
-		fid.storeMapping matcher.compile('/**/*.jsp'), configAttribute
+		fid.storeMapping '/unprotected/**', null, moreSpecificConfigAttribute
+		fid.storeMapping '/**/*.jsp', null, configAttribute
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/unprotected/b.jsp')
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/unprotected/path')
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/unprotected/path/x.jsp')
@@ -173,7 +180,7 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends GroovyTestCase {
 		super.tearDown()
 		ReflectionUtils.application = null
 		SpringSecurityUtils.resetSecurityConfig()
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 	}
 }
 

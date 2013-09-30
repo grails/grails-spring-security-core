@@ -14,14 +14,14 @@
  */
 package grails.plugin.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.plugin.springsecurity.web.access.intercept.AnnotationFilterInvocationDefinitionTests
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class ReflectionUtilsTests extends GroovyTestCase {
 
-	private final application = new FakeApplication()
+	private FakeApplication application
 
 	/**
 	 * {@inheritDoc}
@@ -30,16 +30,19 @@ class ReflectionUtilsTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		ReflectionUtils.application = application
+		def tests = new AnnotationFilterInvocationDefinitionTests()
+		tests.setUp()
+		tests.initCtx()
+		application = tests.application
 	}
 
 	void testSetConfigProperty() {
-		def foo = application.config.grails.plugins.springsecurity.foo
+		def foo = application.config.grails.plugin.springsecurity.foo
 		assertTrue foo instanceof ConfigObject
 		assertEquals 0, foo.size()
 
 		ReflectionUtils.setConfigProperty 'foo', 'bar'
-		assertEquals 'bar', application.config.grails.plugins.springsecurity.foo
+		assertEquals 'bar', application.config.grails.plugin.springsecurity.foo
 	}
 
 	void testGetConfigProperty() {
@@ -49,7 +52,7 @@ class ReflectionUtilsTests extends GroovyTestCase {
 
 		ReflectionUtils.setConfigProperty 'a.b.c', 'd'
 		assertEquals 'd', ReflectionUtils.getConfigProperty('a.b.c')
-		assertEquals 'd', application.config.grails.plugins.springsecurity.a.b.c
+		assertEquals 'd', application.config.grails.plugin.springsecurity.a.b.c
 	}
 
 	void testGetRoleAuthority() {
@@ -87,15 +90,16 @@ class ReflectionUtilsTests extends GroovyTestCase {
 
 	void testSplitMap() {
 		def map = [a: 'b', c: ['d', 'e']]
-		def split = ReflectionUtils.splitMap(map)
+		List<InterceptedUrl> split = ReflectionUtils.splitMap(map)
 		assertEquals 2, split.size()
-		split.each { key, value ->
+
+/*		for (InterceptedUrl iu in split) {
 			assertTrue key instanceof String
 			assertTrue value instanceof List
 		}
 		assertEquals(['b'], split.a)
 		assertEquals(['d', 'e'], split.c)
-	}
+*/	}
 
 	/**
 	 * {@inheritDoc}
@@ -106,6 +110,6 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 	}
 }

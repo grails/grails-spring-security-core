@@ -15,12 +15,11 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import grails.plugin.springsecurity.FakeApplication
-import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.annotation.Secured
+import grails.plugin.springsecurity.InterceptedUrl
+import grails.web.CamelCaseUrlConverter
 
 import javax.servlet.ServletContext
 
-import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.commons.GrailsClass
@@ -36,60 +35,45 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.mock.web.MockServletContext
 import org.springframework.security.access.SecurityConfig
-import org.springframework.security.access.vote.AuthenticatedVoter
-import org.springframework.security.access.vote.RoleVoter
+import org.springframework.security.access.annotation.Secured
 import org.springframework.security.web.FilterInvocation
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-import org.springframework.security.web.util.AntUrlPathMatcher
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 
 /**
  * Unit tests for AnnotationFilterInvocationDefinition.
  *
+ * TODO tests method, closure, etc.
+ *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
+class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocationDefinitionTests {
 
-	private AnnotationFilterInvocationDefinition _fid
-	private final _application = new TestApplication()
-
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() {
-		super.setUp()
-		ReflectionUtils.application = _application
-		_fid = new AnnotationFilterInvocationDefinition()
-	}
+	private AnnotationFilterInvocationDefinition fid = new AnnotationFilterInvocationDefinition()
 
 	void testSupports() {
-		assertTrue _fid.supports(FilterInvocation)
+		assertTrue fid.supports(FilterInvocation)
 	}
 
 //	void testGetConfigAttributeDefinitions() {
-//		assertNull _fid.configAttributeDefinitions
+//		assertNull fid.configAttributeDefinitions
 //	}
 
 	void testLowercaseAndStripQuerystring() {
-		_fid.urlMatcher = new AntUrlPathMatcher()
-
-		assertEquals '/foo/bar', _fid.lowercaseAndStripQuerystring('/foo/BAR')
-		assertEquals '/foo/bar', _fid.lowercaseAndStripQuerystring('/foo/bar')
-		assertEquals '/foo/bar', _fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
+		assertEquals '/foo/bar', fid.lowercaseAndStripQuerystring('/foo/BAR')
+		assertEquals '/foo/bar', fid.lowercaseAndStripQuerystring('/foo/bar')
+		assertEquals '/foo/bar', fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
 	}
 
 	void testGetAttributesNull() {
 		shouldFail(IllegalArgumentException) {
-			_fid.getAttributes null
+			fid.getAttributes null
 		}
 	}
 
 	void testGetAttributesNotSupports() {
 		shouldFail(IllegalArgumentException) {
-			_fid.getAttributes 'foo'
+			fid.getAttributes 'foo'
 		}
 	}
 
@@ -99,38 +83,35 @@ class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 		def chain = new MockFilterChain()
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, chain)
 
-		def matcher = new AntUrlPathMatcher()
-
-		_fid = new MockAnnotationFilterInvocationDefinition()
-		_fid.urlMatcher = matcher
+		fid = new MockAnnotationFilterInvocationDefinition()
 
 		def urlMappingsHolder = [matchAll: { String uri -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
-		_fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
+		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
 		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
 
 		String pattern = '/foo/**'
 		def configAttribute = [new SecurityConfig('ROLE_ADMIN')]
-		_fid.storeMapping matcher.compile(pattern), configAttribute
+		fid.storeMapping pattern, null, configAttribute
 
 		request.requestURI = '/foo/bar'
-		_fid.url = request.requestURI
-		assertEquals configAttribute, _fid.getAttributes(filterInvocation)
+		fid.url = request.requestURI
+		assertEquals configAttribute, fid.getAttributes(filterInvocation)
 
-		_fid.rejectIfNoRule = false
+		fid.rejectIfNoRule = false
 		request.requestURI = '/bar/foo'
-		_fid.url = request.requestURI
-		assertNull _fid.getAttributes(filterInvocation)
+		fid.url = request.requestURI
+		assertNull fid.getAttributes(filterInvocation)
 
-		_fid.rejectIfNoRule = true
-		assertEquals AbstractFilterInvocationDefinition.DENY, _fid.getAttributes(filterInvocation)
+		fid.rejectIfNoRule = true
+		assertEquals AbstractFilterInvocationDefinition.DENY, fid.getAttributes(filterInvocation)
 
 		String moreSpecificPattern = '/foo/ba*'
 		def moreSpecificConfigAttribute = [new SecurityConfig('ROLE_SUPERADMIN')]
-		_fid.storeMapping matcher.compile(moreSpecificPattern), moreSpecificConfigAttribute
+		fid.storeMapping moreSpecificPattern, null, moreSpecificConfigAttribute
 
 		request.requestURI = '/foo/bar'
-		_fid.url = request.requestURI
-		assertEquals moreSpecificConfigAttribute, _fid.getAttributes(filterInvocation)
+		fid.url = request.requestURI
+		assertEquals moreSpecificConfigAttribute, fid.getAttributes(filterInvocation)
 	}
 
 	void testDetermineUrl_StaticRequest() {
@@ -140,16 +121,15 @@ class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
 		request.requestURI = 'requestURI'
 
-		_fid = new MockAnnotationFilterInvocationDefinition()
-		_fid.urlMatcher = new AntUrlPathMatcher()
+		fid = new MockAnnotationFilterInvocationDefinition()
 
 		def urlMappingsHolder = [matchAll: { String uri -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
-		_fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
+		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
 		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
 
-		assertEquals 'requesturi', _fid.determineUrl(filterInvocation)
+		assertEquals 'requesturi', fid.determineUrl(filterInvocation)
 	}
 
 	void testDetermineUrl_DynamicRequest() {
@@ -159,20 +139,18 @@ class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
 		request.requestURI = 'requestURI'
 
-		_fid = new MockAnnotationFilterInvocationDefinition(
-			url: 'FOO?x=1', application: _application,
-			urlMatcher: new AntUrlPathMatcher())
+		fid = new MockAnnotationFilterInvocationDefinition(url: 'FOO?x=1', application: application)
 
 		UrlMappingInfo[] mappings = [[getControllerName: { -> 'foo' },
 		                              getActionName: { -> 'bar' },
 		                              configure: { GrailsWebRequest r -> }] as UrlMappingInfo]
 		def urlMappingsHolder = [matchAll: { String uri -> mappings }] as UrlMappingsHolder
-		_fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
+		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
 		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
 
-		assertEquals 'foo', _fid.determineUrl(filterInvocation)
+		assertEquals 'foo', fid.determineUrl(filterInvocation)
 	}
 
 	void testInitialize() {
@@ -195,10 +173,7 @@ class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 
 		ServletContext servletContext = new MockServletContext()
 
-		def app = new DefaultGrailsApplication()
-		def beans = [(GrailsApplication.APPLICATION_ID): app]
-		def ctx = [getBean: { String name, Class<?> c = null -> beans[name] },
-		           containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
+		def ctx = initCtx()
 		servletContext.setAttribute WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx
 
 		def mappingEvaluator = new DefaultUrlMappingEvaluator(servletContext)
@@ -210,56 +185,51 @@ class AnnotationFilterInvocationDefinitionTests extends GroovyTestCase {
 		GrailsClass[] controllerClasses = [new DefaultGrailsControllerClass(ClassAnnotatedController),
 		                                   new DefaultGrailsControllerClass(MethodAnnotatedController)]
 
-		_fid.urlMatcher = new AntUrlPathMatcher()
-		_fid.roleVoter = new RoleVoter()
-		_fid.authenticatedVoter = new AuthenticatedVoter()
-		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
+		fid.roleVoter = ctx.getBean('roleVoter')
+		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
+		fid.grailsUrlConverter = new CamelCaseUrlConverter()
 
-		_fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
+		fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
 
-		assertEquals 4, _fid.configAttributeMap.size()
+		assertEquals 10, fid.configAttributeMap.size()
 
-		def configAttributes
+		InterceptedUrl iu
 
-		configAttributes = _fid.configAttributeMap['/classannotated/**']
-		assertEquals 1, configAttributes.size()
-		assertEquals 'ROLE_ADMIN', configAttributes.iterator().next().attribute
+		for (key in ['/classannotated', '/classannotated.*', '/classannotated/**']) {
+			iu = fid.getInterceptedUrl(key, null)
+			assertEquals 1, iu.configAttributes.size()
+			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
+		}
 
-		configAttributes = _fid.configAttributeMap['/classannotated/list/**']
-		assertEquals 2, configAttributes.size()
-		assertEquals(['ROLE_FOO', 'ROLE_SUPERADMIN'] as Set, configAttributes*.attribute as Set)
+		for (key in ['/classannotated/list', '/classannotated/list.*', '/classannotated/list/**']) {
+			iu = fid.getInterceptedUrl(key, null)
+			assertEquals 2, iu.configAttributes.size()
+			assertEquals(['ROLE_FOO', 'ROLE_SUPERADMIN'] as Set, iu.configAttributes*.attribute as Set)
+		}
 
-		configAttributes = _fid.configAttributeMap['/methodannotated/list/**']
-		assertEquals 1, configAttributes.size()
-		assertEquals 'ROLE_ADMIN', configAttributes.iterator().next().attribute
+		for (key in ['/methodannotated/list', '/methodannotated/list.*', '/methodannotated/list/**']) {
+			iu = fid.getInterceptedUrl(key, null)
+			assertEquals 1, iu.configAttributes.size()
+			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
+		}
 
-		configAttributes = _fid.configAttributeMap['/js/admin/**']
-		assertEquals 1, configAttributes.size()
-		assertEquals 'ROLE_ADMIN', configAttributes.iterator().next().attribute
+		iu = fid.getInterceptedUrl('/js/admin/**', null)
+		assertEquals 1, iu.configAttributes.size()
+		assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
 	}
 
 //	void testFindConfigAttribute() {
 //
-//		def matcher = new AntUrlPathMatcher()
-//
-//		_fid.urlMatcher = matcher
-//
 //		String pattern = '/foo/**'
 //		def configAttribute = [new SecurityConfig('ROLE_ADMIN')]
-//		_fid.storeMapping matcher.compile(pattern), configAttribute
+//		_fid.storeMapping pattern, configAttribute
 //
-//		assertEquals configAttribute, _fid.findConfigAttribute('/foo/bar')
-//		assertNull _fid.findConfigAttribute('/bar/foo')
+//		assertEquals configAttribute, fid.findConfigAttribute('/foo/bar')
+//		assertNull fid.findConfigAttribute('/bar/foo')
 //	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@Override
 	protected void tearDown() {
 		super.tearDown()
-		ReflectionUtils.application = null
 		RequestContextHolder.resetRequestAttributes()
 		ServletContextHolder.servletContext = null
 	}
@@ -277,16 +247,16 @@ class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocatio
 @Secured(['ROLE_ADMIN'])
 class ClassAnnotatedController {
 
-	def index = {}
+	def index() {}
 
 	@Secured(['ROLE_SUPERADMIN', 'ROLE_FOO'])
-	def list = { [results: []] }
+	def list() { [results: []] }
 }
 
 class MethodAnnotatedController {
 
-	def index = {}
+	def index() {}
 
 	@Secured(['ROLE_ADMIN'])
-	def list = { [results: []] }
+	def list() { [results: []] }
 }

@@ -25,7 +25,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.AuthenticationDetailsSource
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsChecker
@@ -40,9 +40,9 @@ import org.springframework.security.web.authentication.switchuser.SwitchUserFilt
  */
 class SecurityTagLibTests extends GroovyPagesTestCase {
 
-	private final _user = new Expando()
+	private final user = new Expando()
 
-	boolean transactional = false
+	static transactional = false
 
 	def springSecurityService
 
@@ -114,11 +114,11 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	 */
 	void testLoggedInUserInfoWithDomainClass() {
 		String fullName = 'First Last'
-		_user.fullName = fullName
+		user.fullName = fullName
 
 		assertOutputEquals '', "<sec:loggedInUserInfo field='fullName'/>"
 
-		def principal = new HasDomainClass('username', fullName, 'role1', _user)
+		def principal = new HasDomainClass('username', fullName, 'role1', user)
 		authenticate principal, 'role1'
 
 		assertOutputEquals fullName, "<sec:loggedInUserInfo field='fullName'/>"
@@ -129,11 +129,11 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	 */
 	void testLoggedInUserInfoNested() {
 		String fullName = 'First Last'
-		_user.foo = [bar: [fullName: fullName]]
+		user.foo = [bar: [fullName: fullName]]
 
 		assertOutputEquals '', "<sec:loggedInUserInfo field='foo.bar.fullName'/>"
 
-		def principal = new HasDomainClass('username', 'fullName', 'role1', _user)
+		def principal = new HasDomainClass('username', 'fullName', 'role1', user)
 		authenticate principal, 'role1'
 
 		assertOutputEquals fullName, "<sec:loggedInUserInfo field='foo.bar.fullName'/>"
@@ -146,7 +146,7 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	 */
 	void testLoggedInUserInfoWithoutDomainClass() {
 		String fullName = 'First Last'
-		_user.fullName = fullName
+		user.fullName = fullName
 
 		assertOutputEquals '', "<sec:loggedInUserInfo field='fullName'/>"
 
@@ -192,6 +192,7 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	void testAccess() {
 		String body = 'the_content'
 
+		authenticate ''
 		assertOutputEquals '', """<sec:access expression="hasRole('role1')">${body}</sec:access>"""
 		assertOutputEquals body, """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
 
@@ -213,7 +214,7 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		filter.successHandler = [onAuthenticationSuccess: onAuthenticationSuccess] as AuthenticationSuccessHandler
 
 		def user = new User('somebody', 'password', true, true, true, true,
-				[new GrantedAuthorityImpl('ROLE_USER')])
+				[new SimpleGrantedAuthority('ROLE_USER')])
 		def loadUserByUsername = { String username -> user }
 		filter.userDetailsService = [loadUserByUsername: loadUserByUsername] as UserDetailsService
 		filter.userDetailsChecker = [check: { details -> }] as UserDetailsChecker
@@ -226,7 +227,7 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	}
 
 	private void authenticate(String roles) {
-		authenticate new SimplePrincipal(name: 'username1', domainClass: _user), roles
+		authenticate new SimplePrincipal(name: 'username1', domainClass: user), roles
 	}
 
 	private void authenticate(principal, String roles) {
@@ -249,30 +250,30 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 
 class NoDomainClass extends User {
 
-	private final String _fullName
+	private final String fullName
 
-	NoDomainClass(String username, String fullName, String roles) {
+	NoDomainClass(String username, String name, String roles) {
 		super(username, 'password', true, true, true, true, SpringSecurityUtils.parseAuthoritiesString(roles))
-		_fullName = fullName
+		fullName = name
 	}
 
-	String getFullName() { _fullName }
+	String getFullName() { fullName }
 }
 
 class HasDomainClass extends User {
 
-	private final String _fullName
-	private final _domainClass
+	private final String fullName
+	private final domainClass
 
-	HasDomainClass(String username, String fullName, String roles, domainClass) {
+	HasDomainClass(String username, String name, String roles, dc) {
 		super(username, 'password', true, true, true, true, SpringSecurityUtils.parseAuthoritiesString(roles))
-		_fullName = fullName
-		_domainClass = domainClass
+		fullName = name
+		domainClass = dc
 	}
 
-	String getFullName() { _fullName }
+	String getFullName() { fullName }
 
-	def getDomainClass() { _domainClass }
+	def getDomainClass() { domainClass }
 }
 
 class SimplePrincipal implements Principal {

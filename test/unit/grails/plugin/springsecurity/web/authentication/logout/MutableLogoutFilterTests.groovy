@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.authentication.logout
 
+import grails.plugin.springsecurity.SecurityTestUtils
+
 import javax.servlet.FilterChain
 
 import org.springframework.mock.web.MockHttpServletRequest
@@ -28,22 +30,21 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
  */
 class MutableLogoutFilterTests extends GroovyTestCase {
 
-	private final String _afterLogoutUrl = '/loggedout'
-	private final _logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler(
-			defaultTargetUrl: _afterLogoutUrl)
-	private final _handlers = []
-	private final _filter = new MutableLogoutFilter(_logoutSuccessHandler)
+	private final String afterLogoutUrl = '/loggedout'
+	private final logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler(
+			defaultTargetUrl: afterLogoutUrl)
+	private final handlers = []
+	private final filter = new MutableLogoutFilter(logoutSuccessHandler)
 
-	private int _logoutCount
+	private int logoutCount
 
 	@Override
 	protected void setUp() {
 		super.setUp()
 		(1..5).each {
-			def handler = [logout: { req, res, auth -> _logoutCount++ }] as LogoutHandler
-			_handlers << handler
+			handlers << ([logout: { req, res, auth -> logoutCount++ }] as LogoutHandler)
 		}
-		_filter.handlers = _handlers
+		filter.handlers = handlers
 	}
 
 	void testDoFilter() {
@@ -63,14 +64,14 @@ class MutableLogoutFilterTests extends GroovyTestCase {
 		def chain2 = [doFilter: { req, res -> chain2Called = true }] as FilterChain
 
 		// not a logout url, so chain.doFilter() is called
-		_filter.doFilter request1, response1, chain1
+		filter.doFilter request1, response1, chain1
 		assertNull response1.redirectedUrl
 
-		_filter.doFilter request2, response2, chain2
+		filter.doFilter request2, response2, chain2
 		assertNotNull response2.redirectedUrl
 
 		assertTrue chain1Called
 		assertFalse chain2Called
-		assertEquals 5, _logoutCount
+		assertEquals 5, logoutCount
 	}
 }

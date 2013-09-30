@@ -23,7 +23,7 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 /**
  * Unit tests for AuthenticatedVetoableDecisionManager.
@@ -32,7 +32,7 @@ import org.springframework.security.core.authority.GrantedAuthorityImpl
  */
 class AuthenticatedVetoableDecisionManagerTests extends GroovyTestCase {
 
-	private _manager
+	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager()
 
 	/**
 	 * {@inheritDoc}
@@ -41,39 +41,38 @@ class AuthenticatedVetoableDecisionManagerTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		_manager = new AuthenticatedVetoableDecisionManager()
-		_manager.decisionVoters = [new AuthenticatedVoter(), new RoleVoter()]
+		manager.decisionVoters = [new AuthenticatedVoter(), new RoleVoter()]
 	}
 
 	void testDecideHasOneRole() {
-		_manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'ROLE_ADMIN'])
+		manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'ROLE_ADMIN'])
 	}
 
 	void testDecideHasMoreThanRequiredRoles() {
-		_manager.decide createAuthentication(['ROLE_USER', 'ROLE_ADMIN']), null, createDefinition(['ROLE_USER'])
+		manager.decide createAuthentication(['ROLE_USER', 'ROLE_ADMIN']), null, createDefinition(['ROLE_USER'])
 	}
 
 	void testDecideInsufficientRoles() {
 		shouldFail(AccessDeniedException) {
-			_manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_ADMIN'])
+			manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_ADMIN'])
 		}
 	}
 
 	void testDecideAuthenticatedFully() {
-		_manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+		manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
 	}
 
 	void testDecideAuthenticatedFullyRemembered() {
 		def auth = new RememberMeAuthenticationToken('key', 'principal', namesToAuthorities(['ROLE_USER']))
 		shouldFail(AccessDeniedException) {
-			_manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+			manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
 		}
 	}
 
 	void testDecideAuthenticatedFullyAnonymous() {
 		def auth = new AnonymousAuthenticationToken('key', 'principal', namesToAuthorities(['ROLE_USER']))
 		shouldFail(AccessDeniedException) {
-			_manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+			manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
 		}
 	}
 
@@ -82,7 +81,7 @@ class AuthenticatedVetoableDecisionManagerTests extends GroovyTestCase {
 	}
 
 	private List<GrantedAuthority> namesToAuthorities(roleNames) {
-		return roleNames.collect { new GrantedAuthorityImpl(it) }
+		return roleNames.collect { new SimpleGrantedAuthority(it) }
 	}
 
 	private createDefinition(roleNames) {

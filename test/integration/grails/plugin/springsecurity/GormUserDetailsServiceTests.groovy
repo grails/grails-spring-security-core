@@ -14,7 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 import test.TestRole
@@ -31,8 +30,8 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	private static final String ADMIN_ROLE_NAME = 'ROLE_ADMIN'
 	private static final String SUPER_ADMIN_ROLE_NAME = 'ROLE_SUPERADMIN'
 
-	private TestRole _adminRole
-	private TestRole _superAdminRole
+	private TestRole adminRole
+	private TestRole superAdminRole
 
 	def sessionFactory
 	def userDetailsService
@@ -44,11 +43,11 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		CH.config = new ConfigObject()
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = new ConfigObject()
 
 		assertEquals 0, TestRole.count()
-		_adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save()
-		_superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save()
+		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
+		superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save(failOnError: true)
 		assertEquals 2, TestRole.count()
 	}
 
@@ -59,7 +58,7 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 	}
 
 	void testLoadUserByUsername_NotFound() {
@@ -75,7 +74,7 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 		String loginName = 'loginName'
 
 		assertEquals 0, TestUser.count()
-		new TestUser(loginName: loginName, passwrrd: 'password', enabld: true).save()
+		new TestUser(loginName: loginName, passwrrd: 'password', enabld: true).save(failOnError: true)
 		assertEquals 1, TestUser.count()
 
 		def details = userDetailsService.loadUserByUsername(loginName)
@@ -90,11 +89,12 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 		boolean enabled = true
 
 		assertEquals 0, TestUser.count()
-		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save()
+		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
 		assertEquals 1, TestUser.count()
 
-		TestUserRole.create user, _adminRole, true
-		TestUserRole.create user, _superAdminRole, true
+		TestUserRole.create user, adminRole
+		TestUserRole.create user, superAdminRole, true
+		assertEquals 2, TestUserRole.count()
 
 		def details = userDetailsService.loadUserByUsername(loginName)
 		assertNotNull details
@@ -115,11 +115,11 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 		boolean enabled = true
 
 		assertEquals 0, TestUser.count()
-		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save()
+		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
 		assertEquals 1, TestUser.count()
 
-		TestUserRole.create user, _adminRole
-		TestUserRole.create user, _superAdminRole
+		TestUserRole.create user, adminRole
+		TestUserRole.create user, superAdminRole, true
 
 		def details = userDetailsService.loadUserByUsername(loginName, false)
 		assertNotNull details

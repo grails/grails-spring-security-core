@@ -83,7 +83,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 	}
 
 	private void checkSecuredUrlsNotVisibleWithoutAuth() {
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
 		// secureAnnotated is form auth
@@ -110,6 +110,12 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secureClassAnnotated/admin2'
 		assertStatus 401
+
+		get '/secureClassAnnotated/admin2.xml'
+		assertStatus 401
+
+		get '/secureClassAnnotated/admin2;jsessionid=5514B068198CC7DBF372713326E14C12'
+		assertStatus 401
 	}
 
 	private void checkSecuredUrlsVisibleWithAuth() {
@@ -124,7 +130,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Login'
 		}
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		get '/secureAnnotated/index'
 		assertContentContains 'Please Login'
@@ -135,7 +141,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Login'
 		}
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		get '/secureAnnotated/adminEither'
 		assertContentContains 'Please Login'
@@ -146,23 +152,23 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Login'
 		}
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated', 'admin1', 'password1'
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated/index', 'admin1', 'password1'
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated/otherAction', 'admin1', 'password1'
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated/admin2', 'admin1', 'password1'
 		assertStatus 403
-		get '/logout'
+		logout()
 
 		// now as admin2
 
@@ -177,7 +183,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Login'
 		}
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		get '/secureAnnotated/index'
 		assertContentContains 'Please Login'
@@ -188,7 +194,7 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Login'
 		}
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		get '/secureAnnotated/adminEither'
 		assertContentContains 'Please Login'
@@ -199,22 +205,22 @@ class BasicAuthSecurityTest extends AbstractSecurityWebTest {
 			clickButton 'Login'
 		}
 		assertContentContains 'you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated', 'admin2', 'password2'
 		assertContentContains 'index: you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated/index', 'admin2', 'password2'
 		assertContentContains 'index: you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated/otherAction', 'admin2', 'password2'
 		assertContentContains 'otherAction: you have ROLE_ADMIN'
-		get '/logout'
+		logout()
 
 		getWithAuth '/secureClassAnnotated/admin2', 'admin2', 'password2'
 		assertContentContains 'admin2: you have ROLE_ADMIN2'
-		get '/logout'
+		logout()
 	}
 }

@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web
 
+import grails.plugin.springsecurity.SecurityTestUtils
+
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 /**

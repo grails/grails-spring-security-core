@@ -15,54 +15,52 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource
-import org.springframework.security.web.util.AntUrlPathMatcher
+import org.springframework.security.web.util.AntPathRequestMatcher
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanTests extends GroovyTestCase {
 
-	private _factory = new ChannelFilterInvocationSecurityMetadataSourceFactoryBean()
+	private ChannelFilterInvocationSecurityMetadataSourceFactoryBean factory = new ChannelFilterInvocationSecurityMetadataSourceFactoryBean()
 
 	void testGetObjectType() {
-		assertSame DefaultFilterInvocationSecurityMetadataSource, _factory.objectType
+		assertSame DefaultFilterInvocationSecurityMetadataSource, factory.objectType
 	}
 
 	void testIsSingleton() {
-		assertTrue _factory.singleton
+		assertTrue factory.singleton
 	}
 
 	void testAfterPropertiesSet() {
 		shouldFail(IllegalArgumentException) {
-			_factory.afterPropertiesSet()
+			factory.afterPropertiesSet()
 		}
 
-		_factory.urlMatcher = new AntUrlPathMatcher()
 		shouldFail(IllegalArgumentException) {
-			_factory.afterPropertiesSet()
+			factory.afterPropertiesSet()
 		}
 
-		_factory.definition = ['/foo1/**': 'secure_only']
+		factory.definition = ['/foo1/**': 'secure_only']
 		shouldFail(IllegalArgumentException) {
-			_factory.afterPropertiesSet()
+			factory.afterPropertiesSet()
 		}
 
-		_factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL']
-		_factory.afterPropertiesSet()
+		factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL']
+		factory.afterPropertiesSet()
 	}
 
 	void testGetObject() {
-		_factory.urlMatcher = new AntUrlPathMatcher()
-		_factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL',
-		                       '/foo2/**': 'REQUIRES_INSECURE_CHANNEL',
-		                       '/foo3/**': 'ANY_CHANNEL']
-		_factory.afterPropertiesSet()
+		factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL',
+		                      '/foo2/**': 'REQUIRES_INSECURE_CHANNEL',
+		                      '/foo3/**': 'ANY_CHANNEL']
+		factory.afterPropertiesSet()
 
-		def object = _factory.object
+		def object = factory.object
 		assertTrue object instanceof DefaultFilterInvocationSecurityMetadataSource
-		def map = object.@httpMethodMap
-		assertEquals 'REQUIRES_SECURE_CHANNEL',   map.get(null).get('/foo1/**').attribute[0]
-		assertEquals 'REQUIRES_INSECURE_CHANNEL', map.get(null).get('/foo2/**').attribute[0]
-		assertEquals 'ANY_CHANNEL',               map.get(null).get('/foo3/**').attribute[0]
+		def map = object.@requestMap
+		assertEquals 'REQUIRES_SECURE_CHANNEL',   map[new AntPathRequestMatcher('/foo1/**')].attribute[0]
+		assertEquals 'REQUIRES_INSECURE_CHANNEL', map[new AntPathRequestMatcher('/foo2/**')].attribute[0]
+		assertEquals 'ANY_CHANNEL',               map[new AntPathRequestMatcher('/foo3/**')].attribute[0]
 	}
 }

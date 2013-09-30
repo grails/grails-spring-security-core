@@ -1,8 +1,11 @@
+import org.springframework.security.access.annotation.Secured
+
+@Secured('permitAll')
 class TagLibTestController {
 
-	def test = {}
+	def test() {}
 
-	def testMetaclassMethods = {
+	def testMetaclassMethods() {
 
 		render """
 		getPrincipal: ${getPrincipal()}<br/>

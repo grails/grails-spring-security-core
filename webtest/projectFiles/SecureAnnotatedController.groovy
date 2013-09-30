@@ -1,24 +1,24 @@
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class SecureAnnotatedController {
 
 	@Secured(['ROLE_ADMIN'])
-	def index = {
+	def index() {
 		render 'you have ROLE_ADMIN'
 	}
 
 	@Secured(['ROLE_ADMIN', 'ROLE_ADMIN2'])
-	def adminEither = {
+	def adminEither() {
 		render 'you have ROLE_ADMIN or ROLE_ADMIN2'
 	}
 
 	@Secured(['ROLE_USER'])
-	def userAction = {
+	def userAction() {
 		render 'you have ROLE_USER'
 	}
 
 	@Secured(["authentication.name == 'admin1'"])
-	def expression = {
+	def expression() {
 		render 'OK'
 	}
 
@@ -40,5 +40,14 @@ class SecureAnnotatedController {
 	@Secured(["authentication.name == 'admin1'"])
 	def expressionMethod() {
 		render 'OK - method'
+	}
+
+	@Secured(closure = {
+		assert request
+		assert ctx
+		authentication.name == 'admin1'
+	})
+	def closureMethod() {
+		render 'OK - closureMethod'
 	}
 }

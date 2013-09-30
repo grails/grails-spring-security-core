@@ -23,7 +23,7 @@ import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
  */
 class FakeApplication extends DefaultGrailsApplication {
 
-	final config = new ConfigObject()
+	final ConfigObject config = new ConfigObject()
 
 	FakeApplication() {}
 
@@ -33,5 +33,5 @@ class FakeApplication extends DefaultGrailsApplication {
 	}
 
 	@Override
-	ConfigObject getConfig() { this.config }
+	ConfigObject getConfig() { config }
 }

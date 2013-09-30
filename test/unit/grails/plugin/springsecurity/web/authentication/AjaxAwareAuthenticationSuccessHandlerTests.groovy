@@ -15,8 +15,8 @@
 package grails.plugin.springsecurity.web.authentication
 
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -30,10 +30,12 @@ import org.springframework.security.web.savedrequest.SavedRequest
  */
 class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 
-	private final _handler = new AjaxAwareAuthenticationSuccessHandler()
-
 	private static final String AJAX_SUCCESS_URL = '/ajaxSuccessUrl'
 	private static final String DEFAULT_TARGET_URL = '/defaultTargetUrl'
+
+	private final AjaxAwareAuthenticationSuccessHandler handler = new AjaxAwareAuthenticationSuccessHandler()
+	private MockHttpServletRequest request = new MockHttpServletRequest()
+	private MockHttpServletResponse response = new MockHttpServletResponse()
 
 	/**
 	 * {@inheritDoc}
@@ -42,44 +44,42 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		_handler.defaultTargetUrl = DEFAULT_TARGET_URL
-		_handler.ajaxSuccessUrl = AJAX_SUCCESS_URL
+		handler.defaultTargetUrl = DEFAULT_TARGET_URL
+		handler.ajaxSuccessUrl = AJAX_SUCCESS_URL
 
 		def config = new ConfigObject()
 		config.ajaxHeader = 'ajaxHeader'
 		SpringSecurityUtils.securityConfig = config
+		SecurityRequestHolder.set request, response
 	}
 
 	void testDetermineTargetUrl_Ajax() {
 
-		_handler.alwaysUseDefaultTargetUrl = true
+		handler.alwaysUseDefaultTargetUrl = true
 
-		def request = new MockHttpServletRequest()
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
 
-		assertEquals AJAX_SUCCESS_URL, _handler.determineTargetUrl(
+		assertEquals AJAX_SUCCESS_URL, handler.determineTargetUrl(
 				request, new MockHttpServletResponse())
 	}
 
 	void testDetermineTargetUrl_NotAjax() {
-		assertEquals DEFAULT_TARGET_URL, _handler.determineTargetUrl(
+		assertEquals DEFAULT_TARGET_URL, handler.determineTargetUrl(
 				new MockHttpServletRequest(), new MockHttpServletResponse())
 	}
 
 	void testOnAuthenticationSuccess() {
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
 		Authentication authentication = new TestingAuthenticationToken('username', 'password')
 
 		String expectedRedirect = 'expectedRedirect'
 		SavedRequest savedRequest = [getRedirectUrl: { -> expectedRedirect }] as SavedRequest
 		boolean removeRequestCalled = false
-		_handler.requestCache = [removeRequest: { req, res -> removeRequestCalled = true },
+		handler.requestCache = [removeRequest: { req, res -> removeRequestCalled = true },
 		                         getRequest: { req, res -> savedRequest }] as RequestCache
 		String redirectUrl
-		_handler.redirectStrategy = [sendRedirect: { req, res, url -> redirectUrl = url }] as RedirectStrategy
+		handler.redirectStrategy = [sendRedirect: { req, res, url -> redirectUrl = url }] as RedirectStrategy
 
-		_handler.onAuthenticationSuccess(request, response, authentication)
+		handler.onAuthenticationSuccess(request, response, authentication)
 
 		assertTrue removeRequestCalled
 		assertEquals expectedRedirect, redirectUrl
@@ -93,6 +93,7 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.securityConfig = null
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		SecurityRequestHolder.reset()
 	}
 }

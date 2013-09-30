@@ -26,7 +26,7 @@ import org.springframework.mock.web.MockHttpServletResponse
  */
 class RequestHolderAuthenticationFilterTests extends GroovyTestCase {
 
-	private _filter = new RequestHolderAuthenticationFilter()
+	private RequestHolderAuthenticationFilter filter = new RequestHolderAuthenticationFilter()
 
 	void testDoFilter() {
 		assertNull SecurityRequestHolder.request
@@ -42,7 +42,7 @@ class RequestHolderAuthenticationFilterTests extends GroovyTestCase {
 			chainCalled = true
 		}] as FilterChain
 
-		_filter.doFilter request, response, chain
+		filter.doFilter request, response, chain
 
 		assertTrue chainCalled
 		assertNull SecurityRequestHolder.request

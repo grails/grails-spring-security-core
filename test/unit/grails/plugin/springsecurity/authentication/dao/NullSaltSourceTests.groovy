@@ -14,7 +14,7 @@
  */
 package grails.plugin.springsecurity.authentication.dao
 
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 
 /**
@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.User
 class NullSaltSourceTests extends GroovyTestCase {
 
 	void testGetSalt() {
-		def user = new User('username', 'password', true, true, true, true, [new GrantedAuthorityImpl('ROLE_USER')])
+		def user = new User('username', 'password', true, true, true, true, [new SimpleGrantedAuthority('ROLE_USER')])
 		assertNull new NullSaltSource().getSalt(user)
 	}
 }

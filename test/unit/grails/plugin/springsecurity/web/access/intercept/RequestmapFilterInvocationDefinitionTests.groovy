@@ -14,57 +14,34 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import grails.plugin.springsecurity.FakeApplication
-import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.test.GrailsUnitTestCase
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.security.access.vote.AuthenticatedVoter
-import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-import org.springframework.security.web.util.AntUrlPathMatcher
+
+import test.TestRequestmap
 
 /**
  * Unit tests for RequestmapFilterInvocationDefinition.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
+class RequestmapFilterInvocationDefinitionTests extends AbstractFilterInvocationDefinitionTests {
 
-	private RequestmapFilterInvocationDefinition _fid = new RequestmapFilterInvocationDefinition()
-	private final FakeApplication _application = new FakeApplication()
+	private RequestmapFilterInvocationDefinition fid = new TestRequestmapFilterInvocationDefinition()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
-	@Override
-	protected void setUp() {
-		super.setUp()
-//		_application.addToLoaded(TestRequestmap)
-		ReflectionUtils.application = _application
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
-	@Override
 	protected void tearDown() {
 		super.tearDown()
-		ReflectionUtils.application = null
 		SpringSecurityUtils.resetSecurityConfig()
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 	}
 
 	void testSplit() {
-		assertEquals(['ROLE_1', 'ROLE_2', 'ROLE_3', 'ROLE_4', 'ROLE_5'], _fid.split('ROLE_1, ROLE_2,,,ROLE_3 ,ROLE_4,ROLE_5'))
-		assertEquals(['hasAnyRole("ROLE_1","ROLE_2")'], _fid.split('hasAnyRole("ROLE_1","ROLE_2")'))
+		assertEquals(['ROLE_1', 'ROLE_2', 'ROLE_3', 'ROLE_4', 'ROLE_5'], fid.split('ROLE_1, ROLE_2,,,ROLE_3 ,ROLE_4,ROLE_5'))
+		assertEquals(['hasAnyRole("ROLE_1","ROLE_2")'], fid.split('hasAnyRole("ROLE_1","ROLE_2")'))
 	}
 
 //	void testLoadRequestmaps() {
@@ -78,72 +55,58 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 //		                 new TestRequestmap(urlPattern: 'path3', rolePattern: 'config3')]
 //		mockDomain TestRequestmap, instances
 //
-//		def requestmaps = _fid.loadRequestmaps()
+//		def requestmaps = fid.loadRequestmaps()
 //		assertEquals 3, requestmaps.size()
 //		assertEquals 'config1', requestmaps.path1
 //		assertEquals 'config2', requestmaps.path2
 //		assertEquals 'config3', requestmaps.path3
 //	}
 
-	void testAfterPropertiesSet() {
-		assertEquals 'url matcher is required', shouldFail(IllegalArgumentException) {
-			_fid.afterPropertiesSet()
-		}
-
-		_fid.urlMatcher = new AntUrlPathMatcher()
-
-		_fid.afterPropertiesSet()
-	}
-
 	void testStoreMapping() {
-		_fid.urlMatcher = new AntUrlPathMatcher()
 
-		assertEquals 0, _fid.configAttributeMap.size()
+		assertEquals 0, fid.configAttributeMap.size()
 
-		_fid.storeMapping '/foo/bar', ['ROLE_ADMIN']
-		assertEquals 1, _fid.configAttributeMap.size()
+		fid.storeMapping '/foo/bar', null, ['ROLE_ADMIN']
+		assertEquals 1, fid.configAttributeMap.size()
 
-		_fid.storeMapping '/foo/bar', ['ROLE_USER']
-		assertEquals 1, _fid.configAttributeMap.size()
+		fid.storeMapping '/foo/bar', null, ['ROLE_USER']
+		assertEquals 1, fid.configAttributeMap.size()
 
-		_fid.storeMapping '/other/path', ['ROLE_SUPERUSER']
-		assertEquals 2, _fid.configAttributeMap.size()
+		fid.storeMapping '/other/path', null, ['ROLE_SUPERUSER']
+		assertEquals 2, fid.configAttributeMap.size()
 	}
 
 	void testReset() {
-		_fid = new TestRequestmapFilterInvocationDefinition()
-		_fid.urlMatcher = new AntUrlPathMatcher()
-		_fid.roleVoter = new RoleVoter()
-		_fid.authenticatedVoter = new AuthenticatedVoter()
-		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
+		def ctx = initCtx()
 
-		assertEquals 0, _fid.configAttributeMap.size()
+		fid.roleVoter = ctx.getBean('roleVoter')
+		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
 
-		_fid.reset()
+		assertEquals 0, fid.configAttributeMap.size()
 
-		assertEquals 2, _fid.configAttributeMap.size()
+		fid.reset()
+
+		assertEquals 2, fid.configAttributeMap.size()
 	}
 
 	void testInitialize() {
-		_fid = new TestRequestmapFilterInvocationDefinition()
-		_fid.urlMatcher = new AntUrlPathMatcher()
-		_fid.roleVoter = new RoleVoter()
-		_fid.authenticatedVoter = new AuthenticatedVoter()
-		_fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
+		def ctx = initCtx()
 
-		assertEquals 0, _fid.configAttributeMap.size()
+		fid.roleVoter = ctx.getBean('roleVoter')
+		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
 
-		_fid.initialize()
-		assertEquals 2, _fid.configAttributeMap.size()
+		assertEquals 0, fid.configAttributeMap.size()
 
-		_fid.resetConfigs()
+		fid.initialize()
+		assertEquals 2, fid.configAttributeMap.size()
 
-		_fid.initialize()
-		assertEquals 0, _fid.configAttributeMap.size()
+		fid.resetConfigs()
+
+		fid.initialize()
+		assertEquals 0, fid.configAttributeMap.size()
 	}
 
 	void testDetermineUrl() {
-		_fid.urlMatcher = new AntUrlPathMatcher()
 
 		def request = new MockHttpServletRequest()
 		def response = new MockHttpServletResponse()
@@ -151,19 +114,19 @@ class RequestmapFilterInvocationDefinitionTests extends GrailsUnitTestCase {
 		request.contextPath = '/context'
 
 		request.requestURI = '/context/foo'
-		assertEquals '/foo', _fid.determineUrl(new FilterInvocation(request, response, chain))
+		assertEquals '/foo', fid.determineUrl(new FilterInvocation(request, response, chain))
 
 		request.requestURI = '/context/fOo/Bar?x=1&y=2'
-		assertEquals '/foo/bar', _fid.determineUrl(new FilterInvocation(request, response, chain))
+		assertEquals '/foo/bar', fid.determineUrl(new FilterInvocation(request, response, chain))
 	}
 
 	void testSupports() {
-		assertTrue _fid.supports(FilterInvocation)
+		assertTrue fid.supports(FilterInvocation)
 	}
 }
 
 class TestRequestmapFilterInvocationDefinition extends RequestmapFilterInvocationDefinition {
-	protected Map<String, String> loadRequestmaps() {
-		['/foo/bar': 'ROLE_USER', '/admin/**': 'ROLE_ADMIN']
+	protected List<InterceptedUrl> loadRequestmaps() {
+		[new InterceptedUrl('/foo/bar', ['ROLE_USER'], null), new InterceptedUrl('/admin/**', ['ROLE_ADMIN'], null)]
 	}
 }

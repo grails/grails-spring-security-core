@@ -14,13 +14,13 @@
  */
 package grails.plugin.springsecurity
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.plugin.springsecurity.web.SecurityRequestHolder
+
 import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
 
@@ -32,6 +32,7 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest
 class SpringSecurityUtilsTests extends GroovyTestCase {
 
 	private final application = new FakeApplication()
+	private request = new MockHttpServletRequest()
 
 	/**
 	 * {@inheritDoc}
@@ -41,6 +42,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	protected void setUp() {
 		super.setUp()
 		ReflectionUtils.application = application
+		SecurityRequestHolder.set request, null
 	}
 
 	/**
@@ -53,7 +55,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		(1..10).each { i ->
 			String name = "role${i}"
 			roleNames << name
-			authorities << new GrantedAuthorityImpl(name)
+			authorities << new SimpleGrantedAuthority(name)
 		}
 
 		def roles = SpringSecurityUtils.authoritiesToRoles(authorities)
@@ -65,7 +67,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	 */
 	void testAuthoritiesToRolesNullAuthority() {
 
-		def authorities = [new GrantedAuthorityImpl('role1'), new FakeAuthority()]
+		def authorities = [new SimpleGrantedAuthority('role1'), new FakeAuthority()]
 
 		shouldFail(IllegalArgumentException) {
 			SpringSecurityUtils.authoritiesToRoles(authorities)
@@ -93,7 +95,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	void testGetPrincipalAuthorities() {
 		def authorities = []
 		(1..10).each { i ->
-			authorities << new GrantedAuthorityImpl("role${i}")
+			authorities << new SimpleGrantedAuthority("role${i}")
 		}
 
 		SecurityTestUtils.authenticate(null, null, authorities)
@@ -118,54 +120,48 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	 * Test retainAll().
 	 */
 	void testRetainAll() {
-		def granted = [new GrantedAuthorityImpl('role1'),
-		               new GrantedAuthorityImpl('role2'),
-		               new GrantedAuthorityImpl('role3')]
-		def required = [new GrantedAuthorityImpl('role1')]
+		def granted = [new SimpleGrantedAuthority('role1'),
+		               new SimpleGrantedAuthority('role2'),
+		               new SimpleGrantedAuthority('role3')]
+		def required = [new SimpleGrantedAuthority('role1')]
 
 		def expected = ['role1']
 		assertSameContents expected, SpringSecurityUtils.retainAll(granted, required)
 	}
 
 	void testIsAjaxUsingParameterFalse() {
-		assertFalse SpringSecurityUtils.isAjax(new MockHttpServletRequest())
+		assertFalse SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingParameterTrue() {
-
-		def request = new MockHttpServletRequest()
 		request.setParameter('ajax', 'true')
 
 		assertTrue SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingHeaderFalse() {
-		assertFalse SpringSecurityUtils.isAjax(new MockHttpServletRequest())
+		assertFalse SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingHeaderTrue() {
-
-		def request = new MockHttpServletRequest()
-		request.addHeader('X-Requested-With', 'foo')
+		request.addHeader('X-Requested-With', 'XMLHttpRequest')
 
 		assertTrue SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingSavedRequestFalse() {
 
-		def request = new MockHttpServletRequest()
 		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
-		request.session.setAttribute(DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY, savedRequest)
+		request.session.setAttribute(SpringSecurityUtils.SAVED_REQUEST, savedRequest)
 
 		assertFalse SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingSavedRequestTrue() {
 
-		def request = new MockHttpServletRequest()
 		request.addHeader 'X-Requested-With', 'true'
 		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
-		request.session.setAttribute(DefaultSavedRequest.SPRING_SECURITY_SAVED_REQUEST_KEY, savedRequest)
+		request.session.setAttribute(SpringSecurityUtils.SAVED_REQUEST, savedRequest)
 
 		assertTrue SpringSecurityUtils.isAjax(request)
 	}
@@ -244,31 +240,31 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testGetSecurityConfigType() {
-		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Annotation
 		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()
 		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = 'Annotation'
+		application.config.grails.plugin.springsecurity.securityConfigType = 'Annotation'
 		assertEquals 'Annotation', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap
 		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap.name()
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.InterceptUrlMap.name()
 		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = 'InterceptUrlMap'
+		application.config.grails.plugin.springsecurity.securityConfigType = 'InterceptUrlMap'
 		assertEquals 'InterceptUrlMap', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Requestmap
 		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = SecurityConfigType.Requestmap.name()
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Requestmap.name()
 		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 
-		application.config.grails.plugins.springsecurity.securityConfigType = 'Requestmap'
+		application.config.grails.plugin.springsecurity.securityConfigType = 'Requestmap'
 		assertEquals 'Requestmap', SpringSecurityUtils.securityConfigType
 	}
 
@@ -283,8 +279,9 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	private void initRoleHierarchy(String hierarchy) {
 		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
 		def ctx = [getBean: { String name -> roleHierarchy }] as ApplicationContext
-		AH.application = new FakeApplication(mainContext: ctx)
-		SpringSecurityUtils.application = AH.application
+		def application = new FakeApplication(mainContext: ctx)
+		org.codehaus.groovy.grails.commons.ApplicationHolder.application = application
+		SpringSecurityUtils.application = application
 	}
 
 	/**
@@ -296,10 +293,11 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SecurityTestUtils.logout()
 		SpringSecurityUtils.resetSecurityConfig()
-		AH.application = null
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ApplicationHolder.application = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 		SpringSecurityUtils.application = null
 		ReflectionUtils.application = null
+		SecurityRequestHolder.reset()
 	}
 }
 

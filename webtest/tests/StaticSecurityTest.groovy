@@ -81,13 +81,19 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 	}
 
 	private void checkSecuredUrlsNotVisibleWithoutLogin() {
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
 		get '/secureAnnotated'
 		assertContentContains 'Please Login'
 
 		get '/secureAnnotated/index'
+		assertContentContains 'Please Login'
+
+		get '/secureAnnotated/index.xml'
+		assertContentContains 'Please Login'
+
+		get '/secureAnnotated/index;jsessionid=5514B068198CC7DBF372713326E14C12'
 		assertContentContains 'Please Login'
 
 		get '/secureAnnotated/adminEither'
@@ -107,16 +113,7 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 	}
 
 	private void loginAndCheckAllowed() {
-		// login as admin1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'admin1'
-			j_password = 'password1'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'admin1', 'password1'
 
 		// Check that after login as admin1, some @Secure actions are accessible
 		get '/secureAnnotated'
@@ -143,19 +140,10 @@ class StaticSecurityTest extends AbstractSecurityWebTest {
 		get '/secureAnnotated/expression'
 		assertContentContains 'OK'
 
-		// login as admin2
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'admin2'
-			j_password = 'password2'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'admin2', 'password2'
 
 		// Check that after login as admin2, some @Secure actions are accessible
 		get '/secureAnnotated'

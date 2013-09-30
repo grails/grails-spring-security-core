@@ -1,26 +1,27 @@
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
-
 class DisableTest extends AbstractSecurityWebTest {
 
-	void testLockAccount() {
+	void testAll() {
+		_testLockAccount()
+		tearDown()
 
-		// login as user1
-		get '/login/auth'
-		assertContentContains 'Please Login'
+		_testDisableAccount()
+		tearDown()
 
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		_testExpireAccount()
+		tearDown()
+
+		_testExpirePassword()
+	}
+
+	void _testLockAccount() {
+
+		login 'user1', 'p4ssw0rd'
 
 		// verify logged in
 		get '/secureAnnotated'
 		assertContentContains 'you have ROLE_ADMIN'
 
-		// logout
-		get '/logout'
+		logout()
 
 		// lock account
 		assertEquals 'false', getContent('/hack/getUserProperty?user=user1&propName=accountLocked')
@@ -28,15 +29,7 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'true', getContent('/hack/getUserProperty?user=user1&propName=accountLocked')
 
 		// verify locked
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		assertContentContains 'accountLocked'
 
@@ -45,25 +38,15 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'false', getContent('/hack/getUserProperty?user=user1&propName=accountLocked')
 	}
 
-	void testDisableAccount() {
+	void _testDisableAccount() {
 
-		// login as user1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		// verify logged in
 		get '/secureAnnotated'
 		assertContentContains 'you have ROLE_ADMIN'
 
-		// logout
-		get '/logout'
+		logout()
 
 		// disable account
 		assertEquals 'true', getContent('/hack/getUserProperty?user=user1&propName=enabled')
@@ -71,15 +54,7 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'false', getContent('/hack/getUserProperty?user=user1&propName=enabled')
 
 		// verify disabled
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		assertContentContains 'accountDisabled'
 
@@ -88,25 +63,15 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'true', getContent('/hack/getUserProperty?user=user1&propName=enabled')
 	}
 
-	void testExpireAccount() {
+	void _testExpireAccount() {
 
-		// login as user1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		// verify logged in
 		get '/secureAnnotated'
 		assertContentContains 'you have ROLE_ADMIN'
 
-		// logout
-		get '/logout'
+		logout()
 
 		// expire account
 		assertEquals 'false', getContent('/hack/getUserProperty?user=user1&propName=accountExpired')
@@ -114,15 +79,7 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'true', getContent('/hack/getUserProperty?user=user1&propName=accountExpired')
 
 		// verify expired
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		assertContentContains 'accountExpired'
 
@@ -131,25 +88,15 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'false', getContent('/hack/getUserProperty?user=user1&propName=accountExpired')
 	}
 
-	void testExpirePassword() {
+	void _testExpirePassword() {
 
-		// login as user1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		// verify logged in
 		get '/secureAnnotated'
 		assertContentContains 'you have ROLE_ADMIN'
 
-		// logout
-		get '/logout'
+		logout()
 
 		// expire password
 		assertEquals 'false', getContent('/hack/getUserProperty?user=user1&propName=passwordExpired')
@@ -157,15 +104,7 @@ class DisableTest extends AbstractSecurityWebTest {
 		assertEquals 'true', getContent('/hack/getUserProperty?user=user1&propName=passwordExpired')
 
 		// verify expired
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		assertContentContains 'passwordExpired'
 

@@ -25,7 +25,7 @@ import test.TestRole
 class SpringSecurityServiceIntegrationTests extends GroovyTestCase {
 
 	def sessionFactory
-	def springSecurityService
+	SpringSecurityService springSecurityService
 	private oldConfig
 
 	/**

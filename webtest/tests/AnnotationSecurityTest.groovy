@@ -1,13 +1,5 @@
 class AnnotationSecurityTest extends AbstractSecurityWebTest {
 
-	private boolean isGrails2
-
-	@Override
-	protected void setUp() {
-		super.setUp()
-		isGrails2 = !getContent('/hack/grailsVersion').startsWith('1')
-	}
-
 	void testAnnotationSecurity() {
 
 		createRoles()
@@ -92,7 +84,7 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 	}
 
 	private void checkSecuredUrlsNotVisibleWithoutLogin() {
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
 		get '/secureAnnotated'
@@ -116,14 +108,16 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		get '/secureClassAnnotated/admin2'
 		assertContentContains 'Please Login'
 
-		if (!isGrails2) {
-			return
-		}
-
 		get '/secureAnnotated/indexMethod'
 		assertContentContains 'Please Login'
 
 		get '/secureAnnotated/adminEitherMethod'
+		assertContentContains 'Please Login'
+
+		get '/secureAnnotated/adminEitherMethod.xml'
+		assertContentContains 'Please Login'
+
+		get '/secureAnnotated/adminEitherMethod;jsessionid=5514B068198CC7DBF372713326E14C12'
 		assertContentContains 'Please Login'
 	}
 
@@ -133,15 +127,7 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 	}
 
 	private void loginAndCheckAllAllowedAdmin1() {
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'admin1'
-			j_password = 'password1'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'admin1', 'password1'
 
 		// Check that after login as admin1, some @Secure actions are accessible
 		get '/secureAnnotated'
@@ -168,10 +154,6 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		get '/secureAnnotated/expression'
 		assertContentContains 'OK'
 
-		if (!isGrails2) {
-			return
-		}
-
 		get '/secureAnnotated/indexMethod'
 		assertContentContains 'you have ROLE_ADMIN'
 
@@ -180,21 +162,16 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secureAnnotated/expressionMethod'
 		assertContentContains 'OK'
+
+		get '/secureAnnotated/closureMethod'
+		assertContentContains 'OK'
 	}
 
 	private void loginAndCheckAllAllowedAdmin2() {
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'admin2'
-			j_password = 'password2'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'admin2', 'password2'
 
 		// Check that after login as admin2, some @Secure actions are accessible
 		get '/secureAnnotated'
@@ -221,10 +198,6 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		get '/secureAnnotated/expression'
 		assertContentContains "Sorry, you're not authorized to view this page."
 
-		if (!isGrails2) {
-			return
-		}
-
 		get '/secureAnnotated/indexMethod'
 		assertContentContains 'you have ROLE_ADMIN'
 
@@ -232,6 +205,9 @@ class AnnotationSecurityTest extends AbstractSecurityWebTest {
 		assertContentContains 'you have ROLE_ADMIN'
 
 		get '/secureAnnotated/expressionMethod'
+		assertContentContains "Sorry, you're not authorized to view this page."
+
+		get '/secureAnnotated/closureMethod'
 		assertContentContains "Sorry, you're not authorized to view this page."
 	}
 }

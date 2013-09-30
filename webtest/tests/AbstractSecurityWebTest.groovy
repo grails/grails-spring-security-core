@@ -1,43 +1,55 @@
 import functionaltestplugin.FunctionalTestCase
 
-import java.util.regex.Pattern
-
 import com.gargoylesoftware.htmlunit.HttpMethod
 import com.gargoylesoftware.htmlunit.WebRequestSettings
 
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import org.springframework.util.ReflectionUtils
 
-abstract class AbstractSecurityWebTest extends FunctionalTestCase {
+import java.util.regex.Pattern
 
-	protected static final String ROW_COUNT_XPATH = "count(//div[@class='list']//tbody/tr)"
-	protected static final String ROW_COUNT_XPATH2 = "count(//div//table//tbody/tr)"
+import javax.xml.parsers.DocumentBuilderFactory
+import javax.xml.xpath.XPathFactory
+
+abstract class AbstractSecurityWebTest extends FunctionalTestCase {
 
 	protected String sessionId
 
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		get '/logout'
+		logout()
 	}
 
 	protected void verifyListSize(int size) {
-		assertContentContainsStrict 'List'
-		boolean isGrails2 = response.contentAsString.contains('<link rel="apple-touch-icon"')
-		int actual = page.getByXPath(isGrails2 ? ROW_COUNT_XPATH2 : ROW_COUNT_XPATH)[0]
+		int actual = evaluateXpath("count(//div//table//tbody/tr)") as Integer
 		assertEquals "$size row(s) of data expected", size, actual
 	}
 
-	protected void verifyXPath(String xpath, String expected, boolean regex) {
-		def results = page.getByXPath(ROW_COUNT_XPATH)
-println "\n\n verifyXPath xpath: $xpath expected $expected : $results ${results*.getClass().name}\n\n"
-// verifyXPath xpath: //div[@class='message'] expected .*TestRole.*deleted.* : [0.0] [java.lang.Double]
+	protected void verifyXPath(String expression, String expected, boolean regex) {
+		String result = evaluateXpath(expression)
+		if (regex) {
+			assertTrue Pattern.compile(expected, Pattern.DOTALL).matcher(result).find()
+		}
+		else {
+			assertEquals expected, result
+		}
+	}
 
-//		if (regex) {
-//			assertTrue Pattern.compile(expected, Pattern.DOTALL).matcher(results[0]).find()
-//		}
-//		else {
-//			assertEquals expected, results[0]
-//		}
+	protected evaluateXpath(String expression) {
+		def documentElement = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new ByteArrayInputStream(convertResponseToXml().bytes)).documentElement
+		XPathFactory.newInstance().newXPath().evaluate(expression, documentElement)
+	}
+
+	protected String convertResponseToXml() {
+		StringBuilder fixed = new StringBuilder()
+		response.contentAsString.eachLine { String line ->
+			line = line.replaceAll('&hellip;', '').trim()
+			if (!line.startsWith('<link ') && !line.startsWith('<meta ')) {
+				fixed << line << '\n'
+			}
+		}
+		fixed.toString().replaceAll('<!doctype ', '<!DOCTYPE ')
 	}
 
 	protected void clickButton(String idOrText) {
@@ -120,5 +132,28 @@ println "\n\n verifyXPath xpath: $xpath expected $expected : $results ${results*
 		}
 		def parts = cookie.value.split(';Path=/')
 		sessionId = parts[0] - 'JSESSIONID='
+	}
+
+	protected void login(String username, String password) {
+		// login as user1
+		get '/login/auth'
+		assertContentContains 'Please Login'
+
+		form {
+			j_username = username
+			j_password = password
+			_spring_security_remember_me = true
+			clickButton 'Login'
+		}
+	}
+	
+	protected void logout() {
+		post '/logout'
+	}
+
+	protected MessageDigestPasswordEncoder createSha256Encoder() {
+		def passwordEncoder = new MessageDigestPasswordEncoder('SHA-256')
+		passwordEncoder.iterations = 10000
+		passwordEncoder
 	}
 }

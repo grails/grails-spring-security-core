@@ -14,7 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
 import org.springframework.security.access.event.AbstractAuthorizationEvent
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -31,8 +30,8 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  */
 class SecurityEventListenerTests extends GroovyTestCase {
 
-	private SecurityEventListener _listener
-	private _closures
+	private SecurityEventListener listener
+	private closures
 
 	/**
 	 * {@inheritDoc}
@@ -41,9 +40,9 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		_listener = new SecurityEventListener()
-		_closures = new ConfigObject()
-		SpringSecurityUtils.securityConfig = _closures
+		listener = new SecurityEventListener()
+		closures = new ConfigObject()
+		SpringSecurityUtils.securityConfig = closures
 	}
 
 	/**
@@ -54,7 +53,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		CH.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 	}
 
 	/**
@@ -63,9 +62,9 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	void testInteractiveAuthenticationSuccessEvent() {
 
 		boolean called = false
-		_closures.onInteractiveAuthenticationSuccessEvent = { e, appCtx -> called = true }
+		closures.onInteractiveAuthenticationSuccessEvent = { e, appCtx -> called = true }
 
-		_listener.onApplicationEvent(new InteractiveAuthenticationSuccessEvent(
+		listener.onApplicationEvent(new InteractiveAuthenticationSuccessEvent(
 				new TestingAuthenticationToken("", ""), getClass()))
 
 		assertTrue called
@@ -77,9 +76,9 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	void testAbstractAuthenticationFailureEvent() {
 
 		boolean called = false
-		_closures.onAbstractAuthenticationFailureEvent = { e, appCtx -> called = true }
+		closures.onAbstractAuthenticationFailureEvent = { e, appCtx -> called = true }
 
-		_listener.onApplicationEvent new AuthenticationFailureBadCredentialsEvent(
+		listener.onApplicationEvent new AuthenticationFailureBadCredentialsEvent(
 				new TestingAuthenticationToken("", ""), new BadCredentialsException('bad credentials'))
 
 		assertTrue called
@@ -91,9 +90,9 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	void testAuthenticationSuccessEvent() {
 
 		boolean called = false
-		_closures.onAuthenticationSuccessEvent = { e, appCtx -> called = true }
+		closures.onAuthenticationSuccessEvent = { e, appCtx -> called = true }
 
-		_listener.onApplicationEvent(new AuthenticationSuccessEvent(
+		listener.onApplicationEvent(new AuthenticationSuccessEvent(
 				new TestingAuthenticationToken("", "")))
 
 		assertTrue called
@@ -105,9 +104,9 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	void testAbstractAuthorizationEvent() {
 
 		boolean called = false
-		_closures.onAuthorizationEvent = { e, appCtx -> called = true }
+		closures.onAuthorizationEvent = { e, appCtx -> called = true }
 
-		_listener.onApplicationEvent(new TestAuthorizationEvent())
+		listener.onApplicationEvent(new TestAuthorizationEvent())
 
 		assertTrue called
 	}
@@ -118,13 +117,13 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	void testAuthenticationSwitchUserEvent() {
 
 		boolean called = false
-		_closures.onAuthenticationSwitchUserEvent = { e, appCtx -> called = true }
+		closures.onAuthenticationSwitchUserEvent = { e, appCtx -> called = true }
 
 		def authentication = SecurityTestUtils.authenticate(['ROLE_FOO'])
 		def targetUser = new User('username', 'password', true, true, true,
 				true, authentication.authorities)
 
-		_listener.onApplicationEvent(new AuthenticationSwitchUserEvent(authentication, targetUser))
+		listener.onApplicationEvent(new AuthenticationSwitchUserEvent(authentication, targetUser))
 
 		assertTrue called
 	}

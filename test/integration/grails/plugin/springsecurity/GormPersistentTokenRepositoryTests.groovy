@@ -35,8 +35,8 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 	private static final Date DATE = new SimpleDateFormat(DATE_FORMAT).parse(
 			'2007-10-09 18:19:25')
 
-	private _repo = new GormPersistentTokenRepository()
-	private _sql
+	private GormPersistentTokenRepository repo = new GormPersistentTokenRepository()
+	private Sql sql
 
 	def dataSource
 	def grailsApplication
@@ -48,25 +48,25 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		_sql = new Sql(dataSource)
-		_repo.grailsApplication = grailsApplication
+		sql = new Sql(dataSource)
+		repo.grailsApplication = grailsApplication
 	}
 
 	@Override
 	protected void tearDown() {
 		sessionFactory.currentSession.clear()
-		_sql.executeUpdate 'delete from persistent_logins'
+		sql.executeUpdate 'delete from persistent_logins'
 		assertEquals 0, TestPersistentLogin.count()
 	}
 
 	void testCreateNewTokenInsertsCorrectData() {
 		Date currentDate = new Date()
 		def token = new PersistentRememberMeToken('joeuser', 'joesseries', 'atoken', currentDate)
-		_repo.createNewToken token
+		repo.createNewToken token
 
 		assertEquals 1, TestPersistentLogin.count()
 
-		def row = _sql.firstRow('select * from persistent_logins')
+		def row = sql.firstRow('select * from persistent_logins')
 
 		assertEquals currentDate.time, row.last_used.time
 		assertEquals 'joeuser', row.username
@@ -78,7 +78,7 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 
 		insertToken 'joesseries', 'joeuser', 'atoken', DATE
 
-		PersistentRememberMeToken token = _repo.getTokenForSeries('joesseries')
+		PersistentRememberMeToken token = repo.getTokenForSeries('joesseries')
 
 		assertEquals 'joeuser', token.username
 		assertEquals 'joesseries', token.series
@@ -90,18 +90,18 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 		insertToken 'joesseries2', 'joeuser', 'atoken2', DATE
 		insertToken 'joesseries', 'joeuser', 'atoken', DATE
 
-		_repo.removeUserTokens 'joeuser'
+		repo.removeUserTokens 'joeuser'
 
 		assertEquals 0,
-			_sql.firstRow("select count(*) from persistent_logins where username='joeuser'")[0]
+			sql.firstRow("select count(*) from persistent_logins where username='joeuser'")[0]
 	}
 
 	void testUpdatingTokenModifiesTokenValueAndLastUsed() {
 		Date date = new Date(System.currentTimeMillis() - 1)
 		insertToken 'joesseries', 'joeuser', 'atoken', date
-		_repo.updateToken 'joesseries', 'newtoken', new Date()
+		repo.updateToken 'joesseries', 'newtoken', new Date()
 
-		def row = _sql.firstRow("select * from persistent_logins where series='joesseries'")
+		def row = sql.firstRow("select * from persistent_logins where series='joesseries'")
 
 		assertEquals 'joeuser', row.username
 		assertEquals 'joesseries', row.series
@@ -112,7 +112,7 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 
 	private void insertToken(String series, String username, String token, Date lastUsed) {
 		String formattedDate = new SimpleDateFormat(DATE_FORMAT).format(lastUsed)
-		_sql.execute "insert into persistent_logins (series, username, token, last_used) " +
+		sql.execute "insert into persistent_logins (series, username, token, last_used) " +
 		             "values ('$series', '$username', '$token', '$formattedDate')"
 	}
 }
