@@ -12,11 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugins.springsecurity
+package grails.plugin.springsecurity.authentication.encoding
 
 import grails.plugin.springsecurity.FakeApplication
 import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.authentication.encoding.BCryptPasswordEncoder
 
 /**
  * Unit tests for BCryptPasswordEncoder.
@@ -25,13 +24,12 @@ import grails.plugin.springsecurity.authentication.encoding.BCryptPasswordEncode
  */
 class BCryptPasswordEncoderTests extends GroovyTestCase {
 
-	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder()
-	private final _application = new FakeApplication()
+	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10)
 
 	@Override
 	protected void setUp() {
 		super.setUp()
-		ReflectionUtils.application = _application
+		ReflectionUtils.application = new FakeApplication()
 	}
 
 	void testEncodePassword() {

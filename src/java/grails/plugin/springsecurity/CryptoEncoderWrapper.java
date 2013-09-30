@@ -12,45 +12,45 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.springsecurity.authentication.encoding;
+package grails.plugin.springsecurity;
 
 import org.springframework.util.Assert;
 
 /**
- * Wrapper for the Spring Security crypto version (different interface).
+ * Converts a org.springframework.security.crypto.password.PasswordEncoder to a
+ * org.springframework.security.authentication.encoding.PasswordEncoder.
+ *
+ * TODO replace with org.springframework.security.authentication.dao.CryptoEncoderWrapper
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @SuppressWarnings("deprecation")
-public class BCryptPasswordEncoder implements org.springframework.security.authentication.encoding.PasswordEncoder {
+public class CryptoEncoderWrapper implements org.springframework.security.authentication.encoding.PasswordEncoder {
 
-	protected final org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder delegate;
+	protected final org.springframework.security.crypto.password.PasswordEncoder delegate;
 
 	/**
-	 * Constructor.
-	 * @param logRounds the log rounds to use
+	 * @param encoder
 	 */
-	public BCryptPasswordEncoder(int logRounds) {
-		delegate = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder(logRounds);
+	public CryptoEncoderWrapper(org.springframework.security.crypto.password.PasswordEncoder encoder) {
+		delegate = encoder;
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#encodePassword(
-	 * 	java.lang.String, java.lang.Object)
+	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#encodePassword(java.lang.String, java.lang.Object)
 	 */
 	public String encodePassword(String rawPass, Object salt) {
-      checkSalt(salt);
+		checkSalt(salt);
 		return delegate.encode(rawPass);
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#isPasswordValid(
-	 * 	java.lang.String, java.lang.String, java.lang.Object)
+	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#isPasswordValid(java.lang.String, java.lang.String, java.lang.Object)
 	 */
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
-      checkSalt(salt);
+		checkSalt(salt);
 		return delegate.matches(rawPass, encPass);
 	}
 
