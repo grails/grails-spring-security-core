@@ -1,17 +1,32 @@
+/* Copyright 2013 SpringSource.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package grails.plugin.springsecurity
+
 import grails.converters.JSON
 
 import javax.servlet.http.HttpServletResponse
 
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-
+import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.WebAttributes
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 
+@Secured('permitAll')
 class LoginController {
 
 	/**
@@ -27,7 +42,7 @@ class LoginController {
 	/**
 	 * Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise.
 	 */
-	def index = {
+	def index() {
 		if (springSecurityService.isLoggedIn()) {
 			redirect uri: SpringSecurityUtils.securityConfig.successHandler.defaultTargetUrl
 		}
@@ -39,7 +54,7 @@ class LoginController {
 	/**
 	 * Show the login page.
 	 */
-	def auth = {
+	def auth() {
 
 		def config = SpringSecurityUtils.securityConfig
 
@@ -57,7 +72,7 @@ class LoginController {
 	/**
 	 * The redirect action for Ajax requests.
 	 */
-	def authAjax = {
+	def authAjax() {
 		response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
 		response.sendError HttpServletResponse.SC_UNAUTHORIZED
 	}
@@ -65,7 +80,7 @@ class LoginController {
 	/**
 	 * Show denied page.
 	 */
-	def denied = {
+	def denied() {
 		if (springSecurityService.isLoggedIn() &&
 				authenticationTrustResolver.isRememberMe(SCH.context?.authentication)) {
 			// have cookie but the page is guarded with IS_AUTHENTICATED_FULLY
@@ -76,7 +91,7 @@ class LoginController {
 	/**
 	 * Login page for users with a remember-me cookie but accessing a IS_AUTHENTICATED_FULLY page.
 	 */
-	def full = {
+	def full() {
 		def config = SpringSecurityUtils.securityConfig
 		render view: 'auth', params: params,
 			model: [hasCookie: authenticationTrustResolver.isRememberMe(SCH.context?.authentication),
@@ -86,9 +101,8 @@ class LoginController {
 	/**
 	 * Callback after a failed login. Redirects to the auth page with a warning message.
 	 */
-	def authfail = {
+	def authfail() {
 
-		def username = session[UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY]
 		String msg = ''
 		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
 		if (exception) {
@@ -121,14 +135,14 @@ class LoginController {
 	/**
 	 * The Ajax success redirect url.
 	 */
-	def ajaxSuccess = {
+	def ajaxSuccess() {
 		render([success: true, username: springSecurityService.authentication.name] as JSON)
 	}
 
 	/**
 	 * The Ajax denied redirect url.
 	 */
-	def ajaxDenied = {
+	def ajaxDenied() {
 		render([error: 'access denied'] as JSON)
 	}
 }
