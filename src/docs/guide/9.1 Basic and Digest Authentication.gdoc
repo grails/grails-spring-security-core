@@ -51,3 +51,23 @@ grails.plugins.springsecurity.digest.realmName = "Ralph's Bait and Tackle"
 {code}
 
 Digest authentication cannot be applied to a subset of URLs like Basic authentication can. This is due to the password encoding issues. So you cannot use the @chainMap@ attribute here - all URLs will be guarded.
+
+{note}
+Note that since the Digest auth password encoder is different from the typical encoders you must to pass the username as the "salt" value. The generated User class uses @springSecurityService@ which assumes you're not using a salt value. If you
+use the generated code in the User class to encode your password, change the dependency injection for springSecurityService with one for the passwordEncoder bean instead:
+{code}
+transient passwordEncoder
+{code}
+
+and change the code in encodePassword() from
+
+{code}
+password = springSecurityService.encodePassword(password)
+{code}
+
+to
+
+{code}
+password = passwordEncoder.encodePassword(password, username)
+{code}
+{note}
