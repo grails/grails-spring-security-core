@@ -19,7 +19,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
@@ -31,29 +31,30 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
  */
 class GormUserDetailsService implements GrailsUserDetailsService {
 
-	private Logger _log = LoggerFactory.getLogger(getClass())
+	protected Logger log = LoggerFactory.getLogger(getClass())
 
 	/**
 	 * Some Spring Security classes (e.g. RoleHierarchyVoter) expect at least one role, so
 	 * we give a user with no granted roles this one which gets past that restriction but
 	 * doesn't grant anything.
 	 */
-	static final List NO_ROLES = [new GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)]
+	static final GrantedAuthority NO_ROLE = new SimpleGrantedAuthority(SpringSecurityUtils.NO_ROLE)
 
 	/** Dependency injection for the application. */
 	def grailsApplication
 
 	/**
 	 * {@inheritDoc}
-	 * @see org.codehaus.groovy.grails.plugins.springsecurity.GrailsUserDetailsService#loadUserByUsername(
+	 * @see grails.plugin.springsecurity.GrailsUserDetailsService#loadUserByUsername(
 	 * 	java.lang.String, boolean)
 	 */
 	UserDetails loadUserByUsername(String username, boolean loadRoles) throws UsernameNotFoundException {
+
 		def conf = SpringSecurityUtils.securityConfig
 		String userClassName = conf.userLookup.userDomainClassName
 		def dc = grailsApplication.getDomainClass(userClassName)
 		if (!dc) {
-			throw new RuntimeException("The specified user domain class '$userClassName' is not a domain class")
+			throw new IllegalArgumentException("The specified user domain class '$userClassName' is not a domain class")
 		}
 
 		Class<?> User = dc.clazz
@@ -62,7 +63,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 			def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
 			if (!user) {
 				log.warn "User not found: $username"
-				throw new UsernameNotFoundException('User not found', username)
+				throw new NoStackUsernameNotFoundException()
 			}
 
 			Collection<GrantedAuthority> authorities = loadAuthorities(user, username, loadRoles)
@@ -90,8 +91,8 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 		String authorityPropertyName = conf.authority.nameField
 
 		Collection<?> userAuthorities = user."$authoritiesPropertyName"
-		def authorities = userAuthorities.collect { new GrantedAuthorityImpl(it."$authorityPropertyName") }
-		authorities ?: NO_ROLES
+		def authorities = userAuthorities.collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
+		authorities ?: [NO_ROLE]
 	}
 
 	protected UserDetails createUserDetails(user, Collection<GrantedAuthority> authorities) {
@@ -115,6 +116,4 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 		new GrailsUser(username, password, enabled, !accountExpired, !passwordExpired,
 				!accountLocked, authorities, user.id)
 	}
-
-	protected Logger getLog() { _log }
 }
