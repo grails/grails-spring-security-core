@@ -1,4 +1,4 @@
-/* Copyright 2006-2013 the original author or authors.
+/* Copyright 2006-2013 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,12 +13,16 @@
  * limitations under the License.
  */
 import grails.plugin.springsecurity.SecurityConfigType
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken
 
-import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authentication.RememberMeAuthenticationToken
-import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler as ATRH
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter as UPAF
-import org.springframework.security.web.authentication.WebAuthenticationDetails
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository
 
 security {
 
@@ -26,14 +30,18 @@ security {
 
 	active = true
 
+	printStatusMessages = true
+
 	ajaxHeader = 'X-Requested-With'
+	ajaxCheckClosure = null
 
 	registerLoggerListener = false
 
 	// 'strict' mode where an explicit grant is required to access any resource;
-	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY
-	// for /, /js/**, /css/**, /images/**, /login/**, /logout/**, etc.
-	rejectIfNoRule = false
+	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY or permitAll
+	// for /, /index.gsp, /js/**, /css/**, /images/**, /login/**, /logout/**, etc.
+	// If using also set fii.rejectPublicInvocations = true
+	rejectIfNoRule = true
 
 	// hierarchical roles
 	roleHierarchy = ''
@@ -57,97 +65,150 @@ security {
 	cacheUsers = false
 
 	// user and role class properties
-	userLookup.userDomainClassName = 'Person'
-	userLookup.usernamePropertyName = 'username'
-	userLookup.enabledPropertyName = 'enabled'
-	userLookup.passwordPropertyName = 'password'
-	userLookup.authoritiesPropertyName = 'authorities'
-	userLookup.accountExpiredPropertyName = 'accountExpired'
-	userLookup.accountLockedPropertyName = 'accountLocked'
-	userLookup.passwordExpiredPropertyName = 'passwordExpired'
-	userLookup.authorityJoinClassName = 'PersonAuthority'
-	authority.className = 'Authority'
-	authority.nameField = 'authority'
+	userLookup {
+		userDomainClassName = null // must be set if using UserDetailsService
+		usernamePropertyName = 'username'
+		enabledPropertyName = 'enabled'
+		passwordPropertyName = 'password'
+		authoritiesPropertyName = 'authorities'
+		accountExpiredPropertyName = 'accountExpired'
+		accountLockedPropertyName = 'accountLocked'
+		passwordExpiredPropertyName = 'passwordExpired'
+		authorityJoinClassName = null // must be set if using UserDetailsService
+	}
+	authority {
+		className = null // must be set if using UserDetailsService
+		nameField = 'authority'
+	}
 
 	/** authenticationProcessingFilter */
-	apf.filterProcessesUrl = '/j_spring_security_check'
-	apf.usernameParameter = UPAF.SPRING_SECURITY_FORM_USERNAME_KEY // 'j_username'
-	apf.passwordParameter = UPAF.SPRING_SECURITY_FORM_PASSWORD_KEY // 'j_password'
-	apf.continueChainBeforeSuccessfulAuthentication = false
-	apf.allowSessionCreation = true
-	apf.postOnly = true
+	apf {
+		filterProcessesUrl = '/j_spring_security_check'
+		usernameParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY // 'j_username'
+		passwordParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY // 'j_password'
+		continueChainBeforeSuccessfulAuthentication = false
+		allowSessionCreation = true
+		postOnly = true
+		storeLastUsername = false // TODO changed
+	}
 
-	// failureHandler
-	failureHandler.defaultFailureUrl = '/login/authfail?login_error=1'
-	failureHandler.ajaxAuthFailUrl = '/login/authfail?ajax=true'
-	failureHandler.exceptionMappings = [:]
-	failureHandler.useForward = false
+	// authenticationFailureHandler
+	failureHandler {
+		defaultFailureUrl = '/login/authfail?login_error=1'
+		ajaxAuthFailUrl = '/login/authfail?ajax=true'
+		exceptionMappings = [:]
+		useForward = false
+		allowSessionCreation = true
+	}
 
 	// successHandler
-	successHandler.defaultTargetUrl = '/'
-	successHandler.alwaysUseDefault = false
-	successHandler.targetUrlParameter = ATRH.DEFAULT_TARGET_PARAMETER // 'spring-security-redirect'
-	successHandler.useReferer = false
-	successHandler.ajaxSuccessUrl = '/login/ajaxSuccess'
+	successHandler {
+		defaultTargetUrl = '/'
+		alwaysUseDefault = false
+		targetUrlParameter = SpringSecurityUtils.DEFAULT_TARGET_PARAMETER // 'spring-security-redirect' // TODO still supported?
+	}
+
+	successHandler {
+		useReferer = false
+		ajaxSuccessUrl = '/login/ajaxSuccess'
+	}
 
 	// requestCache
-	requestCache.onlyOnGet = false
-	requestCache.createSession = true
+	requestCache {
+//		onlyOnGet = false // TODO doc removed
+		createSession = true
+	}
 
 	// redirectStrategy
-	redirectStrategy.contextRelative = false
+	redirectStrategy {
+		contextRelative = false
+	}
 
 	// authenticationDetails
-	authenticationDetails.authClass = WebAuthenticationDetails
+	// TODO doc that the class isn't configurable
+//	authenticationDetails {
+//		authClass = WebAuthenticationDetails
+//	}
 
 	// session fixation prevention
-	useSessionFixationPrevention = false
-	sessionFixationPrevention.migrate = true
-	sessionFixationPrevention.alwaysCreateSession = false
+	useSessionFixationPrevention = true // TODO doc changed
+	sessionFixationPrevention {
+		migrate = true
+		alwaysCreateSession = false
+	}
 
 	/** daoAuthenticationProvider **/
-	dao.reflectionSaltSourceProperty = null // if null, don't use salt source
-	dao.hideUserNotFoundExceptions = true
+	dao {
+		reflectionSaltSourceProperty = null // if null, don't use salt source
+		hideUserNotFoundExceptions = true
+	}
 
 	/** anonymousProcessingFilter */
-	anon.key = 'foo'
-	anon.userAttribute = 'anonymousUser,ROLE_ANONYMOUS'
+	anon {
+		key = 'foo' // TODO update
+//		userAttribute = 'anonymousUser,ROLE_ANONYMOUS' // TODO doc removed
+	}
 
 	/** authenticationEntryPoint */
-	auth.loginFormUrl = '/login/auth'
-	auth.forceHttps = 'false'
-	auth.ajaxLoginFormUrl = '/login/authAjax'
-	auth.useForward = false
+	auth {
+		loginFormUrl = '/login/auth'
+		forceHttps = false
+		ajaxLoginFormUrl = '/login/authAjax'
+		useForward = false // redirect to login page
+	}
 
 	/** logoutFilter */
-	logout.afterLogoutUrl = '/'
-	logout.filterProcessesUrl = '/j_spring_security_logout'
-	logout.handlerNames = [] // 'rememberMeServices', 'securityContextLogoutHandler'
+	logout {
+		afterLogoutUrl = '/'
+		filterProcessesUrl = '/j_spring_security_logout'
+		handlerNames = [] // 'rememberMeServices', 'securityContextLogoutHandler'
+		clearAuthentication = true
+		invalidateHttpSession = true
+		targetUrlParameter = null
+		alwaysUseDefaultTargetUrl = false
+		redirectToReferer = false
+		postOnly = true // TODO new, doc
+	}
 
 	/**
 	 * accessDeniedHandler
 	 * set errorPage to null to send Error 403 instead of showing error page
 	 */
-	adh.errorPage = '/login/denied'
-	adh.ajaxErrorPage = '/login/ajaxDenied'
+	adh {
+		errorPage = '/login/denied'
+		ajaxErrorPage = '/login/ajaxDenied'
+		useForward = true // set to false to redirect TODO changed?
+	}
 
 	/** passwordEncoder */
-	// see http://java.sun.com/j2se/1.5.0/docs/guide/security/CryptoSpec.html#AppA
-	password.algorithm = 'SHA-256'
-	password.encodeHashAsBase64 = false
-	password.bcrypt.logrounds = 10
+	// see http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html
+	password {
+		algorithm = 'bcrypt' // TODO changed
+		encodeHashAsBase64 = false
+		bcrypt {
+			logrounds = 10
+		}
+		hash {
+			iterations = 10000 // TODO changed
+		}
+	}
 
 	/** rememberMeServices */
-	rememberMe.cookieName = 'grails_remember_me'
-	rememberMe.alwaysRemember = false
-	rememberMe.tokenValiditySeconds = 1209600 //14 days
-	rememberMe.parameter = '_spring_security_remember_me'
-	rememberMe.key = 'grailsRocks'
-	rememberMe.persistent = false
-	rememberMe.persistentToken.domainClassName = 'PersistentLogin'
-	rememberMe.persistentToken.seriesLength = 16
-	rememberMe.persistentToken.tokenLength = 16
-	rememberMe.useSecureCookie = false
+	rememberMe {
+		cookieName = 'grails_remember_me'
+		alwaysRemember = false
+		tokenValiditySeconds = AbstractRememberMeServices.TWO_WEEKS_S // 1209600 -> 14 days
+		parameter = AbstractRememberMeServices.DEFAULT_PARAMETER // '_spring_security_remember_me'
+		key = 'grailsRocks'
+		persistent = false
+		persistentToken {
+			domainClassName = 'PersistentLogin'
+			seriesLength = PersistentTokenBasedRememberMeServices.DEFAULT_SERIES_LENGTH // 16
+			tokenLength = PersistentTokenBasedRememberMeServices.DEFAULT_TOKEN_LENGTH // 16
+		}
+		useSecureCookie = null // TODO doc change; also note that null -> secure if https
+		createSessionOnSuccess = true // TODO doc
+	}
 
 	/** URL <-> Role mapping */
 
@@ -155,68 +216,135 @@ security {
 	securityConfigType = SecurityConfigType.Annotation
 
 	// use Requestmap domain class to store rules in the database
-	// 	change securityConfigType to SecurityConfigType.Requestmap
-	requestMap.className = 'Requestmap'
-	requestMap.urlField = 'url'
-	requestMap.configAttributeField = 'configAttribute'
+	// 	change securityConfigType to 'Requestmap'
+	requestMap {
+		className = null // must be set if using
+		urlField = 'url'
+		configAttributeField = 'configAttribute'
+		httpMethodField = 'httpMethod' // TODO doc new
+	}
 
 	// use annotations from Controllers to define security rules
-	// 	change securityConfigType to SecurityConfigType.Annotation
-	controllerAnnotations.matcher = 'ant' // or 'regex'
-	controllerAnnotations.lowercase = true
-	controllerAnnotations.staticRules = [:]
+	// 	change securityConfigType to 'Annotation'
+	controllerAnnotations {
+		staticRules = [:]
+	}
 
 	// use a Map of URL -> roles to define security rules
-	// 	change securityConfigType to SecurityConfigType.InterceptUrlMap
-	interceptUrlMap = [:]
+	// or List of Maps where the keys are pattern (URL pattern),
+	// access (single token or List, e.g. role name(s)), httpMethod (optional restriction to particular method)
+	// 	to use, change securityConfigType to 'InterceptUrlMap'
+	interceptUrlMap = null
 
 	/** basic auth */
 	useBasicAuth = false
-	basic.realmName = 'Grails Realm'
+	basic {
+		realmName = 'Grails Realm'
+		credentialsCharset = 'UTF-8'
+	}
 
 	/** digest auth */
 	useDigestAuth = false
-	digest.realmName = 'Grails Realm'
-	digest.key = 'changeme'
-	digest.nonceValiditySeconds = 300
-	digest.passwordAlreadyEncoded = false
-	digest.createAuthenticatedToken = false
-	digest.useCleartextPasswords = false
+	digest {
+		realmName = 'Grails Realm'
+		key = 'changeme'
+		nonceValiditySeconds = 300
+		passwordAlreadyEncoded = false
+		createAuthenticatedToken = false
+		useCleartextPasswords = false
+	}
 
 	/** use switchUserProcessingFilter */
 	useSwitchUserFilter = false
-	switchUser.switchUserUrl = '/j_spring_security_switch_user'
-	switchUser.exitUserUrl = '/j_spring_security_exit_user'
-	switchUser.targetUrl = null // use the authenticationSuccessHandler
-	switchUser.switchFailureUrl = null // use the authenticationFailureHandler
+	switchUser {
+		switchUserUrl = '/j_spring_security_switch_user'
+		exitUserUrl = '/j_spring_security_exit_user'
+		targetUrl = null // use the authenticationSuccessHandler
+		switchFailureUrl = null // use the authenticationFailureHandler
+		usernameParameter = SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY // j_username
+	}
 
 	/** filterChainProxy */
-	filterChain.stripQueryStringFromUrls = true
+	// TODO doc that this was removed
+//	filterChain {
+//		stripQueryStringFromUrls = true
+//	}
 
 	// port mappings
-	portMapper.httpPort = 8080
-	portMapper.httpsPort = 8443
+	portMapper {
+		httpPort = 8080
+		httpsPort = 8443
+	}
 
 	// secure channel filter (http/https)
-	secureChannel.definition = [:]
-	secureChannel.useHeaderCheckChannelSecurity = false
-	secureChannel.secureHeaderName = 'X-Forwarded-Proto'
-	secureChannel.secureHeaderValue = 'http'
-	secureChannel.insecureHeaderName = 'X-Forwarded-Proto'
-	secureChannel.insecureHeaderValue = 'https'
+	secureChannel {
+		definition = [:]
+		useHeaderCheckChannelSecurity = false
+		secureHeaderName = 'X-Forwarded-Proto'
+		secureHeaderValue = 'http'
+		insecureHeaderName = 'X-Forwarded-Proto'
+		insecureHeaderValue = 'https'
+	}
 
 	// X509
 	useX509 = false
-	x509.continueFilterChainOnUnsuccessfulAuthentication = true
-	x509.subjectDnRegex = 'CN=(.*?),'
-	x509.checkForPrincipalChanges = false
-	x509.invalidateSessionOnPrincipalChange = true
-	x509.throwExceptionWhenTokenRejected = false
+	x509 {
+		continueFilterChainOnUnsuccessfulAuthentication = true
+		subjectDnRegex = 'CN=(.*?)(?:,|$)' // TODO doc was 'CN=(.*?),'
+		subjectDnClosure = null
+		checkForPrincipalChanges = false
+		invalidateSessionOnPrincipalChange = true
+		throwExceptionWhenTokenRejected = false
+	}
 
 	// authenticationTrustResolver
-	atr.anonymousClass = AnonymousAuthenticationToken
-	atr.rememberMeClass = RememberMeAuthenticationToken
+	atr {
+		anonymousClass = GrailsAnonymousAuthenticationToken // TODO doc changed
+		rememberMeClass = RememberMeAuthenticationToken
+	}
 
 	// providerManager
-	providerManager.eraseCredentialsAfterAuthentication = false
+	providerManager {
+		eraseCredentialsAfterAuthentication = true // TODO doc changed
+	}
+
+	// securityContextRepository
+	scr {
+		allowSessionCreation = true
+		disableUrlRewriting = true // TODO changed
+		springSecurityContextKey = HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY // 'SPRING_SECURITY_CONTEXT'
+	}
+
+	// securityContextPersistenceFilter
+	scpf {
+		forceEagerSessionCreation = false
+	}
+
+	// filterInvocationInterceptor
+	fii {
+		alwaysReauthenticate = false
+		rejectPublicInvocations = true // TODO doc changed
+		validateConfigAttributes = true
+		publishAuthorizationSuccess = false
+		observeOncePerRequest = true
+	}
+
+	antisamy {
+		// TODO doc https://code.google.com/p/owaspantisamy/downloads/list or https://code.google.com/p/owaspantisamy/source/browse/trunk/Java/antisamy-sample-configs/src/main/resources
+		policyResourcePath = null // e.g. '/WEB-INF/antisamy-policy.xml'
+		policyURL = null
+	}
+
+	// TODO doc new
+	debug {
+		useFilter = false
+	}
+
+	// SecurityContextHolder
+	// TODO doc new
+	sch {
+		// one of MODE_THREADLOCAL, MODE_INHERITABLETHREADLOCAL, MODE_GLOBAL,
+		// or the name of a class implementing org.springframework.security.core.context.SecurityContextHolderStrategy
+		strategyName = SecurityContextHolder.MODE_THREADLOCAL
+	}
 }
