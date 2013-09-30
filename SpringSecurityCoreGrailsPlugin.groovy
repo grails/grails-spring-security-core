@@ -12,8 +12,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import grails.plugins.springsecurity.BCryptPasswordEncoder
-import grails.plugins.springsecurity.DigestAuthPasswordEncoder
+import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.SecurityEventListener
+import grails.plugin.springsecurity.SecurityFilterPosition
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.access.vote.AuthenticatedVetoableDecisionManager
+import grails.plugin.springsecurity.authentication.NullAuthenticationEventPublisher
+import grails.plugin.springsecurity.authentication.dao.NullSaltSource
+import grails.plugin.springsecurity.authentication.encoding.BCryptPasswordEncoder
+import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEncoder
+import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
+import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
+import grails.plugin.springsecurity.userdetails.GormUserDetailsService
+import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
+import grails.plugin.springsecurity.web.access.GrailsWebInvocationPrivilegeEvaluator
+import grails.plugin.springsecurity.web.access.channel.HeaderCheckInsecureChannelProcessor
+import grails.plugin.springsecurity.web.access.channel.HeaderCheckSecureChannelProcessor
+import grails.plugin.springsecurity.web.access.expression.WebExpressionVoter
+import grails.plugin.springsecurity.web.access.intercept.AnnotationFilterInvocationDefinition
+import grails.plugin.springsecurity.web.access.intercept.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
+import grails.plugin.springsecurity.web.access.intercept.InterceptUrlMapFilterInvocationDefinition
+import grails.plugin.springsecurity.web.access.intercept.RequestmapFilterInvocationDefinition
+import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationEntryPoint
+import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationFailureHandler
+import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationSuccessHandler
+import grails.plugin.springsecurity.web.authentication.RequestHolderAuthenticationFilter
+import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
+import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
+import grails.plugin.springsecurity.web.filter.IpAddressFilter
 
 import javax.servlet.Filter
 
@@ -35,7 +61,6 @@ import org.springframework.security.authentication.dao.ReflectionSaltSource
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder
 import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
@@ -58,13 +83,13 @@ import org.springframework.security.web.authentication.Http403ForbiddenEntryPoin
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
+import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider
+import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor
+import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
 import org.springframework.security.web.authentication.rememberme.InMemoryTokenRepositoryImpl
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
-import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider
-import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor
-import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
 import org.springframework.security.web.authentication.session.NullAuthenticatedSessionStrategy
 import org.springframework.security.web.authentication.session.SessionFixationProtectionStrategy
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
@@ -80,34 +105,6 @@ import org.springframework.security.web.session.HttpSessionEventPublisher
 import org.springframework.security.web.util.AntUrlPathMatcher
 import org.springframework.security.web.util.RegexUrlPathMatcher
 import org.springframework.web.filter.DelegatingFilterProxy
-
-import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAccessDeniedHandler
-import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationEntryPoint
-import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationFailureHandler
-import org.codehaus.groovy.grails.plugins.springsecurity.AjaxAwareAuthenticationSuccessHandler
-import org.codehaus.groovy.grails.plugins.springsecurity.AnnotationFilterInvocationDefinition
-import org.codehaus.groovy.grails.plugins.springsecurity.AuthenticatedVetoableDecisionManager
-import org.codehaus.groovy.grails.plugins.springsecurity.DefaultPostAuthenticationChecks
-import org.codehaus.groovy.grails.plugins.springsecurity.DefaultPreAuthenticationChecks
-import org.codehaus.groovy.grails.plugins.springsecurity.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
-import org.codehaus.groovy.grails.plugins.springsecurity.GormPersistentTokenRepository
-import org.codehaus.groovy.grails.plugins.springsecurity.GormUserDetailsService
-import org.codehaus.groovy.grails.plugins.springsecurity.GrailsWebInvocationPrivilegeEvaluator
-import org.codehaus.groovy.grails.plugins.springsecurity.HeaderCheckSecureChannelProcessor
-import org.codehaus.groovy.grails.plugins.springsecurity.HeaderCheckInsecureChannelProcessor
-import org.codehaus.groovy.grails.plugins.springsecurity.InterceptUrlMapFilterInvocationDefinition
-import org.codehaus.groovy.grails.plugins.springsecurity.IpAddressFilter
-import org.codehaus.groovy.grails.plugins.springsecurity.MutableLogoutFilter
-import org.codehaus.groovy.grails.plugins.springsecurity.NullAuthenticationEventPublisher
-import org.codehaus.groovy.grails.plugins.springsecurity.NullSaltSource
-import org.codehaus.groovy.grails.plugins.springsecurity.RequestmapFilterInvocationDefinition
-import org.codehaus.groovy.grails.plugins.springsecurity.RequestHolderAuthenticationFilter
-import org.codehaus.groovy.grails.plugins.springsecurity.ReflectionUtils
-import org.codehaus.groovy.grails.plugins.springsecurity.SecurityEventListener
-import org.codehaus.groovy.grails.plugins.springsecurity.SecurityFilterPosition
-import org.codehaus.groovy.grails.plugins.springsecurity.SecurityRequestHolder
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

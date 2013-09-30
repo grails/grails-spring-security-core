@@ -14,8 +14,9 @@
  */
 package grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.plugins.springsecurity.FakeApplication
-import org.codehaus.groovy.grails.plugins.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.FakeApplication
+import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.authentication.encoding.BCryptPasswordEncoder
 
 /**
  * Unit tests for BCryptPasswordEncoder.

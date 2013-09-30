@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import grails.plugins.springsecurity.SecurityConfigType
+import grails.plugin.springsecurity.SecurityConfigType
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authentication.RememberMeAuthenticationToken
