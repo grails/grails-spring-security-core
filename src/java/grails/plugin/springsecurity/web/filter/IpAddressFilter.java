@@ -14,11 +14,11 @@
  */
 package grails.plugin.springsecurity.web.filter;
 
+import grails.plugin.springsecurity.InterceptedUrl;
 import grails.plugin.springsecurity.ReflectionUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.codehaus.groovy.grails.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.util.IpAddressMatcher;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
@@ -49,14 +50,15 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 public class IpAddressFilter extends GenericFilterBean {
 
-	private final Logger _log = LoggerFactory.getLogger(getClass());
+	protected static final String IPV4_LOOPBACK = "127.0.0.1";
+	protected static final String IPV6_LOOPBACK = "0:0:0:0:0:0:0:1";
 
-	private final AntPathMatcher _pathMatcher = new AntPathMatcher();
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
-	private Map<String, List<String>> _restrictions;
+	protected final AntPathMatcher pathMatcher = new AntPathMatcher();
 
-	private static final String IPV4_LOOPBACK = "127.0.0.1";
-	private static final String IPV6_LOOPBACK = "0:0:0:0:0:0:0:1";
+	protected List<InterceptedUrl> restrictions;
+	protected boolean allowLocalhost = true;
 
 	/**
 	 * {@inheritDoc}
@@ -70,12 +72,16 @@ public class IpAddressFilter extends GenericFilterBean {
 		HttpServletResponse response = (HttpServletResponse)res;
 
 		if (!isAllowed(request)) {
-			// send 404 to hide the existence of the resource
-			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			deny(request, response);
 			return;
 		}
 
 		chain.doFilter(request, response);
+	}
+
+	protected void deny(@SuppressWarnings("unused") final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+		// send 404 to hide the existence of the resource
+		res.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
 	/**
@@ -84,7 +90,7 @@ public class IpAddressFilter extends GenericFilterBean {
 	 */
 	@Override
 	protected void initFilterBean() {
-		Assert.notNull(_restrictions, "ipRestrictions map is required");
+		Assert.notNull(restrictions, "ipRestrictions map is required");
 	}
 
 	/**
@@ -92,16 +98,25 @@ public class IpAddressFilter extends GenericFilterBean {
 	 * are either single <code>String</code>s or <code>List</code>s of <code>String</code>s
 	 * representing IP address patterns to allow for the specified URLs.
 	 *
-	 * @param restrictions the map
+	 * @param ipRestrictions the map
 	 */
-	public void setIpRestrictions(final Map<String, Object> restrictions) {
-		_restrictions = ReflectionUtils.splitMap(restrictions);
+	public void setIpRestrictions(final Map<String, Object> ipRestrictions) {
+		restrictions = ReflectionUtils.splitMap(ipRestrictions, false);
 	}
 
-	private boolean isAllowed(final HttpServletRequest request) {
+	/**
+	 * Dependency injection for whether to allow localhost calls (useful for testing).
+	 * TODO document
+	 *
+	 * @param allow if <code>true</code> allow localhost access
+	 */
+	public void setAllowLocalhost(boolean allow) {
+		allowLocalhost = allow;
+	}
+
+	protected boolean isAllowed(final HttpServletRequest request) {
 		String ip = request.getRemoteAddr();
-		if (IPV4_LOOPBACK.equals(ip) || IPV6_LOOPBACK.equals(ip)) {
-			// always allow localhost
+		if (allowLocalhost && (IPV4_LOOPBACK.equals(ip) || IPV6_LOOPBACK.equals(ip))) {
 			return true;
 		}
 
@@ -113,30 +128,28 @@ public class IpAddressFilter extends GenericFilterBean {
 			}
 		}
 
-		Collection<Map.Entry<String, List<String>>> matching = findMatchingRules(uri);
+		List<InterceptedUrl> matching = findMatchingRules(uri);
 		if (matching.isEmpty()) {
 			return true;
 		}
 
-		for (Map.Entry<String, List<String>> entry : matching) {
-			for (String ipPattern : entry.getValue()) {
-				if (new IpAddressMatcher(ipPattern).matches(request)) {
+		for (InterceptedUrl iu : matching) {
+			for (ConfigAttribute ipPattern : iu.getConfigAttributes()) {
+				if (new IpAddressMatcher(ipPattern.getAttribute()).matches(request)) {
 					return true;
 				}
 			}
 		}
 
-		_log.warn("disallowed request " + uri + " from " + ip);
+		log.warn("disallowed request {0} from {1]", new Object[] { uri, ip });
 		return false;
 	}
 
-	private Collection<Map.Entry<String, List<String>>> findMatchingRules(String uri) {
-		Collection<Map.Entry<String, List<String>>> matching =
-			new ArrayList<Map.Entry<String, List<String>>>();
-		for (Map.Entry<String, List<String>> entry : _restrictions.entrySet()) {
-			String uriPattern = entry.getKey();
-			if (_pathMatcher.match(uriPattern, uri)) {
-				matching.add(entry);
+	protected List<InterceptedUrl> findMatchingRules(String uri) {
+		List<InterceptedUrl> matching = new ArrayList<InterceptedUrl>();
+		for (InterceptedUrl iu : restrictions) {
+			if (pathMatcher.match(iu.getPattern(), uri)) {
+				matching.add(iu);
 			}
 		}
 		return matching;
