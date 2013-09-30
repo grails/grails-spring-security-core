@@ -23,7 +23,6 @@ grailsVersion = null
 projectDir = null
 appName = null
 pluginVersion = null
-pluginZip = null
 testprojectRoot = null
 deleteAll = false
 
@@ -46,12 +45,27 @@ target(createS2TestApp: 'Creates test apps for functional tests') {
 	}
 }
 
-private void callGrails(String grailsHome, String dir, String env, String action, extraArgs = null) {
-	ant.exec(executable: "$grailsHome/bin/grails", dir: dir, failonerror: 'true') {
+private void callGrails(String grailsHome, String dir, String env, String action, List extraArgs = null) {
+
+	String resultproperty = 'exitCode' + System.currentTimeMillis()
+	String outputproperty = 'execOutput' + System.currentTimeMillis()
+
+	println "Running 'grails $env $action ${extraArgs?.join(' ') ?: ''}'"
+
+	ant.exec(executable: "${grailsHome}/bin/grails", dir: dir, failonerror: false,
+				resultproperty: resultproperty, outputproperty: outputproperty) {
 		ant.env key: 'GRAILS_HOME', value: grailsHome
 		ant.arg value: env
 		ant.arg value: action
-		extraArgs?.call()
+		extraArgs.each { ant.arg value: it }
+		ant.arg value: '--stacktrace'
+	}
+
+	println ant.project.getProperty(outputproperty)
+
+	int exitCode = ant.project.getProperty(resultproperty) as Integer
+	if (exitCode) {
+		exit exitCode
 	}
 }
 
@@ -64,41 +78,59 @@ private void installPlugins() {
 	contents = contents.replace('grails.project.test.class.dir = "target/test-classes"', '')
 	contents = contents.replace('grails.project.test.reports.dir = "target/test-reports"', '')
 
+	contents = contents.replace('//mavenLocal()', 'mavenLocal()')
+	contents = contents.replace('repositories {', '''repositories {
+mavenRepo 'http://repo.spring.io/milestone' // TODO remove
+''')
+
+	contents = contents.replace('grails.project.fork', 'grails.project.forkDISABLED')
+
+	contents = contents.replace('plugins {', """plugins {
+test ":functional-test:$functionalTestPluginVersion"
+runtime ":spring-security-core:$pluginVersion"
+""")
+
 	buildConfig.withWriter { it.writeLine contents }
 
-	callGrails(grailsHome, testprojectRoot, 'dev', 'install-plugin') {
-		ant.arg value: "functional-test $functionalTestPluginVersion"
-	}
-	callGrails(grailsHome, testprojectRoot, 'dev', 'install-plugin') {
-		ant.arg value: pluginZip.absolutePath
-	}
+	callGrails grailsHome, testprojectRoot, 'dev', 'compile'
 }
 
 private void runQuickstart() {
-	callGrails(grailsHome, testprojectRoot, 'dev', 's2-quickstart') {
-		['com.testapp', 'TestUser', 'TestRole', 'TestRequestmap'].each { ant.arg value: it }
-	}
+	callGrails grailsHome, testprojectRoot, 'dev', 's2-quickstart', ['com.testapp', 'TestUser', 'TestRole', 'TestRequestmap']
 
 	File user = new File(testprojectRoot, 'grails-app/domain/com/testapp/TestUser.groovy')
 	String contents = user.text
 	contents = contents.replace('springSecurityService.encodePassword(password)',
-		'springSecurityService.encodePassword(password, springSecurityService.grailsApplication.config.grails.plugins.springsecurity.dao.reflectionSaltSourceProperty ? username : null)')
+		'springSecurityService.encodePassword(password, springSecurityService.grailsApplication.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty ? username : null)')
 
 	user.withWriter { it.writeLine contents }
+
+	File config = new File(testprojectRoot, 'grails-app/conf/Config.groovy')
+	contents = config.text
+
+	contents = contents.replace('grails.plugin.springsecurity.controllerAnnotations.staticRules = [', '''grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/j_spring_security_switch_user': ['ROLE_ADMIN'],
+	'/j_spring_security_exit_user':   ['permitAll'],
+''')
+
+	config.withWriter { it.writeLine contents }
 }
 
 private void copySampleFiles() {
 
 	ant.copy(todir: "$testprojectRoot/grails-app/controllers") {
 		fileset(dir: projectfiles.path) {
-			include name: 'Secure*Controller.groovy'
+			include name: 'FooBarController.groovy'
 			include name: 'HackController.groovy'
+			include name: 'Secure*Controller.groovy'
 			include name: 'TagLibTestController.groovy'
 		}
 	}
 
 	ant.mkdir dir: "$testprojectRoot/grails-app/views/tagLibTest"
 	ant.copy file: "${projectfiles.path}/test.gsp", todir: "$testprojectRoot/grails-app/views/tagLibTest"
+
+	ant.copy file: "${projectfiles.path}/error.gsp", todir: "$testprojectRoot/grails-app/views"
 
 	ant.copy(todir: "$testprojectRoot/grails-app/services") {
 		fileset(dir: projectfiles.path) {
@@ -113,7 +145,7 @@ private void copySampleFiles() {
 
 	ant.copy(todir: "$testprojectRoot/grails-app/conf") {
 		fileset(dir: projectfiles.path) {
-			include name: 'SecurityConfig-*_groovy'
+			include name: 'BootStrap.groovy'
 		}
 	}
 
@@ -139,12 +171,14 @@ private void copyTests() {
 
 private void generateArtifacts() {
 
-	callGrails(grailsHome, testprojectRoot, 'dev', 'generate-views') {
-		ant.arg value: 'com.testapp.TestRole'
-	}
+	[testRole: 'com.testapp.TestRole', testRequestmap: 'com.testapp.TestRequestmap'].each { k, v ->
 
-	callGrails(grailsHome, testprojectRoot, 'dev', 'generate-views') {
-		ant.arg value: 'com.testapp.TestRequestmap'
+		callGrails grailsHome, testprojectRoot, 'dev', 'generate-views', [v]
+
+		if (!new File(testprojectRoot, "grails-app/views/$k/list.gsp").exists()) {
+			// Grails 2.3
+			ant.copy file: "$testprojectRoot/grails-app/views/$k/index.gsp", tofile: "$testprojectRoot/grails-app/views/$k/list.gsp"
+		}
 	}
 
 	// skip user, needs custom views
@@ -157,9 +191,7 @@ private void createApp() {
 	deleteDir testprojectRoot
 	deleteDir "$dotGrails/projects/$appName"
 
-	callGrails(grailsHome, projectDir, 'dev', 'create-app') {
-		ant.arg value: appName
-	}
+	callGrails grailsHome, projectDir, 'dev', 'create-app', [appName]
 }
 
 private void deleteDir(String path) {
@@ -186,7 +218,7 @@ private void init(String name, config) {
 		error "pluginVersion wasn't specified for config '$name'"
 	}
 
-	pluginZip = new File(basedir, "grails-spring-security-core-${pluginVersion}.zip")
+	def pluginZip = new File(basedir, "grails-spring-security-core-${pluginVersion}.zip")
 	if (!pluginZip.exists()) {
 		error "plugin $pluginZip.absolutePath not found"
 	}
