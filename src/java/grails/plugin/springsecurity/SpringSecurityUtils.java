@@ -269,8 +269,16 @@ public final class SpringSecurityUtils {
 		String ajaxHeaderName = (String)ReflectionUtils.getConfigProperty("ajaxHeader");
 
 		// check the current request's headers
-		if (request.getHeader(ajaxHeaderName) != null) {
+		if ("XMLHttpRequest".equals(request.getHeader(ajaxHeaderName))) {
 			return true;
+		}
+
+		Object ajaxCheckClosure = ReflectionUtils.getConfigProperty("ajaxCheckClosure");
+		if (ajaxCheckClosure instanceof Closure) {
+			Object result = ((Closure<?>)ajaxCheckClosure).call(request);
+			if (result instanceof Boolean && ((Boolean)result)) {
+				return true;
+			}
 		}
 
 		// look for an ajax=true parameter
