@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletRequest
 
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.transaction.annotation.Transactional
 
 /**
  * Utility methods.
@@ -25,8 +26,6 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class SpringSecurityService {
-
-	static transactional = false
 
 	/** dependency injection for authenticationTrustResolver */
 	def authenticationTrustResolver
@@ -75,13 +74,17 @@ class SpringSecurityService {
 		}
 
 		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		grailsApplication.getClassForName(className).get(principal.id)
+		String usernamePropName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
+		grailsApplication.getClassForName(className).findWhere((usernamePropName): principal.username)
 	}
 
 	/**
 	 * Encode the password using the configured PasswordEncoder.
 	 */
 	String encodePassword(String password, salt = null) {
+		if ('bcrypt' == SpringSecurityUtils.securityConfig.password.algorithm) {
+			salt = null
+		}
 		passwordEncoder.encodePassword password, salt
 	}
 
@@ -109,35 +112,34 @@ class SpringSecurityService {
 	 *
 	 * @param role the role to delete
 	 */
+	@Transactional
 	void deleteRole(role) {
 		def conf = SpringSecurityUtils.securityConfig
 		String configAttributeName = conf.requestMap.configAttributeField
 		String authorityFieldName = conf.authority.nameField
 
-		role.getClass().withTransaction { status ->
-			if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
-				String roleName = role."$authorityFieldName"
-				def requestmaps = findRequestmapsByRole(roleName, role.getClass(), conf)
-				for (rm in requestmaps) {
-					String configAttribute = rm."$configAttributeName"
-					if (configAttribute.equals(roleName)) {
-						rm.delete()
-					}
-					else {
-						List parts = configAttribute.split(',')
-						parts.remove roleName
-						rm."$configAttributeName" = parts.join(',')
-					}
+		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
+			String roleName = role."$authorityFieldName"
+			def requestmaps = findRequestmapsByRole(roleName, conf)
+			for (rm in requestmaps) {
+				String configAttribute = rm."$configAttributeName"
+				if (configAttribute.equals(roleName)) {
+					rm.delete(flush: true)
 				}
-				clearCachedRequestmaps()
+				else {
+					List parts = configAttribute.split(',')*.trim()
+					parts.remove roleName
+					rm."$configAttributeName" = parts.join(',')
+				}
 			}
-
-			// remove the role grant from all users
-			def joinClass = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
-			joinClass.removeAll role
-
-			role.delete(flush: true)
+			clearCachedRequestmaps()
 		}
+
+		// remove the role grant from all users
+		def joinClass = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
+		joinClass.removeAll role
+
+		role.delete(flush: true)
 	}
 
 	/**
@@ -147,6 +149,7 @@ class SpringSecurityService {
 	 * @param role the role to update
 	 * @param newProperties the new role attributes ('params' from the calling controller)
 	 */
+	@Transactional
 	boolean updateRole(role, newProperties) {
 
 		def conf = SpringSecurityUtils.securityConfig
@@ -164,7 +167,7 @@ class SpringSecurityService {
 		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
 			String newRoleName = role."$authorityFieldName"
 			if (newRoleName != oldRoleName) {
-				def requestmaps = findRequestmapsByRole(oldRoleName, role.getClass(), conf)
+				def requestmaps = findRequestmapsByRole(oldRoleName, conf)
 				for (rm in requestmaps) {
 					rm."$configAttributeName" = rm."$configAttributeName".replace(oldRoleName, newRoleName)
 				}
@@ -197,12 +200,11 @@ class SpringSecurityService {
 		SpringSecurityUtils.isAjax request
 	}
 
-	private List findRequestmapsByRole(String roleName, domainClass, conf) {
-		String requestmapClassName = conf.requestMap.className
+	protected List findRequestmapsByRole(String roleName, conf) {
+		def domainClass = grailsApplication.getClassForName(conf.requestMap.className)
 		String configAttributeName = conf.requestMap.configAttributeField
-		return domainClass.executeQuery(
-				"SELECT rm FROM $requestmapClassName rm " +
-				"WHERE rm.$configAttributeName LIKE :roleName",
-				[roleName: "%$roleName%"])
+		domainClass.withCriteria {
+			like configAttributeName, "%$roleName%"
+		}
 	}
 }
