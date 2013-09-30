@@ -97,7 +97,15 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
 
-			for (UrlMappingInfo mapping : urlMappingsHolder.matchAll(requestUrl)) {
+			UrlMappingInfo[] urlInfos;
+			if (grails23Plus) {
+				urlInfos = grails.plugin.springsecurity.ReflectionUtils.matchAllUrlMappings(urlMappingsHolder, requestUrl, grailsRequest, responseMimeTypesApi);
+			}
+			else {
+				urlInfos = urlMappingsHolder.matchAll(requestUrl);
+			}
+
+			for (UrlMappingInfo mapping : urlInfos) {
 				configureMapping(mapping, grailsRequest, savedParams);
 
 				url = findGrailsUrl(mapping);
