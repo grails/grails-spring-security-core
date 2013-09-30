@@ -42,6 +42,7 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	protected String ajaxErrorPage;
 	protected PortResolver portResolver;
 	protected AuthenticationTrustResolver authenticationTrustResolver;
+	protected boolean useForward = true;
 	protected RequestCache requestCache;
 
 	/**
@@ -66,6 +67,14 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 		boolean ajaxError = ajaxErrorPage != null && SpringSecurityUtils.isAjax(request);
 		if (errorPage == null && !ajaxError) {
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+			return;
+		}
+
+		if (useForward && (errorPage != null || ajaxError)) {
+			// Put exception into request scope (perhaps of use to a view)
+			request.setAttribute(WebAttributes.ACCESS_DENIED_403, e);
+			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+			request.getRequestDispatcher(ajaxError ? ajaxErrorPage : errorPage).forward(request, response);
 			return;
 		}
 
@@ -139,6 +148,14 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	 */
 	public void setAuthenticationTrustResolver(final AuthenticationTrustResolver resolver) {
 		authenticationTrustResolver = resolver;
+	}
+
+	/**
+	 * Dependency injection for whether to forward or redirect.
+	 * @param forward if <code>true</code> forward to render the denied page, otherwise redirect
+	 */
+	public void setUseForward(boolean forward) {
+		useForward = forward;
 	}
 
 	/**
