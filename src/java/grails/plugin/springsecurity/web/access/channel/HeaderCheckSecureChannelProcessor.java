@@ -29,8 +29,8 @@ import org.springframework.util.Assert;
  */
 public class HeaderCheckSecureChannelProcessor extends SecureChannelProcessor {
 
-	private String headerName;
-	private String headerValue;
+	protected String headerName;
+	protected String headerValue;
 
 	@Override
 	public void decide(FilterInvocation invocation, Collection<ConfigAttribute> config)

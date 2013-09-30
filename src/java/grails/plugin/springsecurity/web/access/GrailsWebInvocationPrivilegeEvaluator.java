@@ -32,6 +32,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
@@ -49,23 +51,25 @@ import org.springframework.util.Assert;
  */
 public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationPrivilegeEvaluator {
 
-	private static final FilterChain DUMMY_CHAIN = new FilterChain() {
+	protected static final FilterChain DUMMY_CHAIN = new FilterChain() {
 		public void doFilter(ServletRequest req, ServletResponse res) throws IOException, ServletException {
 			throw new UnsupportedOperationException("GrailsWebInvocationPrivilegeEvaluator does not support filter chains");
 		}
 	};
 
-	private static final HttpServletResponse DUMMY_RESPONSE = DummyResponseCreator.createInstance();
+	protected static final HttpServletResponse DUMMY_RESPONSE = DummyResponseCreator.createInstance();
 
-	private AbstractSecurityInterceptor _interceptor;
+	protected final Logger log = LoggerFactory.getLogger(getClass());
+
+	protected AbstractSecurityInterceptor interceptor;
 
 	/**
 	 * Constructor.
-	 * @param interceptor the security interceptor
+	 * @param securityInterceptor the security interceptor
 	 */
-	public GrailsWebInvocationPrivilegeEvaluator(final AbstractSecurityInterceptor interceptor) {
-		super(interceptor);
-		_interceptor = interceptor;
+	public GrailsWebInvocationPrivilegeEvaluator(final AbstractSecurityInterceptor securityInterceptor) {
+		super(securityInterceptor);
+		interceptor = securityInterceptor;
 	}
 
 	@Override
@@ -78,9 +82,9 @@ public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationP
 
 		FilterInvocation fi = createFilterInvocation(contextPath, uri, method);
 
-		Collection<ConfigAttribute> attrs = _interceptor.obtainSecurityMetadataSource().getAttributes(fi);
+		Collection<ConfigAttribute> attrs = interceptor.obtainSecurityMetadataSource().getAttributes(fi);
 		if (attrs == null) {
-			return !_interceptor.isRejectPublicInvocations();
+			return !interceptor.isRejectPublicInvocations();
 		}
 
 		if (authentication == null) {
@@ -88,13 +92,13 @@ public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationP
 		}
 
 		try {
-			_interceptor.getAccessDecisionManager().decide(authentication, fi, attrs);
+			interceptor.getAccessDecisionManager().decide(authentication, fi, attrs);
 			return true;
 		}
 		catch (AccessDeniedException unauthorized) {
-			if (logger.isDebugEnabled()) {
+			if (log.isDebugEnabled()) {
 				GrailsUtil.deepSanitize(unauthorized);
-				logger.debug(fi + " denied for " + authentication, unauthorized);
+				log.debug(fi + " denied for " + authentication, unauthorized);
 			}
 			return false;
 		}
@@ -107,7 +111,7 @@ public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationP
 	}
 }
 
-class DummyRequestCreator { //implements HttpServletRequest {
+class DummyRequestCreator {
 
 	static HttpServletRequest createInstance(final String contextPath, final String httpMethod, final String requestURI) {
 		final Map<String, Object> attributes = new HashMap<String, Object>();

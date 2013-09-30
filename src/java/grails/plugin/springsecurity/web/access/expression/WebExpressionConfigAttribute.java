@@ -26,16 +26,16 @@ import org.springframework.security.access.ConfigAttribute;
  */
 public class WebExpressionConfigAttribute implements ConfigAttribute {
 
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1;
 
-	private final Expression _authorizeExpression;
+	protected final Expression expression;
 
 	/**
 	 * Constructor.
 	 * @param authorizeExpression the expression
 	 */
 	public WebExpressionConfigAttribute(final Expression authorizeExpression) {
-		_authorizeExpression = authorizeExpression;
+		expression = authorizeExpression;
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class WebExpressionConfigAttribute implements ConfigAttribute {
 	 * @return the expression
 	 */
 	public Expression getAuthorizeExpression() {
-		return _authorizeExpression;
+		return expression;
 	}
 
 	/**
@@ -56,6 +56,6 @@ public class WebExpressionConfigAttribute implements ConfigAttribute {
 
 	@Override
 	public String toString() {
-		return _authorizeExpression.getExpressionString();
+		return expression.getExpressionString();
 	}
 }

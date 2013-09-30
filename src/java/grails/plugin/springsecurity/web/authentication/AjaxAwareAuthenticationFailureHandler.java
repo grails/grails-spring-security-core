@@ -34,7 +34,7 @@ import org.springframework.util.Assert;
  */
 public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler implements InitializingBean {
 
-	private String _ajaxAuthenticationFailureUrl;
+	protected String ajaxAuthenticationFailureUrl;
 
 	/**
 	 * {@inheritDoc}
@@ -48,7 +48,7 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 
 		if (SpringSecurityUtils.isAjax(request)) {
 			saveException(request, exception);
-			getRedirectStrategy().sendRedirect(request, response, _ajaxAuthenticationFailureUrl);
+			getRedirectStrategy().sendRedirect(request, response, ajaxAuthenticationFailureUrl);
 		}
 		else {
 			super.onAuthenticationFailure(request, response, exception);
@@ -60,7 +60,7 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 	 * @param url the url
 	 */
 	public void setAjaxAuthenticationFailureUrl(final String url) {
-		_ajaxAuthenticationFailureUrl = url;
+		ajaxAuthenticationFailureUrl = url;
 	}
 
 	/**
@@ -68,6 +68,6 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
-		Assert.notNull(_ajaxAuthenticationFailureUrl, "ajaxAuthenticationFailureUrl is required");
+		Assert.notNull(ajaxAuthenticationFailureUrl, "ajaxAuthenticationFailureUrl is required");
 	}
 }

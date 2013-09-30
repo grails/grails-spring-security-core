@@ -40,21 +40,21 @@ public class DefaultPreAuthenticationChecks implements UserDetailsChecker {
 			log.debug("User account is locked");
 
 			throw new LockedException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked",
-				"User account is locked"), user);
+				"User account is locked"));
 		}
 
 		if (!user.isEnabled()) {
 			log.debug("User account is disabled");
 
 			throw new DisabledException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled",
-				"User is disabled"), user);
+				"User is disabled"));
 		}
 
 		if (!user.isAccountNonExpired()) {
 			log.debug("User account is expired");
 
 			throw new AccountExpiredException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired",
-				"User account has expired"), user);
+				"User account has expired"));
 		}
 	}
 }

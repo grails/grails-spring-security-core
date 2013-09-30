@@ -31,8 +31,8 @@ import org.springframework.security.web.savedrequest.RequestCache;
  */
 public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-	private String _ajaxSuccessUrl;
-	private RequestCache _requestCache;
+	protected String ajaxSuccessUrl;
+	protected RequestCache requestCache;
 
 	/**
 	 * {@inheritDoc}
@@ -42,17 +42,17 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 	@Override
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
 		if (SpringSecurityUtils.isAjax(request)) {
-			return _ajaxSuccessUrl;
+			return ajaxSuccessUrl;
 		}
 		return super.determineTargetUrl(request, response);
 	}
 
 	/**
 	 * Dependency injection for the Ajax success url, e.g. '/login/ajaxSuccess'
-	 * @param ajaxSuccessUrl the url
+	 * @param url the url
 	 */
-	public void setAjaxSuccessUrl(final String ajaxSuccessUrl) {
-		_ajaxSuccessUrl = ajaxSuccessUrl;
+	public void setAjaxSuccessUrl(final String url) {
+		ajaxSuccessUrl = url;
 	}
 
 	/**
@@ -64,9 +64,13 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 	@Override
 	public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
 			final Authentication authentication) throws ServletException, IOException {
-		super.onAuthenticationSuccess(request, response, authentication);
-		// always remove the saved request
-		_requestCache.removeRequest(request, response);
+		try {
+			super.onAuthenticationSuccess(request, response, authentication);
+		}
+		finally {
+			// always remove the saved request
+			requestCache.removeRequest(request, response);
+		}
 	}
 
 	/**
@@ -75,8 +79,8 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 	 * 	org.springframework.security.web.savedrequest.RequestCache)
 	 */
 	@Override
-	public void setRequestCache(RequestCache requestCache) {
-		super.setRequestCache(requestCache);
-		_requestCache = requestCache;
+	public void setRequestCache(RequestCache cache) {
+		super.setRequestCache(cache);
+		requestCache = cache;
 	}
 }

@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  */
 class GormPersistentTokenRepository implements PersistentTokenRepository {
 
-	private final Logger log = LoggerFactory.getLogger(getClass())
+	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for grailsApplication */
 	GrailsApplication grailsApplication
@@ -40,13 +40,13 @@ class GormPersistentTokenRepository implements PersistentTokenRepository {
 	 * 	org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken)
 	 */
 	void createNewToken(PersistentRememberMeToken token) {
-		// join an existing transaction if one is active
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
+		// join an existing transaction if one is active
 		clazz.withTransaction { status ->
 			clazz.newInstance(username: token.username, series: token.series,
-					token: token.tokenValue, lastUsed: token.date).save()
+			                  token: token.tokenValue, lastUsed: token.date).save()
 		}
 	}
 

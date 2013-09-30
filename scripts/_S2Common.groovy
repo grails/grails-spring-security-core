@@ -33,7 +33,7 @@ packageToDir = { String packageName ->
 
 okToWrite = { String dest ->
 
-	def file = new File(dest)
+	File file = new File(dest)
 	if (overwriteAll || !file.exists()) {
 		return true
 	}

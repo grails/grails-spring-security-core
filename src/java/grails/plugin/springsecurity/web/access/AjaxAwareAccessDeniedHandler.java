@@ -30,7 +30,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.PortResolver;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.access.AccessDeniedHandler;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest;
+import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.util.Assert;
 
 /**
@@ -38,10 +38,11 @@ import org.springframework.util.Assert;
  */
 public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, InitializingBean {
 
-	private String errorPage;
-	private String ajaxErrorPage;
-	private PortResolver portResolver;
-	private AuthenticationTrustResolver authenticationTrustResolver;
+	protected String errorPage;
+	protected String ajaxErrorPage;
+	protected PortResolver portResolver;
+	protected AuthenticationTrustResolver authenticationTrustResolver;
+	protected RequestCache requestCache;
 
 	/**
 	 * {@inheritDoc}
@@ -54,8 +55,8 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 
 		if (e != null && isLoggedIn() && authenticationTrustResolver.isRememberMe(getAuthentication())) {
 			// user has a cookie but is getting bounced because of IS_AUTHENTICATED_FULLY,
-			// so Acegi won't save the original request
-			request.getSession().setAttribute(WebAttributes.SAVED_REQUEST, new DefaultSavedRequest(request, portResolver));
+			// so Spring Security won't save the original request
+			requestCache.saveRequest(request, response);
 		}
 
 		if (response.isCommitted()) {
@@ -93,12 +94,12 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 		response.sendRedirect(response.encodeRedirectURL(redirectUrl));
 	}
 
-	private Authentication getAuthentication() {
+	protected Authentication getAuthentication() {
 		return SecurityContextHolder.getContext() == null ? null :
 		       SecurityContextHolder.getContext().getAuthentication();
 	}
 
-	private boolean isLoggedIn() {
+	protected boolean isLoggedIn() {
 		Authentication authentication = getAuthentication();
 		if (authentication == null) {
 			return false;
@@ -141,11 +142,20 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	}
 
 	/**
+	 * Dependency injection for the request cache.
+	 * @param cache the cache
+	 */
+	public void setRequestCache(RequestCache cache) {
+		requestCache = cache;
+	}
+
+	/**
 	 * {@inheritDoc}
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
 		Assert.notNull(portResolver, "portResolver is required");
 		Assert.notNull(authenticationTrustResolver, "authenticationTrustResolver is required");
+		Assert.notNull(requestCache, "requestCache is required");
 	}
 }

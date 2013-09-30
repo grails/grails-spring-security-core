@@ -21,9 +21,6 @@ import groovy.lang.GroovyClassLoader;
 import groovy.util.ConfigObject;
 import groovy.util.ConfigSlurper;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -40,12 +37,13 @@ import javax.servlet.Filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.GrantedAuthorityImpl;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserCache;
@@ -57,6 +55,8 @@ import org.springframework.security.web.authentication.switchuser.SwitchUserFilt
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.savedrequest.SavedRequest;
+import org.springframework.security.web.util.AnyRequestMatcher;
+import org.springframework.security.web.util.RequestMatcher;
 import org.springframework.util.StringUtils;
 
 /**
@@ -67,63 +67,27 @@ import org.springframework.util.StringUtils;
 public final class SpringSecurityUtils {
 
 	private static ConfigObject _securityConfig;
-	private static GrailsApplication _application;
-	private static final Map<String, Object> _context = new HashMap<String, Object>();
-	private static final String VOTER_NAMES_KEY = "VOTER_NAMES";
-	private static final String PROVIDER_NAMES_KEY = "PROVIDER_NAMES";
-	private static final String LOGOUT_HANDLER_NAMES_KEY = "LOGOUT_HANDLER_NAMES";
-	private static final String ORDERED_FILTERS_KEY = "ORDERED_FILTERS";
-	private static final String CONFIGURED_ORDERED_FILTERS_KEY = "CONFIGURED_ORDERED_FILTERS";
+	private static GrailsApplication application;
+
+	private static List<String> providerNames = new ArrayList<String>();
+	private static List<String> logoutHandlerNames = new ArrayList<String>();
+	private static List<String> voterNames = new ArrayList<String>();
+	private static Map<Integer, String> orderedFilters = new HashMap<Integer, String>();
+	private static SortedMap<Integer, Filter> configuredOrderedFilters = new TreeMap<Integer, Filter>();
+
+	// HttpSessionRequestCache.SAVED_REQUEST is package-scope
+	public static final String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST"; // TODO use requestCache
+
+	// UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY is deprecated
+   public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
+
+   // AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
+   public static final String DEFAULT_TARGET_PARAMETER = "spring-security-redirect";
 
 	/**
 	 * Default value for the name of the Ajax header.
 	 */
 	public static final String AJAX_HEADER = "X-Requested-With";
-
-	/**
-	 * @deprecated use {@link #getOrderedFilters()}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static final Map<Integer, String> ORDERED_FILTERS =
-		(Map<Integer, String>)createDelegate(
-			ORDERED_FILTERS_KEY, Map.class, HashMap.class);
-
-	/**
-	 * @deprecated use {@link #getConfiguredOrderedFilters()}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static final SortedMap<Integer, Filter> CONFIGURED_ORDERED_FILTERS =
-		(SortedMap<Integer, Filter>)createDelegate(
-				CONFIGURED_ORDERED_FILTERS_KEY, SortedMap.class, TreeMap.class);
-
-	/**
-	 * @deprecated use {@link #getVoterNames()}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static final List<String> VOTER_NAMES =
-		(List<String>)createDelegate(
-			VOTER_NAMES_KEY, List.class, ArrayList.class);
-
-	/**
-	 * @deprecated use {@link #getProviderNames()}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static final List<String> PROVIDER_NAMES =
-		(List<String>)createDelegate(
-				PROVIDER_NAMES_KEY, List.class, ArrayList.class);
-
-	/**
-	 * @deprecated use {@link #getLogoutHandlerNames()}
-	 */
-	@SuppressWarnings("unchecked")
-	@Deprecated
-	public static final List<String> LOGOUT_HANDLER_NAMES =
-		(List<String>)createDelegate(
-				LOGOUT_HANDLER_NAMES_KEY, List.class, ArrayList.class);
 
 	/**
 	 * Used to ensure that all authenticated users have at least one granted authority to work
@@ -138,10 +102,10 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Set at startup by plugin.
-	 * @param application the application
+	 * @param app the application
 	 */
-	public static void setApplication(GrailsApplication application) {
-		_application = application;
+	public static void setApplication(GrailsApplication app) {
+		application = app;
 		initializeContext();
 	}
 
@@ -156,8 +120,8 @@ public final class SpringSecurityUtils {
 			String authorityName = ((GrantedAuthority)authority).getAuthority();
 			if (null == authorityName) {
 				throw new IllegalArgumentException(
-						"Cannot process GrantedAuthority objects which return null from getAuthority() - attempting to process "
-						+ authority);
+						"Cannot process GrantedAuthority objects which return null " +
+						"from getAuthority() - attempting to process " + authority);
 			}
 			roles.add(authorityName);
 		}
@@ -175,7 +139,7 @@ public final class SpringSecurityUtils {
 			return Collections.emptyList();
 		}
 
-		Collection<GrantedAuthority> authorities = authentication.getAuthorities();
+		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
 		if (authorities == null) {
 			return Collections.emptyList();
 		}
@@ -201,7 +165,7 @@ public final class SpringSecurityUtils {
 		for (String auth : StringUtils.commaDelimitedListToStringArray(roleNames)) {
 			auth = auth.trim();
 			if (auth.length() > 0) {
-				requiredAuthorities.add(new GrantedAuthorityImpl(auth));
+				requiredAuthorities.add(new SimpleGrantedAuthority(auth));
 			}
 		}
 
@@ -227,7 +191,7 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has all the roles
 	 */
 	public static boolean ifAllGranted(final String roles) {
-		Collection<GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
 		return inferred.containsAll(parseAuthoritiesString(roles));
 	}
 
@@ -237,7 +201,7 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has none the roles
 	 */
 	public static boolean ifNotGranted(final String roles) {
-		Collection<GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
 		Set<String> grantedCopy = retainAll(inferred, parseAuthoritiesString(roles));
 		return grantedCopy.isEmpty();
 	}
@@ -248,7 +212,7 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has any the roles
 	 */
 	public static boolean ifAnyGranted(final String roles) {
-		Collection<GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
 		Set<String> grantedCopy = retainAll(inferred, parseAuthoritiesString(roles));
 		return !grantedCopy.isEmpty();
 	}
@@ -315,9 +279,12 @@ public final class SpringSecurityUtils {
 		}
 
 		// check the SavedRequest's headers
-		SavedRequest savedRequest = (SavedRequest)request.getSession().getAttribute(WebAttributes.SAVED_REQUEST);
-		if (savedRequest != null) {
-			return !savedRequest.getHeaderValues(ajaxHeaderName).isEmpty();
+		HttpSession httpSession = SecurityRequestHolder.getRequest().getSession(false);
+		if (httpSession != null) {
+			SavedRequest savedRequest = (SavedRequest)httpSession.getAttribute(SAVED_REQUEST);
+			if (savedRequest != null) {
+				return !savedRequest.getHeaderValues(ajaxHeaderName).isEmpty();
+			}
 		}
 
 		return false;
@@ -331,16 +298,15 @@ public final class SpringSecurityUtils {
 	 * @param beanName the Spring bean name of the provider
 	 */
 	public static void registerProvider(final String beanName) {
-		getProviderNames().add(0, beanName);
+		providerNames.add(0, beanName);
 	}
 
 	/**
 	 * Authentication provider names. Plugins add or remove them, and can be overridden by config.
 	 * @return the names
 	 */
-	@SuppressWarnings("unchecked")
-	public static synchronized List<String> getProviderNames() {
-		return (List<String>)getFromContext(PROVIDER_NAMES_KEY);
+	public static List<String> getProviderNames() {
+		return providerNames;
 	}
 
 	/**
@@ -351,16 +317,15 @@ public final class SpringSecurityUtils {
 	 * @param beanName the Spring bean name of the handler
 	 */
 	public static void registerLogoutHandler(final String beanName) {
-		getLogoutHandlerNames().add(0, beanName);
+		logoutHandlerNames.add(0, beanName);
 	}
 
 	/**
 	 * Logout handler names. Plugins add or remove them, and can be overridden by config.
 	 * @return the names
 	 */
-	@SuppressWarnings("unchecked")
-	public static synchronized List<String> getLogoutHandlerNames() {
-		return (List<String>)getFromContext(LOGOUT_HANDLER_NAMES_KEY);
+	public static List<String> getLogoutHandlerNames() {
+		return logoutHandlerNames;
 	}
 
 	/**
@@ -371,16 +336,15 @@ public final class SpringSecurityUtils {
 	 * @param beanName the Spring bean name of the voter
 	 */
 	public static void registerVoter(final String beanName) {
-		getVoterNames().add(0, beanName);
+		voterNames.add(0, beanName);
 	}
 
 	/**
 	 * Voter names. Plugins add or remove them and can be overridden by config.
 	 * @return the names
 	 */
-	@SuppressWarnings("unchecked")
 	public static List<String> getVoterNames() {
-		return (List<String>)getFromContext(VOTER_NAMES_KEY);
+		return voterNames;
 	}
 
 	/**
@@ -419,9 +383,8 @@ public final class SpringSecurityUtils {
 	 * Ordered filter names. Plugins add or remove them, and can be overridden by config.
 	 * @return the names
 	 */
-	@SuppressWarnings("unchecked")
 	public static Map<Integer, String> getOrderedFilters() {
-		return (Map<Integer, String>)getFromContext(ORDERED_FILTERS_KEY);
+		return orderedFilters;
 	}
 
 	/**
@@ -448,6 +411,7 @@ public final class SpringSecurityUtils {
 	 * @param beanName the Spring bean name of the filter
 	 * @param order the position (see {@link SecurityFilterPosition})
 	 */
+	@SuppressWarnings("deprecation")
 	public static void clientRegisterFilter(final String beanName, final int order) {
 
 		Filter oldFilter = getConfiguredOrderedFilters().get(order);
@@ -460,18 +424,17 @@ public final class SpringSecurityUtils {
 		Filter filter = getBean(beanName);
 		getConfiguredOrderedFilters().put(order, filter);
 		FilterChainProxy filterChain = getBean("springSecurityFilterChain");
-		filterChain.setFilterChainMap(Collections.singletonMap(
-				filterChain.getMatcher().getUniversalMatchPattern(),
-				new ArrayList<Filter>(getConfiguredOrderedFilters().values())));
+		RequestMatcher rm = new AnyRequestMatcher();
+		List<Filter> filters = new ArrayList<Filter>(getConfiguredOrderedFilters().values());
+		filterChain.setFilterChainMap(Collections.singletonMap(rm, filters));
 	}
 
 	/**
 	 * Set by SpringSecurityCoreGrailsPlugin; contains the actual filter beans in order.
 	 * @return the filters
 	 */
-	@SuppressWarnings("unchecked")
 	public static SortedMap<Integer, Filter> getConfiguredOrderedFilters() {
-		return (SortedMap<Integer, Filter>)getFromContext(CONFIGURED_ORDERED_FILTERS_KEY);
+		return configuredOrderedFilters;
 	}
 
 	/**
@@ -479,7 +442,16 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if logged in and switched
 	 */
 	public static boolean isSwitched() {
-		return ifAllGranted(SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR);
+		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
+		for (GrantedAuthority authority : inferred) {
+			if (authority instanceof SwitchUserGrantedAuthority) {
+				return true;
+			}
+			if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(authority.getAuthority())) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**
@@ -537,11 +509,12 @@ public final class SpringSecurityUtils {
 		boolean set = false;
 		if (SecurityContextHolder.getContext().getAuthentication() == null) {
 			HttpSession httpSession = SecurityRequestHolder.getRequest().getSession(false);
-			SecurityContext context = null;
+			SecurityContext securityContext = null;
 			if (httpSession != null) {
-				context = (SecurityContext)httpSession.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
-				if (context != null) {
-					SecurityContextHolder.setContext(context);
+				securityContext = (SecurityContext)httpSession.getAttribute(
+						HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+				if (securityContext != null) {
+					SecurityContextHolder.setContext(securityContext);
 					set = true;
 				}
 			}
@@ -584,6 +557,45 @@ public final class SpringSecurityUtils {
 		}
 	}
 
+	public static SecurityContext getSecurityContext(final HttpSession session) {
+		Object securityContext = session.getAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+		if (securityContext instanceof SecurityContext) {
+			return (SecurityContext)securityContext;
+		}
+		return null;
+	}
+
+	/**
+	 * Get the last auth exception.
+	 * @param session the session
+	 * @return the exception
+	 */
+	public static Throwable getLastException(final HttpSession session) {
+		return (Throwable)session.getAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+	}
+
+	/**
+	 * Get the last attempted username.
+	 * @param session the session
+	 * @return the username
+	 */
+	public static String getLastUsername(final HttpSession session) {
+		String username = (String)session.getAttribute(SPRING_SECURITY_LAST_USERNAME_KEY);
+		if (username != null) {
+			username = StringEscapeUtils.unescapeHtml(username);
+		}
+		return username;
+	}
+
+	/**
+	 * Get the saved request from the session.
+	 * @param session the session
+	 * @return the saved request
+	 */
+	public static SavedRequest getSavedRequest(final HttpSession session) {
+		return (SavedRequest)session.getAttribute(SAVED_REQUEST);
+	}
+
 	/**
 	 * Merge in a secondary config (provided by a plugin as defaults) into the main config.
 	 * @param currentConfig the current configuration
@@ -597,7 +609,6 @@ public final class SpringSecurityUtils {
 			secondaryConfig = slurper.parse(classLoader.loadClass(className));
 		}
 		catch (ClassNotFoundException e) {
-			// TODO fix this
 			throw new RuntimeException(e);
 		}
 
@@ -626,10 +637,10 @@ public final class SpringSecurityUtils {
 		return config;
 	}
 
-	private static Collection<GrantedAuthority> findInferredAuthorities(
+	private static Collection<? extends GrantedAuthority> findInferredAuthorities(
 			final Collection<GrantedAuthority> granted) {
 		RoleHierarchy roleHierarchy = getBean("roleHierarchy");
-		Collection<GrantedAuthority> reachable = roleHierarchy.getReachableGrantedAuthorities(granted);
+		Collection<? extends GrantedAuthority> reachable = roleHierarchy.getReachableGrantedAuthorities(granted);
 		if (reachable == null) {
 			return Collections.emptyList();
 		}
@@ -638,28 +649,7 @@ public final class SpringSecurityUtils {
 
 	@SuppressWarnings("unchecked")
 	private static <T> T getBean(final String name) {
-		return (T)_application.getMainContext().getBean(name);
-	}
-
-	private static Object createDelegate(final String configKey,
-			Class<?> interfaceClass, Class<?> implClass) {
-
-		try {
-			storeInContext(configKey, implClass.newInstance());
-		}
-		catch (InstantiationException impossible) {
-			// impossible with regular java.util classes
-		}
-		catch (IllegalAccessException impossible) {
-			// impossible with regular java.util classes
-		}
-
-		return Proxy.newProxyInstance(implClass.getClassLoader(),
-				new Class[] { interfaceClass }, new InvocationHandler() {
-			public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-				return method.invoke(getFromContext(configKey), args);
-			}
-		});
+		return (T)application.getMainContext().getBean(name);
 	}
 
 	/**
@@ -667,30 +657,23 @@ public final class SpringSecurityUtils {
 	 * to default values when running integration and functional tests together.
 	 */
 	private static void initializeContext() {
-		getVoterNames().clear();
-		getVoterNames().add("authenticatedVoter");
-		getVoterNames().add("roleVoter");
-		getVoterNames().add("webExpressionVoter");
+		voterNames.clear();
+		voterNames.add("authenticatedVoter");
+		voterNames.add("roleVoter");
+		voterNames.add("webExpressionVoter");
+		voterNames.add("closureVoter");
 
-		getLogoutHandlerNames().clear();
-		getLogoutHandlerNames().add("rememberMeServices");
-		getLogoutHandlerNames().add("securityContextLogoutHandler");
+		logoutHandlerNames.clear();
+		logoutHandlerNames.add("rememberMeServices");
+		logoutHandlerNames.add("securityContextLogoutHandler");
 
-		getProviderNames().clear();
-		getProviderNames().add("daoAuthenticationProvider");
-		getProviderNames().add("anonymousAuthenticationProvider");
-		getProviderNames().add("rememberMeAuthenticationProvider");
+		providerNames.clear();
+		providerNames.add("daoAuthenticationProvider");
+		providerNames.add("anonymousAuthenticationProvider");
+		providerNames.add("rememberMeAuthenticationProvider");
 
-		getOrderedFilters().clear();
+		orderedFilters.clear();
 
-		getConfiguredOrderedFilters().clear();
-	}
-
-	private static Object getFromContext(String key) {
-		return _context.get(key);
-	}
-
-	private static void storeInContext(String key, Object value) {
-		_context.put(key, value);
+		configuredOrderedFilters.clear();
 	}
 }

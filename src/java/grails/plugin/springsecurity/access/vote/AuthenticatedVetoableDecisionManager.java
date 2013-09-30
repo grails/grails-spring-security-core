@@ -25,12 +25,12 @@ import org.springframework.security.authentication.InsufficientAuthenticationExc
 import org.springframework.security.core.Authentication;
 
 /**
-* Uses the affirmative-based logic for roles, i.e. any in the list will grant access, but allows
-* an authenticated voter to 'veto' access. This allows specification of roles and
-* <code>IS_AUTHENTICATED_FULLY</code> on one line in SecurityConfig.groovy.
-*
+ * Uses the affirmative-based logic for roles, i.e. any in the list will grant access, but allows
+ * an authenticated voter to 'veto' access. This allows specification of roles and
+ * <code>IS_AUTHENTICATED_FULLY</code> on one line in SecurityConfig.groovy.
+ *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
-*/
+ */
 public class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager {
 
 	/**
@@ -53,7 +53,8 @@ public class AuthenticatedVetoableDecisionManager extends AbstractAccessDecision
 	 * throw an exception; if any grant, return <code>true</code>;
 	 * otherwise return <code>false</code> if all abstain.
 	 */
-	private boolean checkAuthenticatedVoters(final Authentication authentication, final Object object,
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected boolean checkAuthenticatedVoters(final Authentication authentication, final Object object,
 			final Collection<ConfigAttribute> configAttributes) {
 
 		boolean grant = false;
@@ -80,7 +81,8 @@ public class AuthenticatedVetoableDecisionManager extends AbstractAccessDecision
 	 * return true. If any voter denies, throw exception. Otherwise return <code>false</code>
 	 * to indicate that all abstained.
 	 */
-	private boolean checkOtherVoters(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) {
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	protected boolean checkOtherVoters(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) {
 		int denyCount = 0;
 		for (AccessDecisionVoter voter : getDecisionVoters()) {
 			if (voter instanceof AuthenticatedVoter) {
@@ -107,7 +109,7 @@ public class AuthenticatedVetoableDecisionManager extends AbstractAccessDecision
 		return false;
 	}
 
-	private void deny() {
+	protected void deny() {
 		throw new AccessDeniedException(messages.getMessage(
 				"AbstractAccessDecisionManager.accessDenied",
 				"Access is denied"));

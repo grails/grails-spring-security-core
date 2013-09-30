@@ -42,7 +42,7 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  * All callbacks are optional; you can implement just the ones you're interested in, e.g.
  * <pre>
  * grails {
- *    plugins {
+ *    plugin {
  *       springsecurity {
  *          ...
  *          onAuthenticationSuccessEvent = { e, appCtx ->
@@ -59,7 +59,7 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  */
 public class SecurityEventListener implements ApplicationListener<ApplicationEvent>, ApplicationContextAware {
 
-	private ApplicationContext _applicationContext;
+	protected ApplicationContext applicationContext;
 
 	/**
 	 * {@inheritDoc}
@@ -89,10 +89,10 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void call(final ApplicationEvent e, final String closureName) {
+	protected void call(final ApplicationEvent e, final String closureName) {
 		Object closure = SpringSecurityUtils.getSecurityConfig().get(closureName);
 		if (closure instanceof Closure) {
-			((Closure)closure).call(new Object[] { e, _applicationContext });
+			((Closure)closure).call(new Object[] { e, applicationContext });
 		}
 	}
 
@@ -101,7 +101,7 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
  	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(
  	 * 	org.springframework.context.ApplicationContext)
  	 */
- 	public void setApplicationContext(final ApplicationContext applicationContext) {
- 		_applicationContext = applicationContext;
+ 	public void setApplicationContext(final ApplicationContext ctx) {
+ 		applicationContext = ctx;
  	}
 }

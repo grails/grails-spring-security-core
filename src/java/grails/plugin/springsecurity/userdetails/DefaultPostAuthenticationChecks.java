@@ -39,7 +39,7 @@ public class DefaultPostAuthenticationChecks implements UserDetailsChecker {
 
 			throw new CredentialsExpiredException(messages.getMessage(
 					"AbstractUserDetailsAuthenticationProvider.credentialsExpired",
-					"User credentials have expired"), user);
+					"User credentials have expired"));
 		}
 	}
 }

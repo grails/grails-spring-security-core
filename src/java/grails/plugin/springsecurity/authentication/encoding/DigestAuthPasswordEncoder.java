@@ -18,8 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
-import org.springframework.security.core.codec.Hex;
+import org.springframework.security.crypto.codec.Hex;
 import org.springframework.util.Assert;
 
 /**
@@ -34,9 +33,10 @@ import org.springframework.util.Assert;
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingBean {
+@SuppressWarnings("deprecation")
+public class DigestAuthPasswordEncoder implements org.springframework.security.authentication.encoding.PasswordEncoder, InitializingBean {
 
-	private String _realm;
+	protected String realm;
 
 	/**
 	 * {@inheritDoc}
@@ -46,7 +46,7 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	public String encodePassword(final String rawPass, final Object salt) {
 		Assert.notNull(salt, "Salt is required and must be the username");
 		String username = salt.toString();
-		return md5Hex(username + ":" + _realm + ":" + rawPass);
+		return md5Hex(username + ":" + realm + ":" + rawPass);
 	}
 
 	/**
@@ -62,10 +62,10 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	/**
 	 * Dependency injection for the realm name.
 	 *
-	 * @param realm the name
+	 * @param name the name
 	 */
-	public void setRealm(final String realm) {
-		_realm = realm;
+	public void setRealm(final String name) {
+		realm = name;
 	}
 
 	/**
@@ -73,10 +73,10 @@ public class DigestAuthPasswordEncoder implements PasswordEncoder, InitializingB
 	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
 	 */
 	public void afterPropertiesSet() {
-		Assert.hasLength(_realm, "realm is required");
+		Assert.hasLength(realm, "realm is required");
 	}
 
-	private String md5Hex(final String s) {
+	protected String md5Hex(final String s) {
 		MessageDigest digest;
 		try {
 			digest = MessageDigest.getInstance("MD5");

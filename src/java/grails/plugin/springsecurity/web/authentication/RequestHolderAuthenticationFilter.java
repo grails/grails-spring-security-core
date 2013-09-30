@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.web.authentication;
 
+import grails.plugin.springsecurity.SpringSecurityUtils;
 import grails.plugin.springsecurity.web.SecurityRequestHolder;
 
 import java.io.IOException;
@@ -24,8 +25,12 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.Assert;
 
 /**
  * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the request
@@ -34,6 +39,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+
+	protected Boolean storeLastUsername;
 
 	@Override
 	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
@@ -44,5 +51,38 @@ public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthentic
 		finally {
 			SecurityRequestHolder.reset();
 		}
+	}
+
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+
+		if (storeLastUsername) {
+			// Place the last username attempted into HttpSession for views
+			HttpSession session = request.getSession(false);
+			if (session != null || getAllowSessionCreation()) {
+				String username = obtainUsername(request);
+				if (username == null) {
+					username = "";
+				}
+				username = username.trim();
+				session.setAttribute(SpringSecurityUtils.SPRING_SECURITY_LAST_USERNAME_KEY, username); // TODO doc that not escaped now
+			}
+		}
+
+		return super.attemptAuthentication(request, response);
+	}
+
+	/**
+	 * Whether to store the last attempted username in the session.
+	 * @param storeLastUsername store if true
+	 */
+	public void setStoreLastUsername(Boolean storeLastUsername) {
+		this.storeLastUsername = storeLastUsername;
+	}
+
+	@Override
+	public void afterPropertiesSet() {
+		super.afterPropertiesSet();
+		Assert.notNull(storeLastUsername, "storeLastUsername must be set");
 	}
 }

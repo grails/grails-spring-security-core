@@ -24,6 +24,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
@@ -35,17 +37,18 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
  */
 public class MutableLogoutFilter extends LogoutFilter {
 
-	private final LogoutSuccessHandler _logoutSuccessHandler;
+	protected final LogoutSuccessHandler logoutSuccessHandler;
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
-	private List<LogoutHandler> _handlers;
+	protected List<LogoutHandler> handlers;
 
 	/**
 	 * Constructor.
-	 * @param logoutSuccessHandler the logout success handler
+	 * @param successHandler the logout success handler
 	 */
-	public MutableLogoutFilter(LogoutSuccessHandler logoutSuccessHandler) {
-		super(logoutSuccessHandler, new DummyLogoutHandler());
-		_logoutSuccessHandler = logoutSuccessHandler;
+	public MutableLogoutFilter(LogoutSuccessHandler successHandler) {
+		super(successHandler, new DummyLogoutHandler());
+		logoutSuccessHandler = successHandler;
 	}
 
 	/**
@@ -63,15 +66,15 @@ public class MutableLogoutFilter extends LogoutFilter {
 		if (requiresLogout(request, response)) {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Logging out user '" + auth + "' and transferring to logout destination");
+			if (log.isDebugEnabled()) {
+				log.debug("Logging out user '{0}' and transferring to logout destination", auth);
 			}
 
-			for (LogoutHandler handler : _handlers) {
+			for (LogoutHandler handler : handlers) {
 				handler.logout(request, response, auth);
 			}
 
-			_logoutSuccessHandler.onLogoutSuccess(request, response, auth);
+			logoutSuccessHandler.onLogoutSuccess(request, response, auth);
 
 			return;
 		}
@@ -81,17 +84,17 @@ public class MutableLogoutFilter extends LogoutFilter {
 
 	/**
 	 * Dependency injection for the logout handlers.
-	 * @param handlers the handlers
+	 * @param l the handlers
 	 */
-	public void setHandlers(final List<LogoutHandler> handlers) {
-		_handlers = handlers;
+	public void setHandlers(final List<LogoutHandler> l) {
+		handlers = l;
 	}
 
 	/**
 	 * Null logout handler that's used to provide a non-empty list of handlers to the base class.
 	 * The real handlers will be after construction.
 	 */
-	private static class DummyLogoutHandler implements LogoutHandler {
+	protected static class DummyLogoutHandler implements LogoutHandler {
 		public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
 			// do nothing
 		}

@@ -69,14 +69,15 @@ public enum SecurityFilterPosition {
 	LAST(Integer.MAX_VALUE);
 
 	private static final int INTERVAL = 100;
-	private final int _order;
+
+	private final int order;
 
 	private SecurityFilterPosition() {
-		_order = ordinal() * INTERVAL;
+		order = ordinal() * INTERVAL;
 	}
 
-	private SecurityFilterPosition(final int order) {
-		_order = order;
+	private SecurityFilterPosition(final int filterOrder) {
+		order = filterOrder;
 	}
 
 	/**
@@ -84,6 +85,6 @@ public enum SecurityFilterPosition {
 	 * @return the order
 	 */
 	public int getOrder() {
-		return _order;
+		return order;
 	}
 }

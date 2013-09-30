@@ -28,7 +28,15 @@ import org.springframework.util.Assert;
  */
 public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
-	private String ajaxLoginFormUrl;
+	protected String ajaxLoginFormUrl;
+
+	/**
+	 * @param loginFormUrl URL where the login page can be found. Should either be relative to the web-app context path
+	 * (include a leading {@code /}) or an absolute URL.
+	 */
+	public AjaxAwareAuthenticationEntryPoint(String loginFormUrl) {
+		super(loginFormUrl);
+	}
 
 	@Override
 	protected String determineUrlToUseForThisRequest(final HttpServletRequest request,
