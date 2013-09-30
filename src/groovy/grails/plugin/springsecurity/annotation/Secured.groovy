@@ -1,4 +1,4 @@
-/* Copyright 2006-2013 SpringSource.
+/* Copyright 2006-2013 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,14 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.springsecurity.annotation;
+package grails.plugin.springsecurity.annotation
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.Documented
+import java.lang.annotation.ElementType
+import java.lang.annotation.Inherited
+import java.lang.annotation.Retention
+import java.lang.annotation.RetentionPolicy
+import java.lang.annotation.Target
 
 /**
  * Annotation for Controllers at the class level or per-action, defining what roles
@@ -27,15 +27,15 @@ import java.lang.annotation.Target;
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
+@Target([ElementType.METHOD, ElementType.TYPE])
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-public @interface Secured {
+@interface Secured {
 
 	/**
-	 * Defines the security configuration attributes (e.g. ROLE_USER, ROLE_ADMIN, etc.)
-	 * @return the names of the roles
+	 * Defines the security configuration attributes (e.g. ROLE_USER, ROLE_ADMIN, IS_AUTHENTICATED_REMEMBERED, etc.)
+	 * @return the names of the roles, expressions, and tokens
 	 */
-	String[] value();
+	String[] value()
 }
