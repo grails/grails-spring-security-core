@@ -25,6 +25,7 @@ import grails.plugin.springsecurity.authentication.NullAuthenticationEventPublis
 import grails.plugin.springsecurity.authentication.dao.NullSaltSource
 import grails.plugin.springsecurity.authentication.encoding.BCryptPasswordEncoder
 import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEncoder
+import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncoder
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
@@ -452,6 +453,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 		/** passwordEncoder */
 		if (conf.password.algorithm == 'bcrypt') {
 			passwordEncoder(BCryptPasswordEncoder, conf.password.bcrypt.logrounds) // 10
+		}
+		else if (conf.password.algorithm == 'pbkdf2') {
+			passwordEncoder(PBKDF2PasswordEncoder)
 		}
 		else {
 			passwordEncoder(MessageDigestPasswordEncoder, conf.password.algorithm) {
