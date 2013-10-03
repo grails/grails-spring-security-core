@@ -1,4 +1,4 @@
-@org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils@ is a utility class with static methods that you can call directly without using dependency injection. It is primarily an internal class but can be called from application code.
+@grails.plugin.springsecurity.SpringSecurityUtils@ is a utility class with static methods that you can call directly without using dependency injection. It is primarily an internal class but can be called from application code.
 
 h4. authoritiesToRoles()
 Extracts role names from an array or @Collection@ of [GrantedAuthority|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html].
@@ -28,7 +28,13 @@ h4. reloadSecurityConfig()
 Forces a reload of the security configuration.
 
 h4. isAjax()
-Checks whether the request was triggered by an Ajax call. The standard way is to determine whether @X-Requested-With@ request header is set and has the value @XMLHttpRequest@. The plugin only checks whether the header is set to any value. In addition, you can configure the name of the header with the @grails.plugins.springsecurity.ajaxHeader@ configuration attribute, but this is not recommended because all major JavaScript toolkits use the standard name.
+Checks whether the request was triggered by an Ajax call. The standard way is to determine whether @X-Requested-With@ request header is set and has the value @XMLHttpRequest@. In addition, you can configure the name of the header with the @grails.plugin.springsecurity.ajaxHeader@ configuration attribute, but this is not recommended because all major JavaScript toolkits use the standard name. Further, you can register a closure in @Config.groovy@ with the name @ajaxCheckClosure@ that will be used to check if a request is an Ajax request. It is passed the request as its single argument, e.g.
+
+{code}
+grails.plugin.springsecurity.ajaxCheckClosure = { request ->
+   // return true or false
+}
+{code}
 
 You can also force the request to be treated as Ajax by appending @&ajax=true@ to your request query string.
 

@@ -72,6 +72,7 @@ public final class SpringSecurityUtils {
 	private static List<String> providerNames = new ArrayList<String>();
 	private static List<String> logoutHandlerNames = new ArrayList<String>();
 	private static List<String> voterNames = new ArrayList<String>();
+	private static List<String> afterInvocationManagerProviderNames = new ArrayList<String>();
 	private static Map<Integer, String> orderedFilters = new HashMap<Integer, String>();
 	private static SortedMap<Integer, Filter> configuredOrderedFilters = new TreeMap<Integer, Filter>();
 
@@ -334,6 +335,25 @@ public final class SpringSecurityUtils {
 	 */
 	public static List<String> getLogoutHandlerNames() {
 		return logoutHandlerNames;
+	}
+
+	/**
+	 * Register an AfterInvocationProvider bean name.
+	 * <p/>
+	 * Note - only for use by plugins during bean building.
+	 *
+	 * @param beanName the Spring bean name of the provider
+	 */
+	public static void registerAfterInvocationProvider(final String beanName) {
+		afterInvocationManagerProviderNames.add(0, beanName);
+	}
+
+	/**
+	 * AfterInvocationProvider names. Plugins add or remove them, and can be overridden by config.
+	 * @return the names
+	 */
+	public static List<String> getAfterInvocationManagerProviderNames() {
+		return afterInvocationManagerProviderNames;
 	}
 
 	/**
@@ -683,5 +703,7 @@ public final class SpringSecurityUtils {
 		orderedFilters.clear();
 
 		configuredOrderedFilters.clear();
+
+		afterInvocationManagerProviderNames.clear();
 	}
 }

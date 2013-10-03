@@ -17,6 +17,7 @@ package grails.plugin.springsecurity.web.authentication.rememberme
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.plugins.support.aware.GrailsApplicationAware
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
@@ -27,7 +28,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class GormPersistentTokenRepository implements PersistentTokenRepository {
+class GormPersistentTokenRepository implements PersistentTokenRepository, GrailsApplicationAware {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass())
 

@@ -16,6 +16,8 @@ import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SecurityEventListener
 import grails.plugin.springsecurity.SecurityFilterPosition
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.access.NullAfterInvocationProvider
+import grails.plugin.springsecurity.access.intercept.NullAfterInvocationManager
 import grails.plugin.springsecurity.access.vote.AuthenticatedVetoableDecisionManager
 import grails.plugin.springsecurity.access.vote.ClosureVoter
 import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationProvider
@@ -40,10 +42,12 @@ import grails.plugin.springsecurity.web.access.intercept.RequestmapFilterInvocat
 import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationEntryPoint
 import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationFailureHandler
 import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationSuccessHandler
+import grails.plugin.springsecurity.web.authentication.FilterProcessUrlRequestMatcher
 import grails.plugin.springsecurity.web.authentication.RequestHolderAuthenticationFilter
 import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.authentication.preauth.x509.ClosureX509PrincipalExtractor
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
+import grails.plugin.springsecurity.web.authentication.switchuser.NullSwitchUserAuthorityChanger
 import grails.plugin.springsecurity.web.filter.DebugFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
@@ -58,6 +62,7 @@ import org.springframework.security.access.event.LoggerListener
 import org.springframework.security.access.expression.DenyAllPermissionEvaluator
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyAuthoritiesMapper
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
+import org.springframework.security.access.intercept.AfterInvocationProviderManager
 import org.springframework.security.access.intercept.NullRunAsManager
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleHierarchyVoter
@@ -246,7 +251,11 @@ class SpringSecurityCoreGrailsPlugin {
 		configureAuthenticationProcessingFilter conf
 
 		/** securityContextHolderAwareRequestFilter */
-		securityContextHolderAwareRequestFilter(SecurityContextHolderAwareRequestFilter)
+		securityContextHolderAwareRequestFilter(SecurityContextHolderAwareRequestFilter) {
+			authenticationEntryPoint = ref('authenticationEntryPoint')
+			authenticationManager = ref('AuthenticationManager')
+			logoutHandlers = ref('logoutHandlers')
+		}
 
 		/** rememberMeAuthenticationFilter */
 		rememberMeAuthenticationFilter(GrailsRememberMeAuthenticationFilter,
@@ -277,9 +286,7 @@ class SpringSecurityCoreGrailsPlugin {
 				tokenLength = conf.rememberMe.persistentToken.tokenLength // 16
 			}
 
-			tokenRepository(GormPersistentTokenRepository) {
-				grailsApplication = ref('grailsApplication')
-			}
+			tokenRepository(GormPersistentTokenRepository)
 		}
 		else {
 			rememberMeServices(TokenBasedRememberMeServices, conf.rememberMe.key, ref('userDetailsService')) {
@@ -339,11 +346,23 @@ class SpringSecurityCoreGrailsPlugin {
 
 		/** filterInvocationInterceptor */
 
+		// TODO doc new
+		if (conf.afterInvocationManagerProviderNames) {
+			afterInvocationManager(AfterInvocationProviderManager) {
+				providers = [new NullAfterInvocationProvider()] // will be replaced in doWithApplicationContext
+			}
+		}
+		else {
+			// register a lightweight impl so there's a bean in either case
+			afterInvocationManager(NullAfterInvocationManager)
+		}
+
 		filterInvocationInterceptor(FilterSecurityInterceptor) {
 			authenticationManager = ref('authenticationManager')
 			accessDecisionManager = ref('accessDecisionManager')
 			securityMetadataSource = ref('objectDefinitionSource')
 			runAsManager = ref('runAsManager')
+			afterInvocationManager = ref('afterInvocationManager')
 			alwaysReauthenticate = conf.fii.alwaysReauthenticate // false
 			rejectPublicInvocations = conf.fii.rejectPublicInvocations // true
 			validateConfigAttributes = conf.fii.validateConfigAttributes // true
@@ -442,9 +461,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		/** userDetailsService */
-		userDetailsService(GormUserDetailsService) {
-			grailsApplication = ref('grailsApplication')
-		}
+		userDetailsService(GormUserDetailsService)
 
 		/** authenticationUserDetailsService */
 		authenticationUserDetailsService(UserDetailsByNameServiceWrapper, ref('userDetailsService'))
@@ -455,7 +472,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		}
 		portResolver(PortResolverImpl) {
-			portMapper = portMapper
+			portMapper = ref('portMapper')
 		}
 
 		// SecurityEventListener
@@ -482,10 +499,15 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		// Switch User
 		if (conf.useSwitchUserFilter) {
+
+			// TODO doc new
+			switchUserAuthorityChanger(NullSwitchUserAuthorityChanger)
+
 			switchUserProcessingFilter(SwitchUserFilter) {
 				userDetailsService = ref('userDetailsService')
 				userDetailsChecker = ref('userDetailsChecker')
 				authenticationDetailsSource = ref('authenticationDetailsSource')
+				switchUserAuthorityChanger = ref('switchUserAuthorityChanger')
 				switchUserUrl = conf.switchUser.switchUserUrl // '/j_spring_security_switch_user'
 				exitUserUrl = conf.switchUser.exitUserUrl // '/j_spring_security_exit_user'
 				usernameParameter = conf.switchUser.usernameParameter // '/j_spring_security_exit_user'
@@ -660,6 +682,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 		ctx.logoutHandlers.clear()
 		ctx.logoutHandlers.addAll createBeanList(logoutHandlerNames, ctx)
 
+		// build after-invocation provider names here to give dependent plugins a chance to register some
+		def afterInvocationManagerProviderNames = conf.afterInvocationManagerProviderNames ?: SpringSecurityUtils.getAfterInvocationManagerProviderNames()
+		if (afterInvocationManagerProviderNames) {
+			ctx.afterInvocationManager.providers = createBeanList(afterInvocationManagerProviderNames, ctx)
+		}
+
 		if (conf.debug.useFilter) {
 			ctx.removeAlias 'springSecurityFilterChain'
 			ctx.registerAlias 'securityDebugFilter', 'springSecurityFilterChain'
@@ -739,7 +767,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private configureLogout = { conf ->
 
 		securityContextLogoutHandler(SecurityContextLogoutHandler) {
-//			clearAuthentication = conf.logout.clearAuthentication // true TODO try in 3.2?
+			clearAuthentication = conf.logout.clearAuthentication // true
 			invalidateHttpSession = conf.logout.invalidateHttpSession // true
 		}
 
@@ -747,6 +775,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		logoutHandlers(ArrayList)
 
 		logoutSuccessHandler(SimpleUrlLogoutSuccessHandler) {
+			redirectStrategy = ref('redirectStrategy')
 			defaultTargetUrl = conf.logout.afterLogoutUrl // '/'
 			alwaysUseDefaultTargetUrl = conf.logout.alwaysUseDefaultTargetUrl // false
 			targetUrlParameter = conf.logout.targetUrlParameter // null
@@ -838,6 +867,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		webExpressionHandler(DefaultWebSecurityExpressionHandler) {
 			roleHierarchy = ref('roleHierarchy')
 			expressionParser = ref('voterExpressionParser')
+			permissionEvaluator = ref('permissionEvaluator')
 		}
 
 		webExpressionVoter(WebExpressionVoter) {
@@ -1040,6 +1070,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 			allowSessionCreation = conf.failureHandler.allowSessionCreation // true
 		}
 
+		filterProcessUrlRequestMatcher(FilterProcessUrlRequestMatcher, conf.apf.filterProcessesUrl) '/j_spring_security_check'
+
 		authenticationProcessingFilter(RequestHolderAuthenticationFilter) {
 			authenticationManager = ref('authenticationManager')
 			sessionAuthenticationStrategy = ref('sessionAuthenticationStrategy')
@@ -1047,7 +1079,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			authenticationFailureHandler = ref('authenticationFailureHandler')
 			rememberMeServices = ref('rememberMeServices')
 			authenticationDetailsSource = ref('authenticationDetailsSource')
-			filterProcessesUrl = conf.apf.filterProcessesUrl // '/j_spring_security_check'
+			requiresAuthenticationRequestMatcher = ref('filterProcessUrlRequestMatcher')
 			usernameParameter = conf.apf.usernameParameter // j_username
 			passwordParameter = conf.apf.passwordParameter // j_password
 			continueChainBeforeSuccessfulAuthentication = conf.apf.continueChainBeforeSuccessfulAuthentication // false
