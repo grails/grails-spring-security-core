@@ -1,8 +1,10 @@
-/cobertura.ser
-stacktrace.log
-/target
-/docs
-/grails-spring-security-core-*.zip
-/testapps.config.groovy
-/plugin.xml
+cobertura.ser
+*.log
+target
+docs
+grails-spring-security-core-*.zip
+grails-spring-security-core-*.zip.sha1
+testapps.config.groovy
+plugin.xml
 .settings
+web-app

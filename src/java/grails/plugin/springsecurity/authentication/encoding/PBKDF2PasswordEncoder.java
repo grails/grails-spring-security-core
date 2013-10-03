@@ -23,7 +23,7 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
 /**
- * PBKDF2 salted password hashing, from http://crackstation.net/hashing-security.htm
+ * PBKDF2 salted password hashing, from https://crackstation.net/hashing-security.htm
  *
  * TODO document
  *
@@ -74,11 +74,11 @@ public class PBKDF2PasswordEncoder implements org.springframework.security.authe
 
 	/**
 	 * Compares two byte arrays in length-constant time. This comparison method
-	 * is used so that password hashes cannot be extracted from an on-line 
+	 * is used so that password hashes cannot be extracted from an on-line
 	 * system using a timing attack and then attacked off-line.
-	 * 
+	 *
 	 * @param   a       the first byte array
-	 * @param   b       the second byte array 
+	 * @param   b       the second byte array
 	 * @return          true if both byte arrays are the same, false if not
 	 */
 	protected boolean slowEquals(byte[] a, byte[] b) {

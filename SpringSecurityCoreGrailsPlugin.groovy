@@ -141,10 +141,10 @@ class SpringSecurityCoreGrailsPlugin {
 	]
 
 	String author = 'Burt Beckwith'
-	String authorEmail = 'beckwithb@vmware.com'
+	String authorEmail = 'burt@burtbeckwith.com'
 	String title = 'Spring Security Core Plugin'
 	String description = 'Spring Security Core plugin'
-	String documentation = 'http://grails.org/plugin/spring-security-core'
+	String documentation = 'http://grails-plugins.github.io/grails-spring-security-core/'
 
 	String license = 'APACHE'
 	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']

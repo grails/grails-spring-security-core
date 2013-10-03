@@ -146,7 +146,7 @@ abstract class AbstractSecurityWebTest extends FunctionalTestCase {
 			clickButton 'Login'
 		}
 	}
-	
+
 	protected void logout() {
 		post '/logout'
 	}

@@ -61,7 +61,7 @@ class TestUserRole implements Serializable {
 
 		rowCount > 0
 	}
-	
+
 	static void removeAll(TestUser u) {
 		TestUserRole.where {
 			user == TestUser.load(u.id)

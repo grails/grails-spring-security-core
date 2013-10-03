@@ -350,7 +350,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			}
 			patterns.add(sb.toString());
 			patterns.add(sb.toString() + ".*");
-	
+
 			sb.append("/**");
 			patterns.add(sb.toString());
 		}
@@ -429,7 +429,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		}
 		return actionClosures;
 	}
-	
+
 	protected Class<?> findClosureClass(final grails.plugin.springsecurity.annotation.Secured annotation) {
 		Class<?> closureClass = annotation.closure();
 		return closureClass == grails.plugin.springsecurity.annotation.Secured.class ? null : closureClass;
