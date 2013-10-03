@@ -1,0 +1,58 @@
+introduction:
+  title: Introduction to the Spring Security Plugin
+  configGroovy: Configuration Settings Now in Config.groovy
+  gettingStarted: Getting Started
+acegiDifferences: Differences Between the Spring Security and Acegi Plugins
+acegiMigrating: Migrating from the Acegi Plugin
+domainClasses:
+  title: Required and Optional Domain Classes
+  personClass: Person Class
+  authorityClass: Authority Class
+  personAuthorityClass: PersonAuthority Class
+  requestmapClass: Requestmap Class
+requestMappings:
+  title: Configuring Request Mappings to Secure URLs
+  securedAnnotations: Defining Secured Annotations
+  configGroovyMap: Simple Map in Config.groovy
+  requestmapInstances: Requestmap Instances Stored in the Database
+  expressions: Using Expressions to Create Descriptive, Fine-Grained Rules
+helperClasses:
+  title: Helper Classes
+  securityTagLib: SecurityTagLib
+  springSecurityService: SpringSecurityService
+  springSecurityUtils: SpringSecurityUtils
+events:
+  title: Events
+  eventNotification: Event Notification
+  registeringEventListener: Registering an Event Listener
+  registeringCallbackClosures: Registering Callback Closures
+domainClassProperties: User, Authority (Role), and Requestmap Properties
+authentication:
+  title: Authentication
+  basicAndDigestAuth: Basic and Digest Authentication
+  x509: Certificate (X509) Login Authentication
+  rememberMeCookie: Remember-Me Cookie
+  ajax: Ajax Authentication
+authenticationProviders: Authentication Providers
+userDetailsService: Custom UserDetailsService
+passwords:
+  title: Password and Account Protection
+  hashing: Password Hashing
+  salt: Salted Passwords
+  locking: Account Locking and Forcing Password Change
+urlProperties: URL Properties
+hierarchicalRoles: Hierarchical Roles
+switchUser: Switch User
+filters: Filters
+channelSecurity: Channel Security
+ip: IP Address Restrictions
+sessionFixation: Session Fixation Prevention
+logoutHandlers: Logout Handlers
+voters: Voters
+miscProperties: Miscellaneous Properties
+tutorials:
+  title: Tutorials
+  usingControllerAnnotations: Using Controller Annotations to Secure URLs
+  migrationFromAcegi: Migration From the Acegi Plugin
+controllerMetaClassMethods: Controller MetaClass Methods
+i18n: Internationalization
