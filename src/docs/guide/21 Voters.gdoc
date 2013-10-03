@@ -1,4 +1,4 @@
-You can register a list of voters by implementing the [AccessDecisionVoter|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/access/AccessDecisionVoter.html] interface. The list confirms whether a successful authentication is applicable for the current request.
+You can register a list of voters by implementing the [AccessDecisionVoter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/AccessDecisionVoter.html] interface. The list confirms whether a successful authentication is applicable for the current request.
 
 {table}
 *Property* | *Default Value* | *Meaning*

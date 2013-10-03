@@ -1,4 +1,4 @@
-Spring Security uses the [Spring Expression Language (SpEL)|http://static.springsource.org/spring/docs/3.0.x/spring-framework-reference/html/expressions.html], which allows you to declare the rules for guarding URLs more descriptively than does the traditional approach, and also allows much more fine-grained rules. Where you traditionally would specify a list of role names and/or special tokens (for example, @IS_AUTHENTICATED_FULLY@), with [Spring Security's expression support|http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html], you can instead use the embedded scripting language to define simple or complex access rules.
+Spring Security uses the [Spring Expression Language (SpEL)|http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/expressions.html], which allows you to declare the rules for guarding URLs more descriptively than does the traditional approach, and also allows much more fine-grained rules. Where you traditionally would specify a list of role names and/or special tokens (for example, @IS_AUTHENTICATED_FULLY@), with [Spring Security's expression support|http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/el-access.html], you can instead use the embedded scripting language to define simple or complex access rules.
 
 You can use expressions with any of the previously described approaches to securing application URLs. For example, consider this annotated controller:
 
@@ -42,7 +42,7 @@ grails.plugins.springsecurity.interceptUrlMap = [
 ]
 {code}
 
-The Spring Security docs have a [table listing the standard expressions|http://static.springsource.org/spring-security/site/docs/3.0.x/reference/el-access.html#el-common-built-in], which is copied here for reference:
+The Spring Security docs have a [table listing the standard expressions|http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/el-access.html#el-common-built-in], which is copied here for reference:
 
 {table}
 *Expression* | *Description*

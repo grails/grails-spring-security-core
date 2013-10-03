@@ -4,4 +4,4 @@ Once you install the plugin, you simply run the initialization script, [s2-quick
 
 To get started using the Spring Security plugin with your Grails application, see  [Tutorials|guide:23 Tutorials].
 
-You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See [the Spring Security documentation|http://static.springsource.org/spring-security/site/reference.html].
+You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See [the Spring Security documentation|http://docs.spring.io/spring-security/site/reference.html].

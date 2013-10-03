@@ -62,6 +62,6 @@ def userDetails = springSecurityService.principal
 person = Person.get(userDetails.id)
 {code}
 
-The preceding approach works because the @UserDetails@ implementation is an instance of @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@, which extends the standard Spring Security [User|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
+The preceding approach works because the @UserDetails@ implementation is an instance of @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@, which extends the standard Spring Security [User|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
 
 You can further extend this class if you want to store more data along with the authentication to avoid database access. See [Custom UserDetailsService|guide:11 Custom UserDetailsService].

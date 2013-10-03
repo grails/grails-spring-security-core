@@ -9,7 +9,7 @@ apf.allowSessionCreation | @true@ | Whether to allow authentication to create an
 apf.postOnly | @true@ | Whether to allow only POST login requests.
 failureHandler. defaultFailureUrl | '/login/authfail?login_error=1' | Redirect URL for failed logins.
 failureHandler. ajaxAuthFailUrl | '/login/authfail?ajax=true' | Redirect URL for failed Ajax logins.
-failureHandler. exceptionMappings | none | Map of exception class name (subclass of [AuthenticationException|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/core/AuthenticationException.html]) to which the URL will redirect for that exception type after authentication failure.
+failureHandler. exceptionMappings | none | Map of exception class name (subclass of [AuthenticationException|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/AuthenticationException.html]) to which the URL will redirect for that exception type after authentication failure.
 failureHandler. useForward | @false@ | Whether to render the error page (@true@) or redirect (@false@).
 successHandler. defaultTargetUrl | '/' | Default post-login URL if there is no saved request that triggered the login.
 successHandler. alwaysUseDefault | @false@ | If @true@, always redirects to the value of @successHandler. defaultTargetUrl@ after successful authentication; otherwise redirects to to originally-requested page.

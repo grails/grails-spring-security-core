@@ -12,7 +12,7 @@ rememberMe.persistent | @false@ | If @true@, stores persistent login information
 rememberMe.persistentToken. domainClassName | 'PersistentLogin' | Domain class used to manage persistent logins.
 rememberMe.persistentToken. seriesLength | 16 | Number of characters in the cookie's @series@ attribute.
 rememberMe.persistentToken. tokenLength | 16 | Number of characters in the cookie's @token@ attribute.
-atr.rememberMeClass | [RememberMeAuthenticationToken|http://static.springsource.org/spring-security/site/docs/3.0.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html] | remember-me authentication class.
+atr.rememberMeClass | [RememberMeAuthenticationToken|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html] | remember-me authentication class.
 {table}
 
 You are most likely to change these attributes:
@@ -21,7 +21,7 @@ You are most likely to change these attributes:
 * @rememberMe.tokenValiditySeconds@. Default is two weeks; set it to what makes sense for your application.
 
 h4. Persistent Logins
-The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the [Spring Security docs|http://static.springsource.org/spring-security/site/docs/3.0.x/reference/remember-me.html] for a description of the implementation.
+The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the [Spring Security docs|http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/remember-me.html] for a description of the implementation.
 
 Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.
 
