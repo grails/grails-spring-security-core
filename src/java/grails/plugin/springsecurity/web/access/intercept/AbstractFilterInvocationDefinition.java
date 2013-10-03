@@ -30,10 +30,13 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.ConfigAttribute;
+import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.access.vote.AuthenticatedVoter;
 import org.springframework.security.access.vote.RoleVoter;
+import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
 import org.springframework.util.AntPathMatcher;
@@ -45,13 +48,18 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractFilterInvocationDefinition implements FilterInvocationSecurityMetadataSource, InitializingBean {
 
-	protected static final Collection<ConfigAttribute> DENY = Collections.emptyList();
+	protected static final Collection<ConfigAttribute> DENY;
+	static {
+		Collection<ConfigAttribute> list = new ArrayList<ConfigAttribute>(1);
+		list.add(new SecurityConfig("_DENY_"));
+		DENY = Collections.unmodifiableCollection(list);
+	}
 
 	protected boolean rejectIfNoRule;
 	protected RoleVoter roleVoter;
 	protected AuthenticatedVoter authenticatedVoter;
 	protected final List<InterceptedUrl> compiled = Collections.synchronizedList(new ArrayList<InterceptedUrl>());
-
+   protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	protected AntPathMatcher urlMatcher = new AntPathMatcher();
 	protected boolean initialized;
 	protected boolean grails23Plus;
@@ -88,7 +96,8 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 			throw new RuntimeException(e);
 		}
 
-		if (configAttributes == null && rejectIfNoRule) {
+		if ((configAttributes == null || configAttributes.isEmpty()) && rejectIfNoRule) {
+			// return something that cannot be valid; this will cause the voters to abstain or deny
 			return DENY;
 		}
 
@@ -192,14 +201,6 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 		return Collections.unmodifiableCollection(all);
 	}
 
-	/**
-	 * Dependency injection for whether to reject if there's no matching rule.
-	 * @param reject if true, reject access unless there's a pattern for the specified resource
-	 */
-	public void setRejectIfNoRule(final boolean reject) {
-		rejectIfNoRule = reject;
-	}
-
 	protected String calculateUri(final HttpServletRequest request) {
 		String url = request.getRequestURI().substring(request.getContextPath().length());
 		int semicolonIndex = url.indexOf(";");
@@ -297,6 +298,14 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 			}
 		}
 		return Collections.emptyList();
+	}
+
+	/**
+	 * Dependency injection for whether to reject if there's no matching rule.
+	 * @param reject if true, reject access unless there's a pattern for the specified resource
+	 */
+	public void setRejectIfNoRule(final boolean reject) {
+		rejectIfNoRule = reject;
 	}
 
 	public void afterPropertiesSet() {
