@@ -20,9 +20,11 @@ Note that the number of rounds must be between 4 and 31.
 
 The table shows configurable password hashing attributes.
 
+If you want to use a message digest hashing algorithm, see [this Java page|http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
+
 {table}
 *Property* | *Default* | *Description*
-password.algorithm | 'bcrypt' | passwordEncoder algorithm; 'bcrypt' to use bcrypt, 'pbkdf2' to use [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2], or any message digest algorithm that is supported in your JDK; see [this Java page|http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html] for the available algorithms
+password.algorithm | 'bcrypt' | passwordEncoder algorithm; 'bcrypt' to use bcrypt, 'pbkdf2' to use [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2], or any message digest algorithm that is supported in your JDK
 password.encodeHashAsBase64 | @false@ | If @true@, Base64-encode the hashed password.
 password.bcrypt.logrounds | 10 | the number of rekeying rounds to use when using bcrypt
 password.hash.iterations | 10000 | the number of iterations which will be executed on the hashed password/salt.
