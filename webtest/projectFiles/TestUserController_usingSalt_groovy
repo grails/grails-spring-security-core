@@ -2,66 +2,67 @@ package com.testapp
 
 import org.springframework.dao.DataIntegrityViolationException
 
+import org.springframework.security.access.annotation.Secured
+
+@Secured('permitAll')
 class TestUserController {
 
 	def springSecurityService
 
-	static allowedMethods = [delete: 'POST', save: 'POST', update: 'POST']
-
-	def index = {
-		redirect action: list, params: params
+	def index() {
+		redirect action: 'list', params: params
 	}
 
-	def list = {
+	def list() {
 		params.max = Math.min((params.max ?: 10).toInteger(), 100)
 		[personList: TestUser.list(params), personCount: TestUser.count()]
 	}
 
-	def create = {
+	def create() {
 		[person: new TestUser(params), authorityList: TestRole.list()]
 	}
 
-	def save = {
+	def save() {
 
 		def person = new TestUser(params)
 		if (person.save()) {
-			addRoles(person)
-			redirect action: show, id: person.id
+			addRoles person
+			redirect action: 'show', id: person.id
 		}
 		else {
 			render view: 'create', model: [authorityList: TestRole.list(), person: person]
 		}
 	}
 
-	def show = {
+	def show() {
 		def person = TestUser.get(params.id)
 		if (!person) {
 			flash.message = "TestUser not found with id $params.id"
-			redirect action: list
+			redirect action: 'list'
 			return
 		}
 		List roleNames = person.authorities*.authority
 		[person: person, roleNames: roleNames.sort()]
 	}
 
-	def edit = {
+	def edit() {
 
 		def person = TestUser.get(params.id)
 		if (!person) {
 			flash.message = "TestUser not found with id $params.id"
-			redirect action: list
+			redirect action: 'list'
 			return
 		}
 
 		return buildPersonModel(person)
 	}
 
-	def update = {
+	def update() {
 
 		def person = TestUser.get(params.id)
 		if (!person) {
 			flash.message = "TestUser not found with id $params.id"
-			redirect action: edit, id: params.id
+			redirect action: 'edit', id: params.id
 			return
 		}
 
@@ -78,20 +79,20 @@ class TestUserController {
 
 		if (person.save()) {
 			TestUserTestRole.removeAll person
-			addRoles(person)
-			redirect action: show, id: person.id
+			addRoles person
+			redirect action: 'show', id: person.id
 		}
 		else {
 			render view: 'edit', model: buildPersonModel(person)
 		}
 	}
 
-	def delete = {
+	def delete() {
 
 		def person = TestUser.get(params.id)
 		if (person) {
 			def authPrincipal = springSecurityService.principal
-			//avoid self-delete if the logged-in user is an admin
+			// avoid self-delete if the logged-in user is an admin
 			if (!(authPrincipal instanceof String) && authPrincipal.username == person.username) {
 				flash.message = "You can not delete yourself, please login as another admin and try again"
 			}
@@ -103,7 +104,7 @@ class TestUserController {
 				}
 				catch (DataIntegrityViolationException e) {
 					flash.message = "TestUser $params.id could not be deleted"
-					redirect action: show, id: params.id
+					redirect action: 'show', id: params.id
 				}
 			}
 		}
@@ -111,22 +112,22 @@ class TestUserController {
 			flash.message = "TestUser not found with id $params.id"
 		}
 
-		redirect action: list
+		redirect action: 'list'
 	}
 
-	def accountLocked = {
+	def accountLocked() {
 		render 'accountLocked'
 	}
 
-	def accountDisabled = {
+	def accountDisabled() {
 		render 'accountDisabled'
 	}
 
-	def accountExpired = {
+	def accountExpired() {
 		render 'accountExpired'
 	}
 
-	def passwordExpired = {
+	def passwordExpired() {
 		render 'passwordExpired'
 	}
 
@@ -147,6 +148,6 @@ class TestUserController {
 			roleMap[(role)] = userRoleNames.contains(role.authority)
 		}
 
-		return [person: person, roleMap: roleMap]
+		[person: person, roleMap: roleMap]
 	}
 }

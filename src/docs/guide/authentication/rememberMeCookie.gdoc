@@ -1,0 +1,29 @@
+Spring Security supports creating a remember-me cookie so that users are not required to log in with a username and password for each session. This is optional and is usually implemented as a checkbox on the login form; the default @auth.gsp@ supplied by the plugin has this feature.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+rememberMe.cookieName | 'grails_remember_me' | remember-me cookie name; should be unique per application.
+rememberMe. alwaysRemember | @false@ | If @true@, create a remember-me cookie even if no checkbox is on the form.
+rememberMe. tokenValiditySeconds | 1209600 (14 days) | Max age of the cookie in seconds.
+rememberMe.parameter | '_spring_security_remember_me' | Login form remember-me checkbox name.
+rememberMe.key | 'grailsRocks' | Value used to encode cookies; should be unique per application.
+rememberMe.useSecureCookie | none | Whether to use a secure cookie or not; if @true@ a secure cookie is created, if @false@ a non-secure cookie is created, and if not set, a secure cookie is created if the request used HTTPS
+rememberMe.createSessionOnSuccess | @true@ | Whether to create a session of one doesn't exist to ensure that the @Authentication@ is stored for future requests
+rememberMe.persistent | @false@ | If @true@, stores persistent login information in the database.
+rememberMe.persistentToken. domainClassName | none | Domain class used to manage persistent logins.
+rememberMe.persistentToken. seriesLength | 16 | Number of characters in the cookie's @series@ attribute.
+rememberMe.persistentToken. tokenLength | 16 | Number of characters in the cookie's @token@ attribute.
+atr.rememberMeClass | [RememberMeAuthenticationToken|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html] | remember-me authentication class.
+{table}
+
+You are most likely to change these attributes:
+* @rememberMe.cookieName@. Purely aesthetic as most users will not look at their cookies, but you probably want the display name to be application-specific rather than "grails_remember_me".
+* @rememberMe.key@. Part of a salt when the cookie is encrypted. Changing the default makes it harder to execute brute-force attacks.
+* @rememberMe.tokenValiditySeconds@. Default is two weeks; set it to what makes sense for your application.
+
+h4. Persistent Logins
+The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the [Spring Security docs|http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/remember-me.html] for a description of the implementation.
+
+Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.
+
+To use this feature, run the [s2-create-persistent-token|Scripts] script. This will create the domain class, and register its name in @grails-app/conf/Config.groovy@. It will also enable persistent logins by setting @rememberMe.persistent@ to @true@.

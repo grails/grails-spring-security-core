@@ -1,4 +1,4 @@
-/* Copyright 2006-2012 SpringSource.
+/* Copyright 2006-2013 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder
  */
 class TestUserRole implements Serializable {
 
+	private static final long serialVersionUID = 1
+
 	TestUser user
 	TestRole role
 
@@ -40,30 +42,36 @@ class TestUserRole implements Serializable {
 	}
 
 	static TestUserRole get(long userId, long roleId) {
-		find 'from TestUserRole where user.id=:userId and role.id=:roleId',
-			[userId: userId, roleId: roleId]
+		TestUserRole.where {
+			user == TestUser.load(userId) &&
+			role == TestRole.load(roleId)
+		}.get()
 	}
 
 	static TestUserRole create(TestUser user, TestRole role, boolean flush = false) {
 		new TestUserRole(user: user, role: role).save(flush: flush, insert: true)
 	}
 
-	static boolean remove(TestUser user, TestRole role, boolean flush = false) {
-		TestUserRole instance = TestUserRole.findByUserAndRole(user, role)
-		if (!instance) {
-			return false
-		}
+	static boolean remove(TestUser u, TestRole r, boolean flush = false) {
 
-		instance.delete(flush: flush)
-		true
+		int rowCount = TestUserRole.where {
+			user == TestUser.load(u.id) &&
+			role == TestRole.load(r.id)
+		}.deleteAll()
+
+		rowCount > 0
 	}
 
-	static void removeAll(TestUser user) {
-		executeUpdate "DELETE FROM TestUserRole WHERE user=:user", [user: user]
+	static void removeAll(TestUser u) {
+		TestUserRole.where {
+			user == TestUser.load(u.id)
+		}.deleteAll()
 	}
 
-	static void removeAll(TestRole role) {
-		executeUpdate 'DELETE FROM TestUserRole WHERE role=:role', [role: role]
+	static void removeAll(TestRole r) {
+		TestUserRole.where {
+			role == TestRole.load(r.id)
+		}.deleteAll()
 	}
 
 	static mapping = {

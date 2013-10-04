@@ -1,0 +1,27 @@
+You can register a list of voters by implementing the [AccessDecisionVoter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/AccessDecisionVoter.html] interface. The list confirms whether a successful authentication is applicable for the current request.
+
+{table}
+*Property* | *Default Value* | *Meaning*
+voterNames | \['authenticatedVoter', 'roleVoter', 'webExpressionVoter'\] | Bean names of voters.
+{table}
+
+By default a @roleVoter@ bean is registered to ensure users have the required roles for the request, and an @authenticatedVoter@ bean is registered to support @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, and @IS_AUTHENTICATED_ANONYMOUSLY@ tokens.
+
+To customize this list, you define a @voterNames@ attribute with a list of bean names. The beans must be declared either by the plugin, or yourself in resources.groovy or resources.xml. Suppose you have a custom MyAccessDecisionVoter in resources.groovy:
+
+{code}
+beans = {
+   myAccessDecisionVoter(com.foo.MyAccessDecisionVoter) {
+      // attributes
+   }
+}
+{code}
+
+You register it in @grails-app/conf/Config.groovy@ as:
+
+{code}
+grails.plugins.springsecurity.voterNames = [
+   'authenticatedVoter', 'roleVoter',
+   'webExpressionVoter', 'myAccessDecisionVoter'
+]
+{code}

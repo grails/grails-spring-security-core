@@ -1,10 +1,10 @@
 class SecureController {
 
-	def index = {
+	def index() {
 		render 'SECURE'
 	}
 
-	def expression = {
+	def expression() {
 		render 'OK'
 	}
 }

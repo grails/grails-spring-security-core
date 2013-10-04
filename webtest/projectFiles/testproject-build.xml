@@ -21,11 +21,11 @@
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
 
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.InterceptUrlMap
+grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.InterceptUrlMap
 
 // SecureClassAnnotatedController intentionally not secured
 
-grails.plugins.springsecurity.interceptUrlMap = [
+grails.plugin.springsecurity.interceptUrlMap = [
 	'/secureannotated/admineither': ['ROLE_ADMIN', 'ROLE_ADMIN2'],
 	'/secureannotated/expression': ["authentication.name == 'admin1'"],
 	'/secureannotated/**': 'ROLE_ADMIN',
@@ -33,12 +33,13 @@ grails.plugins.springsecurity.interceptUrlMap = [
 ]
 
 // reset settings from other test runs
-grails.plugins.springsecurity.useBasicAuth = false
-grails.plugins.springsecurity.filterChain.chainMap = [:]
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugins.springsecurity.roleHierarchy = ''
-grails.plugins.springsecurity.useSwitchUserFilter = false
-grails.plugins.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.useBasicAuth = false
+grails.plugin.springsecurity.filterChain.chainMap = [:]
+grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
+grails.plugin.springsecurity.roleHierarchy = ''
+grails.plugin.springsecurity.useSwitchUserFilter = false
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.web.url.converter = 'camelcase'
 
 ]]></echo>
 
@@ -53,15 +54,17 @@ grails.testing.patterns = ["Role", "User", "StaticSecurity"]
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Annotation
+grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
 
 // reset settings from other test runs
-grails.plugins.springsecurity.useBasicAuth = false
-grails.plugins.springsecurity.filterChain.chainMap = [:]
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugins.springsecurity.roleHierarchy = ''
-grails.plugins.springsecurity.useSwitchUserFilter = false
-grails.plugins.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.useBasicAuth = false
+grails.plugin.springsecurity.filterChain.chainMap = [:]
+grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
+grails.plugin.springsecurity.roleHierarchy = ''
+grails.plugin.springsecurity.useSwitchUserFilter = false
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.web.url.converter = 'camelcase'
+
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -74,15 +77,17 @@ grails.testing.patterns = ["Role", "User", "AnnotationSecurity"]
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Requestmap
+grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Requestmap
 
 // reset settings from other test runs
-grails.plugins.springsecurity.useBasicAuth = false
-grails.plugins.springsecurity.filterChain.chainMap = [:]
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugins.springsecurity.roleHierarchy = ''
-grails.plugins.springsecurity.useSwitchUserFilter = false
-grails.plugins.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.useBasicAuth = false
+grails.plugin.springsecurity.filterChain.chainMap = [:]
+grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
+grails.plugin.springsecurity.roleHierarchy = ''
+grails.plugin.springsecurity.useSwitchUserFilter = false
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.web.url.converter = 'camelcase'
+
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -95,20 +100,22 @@ grails.testing.patterns = ["Requestmap", "Role", "User", "RequestmapSecurity"]
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Annotation
+grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
 
-grails.plugins.springsecurity.useBasicAuth = true
-grails.plugins.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
-grails.plugins.springsecurity.filterChain.chainMap = [
+grails.plugin.springsecurity.useBasicAuth = true
+grails.plugin.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
+grails.plugin.springsecurity.filterChain.chainMap = [
 	'/secureclassannotated/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
 	'/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
 ]
 
 // reset settings from other test runs
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugins.springsecurity.roleHierarchy = ''
-grails.plugins.springsecurity.useSwitchUserFilter = false
-grails.plugins.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
+grails.plugin.springsecurity.roleHierarchy = ''
+grails.plugin.springsecurity.useSwitchUserFilter = false
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.web.url.converter = 'camelcase'
+
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -121,15 +128,15 @@ grails.testing.patterns = ["Role", "User", "BasicAuthSecurity"]
 		<copy file='grails-app/controllers/com/testapp/TestUserController_usingSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Annotation
+grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
 
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'username'
+grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'
 
-grails.plugins.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
+grails.plugin.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
 
-grails.plugins.springsecurity.useSwitchUserFilter = true
+grails.plugin.springsecurity.useSwitchUserFilter = true
 
-grails.plugins.springsecurity.failureHandler.exceptionMappings = [
+grails.plugin.springsecurity.failureHandler.exceptionMappings = [
 	'org.springframework.security.authentication.LockedException': '/testUser/accountLocked',
 	'org.springframework.security.authentication.DisabledException': '/testUser/accountDisabled',
 	'org.springframework.security.authentication.AccountExpiredException': '/testUser/accountExpired',
@@ -137,9 +144,10 @@ grails.plugins.springsecurity.failureHandler.exceptionMappings = [
 ]
 
 // reset settings from other test runs
-grails.plugins.springsecurity.useBasicAuth = false
-grails.plugins.springsecurity.filterChain.chainMap = [:]
-grails.plugins.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.useBasicAuth = false
+grails.plugin.springsecurity.filterChain.chainMap = [:]
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.web.url.converter = 'hyphenated'
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
@@ -152,12 +160,14 @@ grails.testing.patterns = ["Misc", "Disable", "Taglib"]
 		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
 
 		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugins.springsecurity.securityConfigType = grails.plugins.springsecurity.SecurityConfigType.Annotation
-grails.plugins.springsecurity.password.algorithm = 'bcrypt'
+grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
+grails.plugin.springsecurity.password.algorithm = 'bcrypt'
 
 // reset settings from other test runs
-grails.plugins.springsecurity.useBasicAuth = false
-grails.plugins.springsecurity.filterChain.chainMap = [:]
+grails.plugin.springsecurity.useBasicAuth = false
+grails.plugin.springsecurity.filterChain.chainMap = [:]
+grails.web.url.converter = 'camelcase'
+
 ]]></echo>
 
 		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[

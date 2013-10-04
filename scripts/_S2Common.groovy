@@ -1,4 +1,4 @@
-/* Copyright 2006-2012 SpringSource.
+/* Copyright 2006-2013 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ packageToDir = { String packageName ->
 
 okToWrite = { String dest ->
 
-	def file = new File(dest)
+	File file = new File(dest)
 	if (overwriteAll || !file.exists()) {
 		return true
 	}

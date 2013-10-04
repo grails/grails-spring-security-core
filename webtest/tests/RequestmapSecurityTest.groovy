@@ -2,7 +2,7 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 
 	void testRequestmapSecurity() {
 
-		checkSecurePageVisibleWithoutRequestmap()
+		checkSecurePageNotVisibleWithoutRequestmap()
 
 		createRoles()
 		createUsers()
@@ -85,19 +85,32 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		verifyListSize 2
 	}
 
-	private void checkSecurePageVisibleWithoutRequestmap() {
+	private void checkSecurePageNotVisibleWithoutRequestmap() {
 		get '/secure'
-		assertContentContains 'SECURE'
+		assertContentContains 'was denied as public invocations are not allowed via this interceptor'
 
 		get '/secure/expression'
-		assertContentContains 'OK'
+		assertContentContains 'was denied as public invocations are not allowed via this interceptor'
 	}
 
 	private void createRequestMaps() {
-		get '/testRequestmap'
+		get '/testRequestmap/list?max=100'
 		assertContentContains 'Home'
+		verifyListSize 20 // initial 20 from BootStrap
 
-		verifyListSize 0
+		click 'New TestRequestmap'
+		assertContentContains 'Create TestRequestmap'
+
+		form {
+			url = '/secure'
+			configAttribute = 'ROLE_ADMIN'
+			clickButton 'Create'
+		}
+
+		assertContentContains 'Show TestRequestmap'
+
+		get '/testRequestmap/list?max=100'
+		verifyListSize 21
 
 		click 'New TestRequestmap'
 		assertContentContains 'Create TestRequestmap'
@@ -109,9 +122,9 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		}
 
 		assertContentContains 'Show TestRequestmap'
-		click 'TestRequestmap List'
 
-		verifyListSize 1
+		get '/testRequestmap/list?max=100'
+		verifyListSize 22
 
 		click 'New TestRequestmap'
 		assertContentContains 'Create TestRequestmap'
@@ -123,9 +136,9 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		}
 
 		assertContentContains 'Show TestRequestmap'
-		click 'TestRequestmap List'
 
-		verifyListSize 2
+		get '/testRequestmap/list?max=100'
+		verifyListSize 23
 	}
 
 	private void checkSecurePageNotVisibleWithRequestmap() {
@@ -134,22 +147,19 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 
 		get '/secure/expression'
 		assertContentContains 'Please Login'
+
+		get '/secure/index.xml'
+		assertContentContains 'Please Login'
+
+		get '/secure/index;jsessionid=5514B068198CC7DBF372713326E14C12'
+		assertContentContains 'Please Login'
 	}
 
 	private void loginAndCheckAllowed() {
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
-		// login as admin1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'admin1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'admin1', 'p4ssw0rd'
 
 		// Check that with a requestmap, /secure is accessible after login
 		get '/secure'
@@ -159,19 +169,10 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		get '/secure/expression'
 		assertContentContains "Sorry, you're not authorized to view this page."
 
-		// login as user1
-		get '/logout'
+		logout()
 		assertContentContains 'Welcome to Grails'
 
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		get '/secure'
 		assertContentContains "Sorry, you're not authorized to view this page."

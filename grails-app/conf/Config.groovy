@@ -1,12 +1,12 @@
 // for testing only, not included in plugin zip
 
-import org.springframework.security.authentication.LockedException
-import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.CredentialsExpiredException
+import org.springframework.security.authentication.DisabledException
+import org.springframework.security.authentication.LockedException
 
 grails {
-	plugins {
+	plugin {
 		springsecurity {
 			userLookup {
 				userDomainClassName = 'test.TestUser'
@@ -21,6 +21,7 @@ grails {
 				className = 'test.TestRequestmap'
 				urlField = 'urlPattern'
 				configAttributeField = 'rolePattern'
+				httpMethodField = 'httpMethod'
 			}
 
 			authority {
@@ -49,3 +50,6 @@ grails {
 grails.doc.authors = 'Burt Beckwith, Beverley Talbott'
 grails.doc.license = 'Apache License 2.0'
 grails.doc.title = 'Spring Security Core Plugin'
+//grails.doc.subtitle = ''
+//grails.doc.copyright = ''
+//grails.doc.footer = ''

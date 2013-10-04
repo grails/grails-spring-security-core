@@ -1,14 +1,43 @@
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
-
 class MiscTest extends AbstractSecurityWebTest {
 
-	void testSaltedPassword() {
+	void testAll() {
+
 		createRoles()
 		createUsers()
 
+		_testSaltedPassword()
+		tearDown()
+
+		_testSwitchUser()
+		tearDown()
+
+		_testHierarchicalRoles()
+		tearDown()
+
+		_testTaglibsUnauthenticated()
+		tearDown()
+
+		_testTaglibsUser()
+		tearDown()
+
+		_testTaglibsAdmin()
+		tearDown()
+
+		_testMetaclassMethodsUnauthenticated()
+		tearDown()
+
+		_testMetaclassMethodsAuthenticated()
+		tearDown()
+
+		_testHypenated()
+	}
+
+	void _testSaltedPassword() {
+
 		String encryptedPassword = getContent('/hack/getUserProperty?user=user1&propName=password', true)
 
-		def passwordEncoder = new MessageDigestPasswordEncoder('SHA-256')
+		def passwordEncoder = createSha256Encoder()
+
 		String notSalted = passwordEncoder.encodePassword('p4ssw0rd', null)
 		String salted = passwordEncoder.encodePassword('p4ssw0rd', 'user1')
 
@@ -16,100 +45,19 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertFalse notSalted == encryptedPassword
 	}
 
-	private void createRoles() {
+	void _testSwitchUser() {
 
-		// admin
-		get '/testRole'
-		verifyListSize 0
-
-		click 'New TestRole'
-		assertContentContains 'Create TestRole'
-
-		form {
-			authority = 'ROLE_ADMIN'
-		}
-		clickButton 'Create'
-
-		assertContentContains 'Show TestRole'
-		click 'TestRole List'
-		verifyListSize 1
-
-		// user
-		get '/testRole'
-		click 'New TestRole'
-		assertContentContains 'Create TestRole'
-
-		form {
-			authority = 'ROLE_USER'
-		}
-		clickButton 'Create'
-
-		assertContentContains 'Show TestRole'
-		click 'TestRole List'
-		verifyListSize 2
-	}
-
-	private void createUsers() {
-
-		// user1
-		get '/testUser'
-		verifyListSize 0
-
-		click 'New TestUser'
-		assertContentContains 'Create TestUser'
-
-		form {
-			username = 'user1'
-			password = 'p4ssw0rd'
-			enabled = true
-			ROLE_ADMIN = true
-		}
-		clickButton 'Create'
-
-		assertContentContains 'Show TestUser'
-		click 'TestUser List'
-		verifyListSize 1
-
-		// user2
-		get '/testUser'
-		click 'New TestUser'
-		assertContentContains 'Create TestUser'
-
-		form {
-			username = 'user2'
-			password = 'p4ssw0rd2'
-			enabled = true
-			ROLE_USER = true
-		}
-		clickButton 'Create'
-
-		assertContentContains 'Show TestUser'
-		click 'TestUser List'
-		verifyListSize 2
-	}
-
-	void testSwitchUser() {
-
-		// login as user1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		// verify logged in
-		get '/secureAnnotated'
+		get '/secure-annotated'
 		assertContentContains 'you have ROLE_ADMIN'
 
 		String auth = getSessionValue('SPRING_SECURITY_CONTEXT', sessionId)
 		assertTrue auth.contains('Username:user1')
 		assertTrue auth.contains('Authenticated:true')
 		assertTrue auth.contains('ROLE_ADMIN')
-		assertFalse auth.contains('ROLE_USER')
+		assertTrue auth.contains('ROLE_USER') // new, added since inferred from role hierarchy
 		assertFalse auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
 
 		// switch
@@ -124,11 +72,11 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertTrue auth.contains('ROLE_USER')
 		assertTrue auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
 
-		get '/secureAnnotated/userAction'
+		get '/secure-annotated/user-action'
 		assertContentContains 'you have ROLE_USER'
 
 		// verify not logged in as admin
-		get '/secureAnnotated/adminEither'
+		get '/secure-annotated/admin-either'
 		assertContentContains "Sorry, you're not authorized to view this page."
 
 		// switch back
@@ -136,46 +84,37 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertContentContains 'Welcome to Grails'
 
 		// verify logged in as admin
-		get '/secureAnnotated/adminEither'
+		get '/secure-annotated/admin-either'
 		assertContentContains 'you have ROLE_ADMIN'
 
 		auth = getSessionValue('SPRING_SECURITY_CONTEXT', sessionId)
 		assertTrue auth.contains('Username:user1')
 		assertTrue auth.contains('Authenticated:true')
 		assertTrue auth.contains('ROLE_ADMIN')
-		assertFalse auth.contains('ROLE_USER')
+		assertTrue auth.contains('ROLE_USER')
 		assertFalse auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
 	}
 
-	void testHierarchicalRoles() {
+	void _testHierarchicalRoles() {
 
-		// login as user1
-		get '/login/auth'
-		assertContentContains 'Please Login'
-
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
+		login 'user1', 'p4ssw0rd'
 
 		// verify logged in
-		get '/secureAnnotated'
+		get '/secure-annotated'
 		assertContentContains 'you have ROLE_ADMIN'
 
 		String auth = getSessionValue('SPRING_SECURITY_CONTEXT', sessionId)
 		assertTrue auth.contains('Authenticated:true')
-		assertFalse auth.contains('ROLE_USER')
+		assertTrue auth.contains('ROLE_USER')
 
 		// now get an action that's ROLE_USER only
-		get '/secureAnnotated/userAction'
+		get '/secure-annotated/user-action'
 		assertContentContains 'you have ROLE_USER'
 	}
 
-	void testTaglibsUnauthenticated() {
+	void _testTaglibsUnauthenticated() {
 
-		get '/tagLibTest/test'
+		get '/tag-lib-test/test'
 
 		assertContentDoesNotContain 'user and admin'
 		assertContentDoesNotContain 'user and admin and foo'
@@ -195,19 +134,11 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertContentContains 'access with role admin: false'
 	}
 
-	void testTaglibsUser() {
+	void _testTaglibsUser() {
 
-		get '/login/auth'
-		assertContentContains 'Please Login'
+		login 'user2', 'p4ssw0rd2'
 
-		form {
-			j_username = 'user2'
-			j_password = 'p4ssw0rd2'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
-
-		get '/tagLibTest/test'
+		get '/tag-lib-test/test'
 		assertContentDoesNotContain 'user and admin'
 		assertContentDoesNotContain 'user and admin and foo'
 		assertContentDoesNotContain 'not user and not admin'
@@ -232,19 +163,11 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertContentContains 'Cannot access /secureAnnotated'
 	}
 
-	void testTaglibsAdmin() {
+	void _testTaglibsAdmin() {
 
-		get '/login/auth'
-		assertContentContains 'Please Login'
+		login 'user1', 'p4ssw0rd'
 
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
-
-		get '/tagLibTest/test'
+		get '/tag-lib-test/test'
 		assertContentContains 'user and admin'
 		assertContentDoesNotContain 'user and admin and foo'
 		assertContentDoesNotContain 'not user and not admin'
@@ -270,35 +193,119 @@ class MiscTest extends AbstractSecurityWebTest {
 		assertContentDoesNotContain 'Cannot access /secureAnnotated'
 	}
 
-	void testMetaclassMethodsUnauthenticated() {
-		get '/tagLibTest/testMetaclassMethods'
-		assertContentContains 'getPrincipal: anonymousUser'
-		assertContentContains 'principal: anonymousUser'
+	void _testMetaclassMethodsUnauthenticated() {
+		get '/tag-lib-test/testMetaclassMethods'
+		assertContentContains 'getPrincipal: org.springframework.security.core.userdetails.User'
+		assertContentContains 'Username: __grails.anonymous.user__'
+		assertContentContains 'Granted Authorities: ROLE_ANONYMOUS'
 		assertContentContains 'isLoggedIn: false'
 		assertContentContains 'loggedIn: false'
 		assertContentContains 'getAuthenticatedUser: null'
 		assertContentContains 'authenticatedUser: null'
 	}
 
-	void testMetaclassMethodsAuthenticated() {
+	void _testMetaclassMethodsAuthenticated() {
 
-		get '/login/auth'
-		assertContentContains 'Please Login'
+		login 'user1', 'p4ssw0rd'
 
-		form {
-			j_username = 'user1'
-			j_password = 'p4ssw0rd'
-			_spring_security_remember_me = true
-			clickButton 'Login'
-		}
-
-		get '/tagLibTest/testMetaclassMethods'
-		assertContentContains 'getPrincipal: org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser'
-		assertContentContains 'principal: org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser'
+		get '/tag-lib-test/testMetaclassMethods'
+		assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
+		assertContentContains 'principal: grails.plugin.springsecurity.userdetails.GrailsUser'
 		assertContentContains 'Username: user1'
 		assertContentContains 'isLoggedIn: true'
 		assertContentContains 'loggedIn: true'
 		assertContentContains 'getAuthenticatedUser: com.testapp.TestUser : '
 		assertContentContains 'authenticatedUser: com.testapp.TestUser : '
+	}
+
+	void _testHypenated() {
+
+		get '/foo-bar'
+		assertContentContains 'Please Login'
+		get '/foo-bar/index'
+		assertContentContains 'Please Login'
+		get '/foo-bar/bar-foo'
+		assertContentContains 'Please Login'
+
+		login 'user1', 'p4ssw0rd'
+
+		get '/foo-bar'
+		assertContentContains 'INDEX'
+		get '/foo-bar/index'
+		assertContentContains 'INDEX'
+		get '/foo-bar/bar-foo'
+		assertContentContains 'barFoo'
+	}
+
+	private void createRoles() {
+
+		// admin
+		get '/test-role'
+		verifyListSize 0
+
+		click 'New TestRole'
+		assertContentContains 'Create TestRole'
+
+		form {
+			authority = 'ROLE_ADMIN'
+		}
+		clickButton 'Create'
+
+		assertContentContains 'Show TestRole'
+		click 'TestRole List'
+		verifyListSize 1
+
+		// user
+		get '/test-role'
+		click 'New TestRole'
+		assertContentContains 'Create TestRole'
+
+		form {
+			authority = 'ROLE_USER'
+		}
+		clickButton 'Create'
+
+		assertContentContains 'Show TestRole'
+		click 'TestRole List'
+		verifyListSize 2
+	}
+
+	private void createUsers() {
+
+		// user1
+		get '/test-user'
+		verifyListSize 0
+
+		click 'New TestUser'
+		assertContentContains 'Create TestUser'
+
+		form {
+			username = 'user1'
+			password = 'p4ssw0rd'
+			enabled = true
+			ROLE_ADMIN = true
+		}
+		clickButton 'Create'
+
+		assertContentContains 'Show TestUser'
+		click 'TestUser List'
+		verifyListSize 1
+
+		// user2
+		get '/test-user'
+		click 'New TestUser'
+		assertContentContains 'Create TestUser'
+
+		form {
+			username = 'user2'
+			password = 'p4ssw0rd2'
+			enabled = true
+			ROLE_USER = true
+		}
+		clickButton 'Create'
+
+		assertContentContains 'Show TestUser'
+		click 'TestUser List'
+		verifyListSize 2
 	}
 }

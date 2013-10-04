@@ -1,4 +1,4 @@
-/* Copyright 2006-2012 SpringSource.
+/* Copyright 2006-2013 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groovy")
+includeTargets << new File(springSecurityCorePluginDir, 'scripts/_S2Common.groovy')
 
 fullClassName = null
 
@@ -61,16 +61,19 @@ private boolean configure() {
 private void createDomainClass() {
 	String dir = packageToDir(templateAttributes.packageName)
 	generateFile "$templateDir/PersistentLogin.groovy.template",
-		"$appDir/domain/${dir}${templateAttributes.className}.groovy"
+	             "$appDir/domain/${dir}${templateAttributes.className}.groovy"
 }
 
 private void updateConfig() {
 	def configFile = new File(appDir, 'conf/Config.groovy')
-	if (configFile.exists()) {
-		configFile.withWriterAppend {
-			it.writeLine "grails.plugins.springsecurity.rememberMe.persistent = true"
-			it.writeLine "grails.plugins.springsecurity.rememberMe.persistentToken.domainClassName = '$fullClassName'"
-		}
+	if (!configFile.exists()) {
+		return
+	}
+
+	configFile.withWriterAppend { BufferedWriter writer ->
+		writer.writeLine "grails.plugin.springsecurity.rememberMe.persistent = true"
+		writer.writeLine "grails.plugin.springsecurity.rememberMe.persistentToken.domainClassName = '$fullClassName'"
+		writer.newLine()
 	}
 }
 

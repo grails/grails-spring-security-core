@@ -1,4 +1,4 @@
-/* Copyright 2006-2012 SpringSource.
+/* Copyright 2006-2013 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,9 +13,8 @@
  * limitations under the License.
  */
 import grails.util.GrailsNameUtils
-import grails.util.Metadata
 
-includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groovy")
+includeTargets << new File(springSecurityCorePluginDir, 'scripts/_S2Common.groovy')
 
 USAGE = """
 Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name]
@@ -39,13 +38,13 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	if (!configure()) {
 		return 1
 	}
+
 	createDomains()
-	copyControllersAndViews()
 	updateConfig()
 
 	printMessage """
 *******************************************************
-* Created domain classes, controllers, and GSPs. Your *
+* Created security-related domain classes. Your       *
 * grails-app/conf/Config.groovy has been updated with *
 * the class names of the configured domain classes;   *
 * please verify that the values are correct.          *
@@ -74,47 +73,6 @@ private boolean configure() {
 	                      roleClassProperty: GrailsNameUtils.getPropertyName(roleClassName),
 	                      requestmapClassName: requestmapClassName]
 
-	if (Metadata.current.getGrailsVersion().startsWith('1.2')) {
-		templateAttributes.dependencyInjections = '''\
-	transient springSecurityService
-	transient grailsApplication
-	transient sessionFactory
-'''
-		templateAttributes.dirtyMethods = '''
-
-	private boolean isDirty(String fieldName) {
-		def session = sessionFactory.currentSession
-		def entry = findEntityEntry(session)
-		if (!entry) {
-			return false
-		}
-
-		Object[] values = entry.persister.getPropertyValues(this, session.entityMode)
-		int[] dirtyProperties = entry.persister.findDirty(values, entry.loadedState, this, session)
-		int fieldIndex = entry.persister.propertyNames.findIndexOf { fieldName == it }
-		return fieldIndex in dirtyProperties
-	}
-
-	private findEntityEntry(session) {
-		def entry = session.persistenceContext.getEntry(this)
-		if (!entry) {
-			return null
-		}
-
-		if (!entry.requiresDirtyCheck(this) && entry.loadedState) {
-			return null
-		}
-
-		entry
-	}'''
-	}
-	else {
-		templateAttributes.dependencyInjections = '''\
-	transient springSecurityService
-'''
-		templateAttributes.dirtyMethods = ''
-	}
-
 	true
 }
 
@@ -129,28 +87,34 @@ private void createDomains() {
 	}
 }
 
-private void copyControllersAndViews() {
-	ant.mkdir dir: "$appDir/views/login"
-	copyFile "$templateDir/auth.gsp.template", "$appDir/views/login/auth.gsp"
-	copyFile "$templateDir/denied.gsp.template", "$appDir/views/login/denied.gsp"
-	copyFile "$templateDir/LoginController.groovy.template", "$appDir/controllers/LoginController.groovy"
-	copyFile "$templateDir/LogoutController.groovy.template", "$appDir/controllers/LogoutController.groovy"
-}
-
 private void updateConfig() {
 
 	def configFile = new File(appDir, 'conf/Config.groovy')
-	if (configFile.exists()) {
-		configFile.withWriterAppend {
-			it.writeLine '\n// Added by the Spring Security Core plugin:'
-			it.writeLine "grails.plugins.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
-			it.writeLine "grails.plugins.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
-			it.writeLine "grails.plugins.springsecurity.authority.className = '${packageName}.$roleClassName'"
-			if (requestmapClassName) {
-				it.writeLine "grails.plugins.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
-				it.writeLine "grails.plugins.springsecurity.securityConfigType = 'Requestmap'"
-			}
+	if (!configFile.exists()) {
+		return
+	}
+
+	configFile.withWriterAppend { BufferedWriter writer ->
+		writer.newLine()
+		writer.newLine()
+		writer.writeLine '// Added by the Spring Security Core plugin:'
+		writer.writeLine "grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
+		writer.writeLine "grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
+		writer.writeLine "grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'"
+		if (requestmapClassName) {
+			writer.writeLine "grails.plugin.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
+			writer.writeLine "grails.plugin.springsecurity.securityConfigType = 'Requestmap'"
 		}
+		writer.writeLine 'grails.plugin.springsecurity.controllerAnnotations.staticRules = ['
+		writer.writeLine "\t'/':                              ['permitAll'],"
+		writer.writeLine "\t'/index.gsp':                     ['permitAll'],"
+		writer.writeLine "\t'/**/js/**':                      ['permitAll'],"
+		writer.writeLine "\t'/**/css/**':                     ['permitAll'],"
+		writer.writeLine "\t'/**/images/**':                  ['permitAll'],"
+		writer.writeLine "\t'/**/favicon.ico':                ['permitAll']"
+
+		writer.writeLine ']'
+		writer.newLine()
 	}
 }
 

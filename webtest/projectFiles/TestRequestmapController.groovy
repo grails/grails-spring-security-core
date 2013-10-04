@@ -2,25 +2,28 @@ package com.testapp
 
 import org.springframework.dao.DataIntegrityViolationException
 
+import org.springframework.security.access.annotation.Secured
+
+@Secured('permitAll')
 class TestRequestmapController {
-
-	static allowedMethods = [save: 'POST', update: 'POST', delete: 'POST']
-
-	static defaultAction = 'list'
 
 	def springSecurityService
 
-	def list = {
+	def index() {
+		redirect action: 'list', params: params
+	}
+
+	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
 		[testRequestmapInstanceList: TestRequestmap.list(params),
 		 testRequestmapInstanceTotal: TestRequestmap.count()]
 	}
 
-	def create = {
+	def create() {
 		[testRequestmapInstance: new TestRequestmap(params)]
 	}
 
-	def save = {
+	def save() {
 		def testRequestmapInstance = new TestRequestmap(params)
 		if (!testRequestmapInstance.save(flush: true)) {
 			render view: 'create', model: [testRequestmapInstance: testRequestmapInstance]
@@ -29,36 +32,36 @@ class TestRequestmapController {
 
 		springSecurityService.clearCachedRequestmaps()
 		flash.message = "${message(code: 'default.created.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), testRequestmapInstance.id])}"
-		redirect action: show, id: testRequestmapInstance.id
+		redirect action: 'show', id: testRequestmapInstance.id
 	}
 
-	def show = {
+	def show() {
 		def testRequestmapInstance = TestRequestmap.get(params.id)
 		if (!testRequestmapInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: list
+			redirect action: 'list'
 			return
 		}
 
 		[testRequestmapInstance: testRequestmapInstance]
 	}
 
-	def edit = {
+	def edit() {
 		def testRequestmapInstance = TestRequestmap.get(params.id)
 		if (!testRequestmapInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: list
+			redirect action: 'list'
 			return
 		}
 
 		[testRequestmapInstance: testRequestmapInstance]
 	}
 
-	def update = {
+	def update() {
 		def testRequestmapInstance = TestRequestmap.get(params.id)
 		if (!testRequestmapInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: list
+			redirect action: 'list'
 			return
 		}
 
@@ -77,18 +80,18 @@ class TestRequestmapController {
 		if (!testRequestmapInstance.hasErrors() && testRequestmapInstance.save(flush: true)) {
 			springSecurityService.clearCachedRequestmaps()
 			flash.message = "${message(code: 'default.updated.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), testRequestmapInstance.id])}"
-			redirect action: show, id: testRequestmapInstance.id
+			redirect action: 'show', id: testRequestmapInstance.id
 		}
 		else {
 			render view: 'edit', model: [testRequestmapInstance: testRequestmapInstance]
 		}
 	}
 
-	def delete = {
+	def delete() {
 		def testRequestmapInstance = TestRequestmap.get(params.id)
 		if (!testRequestmapInstance) {
 			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: list
+			redirect action: 'list'
 			return
 		}
 
@@ -96,11 +99,11 @@ class TestRequestmapController {
 			testRequestmapInstance.delete(flush: true)
 			springSecurityService.clearCachedRequestmaps()
 			flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: list
+			redirect action: 'list'
 		}
 		catch (DataIntegrityViolationException e) {
 			flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: show, id: params.id
+			redirect action: 'show', id: params.id
 		}
 	}
 }

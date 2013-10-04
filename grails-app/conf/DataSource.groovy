@@ -5,10 +5,13 @@ dataSource {
 	password = ''
 	dbCreate = 'update'
 	url = 'jdbc:h2:mem:testDb'
+	logSql = true
 }
 
 hibernate {
 	cache.use_second_level_cache = false
 	cache.use_query_cache = false
 	cache.provider_class = 'org.hibernate.cache.EhCacheProvider'
+	format_sql = true
+	use_sql_comments = true
 }

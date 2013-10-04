@@ -1,0 +1,277 @@
+h4. 1. Create your Grails application.
+
+{code}
+$ grails create-app bookstore
+$ cd bookstore
+{code}
+h4. 2. Install the plugin by adding it to BuildConfig.groovy
+{code}
+plugins {
+   compile ':spring-security-core:2.0'
+}
+{code}
+h4. 3. Create the User and Role domain classes.
+{code}
+$ grails s2-quickstart com.testapp User Role
+{code}
+
+You can choose your names for your domain classes and package; these are just examples.
+
+{note}
+Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "User" or "Group", make sure they are not reserved keywords in your database.
+{note}
+
+The script creates this User class:
+
+{code}
+package com.testapp
+
+package test
+
+class User {
+
+   transient springSecurityService
+
+   String username
+   String password
+   boolean enabled = true
+   boolean accountExpired
+   boolean accountLocked
+   boolean passwordExpired
+
+   static constraints = {
+      username blank: false, unique: true
+      password blank: false
+   }
+
+   static mapping = {
+      password column: '`password`'
+   }
+
+   Set<Role> getAuthorities() {
+      UserRole.findAllByUser(this).collect { it.role } as Set
+   }
+
+   def beforeInsert() {
+      encodePassword()
+   }
+
+   def beforeUpdate() {
+      if (isDirty('password')) {
+         encodePassword()
+      }
+   }
+
+   protected void encodePassword() {
+      password = springSecurityService.encodePassword(password)
+   }
+}
+{code}
+
+{note}
+Earlier versions of the plugin didn't include password hashing logic in the domain class, but it makes the code a lot cleaner.
+{note}
+
+and this Role class:
+
+{code}
+package com.testapp
+
+class Role {
+
+   String authority
+
+   static mapping = {
+      cache true
+   }
+
+   static constraints = {
+      authority blank: false, unique: true
+   }
+}
+{code}
+
+and a domain class that maps the many-to-many join class, @UserRole@:
+
+{code}
+package com.testapp
+
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+class UserRole implements Serializable {
+
+   private static final long serialVersionUID = 1
+
+   User user
+   Role role
+
+   boolean equals(other) {
+      if (!(other instanceof UserRole)) {
+         return false
+      }
+
+      other.user?.id == user?.id &&
+         other.role?.id == role?.id
+   }
+
+   int hashCode() {
+      def builder = new HashCodeBuilder()
+      if (user) builder.append(user.id)
+      if (role) builder.append(role.id)
+      builder.toHashCode()
+   }
+
+   static UserRole get(long userId, long roleId) {
+      UserRole.where {
+         user == User.load(userId) &&
+         role == Role.load(roleId)
+      }.get()
+   }
+
+   static UserRole create(User user, Role role, boolean flush = false) {
+      new UserRole(user: user, role: role).save(flush: flush, insert: true)
+   }
+
+   static boolean remove(User u, Role r, boolean flush = false) {
+      int rowCount = UserRole.where {
+         user == User.load(u.id) &&
+         role == Role.load(r.id)
+      }.deleteAll()
+
+      rowCount > 0
+   }
+
+   static void removeAll(User u) {
+      UserRole.where {
+         user == User.load(u.id)
+      }.deleteAll()
+   }
+
+   static void removeAll(Role r) {
+      UserRole.where {
+         role == Role.load(r.id)
+      }.deleteAll()
+   }
+
+   static mapping = {
+      id composite: ['role', 'user']
+      version false
+   }
+}
+{code}
+
+The script has edited @grails-app/conf/Config.groovy@ and added the configuration for your domain classes. Make sure that the changes are correct.
+
+{note}
+These generated files are not part of the plugin - these are your application files. They are examples to get you started, so you can edit them as you please. They contain the minimum needed for the plugin.
+{note}
+
+The plugin has no support for CRUD actions and GSPs for your domain classes; the @spring-security-ui@ plugin supplies a UI for those. So for now you will create roles and users in @grails-app/conf/BootStrap.groovy@. (See step 7.)
+
+h4. 4. Create a controller that will be restricted by role.
+{code}
+$ grails create-controller com.testapp.Secure
+{code}
+
+This command creates @grails-app/controllers/com/testapp/ SecureController.groovy@. Add some output so you can verify that things are working:
+
+{code}
+package com.testapp
+
+class SecureController {
+   def index() {
+      render 'Secure access only'
+   }
+}
+{code}
+
+h4. 5. Start the server.
+{code}
+$ grails run-app
+{code}
+
+h4. 6. Before you secure the page, navigate to [http://localhost:8080/bookstore/secure|http://localhost:8080/bookstore/secure] to verify that you can see the page without being logged in.
+
+h4. 7. Shut down the app (using CTRL-C) and edit grails-app/conf/BootStrap.groovy to add the security objects that you need.
+
+{code}
+import com.testapp.Role
+import com.testapp.User
+import com.testapp.UserRole
+
+class BootStrap {
+
+   def init = { servletContext ->
+
+      def adminRole = new Role(authority: 'ROLE_ADMIN').save(flush: true)
+      def userRole = new Role(authority: 'ROLE_USER').save(flush: true)
+
+      def testUser = new User(username: 'me', password: 'password')
+      testUser.save(flush: true)
+
+      UserRole.create testUser, adminRole, true
+
+      assert User.count() == 1
+      assert Role.count() == 2
+      assert UserRole.count() == 1
+   }
+}
+{code}
+
+Some things to note about the preceding @BootStrap.groovy@:
+* The example does not use a traditional GORM many-to-many mapping for the User<->Role relationship; instead you are mapping the join table with the @UserRole@ class. This performance optimization helps significantly when many users have one or more common roles.
+* We explicitly flushed the creates because @BootStrap@ does not run in a transaction or OpenSessionInView.
+
+h4. 8. Edit grails-app/controllers/SecureController.groovy to import the annotation class and apply the annotation to restrict access.
+
+{code}
+package com.testapp
+
+import grails.plugin.springsecurity.annotation.Secured
+
+class SecureController {
+
+   @Secured(['ROLE_ADMIN'])
+   def index() {
+      render 'Secure access only'
+   }
+}
+{code}
+
+or
+
+{code}
+package com.testapp
+
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured(['ROLE_ADMIN'])
+class SecureController {
+   def index() {
+      render 'Secure access only'
+   }
+}
+{code}
+
+You can annotate the entire controller or individual actions. In this case you have only one action, so you can do either.
+
+h4. 9. Run grails run-app again and navigate to [http://localhost:8080/bookstore/secure|http://localhost:8080/bookstore/secure].
+
+This time, you should be presented with the login page. Log in with the username and password you used for the test user, and you should again be able to see the secure page.
+
+h4. 10. Test the Remember Me functionality.
+Check the checkbox, and once you've tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a is cookie stored, you should not need to log in again. Logout at any time by navigating to [http://localhost:8080/bookstore/logout|http://localhost:8080/bookstore/logout].
+
+h4. 11. Optionally, create a CRUD UI to work with users and roles.
+
+h5. Run grails generate-all for the domain classes:
+
+{code}
+$ grails generate-all com.testapp.User
+{code}
+
+{code}
+$ grails generate-all com.testapp.Role
+{code}
+
+Since the User domain class handles password hashing, there are no changes required in the generated controllers.
