@@ -42,7 +42,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 {code}
 
-This is needed when using annotations; if you use the @grails.plugins.springsecurity.interceptUrlMap@ map in @Config.groovy@ you'll need to add these URLs too,
+This is needed when using annotations; if you use the @grails.plugin.springsecurity.interceptUrlMap@ map in @Config.groovy@ you'll need to add these URLs too,
 and likewise when using @Requestmap@ instances.
 
 In addition, when you enable the switch-user feature, you'll have to specify access rules for the associated URLs, e.g.

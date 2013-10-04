@@ -6,7 +6,7 @@ h4. dao.reflectionSaltSourceProperty
 Set the @dao.reflectionSaltSourceProperty@ configuration property:
 
 {code}
-grails.plugins.springsecurity.dao.reflectionSaltSourceProperty = 'username'
+grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'
 {code}
 
 This property belongs to the @UserDetails@ class. By default it is an instance of @grails.plugin.springsecurity.userdetails.GrailsUser@, which extends the standard Spring Security [User class|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html] and not your 'person' domain class. This limits the available fields unless you use a [custom @UserDetailsService@|guide:userDetailsService].

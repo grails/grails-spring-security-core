@@ -5,7 +5,7 @@ You can use expressions with any of the previously described approaches to secur
 {code}
 package com.yourcompany.yourapp
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class SecureController {
 
@@ -36,7 +36,7 @@ new Requestmap(url: "/secure/someOtherAction",
 and the corresponding static mappings would be
 
 {code}
-grails.plugins.springsecurity.interceptUrlMap = [
+grails.plugin.springsecurity.interceptUrlMap = [
    '/secure/someAction':      ["hasRole('ROLE_ADMIN'"],
    '/secure/someOtherAction': ["authentication.name == 'ralph'"]
 ]
