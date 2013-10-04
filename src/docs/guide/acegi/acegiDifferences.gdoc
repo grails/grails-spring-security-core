@@ -39,7 +39,7 @@ h4. Script Differences
 
 To initialize the Acegi plugin, you run @create-auth-domains@. This initialization creates @grails-app/conf/SecurityConfig.groovy@ to allow configuration customization; creates the User, Role, and Requestmap domain classes; and creates the Login and Logout controllers and views. Another Acegi script, @generate-manager@, creates CRUD pages for the domain classes. (The earlier version of Grails did not scaffold many-to-many relationships well, so these GSPs were necessary.)In addition, a @generate-registration@ script installs a basic user registration controller.
 
-The Spring Security plugin uses only one script, [s2-quickstart|Scripts]. It is similar to @create-auth-domains@ because it creates domain classes and login and logout bcontrollers, but it appends files to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There is no equivalent to @generate-manager@ or @generate-registration@ because an optional UI plugin  generates domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages, you can use the standard Grails @generate-all@ script. Various sections of this documentation discuss required changes to the generated source files, for example, encrypting passwords before saving or updating a user.
+The Spring Security plugin uses only one script, [s2-quickstart|Scripts]. It is similar to @create-auth-domains@ because it creates domain classes and login and logout bcontrollers, but it appends files to @grails-app/conf/Config.groovy@ instead of creating a standalone configuration file. There is no equivalent to @generate-manager@ or @generate-registration@ because an optional UI plugin  generates domain class management screens, an admin console, and forgot password and registration workflows. If you want to create your own CRUD pages, you can use the standard Grails @generate-all@ script. Various sections of this documentation discuss required changes to the generated source files, for example, hashing passwords before saving or updating a user.
 
 h4. UserDetails Differences
 
@@ -62,6 +62,6 @@ def userDetails = springSecurityService.principal
 person = Person.get(userDetails.id)
 {code}
 
-The preceding approach works because the @UserDetails@ implementation is an instance of @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@, which extends the standard Spring Security [User|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
+The preceding approach works because the @UserDetails@ implementation is an instance of @grails.plugin.springsecurity.userdetails.GrailsUser@, which extends the standard Spring Security [User|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html] and adds a @getId()@ method.
 
-You can further extend this class if you want to store more data along with the authentication to avoid database access. See [Custom UserDetailsService|guide:11 Custom UserDetailsService].
+You can further extend this class if you want to store more data along with the authentication to avoid database access. See [Custom UserDetailsService|guide:userDetailsService].

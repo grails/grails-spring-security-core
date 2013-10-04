@@ -22,7 +22,7 @@ beans = {
 You register it in @grails-app/conf/Config.groovy@ as:
 
 {code}
-grails.plugins.springsecurity.logout.handlerNames = [
+grails.plugin.springsecurity.logout.handlerNames = [
    'rememberMeServices', 'securityContextLogoutHandler', 'myLogoutHandler'
 ]
 {code}

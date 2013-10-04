@@ -3,18 +3,18 @@ With this approach you use the @Requestmap@ domain class to store mapping entrie
 To use @Requestmap@ entries, specify @securityConfigType="Requestmap"@:
 
 {code}
-grails.plugins.springsecurity.securityConfigType = "Requestmap"
+grails.plugin.springsecurity.securityConfigType = "Requestmap"
 {code}
 
 You create @Requestmap@ entries as you create entries in any Grails domain class:
 
 {code}
-new Requestmap(url: '/js/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
-new Requestmap(url: '/css/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
-new Requestmap(url: '/images/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
-new Requestmap(url: '/login/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
-new Requestmap(url: '/logout/**', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
-new Requestmap(url: '/*', configAttribute: 'IS_AUTHENTICATED_ANONYMOUSLY').save()
+new Requestmap(url: '/js/**', configAttribute: 'permitAll').save()
+new Requestmap(url: '/css/**', configAttribute: 'permitAll').save()
+new Requestmap(url: '/images/**', configAttribute: 'permitAll').save()
+new Requestmap(url: '/login/**', configAttribute: 'permitAll').save()
+new Requestmap(url: '/logout/**', configAttribute: 'permitAll').save()
+new Requestmap(url: '/*', configAttribute: 'permitAll').save()
 new Requestmap(url: '/profile/**', configAttribute: 'ROLE_USER').save()
 new Requestmap(url: '/admin/**', configAttribute: 'ROLE_ADMIN').save()
 new Requestmap(url: '/admin/role/**', configAttribute: 'ROLE_SUPERVISOR').save()
@@ -25,7 +25,7 @@ new Requestmap(url: '/j_spring_security_switch_user',
 
 The @configAttribute@ value can have a single value or have multiple comma-delimited values. In this example only users with @ROLE_ADMIN@ or @ROLE_SUPERVISOR@ can access @/admin/user/\*\*@ urls, and only users with @ROLE_SWITCH_USER@ can access the switch-user url (@/j_spring_security_switch_user@) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, or @IS_AUTHENTICATED_ANONYMOUSLY@ with one or more roles means the user must have one of the roles and satisty the @IS_AUTHENTICATED@ rule.
 
-Unlike the [Config.groovy Map approach|guide:5.2 Simple Map in Config.groovy], you do not need to revise the @Requestmap@ entry order because the plugin calculates the most specific rule that applies to the current request.
+Unlike the [Config.groovy Map approach|guide:configGroovyMap], you do not need to revise the @Requestmap@ entry order because the plugin calculates the most specific rule that applies to the current request.
 
 h4. Requestmap Cache
 
@@ -38,7 +38,7 @@ class RequestmapController {
 
    ...
 
-   def save = {
+   def save() {
       def requestmapInstance = new Requestmap(params)
       if (!requestmapInstance.save(flush: true)) {
          render view: 'create', model: [requestmapInstance: requestmapInstance]
@@ -46,8 +46,9 @@ class RequestmapController {
       }
 
       springSecurityService.clearCachedRequestmaps()
+
       flash.message = "${message(code: 'default.created.message', args: [message(code: 'requestmap.label', default: 'Requestmap'), requestmapInstance.id])}"
-      redirect action: show, id: requestmapInstance.id
+      redirect action: 'show', id: requestmapInstance.id
    }
 }
 {code}

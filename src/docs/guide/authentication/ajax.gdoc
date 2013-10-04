@@ -241,7 +241,7 @@ Most of the attributes are typical, but the @on401@ attribute is the key to maki
 Note that depending on the version of the plugin that you're using, you may need to add the @authAjax@ method to your @LoginController@:
 
 {code}
-def authAjax = {
+def authAjax() {
    response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
    response.sendError HttpServletResponse.SC_UNAUTHORIZED
 }

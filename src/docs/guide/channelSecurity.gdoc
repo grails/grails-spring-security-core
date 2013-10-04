@@ -7,10 +7,11 @@ portMapper.httpsPort | 8443 | HTTPS port your application uses.
 secureChannel.definition | none | Map of URL pattern to channel rule
 {table}
 
+
 Build a Map under the @secureChannel.definition@ key, where the keys are URL patterns, and the values are one of @REQUIRES_SECURE_CHANNEL@, @REQUIRES_INSECURE_CHANNEL@, or @ANY_CHANNEL@:
 
 {code}
-grails.plugins.springsecurity.secureChannel.definition = [
+grails.plugin.springsecurity.secureChannel.definition = [
    '/login/**':         'REQUIRES_SECURE_CHANNEL',
    '/maps/**':          'REQUIRES_INSECURE_CHANNEL',
    '/images/login/**':  'REQUIRES_SECURE_CHANNEL',
@@ -25,15 +26,14 @@ h4. Header checking
 The default implementation of channel security is fairly simple; if you're using HTTP but HTTPS is required, you get redirected to the corresponding SSL URL and vice versa. But when using a load balancer such as an F5 BIG-IP it's not possible to just check secure/insecure. In that case you can configure the load balancer to set a request header indicating the current state. To use this approach, set the @useHeaderCheckChannelSecurity@ configuration property to @true@ and optionally change the header names or values:
 
 {code}
-grails.plugins.springsecurity.secureChannel.useHeaderCheckChannelSecurity = true
+grails.plugin.springsecurity.secureChannel.useHeaderCheckChannelSecurity = true
 {code}
 
 By default the header name is "X-Forwarded-Proto" and the secure header value is "http" (i.e. if you're not secure, redirect to secure) and the insecure header value is "https" (i.e. if you're secure, redirect to insecure). You can change any or all of these default values though:
 
 {code}
-grails.plugins.springsecurity.secureChannel.secureHeaderName = '...'
-grails.plugins.springsecurity.secureChannel.secureHeaderValue = '...'
-grails.plugins.springsecurity.secureChannel.insecureHeaderName = '...'
-grails.plugins.springsecurity.secureChannel.insecureHeaderValue = '...'
+grails.plugin.springsecurity.secureChannel.secureHeaderName = '...'
+grails.plugin.springsecurity.secureChannel.secureHeaderValue = '...'
+grails.plugin.springsecurity.secureChannel.insecureHeaderName = '...'
+grails.plugin.springsecurity.secureChannel.insecureHeaderValue = '...'
 {code}
-

@@ -2,8 +2,7 @@ introduction:
   title: Introduction to the Spring Security Plugin
   configGroovy: Configuration Settings Now in Config.groovy
   gettingStarted: Getting Started
-acegiDifferences: Differences Between the Spring Security and Acegi Plugins
-acegiMigrating: Migrating from the Acegi Plugin
+newInV2: What's New in Version 2.0
 domainClasses:
   title: Required and Optional Domain Classes
   personClass: Person Class
@@ -56,3 +55,7 @@ tutorials:
   migrationFromAcegi: Migration From the Acegi Plugin
 controllerMetaClassMethods: Controller MetaClass Methods
 i18n: Internationalization
+acegi:
+  title: Migrating from the Acegi plugin
+  acegiDifferences: Differences Between the Spring Security and Acegi Plugins
+  acegiMigrating: Migrating from the Acegi Plugin

@@ -18,8 +18,3 @@ grails s2-quickstart com.yourapp Person Authority Requestmap
 h2. Description
 
 * creates domain classes in @grails-app/domain@
-* creates example GSPs and controllers:
-** @grails-app/views/login/auth.gsp@ - shows a standard username/password login page
-** @grails-app/views/login/denied.gsp@ - shows a 403 error page
-** @grails-app/controllers/LoginController.groovy@ - manages login workflow
-** @grails-app/controllers/LogoutController.groovy@ - logs users out of the application

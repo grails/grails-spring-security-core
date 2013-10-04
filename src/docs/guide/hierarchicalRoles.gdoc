@@ -10,12 +10,12 @@ For example, if you have several types of 'admin' roles that can be used to acce
 {code}
 package com.mycompany.myapp
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class SomeController {
 
    @Secured(['ROLE_ADMIN', 'ROLE_FINANCE_ADMIN', 'ROLE_SUPERADMIN'])
-   def someAction = {
+   def someAction() {
       ...
    }
 }
@@ -24,7 +24,7 @@ class SomeController {
 However, if you have a business rule that says @ROLE_FINANCE_ADMIN@ implies being granted @ROLE_ADMIN@, and that @ROLE_SUPERADMIN@ implies being granted @ROLE_FINANCE_ADMIN@, you can express that hierarchy as:
 
 {code}
-grails.plugins.springsecurity.roleHierarchy = '''
+grails.plugin.springsecurity.roleHierarchy = '''
    ROLE_SUPERADMIN > ROLE_FINANCE_ADMIN
    ROLE_FINANCE_ADMIN > ROLE_ADMIN
 '''
@@ -35,12 +35,12 @@ Then you can simplify your mappings by specifying only the roles that are requir
 {code}
 package com.mycompany.myapp
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class SomeController {
 
    @Secured(['ROLE_ADMIN'])
-   def someAction = {
+   def someAction() {
       ...
    }
 }

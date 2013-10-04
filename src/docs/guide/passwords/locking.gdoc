@@ -50,7 +50,7 @@ You can use this functionality to manually lock a user's account or expire the p
 Here's an example for a password expired workflow. You'd need a simple action to display a password reset form (similar to the login form):
 
 {code}
-def passwordExpired = {
+def passwordExpired() {
    [username: session['SPRING_SECURITY_LAST_USERNAME']]
 }
 {code}
@@ -94,7 +94,7 @@ It's important that you not allow the user to specify the username (it's availab
 The GSP form would submit to an action like this one:
 
 {code}
-def updatePassword = {
+def updatePassword() {
    String username = session['SPRING_SECURITY_LAST_USERNAME']
    if (!username) {
       flash.message = 'Sorry, an error has occurred'

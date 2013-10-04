@@ -1,4 +1,4 @@
-@grails.plugins.springsecurity.SpringSecurityService@ provides security utility functions. It is a regular Grails service, so you use dependency injection to inject it into a controller, service, taglib, and so on:
+@grails.plugin.springsecurity.SpringSecurityService@ provides security utility functions. It is a regular Grails service, so you use dependency injection to inject it into a controller, service, taglib, and so on:
 
 {code}
 def springSecurityService
@@ -14,7 +14,7 @@ class SomeController {
 
    def springSecurityService
 
-   def someAction = {
+   def someAction() {
       def user = springSecurityService.currentUser
       ...
    }
@@ -31,7 +31,7 @@ class SomeController {
 
    def springSecurityService
 
-   def someAction = {
+   def someAction() {
       if (springSecurityService.isLoggedIn()) {
          ...
       }
@@ -44,10 +44,9 @@ class SomeController {
 
 h4. getAuthentication()
 
-Retrieves the current user's [Authentication|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html]. If authenticated in, this will typically be a [UsernamePasswordAuthenticationToken|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html].
+Retrieves the current user's [Authentication|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html]. If authenticated, this will typically be a [UsernamePasswordAuthenticationToken|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html].
 
-If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's authentication will be returned ([AnonymousAuthenticationToken|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AnonymousAuthenticationToken.html] with username 'anonymousUser' unless overridden).
-
+If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of @grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken@ with a standard @org.springframework.security.core.userdetails.User@ instance as its Principal. The authentication will have a single granted role, @ROLE_ANONYMOUS@.
 
 Example:
 
@@ -56,7 +55,7 @@ class SomeController {
 
    def springSecurityService
 
-   def someAction = {
+   def someAction() {
       def auth = springSecurityService.authentication
       String username = auth.username
       def authorities = auth.authorities // a Collection of GrantedAuthority
@@ -68,9 +67,9 @@ class SomeController {
 
 h4. getPrincipal()
 
-Retrieves the currently logged in user's @Principal@. If authenticated, the principal will be a @org.codehaus.groovy.grails.plugins.springsecurity.GrailsUser@, unless you  have created a custom @UserDetailsService@, in which case it will be whatever implementation of [UserDetails|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html] you use there.
+Retrieves the currently logged in user's @Principal@. If authenticated, the principal will be a @grails.plugin.springsecurity.userdetails.GrailsUser@, unless you  have created a custom @UserDetailsService@, in which case it will be whatever implementation of [UserDetails|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html] you use there.
 
-If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's name will be returned ('anonymousUser' unless overridden).
+If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then a standard @org.springframework.security.core.userdetails.User@ is used.
 
 Example:
 
@@ -79,7 +78,7 @@ class SomeController {
 
    def springSecurityService
 
-   def someAction = {
+   def someAction() {
       def principal = springSecurityService.principal
       String username = principal.username
       def authorities = principal.authorities // a Collection of GrantedAuthority
@@ -90,9 +89,9 @@ class SomeController {
 {code}
 
 h4. encodePassword()
-Encrypts a password with the configured encryption scheme. By default the plugin uses SHA-256, but you can configure the scheme with the @grails.plugins.springsecurity.password.algorithm@ attribute in @Config.groovy@. You can use any message digest algorithm that is supported in your JDK; see [this Java page|http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html].
+Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the @grails.plugin.springsecurity.password.algorithm@ attribute in @Config.groovy@. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2], or any message digest algorithm that is supported in your JDK; see [this Java page|http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
 {warning}
-You are *strongly* discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See [Salted Passwords|guide:12.2 Salted Passwords].
+You are *strongly* discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See [Salted Passwords|guide:salt].
 {warning}
 
 Example:
@@ -102,7 +101,7 @@ class PersonController {
 
    def springSecurityService
 
-   def updateAction = {
+   def updateAction() {
       def person = Person.get(params.id)
 
       params.salt = person.salt
@@ -116,13 +115,13 @@ class PersonController {
          render view: 'edit', model: [person: person]
          return
       }
-      redirect action: show, id: person.id
+      redirect action: 'show', id: person.id
    }
 }
 {code}
 
 {note}
-If you are encoding the password in the User domain class (using @beforeInsert@ and @encodePassword@) then don't call @springSecurityService.encodePassword()@ in your controller since you'll double-encrypt the password and users won't be able to log in. It's best to encapsulate the password handling logic in the domain class.
+If you are hashing the password in the User domain class (using @beforeInsert@ and @encodePassword@) then don't call @springSecurityService.encodePassword()@ in your controller since you'll double-hash the password and users won't be able to log in. It's best to encapsulate the password handling logic in the domain class.
 {note}
 
 h4. updateRole()
@@ -135,7 +134,7 @@ class RoleController {
 
    def springSecurityService
 
-   def update = {
+   def update() {
       def roleInstance = Role.get(params.id)
       if (!springSecurityService.updateRole(roleInstance, params)) {
          render view: 'edit', model: [roleInstance: roleInstance]
@@ -158,7 +157,7 @@ class RoleController {
 
    def springSecurityService
 
-   def delete = {
+   def delete() {
       def roleInstance = Role.get(params.id)
       try {
          springSecurityService.deleteRole (roleInstance
@@ -183,7 +182,7 @@ class RequestmapController {
 
    def springSecurityService
 
-   def save = {
+   def save() {
       def requestmapInstance = new Requestmap(params)
       if (!requestmapInstance.save(flush: true)) {
          render view: 'create', model: [requestmapInstance: requestmapInstance]
@@ -207,7 +206,7 @@ class UserController {
 
    def springSecurityService
 
-   def update = {
+   def update() {
       def userInstance = User.get(params.id)
 
       params.salt = person.salt

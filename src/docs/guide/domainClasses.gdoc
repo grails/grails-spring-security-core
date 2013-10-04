@@ -1,4 +1,4 @@
-By default the plugin uses regular Grails domain classes to access its required data. It's easy to create your own user lookup code though, which can access the database or any other source to retrieve user and authority data. See [Custom UserDetailsService|guide:11 Custom UserDetailsService] for how to implement this.
+By default the plugin uses regular Grails domain classes to access its required data. It's easy to create your own user lookup code though, which can access the database or any other source to retrieve user and authority data. See [Custom UserDetailsService|guide:userDetailsService] for how to implement this.
 
 To use the standard user lookup you'll need at a minimum a 'person' and an 'authority' domain class. In addition, if you want to store URL<->Role mappings in the database (this is one of multiple approaches for defining the mappings) you need a 'requestmap' domain class. If you use the recommended approach for mapping the many-to-many relationship between 'person' and 'authority,' you also need a domain class to map the join table.
 

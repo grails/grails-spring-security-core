@@ -75,7 +75,7 @@ Welcome Back <sec:username/>!
 {code}
 
 h4. ifSwitched
-Displays the inner body content only if the current user switched from another user. (See also [Switch User|guide:15 Switch User].)
+Displays the inner body content only if the current user switched from another user. (See also [Switch User|guide:switchUser].)
 
 {code}
 <sec:ifLoggedIn>

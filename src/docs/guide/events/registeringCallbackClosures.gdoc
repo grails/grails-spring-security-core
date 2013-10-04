@@ -1,27 +1,27 @@
-Alternatively, enable events with @grails.plugins.springsecurity.useSecurityEventListener = true@ and register one or more callback closure(s) in @grails-app/conf/Config.groovy@ and let @SecurityEventListener@ do the filtering.
+Alternatively, enable events with @grails.plugin.springsecurity.useSecurityEventListener = true@ and register one or more callback closure(s) in @grails-app/conf/Config.groovy@ and let @SecurityEventListener@ do the filtering.
 
 Implement the event handlers that you need, for example:
 
 {code}
-grails.plugins.springsecurity.useSecurityEventListener = true
+grails.plugin.springsecurity.useSecurityEventListener = true
 
-grails.plugins.springsecurity. onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
+grails.plugin.springsecurity. onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
    // handle InteractiveAuthenticationSuccessEvent
 }
 
-grails.plugins.springsecurity. onAbstractAuthenticationFailureEvent = { e, appCtx ->
+grails.plugin.springsecurity. onAbstractAuthenticationFailureEvent = { e, appCtx ->
    // handle AbstractAuthenticationFailureEvent
 }
 
-grails.plugins.springsecurity. onAuthenticationSuccessEvent = { e, appCtx ->
+grails.plugin.springsecurity. onAuthenticationSuccessEvent = { e, appCtx ->
    // handle AuthenticationSuccessEvent
 }
 
-grails.plugins.springsecurity. onAuthenticationSwitchUserEvent = { e, appCtx ->
+grails.plugin.springsecurity. onAuthenticationSwitchUserEvent = { e, appCtx ->
    // handle AuthenticationSwitchUserEvent
 }
 
-grails.plugins.springsecurity. onAuthorizationEvent = { e, appCtx ->
+grails.plugin.springsecurity. onAuthorizationEvent = { e, appCtx ->
    // handle AuthorizationEvent
 }
 {code}

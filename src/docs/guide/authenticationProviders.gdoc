@@ -20,7 +20,7 @@ beans = {
 You register the provider in @grails-app/conf/Config.groovy@ as:
 
 {code}
-grails.plugins.springsecurity.providerNames = [
+grails.plugin.springsecurity.providerNames = [
    'myAuthenticationProvider',
    'anonymousAuthenticationProvider',
    'rememberMeAuthenticationProvider']

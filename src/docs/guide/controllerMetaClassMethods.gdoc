@@ -7,7 +7,7 @@ Returns @true@ if there is an authenticated user.
 {code}
 class MyController {
 
-   def someAction = {
+   def someAction() {
       if (isLoggedIn()) {
          ...
       }
@@ -38,7 +38,7 @@ Retrieves the current authenticated user's Principal (a @GrailsUser@ instance un
 {code}
 class MyController {
 
-   def someAction = {
+   def someAction() {
       if (isLoggedIn()) {
          String username = getPrincipal().username
          ...
@@ -61,7 +61,7 @@ Loads the user domain class instance from the database that corresponds to the c
 {code}
 class MyController {
 
-   def someAction = {
+   def someAction() {
       if (isLoggedIn()) {
          String email = getAuthenticatedUser().email
          ...

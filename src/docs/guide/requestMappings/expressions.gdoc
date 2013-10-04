@@ -10,12 +10,12 @@ import grails.plugins.springsecurity.Secured
 class SecureController {
 
    @Secured(["hasRole('ROLE_ADMIN')"])
-   def someAction = {
+   def someAction() {
       ...
    }
 
    @Secured(["authentication.name == 'ralph'"])
-   def someOtherAction = {
+   def someOtherAction() {
       ...
    }
 }
@@ -56,9 +56,10 @@ The Spring Security docs have a [table listing the standard expressions|http://d
 @isRememberMe()@ | Returns true if the current principal is a remember-me user
 @isAuthenticated()@ | Returns true if the user is not anonymous
 @isFullyAuthenticated()@ | Returns true if the user is not an anonymous or a remember-me user
+@request@ | the HTTP request, allowing expressions such as "isFullyAuthenticated() or request.getMethod().equals('OPTIONS')"
 {table}
 
-In addition, you can use a web-specific expression @hasIpAddress@. However, you may find it more convenient to separate IP restrictions from role restrictions by using the [IP address filter|guide:18 IP Address Restrictions].
+In addition, you can use a web-specific expression @hasIpAddress@. However, you may find it more convenient to separate IP restrictions from role restrictions by using the [IP address filter|guide:ip].
 
 To help you migrate traditional configurations to expressions, this table compares various configurations and their corresponding expressions:
 

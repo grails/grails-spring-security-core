@@ -1,7 +1,7 @@
-You can use an @\@Secured@ annotation (either the standard @org.springframework.security.access.annotation.Secured@ or the plugin's @grails.plugins.springsecurity.Secured@ which also works on controller closure actions) in your controllers to configure which roles are required for which actions. To use annotations, specify @securityConfigType="Annotation"@, or leave it unspecified because it's the default:
+You can use an @\@Secured@ annotation (either the standard @org.springframework.security.access.annotation.Secured@ or the plugin's @grails.plugin.springsecurity.annotation.Secured@ which also works on controller closure actions) in your controllers to configure which roles are required for which actions. To use annotations, specify @securityConfigType="Annotation"@, or leave it unspecified because it's the default:
 
 {code}
-grails.plugins.springsecurity.securityConfigType = "Annotation"
+grails.plugin.springsecurity.securityConfigType = "Annotation"
 {code}
 
 You can define the annotation at the class level, meaning that the specified roles are required for all actions, or at the action level, or both. If the class and an action are annotated then the action annotation values will be used since they're more specific.
@@ -11,48 +11,48 @@ For example, given this controller:
 {code}
 package com.mycompany.myapp
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 class SecureAnnotatedController {
 
    @Secured(['ROLE_ADMIN'])
-   def index = {
+   def index() {
       render 'you have ROLE_ADMIN'
    }
 
    @Secured(['ROLE_ADMIN', 'ROLE_SUPERUSER'])
-   def adminEither = {
+   def adminEither() {
       render 'you have ROLE_ADMIN or SUPERUSER'
    }
 
-   def anybody = {
+   def anybody() {
       render 'anyone can see this'
    }
 }
 {code}
 
-you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@.
+you must be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@.
 
 Often most actions in a controller require similar access rules, so you can also define annotations at the class level:
 
 {code}
 package com.mycompany.myapp
 
-import grails.plugins.springsecurity.Secured
+import grails.plugin.springsecurity.annotation.Secured
 
 @Secured(['ROLE_ADMIN'])
 class SecureClassAnnotatedController {
 
-   def index = {
+   def index() {
       render 'index: you have ROLE_ADMIN'
    }
 
-   def otherAction = {
+   def otherAction() {
       render 'otherAction: you have ROLE_ADMIN'
    }
 
    @Secured(['ROLE_SUPERUSER'])
-   def super = {
+   def super() {
       render 'super: you have ROLE_SUPERUSER'
    }
 }
@@ -65,7 +65,7 @@ h4. controllerAnnotations.staticRules
 You can also define 'static' mappings that cannot be expressed in the controllers, such as '/\*\*' or for JavaScript, CSS, or image URLs. Use the @controllerAnnotations.staticRules@ property, for example:
 
 {code}
-grails.plugins.springsecurity.controllerAnnotations.staticRules = [
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    '/js/admin/**': ['ROLE_ADMIN'],
    '/someplugin/**': ['ROLE_ADMIN']
 ]
