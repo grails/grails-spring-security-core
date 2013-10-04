@@ -151,7 +151,7 @@ You can register a list of voters by implementing the <a href="http://docs.sprin
    myAccessDecisionVoter(com.foo.MyAccessDecisionVoter) &#123;
       // attributes
    &#125;
-&#125;</pre></div><p class="paragraph"/>You register it in <code>grails-app/conf/Config.groovy</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.voterNames = &#91;
+&#125;</pre></div><p class="paragraph"/>You register it in <code>grails-app/conf/Config.groovy</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.voterNames = &#91;
    'authenticatedVoter', 'roleVoter',
    'webExpressionVoter', 'myAccessDecisionVoter'
 &#93;</pre></div>

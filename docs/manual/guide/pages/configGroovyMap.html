@@ -147,7 +147,7 @@ function addJsClass() {
                 
 
 <h2 id="configGroovyMap">4.2 Simple Map in Config.groovy</h2>
-To use the <code>Config.groovy</code> Map to secure URLs, first specify <code>securityConfigType="InterceptUrlMap"</code>:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.securityConfigType = <span class="java&#45;quote">"InterceptUrlMap"</span></pre></div><p class="paragraph"/>Define a Map in <code>Config.groovy</code>:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.interceptUrlMap = &#91;
+To use the <code>Config.groovy</code> Map to secure URLs, first specify <code>securityConfigType="InterceptUrlMap"</code>:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.securityConfigType = <span class="java&#45;quote">"InterceptUrlMap"</span></pre></div><p class="paragraph"/>Define a Map in <code>Config.groovy</code>:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
    '/secure/&#42;&#42;':    &#91;'ROLE_ADMIN'&#93;,
    '/finance/&#42;&#42;':   &#91;'ROLE_FINANCE', 'IS_AUTHENTICATED_FULLY'&#93;,
    '/js/&#42;&#42;':        &#91;'IS_AUTHENTICATED_ANONYMOUSLY'&#93;,
