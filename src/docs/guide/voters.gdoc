@@ -20,7 +20,7 @@ beans = {
 You register it in @grails-app/conf/Config.groovy@ as:
 
 {code}
-grails.plugins.springsecurity.voterNames = [
+grails.plugin.springsecurity.voterNames = [
    'authenticatedVoter', 'roleVoter',
    'webExpressionVoter', 'myAccessDecisionVoter'
 ]

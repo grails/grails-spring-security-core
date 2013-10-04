@@ -5,13 +5,13 @@ By default the plugin uses the bcrypt algorithm to hash passwords. You can custo
 Enable bcrypt by using the @'bcrypt'@ value for the @algorithm@ config attribute:
 
 {code}
-grails.plugins.springsecurity.password.algorithm = 'bcrypt'
+grails.plugin.springsecurity.password.algorithm = 'bcrypt'
 {code}
 
 and optionally changing the number of rekeying rounds (which will affect the time it takes to hash passwords), e.g.
 
 {code}
-grails.plugins.springsecurity.password.bcrypt.logrounds = 15
+grails.plugin.springsecurity.password.bcrypt.logrounds = 15
 {code}
 
 Note that the number of rounds must be between 4 and 31.

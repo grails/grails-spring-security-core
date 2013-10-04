@@ -1,4 +1,4 @@
-The plugin includes GSP tags to support conditional display based on whether the user is authenticated, and/or has the required role to perform a particular action. These tags are in the @sec@ namespace and are implemented in @grails.plugins.springsecurity.SecurityTagLib@.
+The plugin includes GSP tags to support conditional display based on whether the user is authenticated, and/or has the required role to perform a particular action. These tags are in the @sec@ namespace and are implemented in @grails.plugin.springsecurity.SecurityTagLib@.
 
 h4. ifLoggedIn
 Displays the inner body content if the user is authenticated.

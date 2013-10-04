@@ -20,7 +20,7 @@ When an accessor returns @true@ for @accountExpired@, @accountLocked@, or @passw
 You can configure an exception mapping in @Config.groovy@ to associate a URL to any or all of these exceptions to determine where to redirect after a failure, for example:
 
 {code}
-grails.plugins.springsecurity.failureHandler.exceptionMappings = [
+grails.plugin.springsecurity.failureHandler.exceptionMappings = [
    'org.springframework.security.authentication.LockedException':             '/user/accountLocked',
    'org.springframework.security.authentication.DisabledException':           '/user/accountDisabled',
    'org.springframework.security.authentication.AccountExpiredException':     '/user/accountExpired',
@@ -42,7 +42,7 @@ errors.login.fail | "Sorry, we were not able to find a user with that username a
 You can customize these messages by setting the corresponding property in @Config.groovy@, for example:
 
 {code}
-grails.plugins.springsecurity.errors.login.locked = "None shall pass."
+grails.plugin.springsecurity.errors.login.locked = "None shall pass."
 {code}
 
 You can use this functionality to manually lock a user's account or expire the password, but you can automate the process. For example, use the [Quartz plugin|http://grails.org/plugin/quartz] to periodically expire everyone's password and force them to go to a page where they update it. Keep track of the date when users change their passwords and use a Quartz job to expire their passwords once the password is older than a fixed max age.
