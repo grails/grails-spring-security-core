@@ -1,0 +1,292 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>11.3 Account Locking and Forcing Password Change 2.0-RC1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClassProperties.html"><strong>7</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/authentication.html"><strong>8</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>9</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/userDetailsService.html"><strong>10</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/hierarchicalRoles.html"><strong>13</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/switchUser.html"><strong>14</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/filters.html"><strong>15</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/channelSecurity.html"><strong>16</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/ip.html"><strong>17</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/sessionFixation.html"><strong>18</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/logoutHandlers.html"><strong>19</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/voters.html"><strong>20</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/miscProperties.html"><strong>21</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/tutorials.html"><strong>22</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/controllerMetaClassMethods.html"><strong>23</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/userDetailsService.html">&lt;&lt; <strong>10</strong><span>Custom UserDetailsService</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>11.3 Account Locking and Forcing Password Change - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 2.0-RC1</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="locking">11.3 Account Locking and Forcing Password Change</h2>
+Spring Security supports four ways of disabling a user account. When you attempt to log in, the <code>UserDetailsService</code> implementation creates an instance of <code>UserDetails</code> that uses these accessor methods:
+<ul class="star">
+<li><code>isAccountNonExpired()</code></li>
+<li><code>isAccountNonLocked()</code></li>
+<li><code>isCredentialsNonExpired()</code></li>
+<li><code>isEnabled()</code></li>
+</ul><p class="paragraph"/>If you use the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script to create a user domain class, it creates a class with corresponding properties to manage this state.<p class="paragraph"/>When an accessor returns <code>true</code> for <code>accountExpired</code>, <code>accountLocked</code>, or <code>passwordExpired</code> or returns <code>false</code> for <code>enabled</code>, a corresponding exception is thrown:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Accessor</strong></th><th><strong class="bold">Property</strong></th><th><strong class="bold">Exception</strong></th></tr><tr class="table-odd"><td><code>isAccountNonExpired()</code></td><td><code>accountExpired</code></td><td><a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AccountExpiredException.html" target="blank">AccountExpiredException</a></td></tr><tr class="table-even"><td><code>isAccountNonLocked()</code></td><td><code>accountLocked</code></td><td><a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/LockedException.html" target="blank">LockedException</a></td></tr><tr class="table-odd"><td><code>isCredentialsNonExpired()</code></td><td><code>passwordExpired</code></td><td><a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/CredentialsExpiredException.html" target="blank">CredentialsExpiredException</a></td></tr><tr class="table-even"><td><code>isEnabled()</code></td><td><code>enabled</code></td><td><a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/DisabledException.html" target="blank">DisabledException</a></td></tr></table><p class="paragraph"/>You can configure an exception mapping in <code>Config.groovy</code> to associate a URL to any or all of these exceptions to determine where to redirect after a failure, for example:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.failureHandler.exceptionMappings = &#91;
+   'org.springframework.security.authentication.LockedException':             '/user/accountLocked',
+   'org.springframework.security.authentication.DisabledException':           '/user/accountDisabled',
+   'org.springframework.security.authentication.AccountExpiredException':     '/user/accountExpired',
+   'org.springframework.security.authentication.CredentialsExpiredException': '/user/passwordExpired'
+&#93;</pre></div><p class="paragraph"/>Without a mapping for a particular exception, the user is redirected to the standard login fail page (by default <code>/login/authfail</code>), which displays an error message from this table:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default</strong></th></tr><tr class="table-odd"><td>errors.login.disabled</td><td>"Sorry, your account is disabled."</td></tr><tr class="table-even"><td>errors.login.expired</td><td>"Sorry, your account has expired."</td></tr><tr class="table-odd"><td>errors.login.passwordExpired</td><td>"Sorry, your password has expired."</td></tr><tr class="table-even"><td>errors.login.locked</td><td>"Sorry, your account is locked."</td></tr><tr class="table-odd"><td>errors.login.fail</td><td>"Sorry, we were not able to find a user with that username and password."</td></tr></table><p class="paragraph"/>You can customize these messages by setting the corresponding property in <code>Config.groovy</code>, for example:<p class="paragraph"/><div class="code"><pre>grails.plugins.springsecurity.errors.login.locked = <span class="java&#45;quote">"None shall pass."</span></pre></div><p class="paragraph"/>You can use this functionality to manually lock a user's account or expire the password, but you can automate the process. For example, use the <a href="http://grails.org/plugin/quartz" target="blank">Quartz plugin</a> to periodically expire everyone's password and force them to go to a page where they update it. Keep track of the date when users change their passwords and use a Quartz job to expire their passwords once the password is older than a fixed max age.<p class="paragraph"/>Here's an example for a password expired workflow. You'd need a simple action to display a password reset form (similar to the login form):<p class="paragraph"/><div class="code"><pre>def passwordExpired() &#123;
+   &#91;username: session&#91;'SPRING_SECURITY_LAST_USERNAME'&#93;&#93;
+&#125;</pre></div><p class="paragraph"/>and the form would look something like this:<p class="paragraph"/><div class="code"><pre>&#60;div id='login'&#62;
+   &#60;div class='<span class="java&#45;keyword">inner</span>'&#62;
+      &#60;g:<span class="java&#45;keyword">if</span> test='$&#123;flash.message&#125;'&#62;
+      &#60;div class='login_message'&#62;$&#123;flash.message&#125;&#60;/div&#62;
+      &#60;/g:<span class="java&#45;keyword">if</span>&#62;
+      &#60;div class='fheader'&#62;Please update your password..&#60;/div&#62;
+      &#60;g:form action='updatePassword' id='passwordResetForm' class='cssform' autocomplete='off'&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='username'&#62;Username&#60;/label&#62;
+            &#60;span class='text_'&#62;$&#123;username&#125;&#60;/span&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='password'&#62;Current Password&#60;/label&#62;
+            &#60;g:passwordField name='password' class='text_' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='password'&#62;New Password&#60;/label&#62;
+            &#60;g:passwordField name='password_new' class='text_' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='password'&#62;New Password (again)&#60;/label&#62;
+            &#60;g:passwordField name='password_new_2' class='text_' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;input type='submit' value='Reset' /&#62;
+         &#60;/p&#62;
+      &#60;/g:form&#62;
+   &#60;/div&#62;
+&#60;/div&#62;</pre></div><p class="paragraph"/>It's important that you not allow the user to specify the username (it's available in the HTTP session) but that you require the current password, otherwise it would be simple to forge a password reset.<p class="paragraph"/>The GSP form would submit to an action like this one:<p class="paragraph"/><div class="code"><pre>def updatePassword() &#123;
+   <span class="java&#45;object">String</span> username = session&#91;'SPRING_SECURITY_LAST_USERNAME'&#93;
+   <span class="java&#45;keyword">if</span> (!username) &#123;
+      flash.message = 'Sorry, an error has occurred'
+      redirect controller: 'login', action: 'auth'
+      <span class="java&#45;keyword">return</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;object">String</span> password = params.password
+   <span class="java&#45;object">String</span> newPassword = params.password_new
+   <span class="java&#45;object">String</span> newPassword2 = params.password_new_2
+   <span class="java&#45;keyword">if</span> (!password || !newPassword || !newPassword2 || newPassword != newPassword2) &#123;
+      flash.message = 'Please enter your current password and a valid <span class="java&#45;keyword">new</span> password'
+      render view: 'passwordExpired', model: &#91;username: session&#91;'SPRING_SECURITY_LAST_USERNAME'&#93;&#93;
+      <span class="java&#45;keyword">return</span>
+   &#125;<p class="paragraph"/>   User user = User.findByUsername(username)
+   <span class="java&#45;keyword">if</span> (!passwordEncoder.isPasswordValid(user.password, password, <span class="java&#45;keyword">null</span> /&#42;salt&#42;/)) &#123;
+      flash.message = 'Current password is incorrect'
+      render view: 'passwordExpired', model: &#91;username: session&#91;'SPRING_SECURITY_LAST_USERNAME'&#93;&#93;
+      <span class="java&#45;keyword">return</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">if</span> (passwordEncoder.isPasswordValid(user.password, newPassword, <span class="java&#45;keyword">null</span> /&#42;salt&#42;/)) &#123;
+      flash.message = 'Please choose a different password from your current one'
+      render view: 'passwordExpired', model: &#91;username: session&#91;'SPRING_SECURITY_LAST_USERNAME'&#93;&#93;
+      <span class="java&#45;keyword">return</span>
+   &#125;<p class="paragraph"/>   user.password = newPassword
+   user.passwordExpired = <span class="java&#45;keyword">false</span>
+   user.save() // <span class="java&#45;keyword">if</span> you have password constraints check them here<p class="paragraph"/>   redirect controller: 'login', action: 'auth'
+&#125;</pre></div><p class="paragraph"/><h4>User Cache</h4>
+If the <code>cacheUsers</code> configuration property is set to <code>true</code>, Spring Security caches <code>UserDetails</code> instances to save trips to the database. (The default is <code>false</code>.) This optimization is minor, because typically only two small queries occur during login -- one to load the user, and one to load the authorities.<p class="paragraph"/>If you enable this feature, you must remove any cached instances after making a change that affects login. If you do not remove cached instances, even though a user's account is locked or disabled, logins succeed because the database is bypassed. By removing the cached data, you force at trip to the database to retrieve the latest updates.<p class="paragraph"/>Here is a sample Quartz job that demonstrates how to find and disable users with passwords that are too old:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class ExpirePasswordsJob  &#123;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> triggers = &#123;
+      cron name: 'myTrigger', cronExpression: '0 0 0 &#42; &#42; ?' // midnight daily
+   &#125;<p class="paragraph"/>   def userCache<p class="paragraph"/>   void execute() &#123;<p class="paragraph"/>      def users = User.executeQuery(
+            'from User u where u.passwordChangeDate &#60;= :cutoffDate',
+            &#91;cutoffDate: <span class="java&#45;keyword">new</span> Date() &#45; 180&#93;)<p class="paragraph"/>      <span class="java&#45;keyword">for</span> (user in users) &#123;
+         // flush each separately so one failure doesn't rollback all of the others
+         <span class="java&#45;keyword">try</span> &#123;
+            user.passwordExpired = <span class="java&#45;keyword">true</span>
+            user.save(flush: <span class="java&#45;keyword">true</span>)
+            userCache.removeUserFromCache user.username
+         &#125;
+         <span class="java&#45;keyword">catch</span> (e) &#123;
+            log.error <span class="java&#45;quote">"problem expiring password <span class="java&#45;keyword">for</span> user $user.username : $e.message"</span>, e
+         &#125;
+      &#125;
+   &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/userDetailsService.html">&lt;&lt; <strong>10</strong><span>Custom UserDetailsService</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
