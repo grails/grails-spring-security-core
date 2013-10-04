@@ -17,7 +17,6 @@ package grails.plugin.springsecurity.userdetails
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.plugins.support.aware.GrailsApplicationAware
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
@@ -31,7 +30,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class GormUserDetailsService implements GrailsUserDetailsService, GrailsApplicationAware {
+class GormUserDetailsService implements GrailsUserDetailsService {
 
 	protected Logger log = LoggerFactory.getLogger(getClass())
 

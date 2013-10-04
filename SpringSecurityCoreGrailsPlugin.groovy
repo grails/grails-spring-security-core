@@ -465,7 +465,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		/** userDetailsService */
-		userDetailsService(GormUserDetailsService)
+		userDetailsService(GormUserDetailsService) {
+			grailsApplication = ref('grailsApplication')
+		}
 
 		/** authenticationUserDetailsService */
 		authenticationUserDetailsService(UserDetailsByNameServiceWrapper, ref('userDetailsService'))
