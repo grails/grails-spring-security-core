@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-includeTargets << new File("$springSecurityCorePluginDir/scripts/_S2Common.groovy")
+includeTargets << new File(springSecurityCorePluginDir, "scripts/_S2Common.groovy")
 
 functionalTestPluginVersion = '1.2.7'
 projectfiles = new File(basedir, 'webtest/projectFiles')
@@ -110,8 +110,12 @@ private void runQuickstart() {
 
 	contents = contents.replace('grails.plugin.springsecurity.controllerAnnotations.staticRules = [', '''grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/j_spring_security_switch_user': ['ROLE_ADMIN'],
-	'/j_spring_security_exit_user':   ['permitAll'],
-''')
+	'/j_spring_security_exit_user':   ['permitAll'],''')
+
+	contents += '''
+grails.plugin.springsecurity.fii.rejectPublicInvocations = true
+grails.plugin.springsecurity.rejectIfNoRule = false
+'''
 
 	config.withWriter { it.writeLine contents }
 }
