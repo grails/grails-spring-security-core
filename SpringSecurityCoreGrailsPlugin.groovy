@@ -254,7 +254,7 @@ class SpringSecurityCoreGrailsPlugin {
 		/** securityContextHolderAwareRequestFilter */
 		securityContextHolderAwareRequestFilter(SecurityContextHolderAwareRequestFilter) {
 			authenticationEntryPoint = ref('authenticationEntryPoint')
-			authenticationManager = ref('AuthenticationManager')
+			authenticationManager = ref('authenticationManager')
 			logoutHandlers = ref('logoutHandlers')
 		}
 
@@ -1074,7 +1074,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			allowSessionCreation = conf.failureHandler.allowSessionCreation // true
 		}
 
-		filterProcessUrlRequestMatcher(FilterProcessUrlRequestMatcher, conf.apf.filterProcessesUrl) '/j_spring_security_check'
+		filterProcessUrlRequestMatcher(FilterProcessUrlRequestMatcher, conf.apf.filterProcessesUrl) // '/j_spring_security_check'
 
 		authenticationProcessingFilter(RequestHolderAuthenticationFilter) {
 			authenticationManager = ref('authenticationManager')
