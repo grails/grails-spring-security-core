@@ -16,12 +16,13 @@ package grails.plugin.springsecurity.web.access.intercept
 
 import grails.plugin.springsecurity.FakeApplication
 import grails.plugin.springsecurity.InterceptedUrl
+import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
+import grails.plugin.springsecurity.annotation.Secured
 import grails.web.CamelCaseUrlConverter
 
 import javax.servlet.ServletContext
 
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
-import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.commons.GrailsClass
 import org.codehaus.groovy.grails.web.context.ServletContextHolder
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
@@ -30,20 +31,18 @@ import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
 import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.codehaus.groovy.grails.web.util.WebUtils
+import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.mock.web.MockServletContext
 import org.springframework.security.access.SecurityConfig
-import org.springframework.security.access.annotation.Secured
 import org.springframework.security.web.FilterInvocation
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 
 /**
  * Unit tests for AnnotationFilterInvocationDefinition.
- *
- * TODO tests method, closure, etc.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
@@ -191,7 +190,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
 
-		assertEquals 10, fid.configAttributeMap.size()
+		assertEquals 16, fid.configAttributeMap.size()
 
 		InterceptedUrl iu
 
@@ -199,18 +198,35 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 			iu = fid.getInterceptedUrl(key, null)
 			assertEquals 1, iu.configAttributes.size()
 			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
+			assertNull iu.httpMethod
 		}
 
 		for (key in ['/classannotated/list', '/classannotated/list.*', '/classannotated/list/**']) {
 			iu = fid.getInterceptedUrl(key, null)
 			assertEquals 2, iu.configAttributes.size()
 			assertEquals(['ROLE_FOO', 'ROLE_SUPERADMIN'] as Set, iu.configAttributes*.attribute as Set)
+			assertNull iu.httpMethod
 		}
 
 		for (key in ['/methodannotated/list', '/methodannotated/list.*', '/methodannotated/list/**']) {
 			iu = fid.getInterceptedUrl(key, null)
 			assertEquals 1, iu.configAttributes.size()
 			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
+			assertNull iu.httpMethod
+		}
+
+		for (key in ['/methodannotated/bar', '/methodannotated/bar.*', '/methodannotated/bar/**']) {
+			iu = fid.getInterceptedUrl(key, HttpMethod.PUT)
+			assertEquals 1, iu.configAttributes.size()
+			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
+			assertEquals HttpMethod.PUT, iu.httpMethod
+		}
+
+		for (key in ['/methodannotated/foo', '/methodannotated/foo.*', '/methodannotated/foo/**']) {
+			iu = fid.getInterceptedUrl(key, null)
+			assertEquals 1, iu.configAttributes.size()
+			assertTrue(iu.configAttributes.iterator().next() instanceof ClosureConfigAttribute)
+			assertNull iu.httpMethod
 		}
 
 		iu = fid.getInterceptedUrl('/js/admin/**', null)
@@ -259,4 +275,14 @@ class MethodAnnotatedController {
 
 	@Secured(['ROLE_ADMIN'])
 	def list() { [results: []] }
+
+	@Secured(closure = {
+	   assert request
+	   assert ctx
+	   authentication.name == 'admin1'
+	})
+	def foo() { [results: []] }
+
+	@Secured(value=['ROLE_ADMIN'], httpMethod='PUT')
+	def bar() { [results: []] }
 }
