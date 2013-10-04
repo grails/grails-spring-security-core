@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5.2 SpringSecurityService 2.0-RC1</title>
+    <title>5.2 SpringSecurityService 2.0-RC2</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -137,7 +137,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC1</p>
+                    <p><strong>Version:</strong> 2.0-RC2</p>
 
                     
                 </div>
@@ -161,7 +161,7 @@ Checks whether there is a currently logged-in user.<p class="paragraph"/>Example
          &#8230;
       &#125;
    &#125;
-&#125;</pre></div><p class="paragraph"/><h4>getAuthentication()</h4><p class="paragraph"/>Retrieves the current user's <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a>. If authenticated, this will typically be a <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html" target="blank">UsernamePasswordAuthenticationToken</a>.<p class="paragraph"/>If not authenticated and the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of <code>grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken</code> with a standard <code>org.springframework.security.core.userdetails.User</code> instance as its Principal. The authentication will have a single granted role, <code>ROLE_ANONYMOUS</code>.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+&#125;</pre></div><p class="paragraph"/><h4>getAuthentication()</h4><p class="paragraph"/>Retrieves the current user's <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a>. If authenticated, this will typically be a <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html" target="blank">UsernamePasswordAuthenticationToken</a>.<p class="paragraph"/>If not authenticated and the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of <code>grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken</code> with a standard <code>org.springframework.security.core.userdetails.User</code> instance as its Principal. The authentication will have a single granted role, <code>ROLE_ANONYMOUS</code>.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
       def auth = springSecurityService.authentication
       <span class="java&#45;object">String</span> username = auth.username
       def authorities = auth.authorities // a Collection of GrantedAuthority
