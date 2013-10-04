@@ -3,8 +3,8 @@ The Spring Security plugin simplifies the integration of  [Spring Security|http:
 This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.
 
 h4. Release History and Acknowledgment
-* October 3, 2013
-** 2.0-RC1 release
+* October 4, 2013
+** 2.0-RC2 release
 ** [JIRA Issues|http://jira.grails.org/issues/?jql=project%20%3D%20GPSPRINGSECURITYCORE%20AND%20fixVersion%20%3D%20%22Grails-Spring-Security-Core%202.0%22%20ORDER%20BY%20updated%20DESC%2C%20priority%20DESC%2C%20created%20ASC]
 * April 6, 2012
 ** 1.2.7.3 release
