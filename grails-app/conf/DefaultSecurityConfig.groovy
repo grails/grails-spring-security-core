@@ -40,7 +40,7 @@ security {
 	// 'strict' mode where an explicit grant is required to access any resource;
 	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY or permitAll
 	// for /, /index.gsp, /js/**, /css/**, /images/**, /login/**, /logout/**, etc.
-	// If using also set fii.rejectPublicInvocations = true
+	// Also consider using fii.rejectPublicInvocations = true
 	rejectIfNoRule = true
 
 	// hierarchical roles
@@ -50,10 +50,13 @@ security {
 	ipRestrictions = [:]
 
 	// voters
-	voterNames = [] // 'authenticatedVoter', 'roleVoter'
+	voterNames = [] // 'authenticatedVoter', 'roleVoter', 'closureVoter'
 
 	// providers
 	providerNames = [] // 'daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'
+
+	// AfterInvocationManager
+	afterInvocationManagerProviderNames = []
 
 	// HttpSessionEventPublisher
 	useHttpSessionEventPublisher = false
@@ -89,7 +92,7 @@ security {
 		continueChainBeforeSuccessfulAuthentication = false
 		allowSessionCreation = true
 		postOnly = true
-		storeLastUsername = false // TODO changed
+		storeLastUsername = false
 	}
 
 	// authenticationFailureHandler
@@ -105,17 +108,13 @@ security {
 	successHandler {
 		defaultTargetUrl = '/'
 		alwaysUseDefault = false
-		targetUrlParameter = SpringSecurityUtils.DEFAULT_TARGET_PARAMETER // 'spring-security-redirect' // TODO still supported?
-	}
-
-	successHandler {
-		useReferer = false
+		targetUrlParameter = SpringSecurityUtils.DEFAULT_TARGET_PARAMETER // 'spring-security-redirect'
 		ajaxSuccessUrl = '/login/ajaxSuccess'
+		useReferer = false
 	}
 
 	// requestCache
 	requestCache {
-//		onlyOnGet = false // TODO doc removed
 		createSession = true
 	}
 
@@ -124,14 +123,8 @@ security {
 		contextRelative = false
 	}
 
-	// authenticationDetails
-	// TODO doc that the class isn't configurable
-//	authenticationDetails {
-//		authClass = WebAuthenticationDetails
-//	}
-
 	// session fixation prevention
-	useSessionFixationPrevention = true // TODO doc changed
+	useSessionFixationPrevention = true
 	sessionFixationPrevention {
 		migrate = true
 		alwaysCreateSession = false
@@ -145,8 +138,7 @@ security {
 
 	/** anonymousProcessingFilter */
 	anon {
-		key = 'foo' // TODO update
-//		userAttribute = 'anonymousUser,ROLE_ANONYMOUS' // TODO doc removed
+		key = 'foo'
 	}
 
 	/** authenticationEntryPoint */
@@ -167,7 +159,7 @@ security {
 		targetUrlParameter = null
 		alwaysUseDefaultTargetUrl = false
 		redirectToReferer = false
-		postOnly = true // TODO new, doc
+		postOnly = true
 	}
 
 	/**
@@ -177,19 +169,19 @@ security {
 	adh {
 		errorPage = '/login/denied'
 		ajaxErrorPage = '/login/ajaxDenied'
-		useForward = true // set to false to redirect TODO changed?
+		useForward = true
 	}
 
 	/** passwordEncoder */
 	// see http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html
 	password {
-		algorithm = 'bcrypt' // TODO changed
+		algorithm = 'bcrypt'
 		encodeHashAsBase64 = false
 		bcrypt {
 			logrounds = 10
 		}
 		hash {
-			iterations = 10000 // TODO changed
+			iterations = 10000
 		}
 	}
 
@@ -202,12 +194,12 @@ security {
 		key = 'grailsRocks'
 		persistent = false
 		persistentToken {
-			domainClassName = 'PersistentLogin'
+			domainClassName = null
 			seriesLength = PersistentTokenBasedRememberMeServices.DEFAULT_SERIES_LENGTH // 16
 			tokenLength = PersistentTokenBasedRememberMeServices.DEFAULT_TOKEN_LENGTH // 16
 		}
-		useSecureCookie = null // TODO doc change; also note that null -> secure if https
-		createSessionOnSuccess = true // TODO doc
+		useSecureCookie = null
+		createSessionOnSuccess = true
 	}
 
 	/** URL <-> Role mapping */
@@ -221,7 +213,7 @@ security {
 		className = null // must be set if using
 		urlField = 'url'
 		configAttributeField = 'configAttribute'
-		httpMethodField = 'httpMethod' // TODO doc new
+		httpMethodField = 'httpMethod'
 	}
 
 	// use annotations from Controllers to define security rules
@@ -264,12 +256,6 @@ security {
 		usernameParameter = SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY // j_username
 	}
 
-	/** filterChainProxy */
-	// TODO doc that this was removed
-//	filterChain {
-//		stripQueryStringFromUrls = true
-//	}
-
 	// port mappings
 	portMapper {
 		httpPort = 8080
@@ -290,7 +276,7 @@ security {
 	useX509 = false
 	x509 {
 		continueFilterChainOnUnsuccessfulAuthentication = true
-		subjectDnRegex = 'CN=(.*?)(?:,|$)' // TODO doc was 'CN=(.*?),'
+		subjectDnRegex = 'CN=(.*?)(?:,|$)'
 		subjectDnClosure = null
 		checkForPrincipalChanges = false
 		invalidateSessionOnPrincipalChange = true
@@ -299,19 +285,19 @@ security {
 
 	// authenticationTrustResolver
 	atr {
-		anonymousClass = GrailsAnonymousAuthenticationToken // TODO doc changed
+		anonymousClass = GrailsAnonymousAuthenticationToken
 		rememberMeClass = RememberMeAuthenticationToken
 	}
 
 	// providerManager
 	providerManager {
-		eraseCredentialsAfterAuthentication = true // TODO doc changed
+		eraseCredentialsAfterAuthentication = true
 	}
 
 	// securityContextRepository
 	scr {
 		allowSessionCreation = true
-		disableUrlRewriting = true // TODO changed
+		disableUrlRewriting = true
 		springSecurityContextKey = HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY // 'SPRING_SECURITY_CONTEXT'
 	}
 
@@ -323,25 +309,17 @@ security {
 	// filterInvocationInterceptor
 	fii {
 		alwaysReauthenticate = false
-		rejectPublicInvocations = true // TODO doc changed
+		rejectPublicInvocations = true
 		validateConfigAttributes = true
 		publishAuthorizationSuccess = false
 		observeOncePerRequest = true
 	}
 
-	antisamy {
-		// TODO doc https://code.google.com/p/owaspantisamy/downloads/list or https://code.google.com/p/owaspantisamy/source/browse/trunk/Java/antisamy-sample-configs/src/main/resources
-		policyResourcePath = null // e.g. '/WEB-INF/antisamy-policy.xml'
-		policyURL = null
-	}
-
-	// TODO doc new
 	debug {
 		useFilter = false
 	}
 
 	// SecurityContextHolder
-	// TODO doc new
 	sch {
 		// one of MODE_THREADLOCAL, MODE_INHERITABLETHREADLOCAL, MODE_GLOBAL,
 		// or the name of a class implementing org.springframework.security.core.context.SecurityContextHolderStrategy
