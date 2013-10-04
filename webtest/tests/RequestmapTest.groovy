@@ -5,7 +5,7 @@ class RequestmapTest extends AbstractSecurityWebTest {
 
 		assertContentContains 'Home'
 
-		verifyListSize 20
+		verifyListSize 21
 
 		click 'New TestRequestmap'
 		assertContentContains 'Create TestRequestmap'
@@ -19,7 +19,7 @@ class RequestmapTest extends AbstractSecurityWebTest {
 		assertContentContains 'Show TestRequestmap'
 		get '/testRequestmap/list?max=100'
 
-		verifyListSize 21
+		verifyListSize 22
 
 		get '/testRequestmap/edit/21'
 		assertContentContains 'Edit TestRequestmap'
@@ -27,7 +27,7 @@ class RequestmapTest extends AbstractSecurityWebTest {
 		assertContentContains 'Show TestRequestmap'
 		get '/testRequestmap/list?max=100'
 
-		verifyListSize 21
+		verifyListSize 22
 
 		get '/testRequestmap/show/21'
 		clickButton 'Delete'
@@ -35,6 +35,6 @@ class RequestmapTest extends AbstractSecurityWebTest {
 		verifyXPath "//div[@class='message']", '.*TestRequestmap.*deleted.*', true
 
 		get '/testRequestmap/list?max=100'
-		verifyListSize 20
+		verifyListSize 21
 	}
 }

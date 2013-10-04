@@ -96,7 +96,7 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 	private void createRequestMaps() {
 		get '/testRequestmap/list?max=100'
 		assertContentContains 'Home'
-		verifyListSize 20 // initial 20 from BootStrap
+		verifyListSize 21 // initial 21 from BootStrap
 
 		click 'New TestRequestmap'
 		assertContentContains 'Create TestRequestmap'
@@ -110,7 +110,7 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		assertContentContains 'Show TestRequestmap'
 
 		get '/testRequestmap/list?max=100'
-		verifyListSize 21
+		verifyListSize 22
 
 		click 'New TestRequestmap'
 		assertContentContains 'Create TestRequestmap'
@@ -124,7 +124,7 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		assertContentContains 'Show TestRequestmap'
 
 		get '/testRequestmap/list?max=100'
-		verifyListSize 22
+		verifyListSize 23
 
 		click 'New TestRequestmap'
 		assertContentContains 'Create TestRequestmap'
@@ -138,7 +138,7 @@ class RequestmapSecurityTest extends AbstractSecurityWebTest {
 		assertContentContains 'Show TestRequestmap'
 
 		get '/testRequestmap/list?max=100'
-		verifyListSize 23
+		verifyListSize 24
 	}
 
 	private void checkSecurePageNotVisibleWithRequestmap() {

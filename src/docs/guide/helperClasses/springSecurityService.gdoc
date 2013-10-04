@@ -46,7 +46,7 @@ h4. getAuthentication()
 
 Retrieves the current user's [Authentication|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html]. If authenticated, this will typically be a [UsernamePasswordAuthenticationToken|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html].
 
-If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of @grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken@ with a standard @org.springframework.security.core.userdetails.User@ instance as its Principal. The authentication will have a single granted role, @ROLE_ANONYMOUS@.
+If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of @grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken@ with a standard @org.springframework.security.core.userdetails.User@ instance as its Principal. The authentication will have a single granted role, @ROLE_ANONYMOUS@.
 
 Example:
 

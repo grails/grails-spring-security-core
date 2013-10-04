@@ -69,7 +69,7 @@ h4. Anonymous authentication
 
 In standard Spring Security and older versions of the plugin, there is support for an "anonymous" authentication. This is implemented by a filter that registers a simple @Authentication@ in the @SecurityContext@ to remove the need for null checks, since there will always be an @Authentication@ available. This approach is still problematic though because the Principal of the anonymous authentication is a String, whereas it is a @UserDetails@ instance when there is a non-anonymous authentication.
 
-Since you still have to be careful to differentiate between anonymous and non-anonymous authentications, the plugin now creates an anonymous @Authentication@ which will be an instance of @grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken@ with a standard @org.springframework.security.core.userdetails.User@ instance as its Principal. The authentication will have a single granted role, @ROLE_ANONYMOUS@.
+Since you still have to be careful to differentiate between anonymous and non-anonymous authentications, the plugin now creates an anonymous @Authentication@ which will be an instance of @grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken@ with a standard @org.springframework.security.core.userdetails.User@ instance as its Principal. The authentication will have a single granted role, @ROLE_ANONYMOUS@.
 
 h4. No HQL
 

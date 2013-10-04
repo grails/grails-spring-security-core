@@ -68,11 +68,11 @@ grails.plugins.springsecurity.switchUser.switchFailureUrl = ...
 {table}
 *Property* | *Default* | *Meaning*
 useSwitchUserFilter | @false@ | Whether to use the switch user filter.
-switchUser.switchUserUrl | '/j_spring_security_switch_user' | URL to access (via GET or POST) to switch to another user.
-switchUser.exitUserUrl | '/j_spring_security_exit_user' | URL to access to switch to another user.
-switchUser.targetUrl | Same as @successHandler.defaultTargetUrl@ | URL for redirect after switching.
-switchUser.switchFailureUrl | Same as @failureHandler.defaultFailureUrl@ | URL for redirect after an error during an attempt to switch.
-switchUser.usernameParameter | @SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY@ | The username request parameter name
+switchUser. switchUserUrl | '/j_spring_security_switch_user' | URL to access (via GET or POST) to switch to another user.
+switchUser. exitUserUrl | '/j_spring_security_exit_user' | URL to access to switch to another user.
+switchUser. targetUrl | Same as @successHandler.defaultTargetUrl@ | URL for redirect after switching.
+switchUser. switchFailureUrl | Same as @failureHandler.defaultFailureUrl@ | URL for redirect after an error during an attempt to switch.
+switchUser. usernameParameter | @SwitchUserFilter. SPRING_SECURITY_SWITCH_USERNAME_KEY@ | The username request parameter name
 {table}
 
 h4. GSP Code

@@ -15,7 +15,7 @@ class BootStrap {
 			return
 		}
 
-		for (url in ['/', '/index.gsp', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
+		for (url in ['/', '/index', '/index.gsp', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
 						 '/login', '/login/**', '/logout', '/logout/**',
 						 '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
 						 '/testRequestmap', '/testRequestmap/**',
@@ -23,6 +23,6 @@ class BootStrap {
 			Requestmap.newInstance(url: url, configAttribute: 'permitAll').save(flush: true, failOnError: true)
 		}
 
-		assert 20 == Requestmap.count()
+		assert 21 == Requestmap.count()
 	}
 }
