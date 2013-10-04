@@ -20,8 +20,6 @@ import org.springframework.util.Assert;
  * Converts a org.springframework.security.crypto.password.PasswordEncoder to a
  * org.springframework.security.authentication.encoding.PasswordEncoder.
  *
- * TODO replace with org.springframework.security.authentication.dao.CryptoEncoderWrapper
- *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @SuppressWarnings("deprecation")

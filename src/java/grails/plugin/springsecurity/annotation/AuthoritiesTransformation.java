@@ -34,11 +34,10 @@ import org.codehaus.groovy.control.messages.SyntaxErrorMessage;
 import org.codehaus.groovy.syntax.SyntaxException;
 import org.codehaus.groovy.transform.ASTTransformation;
 import org.codehaus.groovy.transform.GroovyASTTransformation;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.util.StringUtils;
 
 /**
- * TODO support custom annotation
+ * See http://burtbeckwith.com/blog/?p=1398 for the motivation for this.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */

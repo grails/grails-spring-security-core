@@ -65,7 +65,7 @@ public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthentic
 					username = "";
 				}
 				username = username.trim();
-				session.setAttribute(SpringSecurityUtils.SPRING_SECURITY_LAST_USERNAME_KEY, username); // TODO doc that not escaped now
+				session.setAttribute(SpringSecurityUtils.SPRING_SECURITY_LAST_USERNAME_KEY, username);
 			}
 		}
 

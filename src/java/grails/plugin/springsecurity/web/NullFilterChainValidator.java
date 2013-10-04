@@ -24,10 +24,6 @@ import org.springframework.security.web.FilterChainProxy.FilterChainValidator;
  */
 public class NullFilterChainValidator implements FilterChainValidator {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.FilterChainProxy.FilterChainValidator#validate(org.springframework.security.web.FilterChainProxy)
-	 */
 	public void validate(FilterChainProxy filterChainProxy) {
 		// do nothing
 	}

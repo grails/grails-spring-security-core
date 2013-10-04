@@ -6,7 +6,7 @@ class ${userClassName} {
 
 	String username
 	String password
-	boolean enabled = true // TODO doc changed
+	boolean enabled = true
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired

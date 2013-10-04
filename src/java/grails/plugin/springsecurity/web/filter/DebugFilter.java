@@ -41,8 +41,6 @@ import org.springframework.web.filter.GenericFilterBean;
 /**
  * Based on the package-scope org.springframework.security.config.debug.DebugFilter.
  *
- * TODO doc info 'grails.plugin.springsecurity.web.filter.DebugFilter'
- *
  * @author Luke Taylor
  * @author Rob Winch
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
