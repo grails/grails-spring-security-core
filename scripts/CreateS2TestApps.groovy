@@ -45,7 +45,7 @@ target(createS2TestApp: 'Creates test apps for functional tests') {
 	}
 }
 
-private void callGrails(String grailsHome, String dir, String env, String action, List extraArgs = null) {
+private void callGrails(String grailsHome, String dir, String env, String action, List extraArgs = null, boolean ignoreFailure = false) {
 
 	String resultproperty = 'exitCode' + System.currentTimeMillis()
 	String outputproperty = 'execOutput' + System.currentTimeMillis()
@@ -64,7 +64,7 @@ private void callGrails(String grailsHome, String dir, String env, String action
 	println ant.project.getProperty(outputproperty)
 
 	int exitCode = ant.project.getProperty(resultproperty) as Integer
-	if (exitCode) {
+	if (exitCode && !ignoreFailure) {
 		exit exitCode
 	}
 }
@@ -92,6 +92,7 @@ runtime ":spring-security-core:$pluginVersion"
 
 	buildConfig.withWriter { it.writeLine contents }
 
+	callGrails grailsHome, testprojectRoot, 'dev', 'compile', null, true // can fail when installing the functional-test plugin
 	callGrails grailsHome, testprojectRoot, 'dev', 'compile'
 }
 
