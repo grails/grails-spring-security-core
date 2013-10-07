@@ -125,3 +125,38 @@ In Spring Security 3.0 and earlier, the username was stored in the HTTP session 
 h4. \@Authorities annotation
 
 You can use the new \@Authorities annotation to make your annotations more DRY. See [this blog post|http://burtbeckwith.com/blog/?p=1398] for a description about the motivation and implementation details. Note that the package for the annotation in the plugin is @grails.plugin.springsecurity.annotation@, not @grails.plugins.springsecurity.annotation@ as described in the blog post.
+
+h4. Miscellaneous changes
+
+h5. AuthenticationDetailsSource
+
+Previously you could configure the details class that was constructed by the @authenticationDetailsSource@ bean by setting the @authenticationDetails.authClass@ 
+property. In Spring Security 3.2 this isn't possible because @WebAuthenticationDetailsSource@ always returns a @WebAuthenticationDetails@. But you
+can still customize the details class by creating a class that implements the [AuthenticationDetailsSource|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationDetailsSource.html] interface, e.g.:
+
+{code}
+package com.mycompany;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.security.authentication.AuthenticationDetailsSource;
+
+public class MyAuthenticationDetailsSource implements AuthenticationDetailsSource<HttpServletRequest, MyWebAuthenticationDetails> {
+
+   public MyWebAuthenticationDetails buildDetails(HttpServletRequest context) {
+      // build a MyWebAuthenticationDetails
+   }
+}
+{code}
+
+and registering that as the @authenticationDetailsSource@ bean in @resources.groovy@
+
+{code}
+import com.mycompany.MyAuthenticationDetailsSource
+
+beans = {
+   authenticationDetailsSource(MyAuthenticationDetailsSource) {
+      // any required properties
+   }
+}
+{code}
