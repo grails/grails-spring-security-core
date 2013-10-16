@@ -53,6 +53,7 @@ import grails.plugin.springsecurity.web.filter.DebugFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.IpAddressFilter
+import grails.plugin.webxml.FilterManager
 
 import javax.servlet.Filter
 
@@ -153,7 +154,6 @@ class SpringSecurityCoreGrailsPlugin {
 
 	// make sure the filter chain filter is after the Grails filter
 	def getWebXmlFilterOrder() {
-		def FilterManager = getClass().getClassLoader().loadClass('grails.plugin.webxml.FilterManager')
 		[springSecurityFilterChain: FilterManager.GRAILS_WEB_REQUEST_POSITION + 100]
 	}
 
