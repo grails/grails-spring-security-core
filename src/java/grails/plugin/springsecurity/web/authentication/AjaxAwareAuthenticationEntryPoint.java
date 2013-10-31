@@ -16,12 +16,16 @@ package grails.plugin.springsecurity.web.authentication;
 
 import grails.plugin.springsecurity.SpringSecurityUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.util.Assert;
+
+import java.io.IOException;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -57,4 +61,13 @@ public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEnt
 		Assert.isTrue(url == null || url.startsWith("/"), "ajaxLoginFormUrl must begin with '/'");
 		ajaxLoginFormUrl = url;
 	}
+    @Override
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
+            throws IOException, ServletException {
+        if(StringUtils.equalsIgnoreCase(request.getHeader("nopage"), "true")) {
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized: The requested URL is protected");
+            return;
+        }
+        super.commence(request, response, authException);
+    }
 }
