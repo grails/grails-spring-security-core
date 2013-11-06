@@ -148,12 +148,14 @@ function addJsClass() {
 
 <h2 id="usingControllerAnnotations">22.1 Using Controller Annotations to Secure URLs</h2>
 <h4>1. Create your Grails application.</h4><p class="paragraph"/><div class="code"><pre>$ grails create&#45;app bookstore
-$ cd bookstore</pre></div>
-<h4>2. Install the plugin by adding it to BuildConfig.groovy</h4>
+$ cd bookstore</pre></div><p class="paragraph"/><h4>2. Install the plugin by adding it to BuildConfig.groovy</h4>
 <div class="code"><pre>plugins &#123;
-   compile ':spring&#45;security&#45;core:2.0'
-&#125;</pre></div>
-<h4>3. Create the User and Role domain classes.</h4>
+   &#8230;
+   compile ':spring&#45;security&#45;core:2.0&#45;RC2'
+&#125;</pre></div><p class="paragraph"/>Note that until the 2.0 version of the plugin is officially released, you'll also need to add a custom repository:<p class="paragraph"/><div class="code"><pre>repositories &#123;
+   &#8230;
+   mavenRepo 'http://repo.spring.io/milestone'
+&#125;</pre></div><p class="paragraph"/>Run the compile script to resolve the dependencies and ensure everything is correct:<p class="paragraph"/><div class="code"><pre>$ grails compile</pre></div><p class="paragraph"/><h4>3. Create the User and Role domain classes.</h4>
 <div class="code"><pre>$ grails s2&#45;quickstart com.testapp User Role</pre></div><p class="paragraph"/>You can choose your names for your domain classes and package; these are just examples.<p class="paragraph"/><blockquote class="note">
 Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "User" or "Group", make sure they are not reserved keywords in your database.
 </blockquote><p class="paragraph"/>The script creates this User class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">package</span> test<p class="paragraph"/>class User &#123;<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
