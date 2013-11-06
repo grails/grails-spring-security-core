@@ -192,8 +192,12 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has all the roles
 	 */
 	public static boolean ifAllGranted(final String roles) {
+		return ifAllGranted(parseAuthoritiesString(roles));
+ 	}
+
+	public static boolean ifAllGranted(final Collection<? extends GrantedAuthority> roles) {
 		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
-		return inferred.containsAll(parseAuthoritiesString(roles));
+		return inferred.containsAll(roles);
 	}
 
 	/**
@@ -202,8 +206,12 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has none the roles
 	 */
 	public static boolean ifNotGranted(final String roles) {
-		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
-		Set<String> grantedCopy = retainAll(inferred, parseAuthoritiesString(roles));
+		return ifNotGranted(parseAuthoritiesString(roles));
+	}
+
+	public static boolean ifNotGranted(final Collection<? extends GrantedAuthority> roles) {
+		Collection<? extends GrantedAuthority>inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Set<String> grantedCopy = retainAll(inferred, roles);
 		return grantedCopy.isEmpty();
 	}
 
@@ -213,8 +221,12 @@ public final class SpringSecurityUtils {
 	 * @return <code>true</code> if the user is authenticated and has any the roles
 	 */
 	public static boolean ifAnyGranted(final String roles) {
+		return ifAnyGranted(parseAuthoritiesString(roles));
+	}
+
+	public static boolean ifAnyGranted(final Collection<? extends GrantedAuthority> roles) {
 		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
-		Set<String> grantedCopy = retainAll(inferred, parseAuthoritiesString(roles));
+		Set<String> grantedCopy = retainAll(inferred, roles);
 		return !grantedCopy.isEmpty();
 	}
 

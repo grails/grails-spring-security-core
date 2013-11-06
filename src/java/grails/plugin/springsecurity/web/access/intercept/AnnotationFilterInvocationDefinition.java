@@ -106,6 +106,10 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			}
 
 			for (UrlMappingInfo mapping : urlInfos) {
+				if (grails23Plus && grails.plugin.springsecurity.ReflectionUtils.isRedirect(mapping)) {
+					break;
+				}
+
 				configureMapping(mapping, grailsRequest, savedParams);
 
 				url = findGrailsUrl(mapping);

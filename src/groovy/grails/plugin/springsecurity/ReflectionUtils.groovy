@@ -214,4 +214,9 @@ class ReflectionUtils {
 		String version = grailsRequest.getHeader(HttpHeaders.ACCEPT_VERSION) ?: responseMimeTypesApi.getMimeTypeForRequest(grailsRequest).version
 		urlMappingsHolder.matchAll requestUrl, method, version == null ? UrlMapping.ANY_VERSION : version
 	}
+
+	// Grails 2.3+ only
+	static boolean isRedirect(UrlMappingInfo mapping) {
+		mapping.redirectInfo
+	}
 }

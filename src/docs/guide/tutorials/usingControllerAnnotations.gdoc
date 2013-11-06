@@ -4,12 +4,30 @@ h4. 1. Create your Grails application.
 $ grails create-app bookstore
 $ cd bookstore
 {code}
+
 h4. 2. Install the plugin by adding it to BuildConfig.groovy
 {code}
 plugins {
-   compile ':spring-security-core:2.0'
+   ...
+   compile ':spring-security-core:2.0-RC2'
 }
 {code}
+
+Note that until the 2.0 version of the plugin is officially released, you'll also need to add a custom repository:
+
+{code}
+repositories {
+   ...
+   mavenRepo 'http://repo.spring.io/milestone'
+}
+{code}
+
+Run the compile script to resolve the dependencies and ensure everything is correct:
+
+{code}
+$ grails compile
+{code}
+
 h4. 3. Create the User and Role domain classes.
 {code}
 $ grails s2-quickstart com.testapp User Role

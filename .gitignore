@@ -3,8 +3,6 @@ cobertura.ser
 /target
 grails-spring-security-core-*.zip
 grails-spring-security-core-*.zip.sha1
-/testapps.config.groovy
-testapps.config.groovy
 plugin.xml
 .settings
 web-app
