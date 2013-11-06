@@ -8,11 +8,13 @@ Upon successful authentication a new HTTP session is created and the previous se
 
 Session fixation is less of a problem now that Grails by default does not include jsessionid in URLs (see [this JIRA issue|http://jira.grails.org/browse/GRAILS-3364]), but it's still a good idea to use this feature.
 
+Note that there is an issue when using the [cookie-session|http://grails.org/plugin/cookie-session] plugin; see [this issue|https://github.com/benlucchesi/grails-cookie-session-v2/issues/17] for more details.
+
 The table shows configuration options for session fixation.
 
 {table}
 *Property* | *Default Value* | *Meaning*
-useSessionFixationPrevention | @false@ | Whether to use session fixation prevention.
+useSessionFixationPrevention | @true@ | Whether to use session fixation prevention.
 sessionFixationPrevention.migrate | @true@ | Whether to copy the session attributes of the existing session to the new session after login.
 sessionFixationPrevention.alwaysCreateSession | @false@ | Whether to always create a session even if one did not exist at the start of the request.
 {table}
