@@ -37,6 +37,6 @@ class ${userClassName} {
 	}
 
 	protected void encodePassword() {
-		password = springSecurityService.encodePassword(password)
+		password = springSecurityService ? springSecurityService.encodePassword(password) : password
 	}
 }
