@@ -698,6 +698,13 @@ to default to 'Annotation'; setting value to 'Annotation'
 			ctx.removeAlias 'springSecurityFilterChain'
 			ctx.registerAlias 'securityDebugFilter', 'springSecurityFilterChain'
 		}
+
+		if (conf.useDigestAuth) {
+			def passwordEncoder = ctx.passwordEncoder
+			if (passwordEncoder instanceof DigestAuthPasswordEncoder) {
+				passwordEncoder.resetInitializing()
+			}
+		}
 	}
 
 	def onChange = { event ->
