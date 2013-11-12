@@ -27,8 +27,7 @@ grails.plugin.springsecurity.rejectIfNoRule = false
 grails.plugin.springsecurity.fii.rejectPublicInvocations = true
 {code}
 
-Note that if you set @rejectIfNoRule@ or @rejectPublicInvocations@ to @true@ you'll need to configure the @staticRules@ map to include URLs that can't otherwise
-be guarded:
+Note that if you set @rejectIfNoRule@ or @rejectPublicInvocations@ to @true@ you'll need to configure the @staticRules@ map to include URLs that can't otherwise be guarded:
 
 {code}
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
@@ -42,8 +41,33 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 {code}
 
-This is needed when using annotations; if you use the @grails.plugin.springsecurity.interceptUrlMap@ map in @Config.groovy@ you'll need to add these URLs too,
-and likewise when using @Requestmap@ instances.
+This is needed when using annotations; if you use the @grails.plugin.springsecurity.interceptUrlMap@ map in @Config.groovy@ you'll need to add these URLs too, and likewise when using @Requestmap@ instances. If you don't use annotations, you must add rules for the login and logout controllers also. You can add Requestmaps manually, or in BootStrap.groovy, for example:
+
+{code}
+for (String url in [
+      '/', '/index', '/index.gsp', '/**/favicon.ico',
+      '/**/js/**', '/**/css/**', '/**/images/**',
+      '/login', '/login.*', '/login/*',
+      '/logout', '/logout.*', '/logout/*']) {
+   new Requestmap(url: url, configAttribute: 'permitAll').save()
+}
+{code}
+
+The analogous interceptUrlMap settings would be:
+
+{code}
+grails.plugin.springsecurity.interceptUrlMap = [
+   '/':                  ['permitAll'],
+   '/index':             ['permitAll'],
+   '/index.gsp':         ['permitAll'],
+   '/**/js/**':          ['permitAll'],
+   '/**/css/**':         ['permitAll'],
+   '/**/images/**':      ['permitAll'],
+   '/**/favicon.ico':    ['permitAll'],
+   '/login/**':          ['permitAll'],
+   '/logout/**':         ['permitAll']
+]
+{code}
 
 In addition, when you enable the switch-user feature, you'll have to specify access rules for the associated URLs, e.g.
 
