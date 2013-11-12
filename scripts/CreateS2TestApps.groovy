@@ -19,7 +19,6 @@ functionalTestPluginVersion = '1.2.7'
 projectfiles = new File(basedir, 'webtest/projectFiles')
 grailsHome = null
 dotGrails = null
-grailsVersion = null
 projectDir = null
 appName = null
 pluginVersion = null
@@ -237,8 +236,7 @@ private void init(String name, config) {
 	appName = 'spring-security-core-test-' + name
 	testprojectRoot = "$projectDir/$appName"
 
-	grailsVersion = config.grailsVersion
-	dotGrails = config.dotGrails + '/' + grailsVersion
+	dotGrails = config.dotGrails + '/' + config.grailsVersion
 }
 
 private void error(String message) {

@@ -37,6 +37,7 @@ import org.springframework.util.Assert;
 public class DigestAuthPasswordEncoder implements org.springframework.security.authentication.encoding.PasswordEncoder, InitializingBean {
 
 	protected String realm;
+	protected boolean initializing = true;
 
 	/**
 	 * {@inheritDoc}
@@ -44,8 +45,15 @@ public class DigestAuthPasswordEncoder implements org.springframework.security.a
 	 * 	java.lang.String, java.lang.Object)
 	 */
 	public String encodePassword(final String rawPass, final Object salt) {
-		Assert.notNull(salt, "Salt is required and must be the username");
-		String username = salt.toString();
+		String username;
+		if (initializing && "userNotFoundPassword".equals(rawPass)) {
+			// during startup, DaoAuthenticationProvider calls this method with a null salt
+			username = rawPass;
+		}
+		else {
+			Assert.notNull(salt, "Salt is required and must be the username");
+			username = salt.toString();
+		}
 		return md5Hex(username + ":" + realm + ":" + rawPass);
 	}
 
@@ -67,6 +75,13 @@ public class DigestAuthPasswordEncoder implements org.springframework.security.a
 	public void setRealm(final String name) {
 		realm = name;
 	}
+
+	/**
+	 * Called after the ApplicationContext is built to enable standard behavior.
+	 */
+	public void resetInitializing() {
+	   initializing = false;
+   }
 
 	/**
 	 * {@inheritDoc}
