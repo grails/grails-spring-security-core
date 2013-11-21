@@ -27,7 +27,7 @@ The corresponding @Requestmap@ URLs would be
 
 {code}
 new Requestmap(url: "/secure/someAction",
-               configAttribute: "hasRole('ROLE_ADMIN'").save()
+               configAttribute: "hasRole('ROLE_ADMIN')").save()
 
 new Requestmap(url: "/secure/someOtherAction",
                configAttribute: "authentication.name == 'ralph'").save()
@@ -37,7 +37,7 @@ and the corresponding static mappings would be
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
-   '/secure/someAction':      ["hasRole('ROLE_ADMIN'"],
+   '/secure/someAction':      ["hasRole('ROLE_ADMIN')"],
    '/secure/someOtherAction': ["authentication.name == 'ralph'"]
 ]
 {code}
