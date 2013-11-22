@@ -64,7 +64,7 @@
 		<g:each var='auth' in="${authorityList}">
 		<tr>
 			<td valign="top" class="name" align="left">${auth.authority.encodeAsHTML()}</td>
-			<td align="left"><g:checkBox name="${auth.authority}"/></td>
+			<td align="left"><g:checkBox name="${auth.authority}" id="${auth.authority}"/></td>
 		</tr>
 		</g:each>
 

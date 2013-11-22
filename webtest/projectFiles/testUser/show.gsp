@@ -25,17 +25,17 @@
 
 		<tr class="prop">
 			<td valign="top" class="name"><g:message code="testUser.id.label" default="Id" /></td>
-			<td valign="top" class="value">${fieldValue(bean: person, field: "id")}</td>
+			<td valign="top" class="value" id='userId'>${fieldValue(bean: person, field: "id")}</td>
 		</tr>
 
 		<tr class="prop">
 			<td valign="top" class="name"><g:message code="testUser.username.label" default="Username" /></td>
-			<td valign="top" class="value">${fieldValue(bean: person, field: "username")}</td>
+			<td valign="top" class="value" id='username'>${fieldValue(bean: person, field: "username")}</td>
 		</tr>
 
 		<tr class="prop">
 			<td valign="top" class="name"><g:message code="testUser.enabled.label" default="Enabled" /></td>
-			<td valign="top" class="value"><g:formatBoolean boolean="${person?.enabled}" /></td>
+			<td valign="top" class="value" id='userEnabled'><g:formatBoolean boolean="${person?.enabled}" /></td>
 		</tr>
 
 		<tr class="prop">
@@ -55,11 +55,12 @@
 
 	<div class="buttons">
 		<g:form>
-			<g:hiddenField name="id" value="${person?.id}" />
-			<span class="button"><g:actionSubmit class="edit" action="edit" value="${message(code: 'default.button.edit.label', default: 'Edit')}" /></span>
-			<span class="button"><g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" /></span>
+			<fieldset class="buttons">
+				<g:hiddenField name="id" value="${person?.id}" />
+				<g:link class="edit" action="edit" id="${person?.id}"><g:message code="default.button.edit.label" default="Edit" /></g:link>
+				<g:actionSubmit class="delete" action="delete" value="${message(code: 'default.button.delete.label', default: 'Delete')}" onclick="return confirm('${message(code: 'default.button.delete.confirm.message', default: 'Are you sure?')}');" />
+			</fieldset>
 		</g:form>
 	</div>
 </div>
 </body>
-
