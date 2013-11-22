@@ -17,162 +17,51 @@
 	<target name='test-bcrypt'     description='Run BCrypt tests'     depends='clean, init-bcrypt,     test-app' />
 
 	<target name='init-static'>
+		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
+		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
+		      overwrite='true' />
 
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
-		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-
-grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.InterceptUrlMap
-
-// SecureClassAnnotatedController intentionally not secured
-
-grails.plugin.springsecurity.interceptUrlMap = [
-	'/secureannotated/admineither': ['ROLE_ADMIN', 'ROLE_ADMIN2'],
-	'/secureannotated/expression': ["authentication.name == 'admin1'"],
-	'/secureannotated/**': 'ROLE_ADMIN',
-	'/**': 'IS_AUTHENTICATED_ANONYMOUSLY'
-]
-
-// reset settings from other test runs
-grails.plugin.springsecurity.useBasicAuth = false
-grails.plugin.springsecurity.filterChain.chainMap = [:]
-grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugin.springsecurity.roleHierarchy = ''
-grails.plugin.springsecurity.useSwitchUserFilter = false
-grails.plugin.springsecurity.password.algorithm = 'SHA-256'
-grails.web.url.converter = 'camelcase'
-
-]]></echo>
-
-		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
-grails.testing.patterns = ["Role", "User", "StaticSecurity"]
-]]></echo>
-
+		<echo file='testconfig'>static</echo>
 	</target>
 
 	<target name='init-annotation'>
+		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
+		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
+		      overwrite='true' />
 
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
-
-		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
-
-// reset settings from other test runs
-grails.plugin.springsecurity.useBasicAuth = false
-grails.plugin.springsecurity.filterChain.chainMap = [:]
-grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugin.springsecurity.roleHierarchy = ''
-grails.plugin.springsecurity.useSwitchUserFilter = false
-grails.plugin.springsecurity.password.algorithm = 'SHA-256'
-grails.web.url.converter = 'camelcase'
-
-]]></echo>
-
-		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
-grails.testing.patterns = ["Role", "User", "AnnotationSecurity"]
-]]></echo>
+		<echo file='testconfig'>annotation</echo>
 	</target>
 
 	<target name='init-requestmap'>
+		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
+		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
+		      overwrite='true' />
 
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
-
-		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Requestmap
-
-// reset settings from other test runs
-grails.plugin.springsecurity.useBasicAuth = false
-grails.plugin.springsecurity.filterChain.chainMap = [:]
-grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugin.springsecurity.roleHierarchy = ''
-grails.plugin.springsecurity.useSwitchUserFilter = false
-grails.plugin.springsecurity.password.algorithm = 'SHA-256'
-grails.web.url.converter = 'camelcase'
-
-]]></echo>
-
-		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
-grails.testing.patterns = ["Requestmap", "Role", "User", "RequestmapSecurity"]
-]]></echo>
+		<echo file='testconfig'>requestmap</echo>
 	</target>
 
 	<target name='init-basic'>
+		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
+		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
+		      overwrite='true' />
 
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
-
-		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
-
-grails.plugin.springsecurity.useBasicAuth = true
-grails.plugin.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
-grails.plugin.springsecurity.filterChain.chainMap = [
-	'/secureclassannotated/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
-	'/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
-]
-
-// reset settings from other test runs
-grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = null
-grails.plugin.springsecurity.roleHierarchy = ''
-grails.plugin.springsecurity.useSwitchUserFilter = false
-grails.plugin.springsecurity.password.algorithm = 'SHA-256'
-grails.web.url.converter = 'camelcase'
-
-]]></echo>
-
-		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
-grails.testing.patterns = ["Role", "User", "BasicAuthSecurity"]
-]]></echo>
+		<echo file='testconfig'>basic</echo>
 	</target>
 
 	<target name='init-misc'>
+		<copy file='grails-app/controllers/com/testapp/TestUserController_usingSalt_groovy'
+		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
+		      overwrite='true' />
 
-		<copy file='grails-app/controllers/com/testapp/TestUserController_usingSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
-
-		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
-
-grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'
-
-grails.plugin.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
-
-grails.plugin.springsecurity.useSwitchUserFilter = true
-
-grails.plugin.springsecurity.failureHandler.exceptionMappings = [
-	'org.springframework.security.authentication.LockedException': '/testUser/accountLocked',
-	'org.springframework.security.authentication.DisabledException': '/testUser/accountDisabled',
-	'org.springframework.security.authentication.AccountExpiredException': '/testUser/accountExpired',
-	'org.springframework.security.authentication.CredentialsExpiredException': '/testUser/passwordExpired'
-]
-
-// reset settings from other test runs
-grails.plugin.springsecurity.useBasicAuth = false
-grails.plugin.springsecurity.filterChain.chainMap = [:]
-grails.plugin.springsecurity.password.algorithm = 'SHA-256'
-grails.web.url.converter = 'hyphenated'
-]]></echo>
-
-		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
-grails.testing.patterns = ["Misc", "Disable", "Taglib"]
-]]></echo>
+		<echo file='testconfig'>misc</echo>
 	</target>
 
 	<target name='init-bcrypt'>
+		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
+		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
+		      overwrite='true' />
 
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy' tofile='grails-app/controllers/com/testapp/TestUserController.groovy' overwrite='true' />
-
-		<echo file='grails-app/conf/Config.groovy' append='true'><![CDATA[
-grails.plugin.springsecurity.securityConfigType = grails.plugin.springsecurity.SecurityConfigType.Annotation
-grails.plugin.springsecurity.password.algorithm = 'bcrypt'
-
-// reset settings from other test runs
-grails.plugin.springsecurity.useBasicAuth = false
-grails.plugin.springsecurity.filterChain.chainMap = [:]
-grails.web.url.converter = 'camelcase'
-
-]]></echo>
-
-		<echo file='grails-app/conf/BuildConfig.groovy' append='true'><![CDATA[
-grails.testing.patterns = ["BCrypt"]
-]]></echo>
+		<echo file='testconfig'>bcrypt</echo>
 	</target>
 
 	<target name='test-app'>

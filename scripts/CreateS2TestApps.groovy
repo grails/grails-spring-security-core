@@ -15,9 +15,9 @@
 
 includeTargets << new File(springSecurityCorePluginDir, "scripts/_S2Common.groovy")
 
-functionalTestPluginVersion = '1.2.7'
 projectfiles = new File(basedir, 'webtest/projectFiles')
 grailsHome = null
+grailsVersion = null
 dotGrails = null
 projectDir = null
 appName = null
@@ -84,14 +84,59 @@ mavenRepo 'http://repo.spring.io/milestone' // TODO remove
 
 	contents = contents.replace('grails.project.fork', 'grails.project.forkDISABLED')
 
-	contents = contents.replace('plugins {', """plugins {
-test ":functional-test:$functionalTestPluginVersion"
-runtime ":spring-security-core:$pluginVersion"
+	float grailsMinorVersion = grailsVersion[0..2] as float
+	String spockDependency = grailsMinorVersion > 2.1 ? '		test "org.spockframework:spock-grails-support:0.7-groovy-2.0"' : ''
+	String spockExclude = grailsMinorVersion > 2.1 ? '			exclude "spock-grails-support"' : ''
+
+	contents = contents.replace('dependencies {', """
+	String gebVersion = '0.9.2'
+	String seleniumVersion = '2.32.0'
+
+	dependencies {
+		test "org.seleniumhq.selenium:selenium-chrome-driver:\$seleniumVersion"
+		test "org.seleniumhq.selenium:selenium-firefox-driver:\$seleniumVersion"
+		test 'com.github.detro.ghostdriver:phantomjsdriver:1.0.1', {
+			transitive = false
+		}
+		test "org.gebish:geb-spock:\$gebVersion"
+$spockDependency
 """)
 
+	contents = contents.replace('plugins {', """plugins {
+		test "org.grails.plugins:geb:\$gebVersion"
+		test ":spock:0.7", {
+$spockExclude
+		}
+
+		runtime ":spring-security-core:$pluginVersion"
+""")
+
+	contents += '''
+
+def file = new File('testconfig')
+String testconfig = file.exists() ? file.text.trim() : ''
+switch (testconfig) {
+	case 'annotation':
+		grails.testing.patterns = ['Role', 'User', 'AnnotationSecurity']
+		break
+	case 'basic':
+		grails.testing.patterns = ['Role', 'User', 'BasicAuthSecurity']
+		break
+	case 'bcrypt':
+		grails.testing.patterns = ['BCrypt']
+		break
+	case 'misc':
+		grails.testing.patterns = ['Misc', 'Disable']
+		break
+	case 'requestmap':
+		grails.testing.patterns = ['Requestmap', 'Role', 'User', 'RequestmapSecurity']
+		break
+	case 'static':
+		grails.testing.patterns = ['Role', 'User', 'StaticSecurity']
+		break
+}'''
 	buildConfig.withWriter { it.writeLine contents }
 
-	callGrails grailsHome, testprojectRoot, 'dev', 'compile', null, true // can fail when installing the functional-test plugin
 	callGrails grailsHome, testprojectRoot, 'dev', 'compile'
 }
 
@@ -115,9 +160,71 @@ private void runQuickstart() {
 	contents += '''
 grails.plugin.springsecurity.fii.rejectPublicInvocations = true
 grails.plugin.springsecurity.rejectIfNoRule = false
-'''
+
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+
+def file = new File('testconfig')
+String testconfig = file.exists() ? file.text.trim() : ''
+switch (testconfig) {
+	case 'annotation':
+		grails.plugin.springsecurity.securityConfigType = 'Annotation'
+		break
+
+	case 'basic':
+		grails.plugin.springsecurity.securityConfigType = 'Annotation'
+		grails.plugin.springsecurity.useBasicAuth = true
+		grails.plugin.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
+		grails.plugin.springsecurity.filterChain.chainMap = [
+			'/secureclassannotated/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
+			'/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+		]
+		break
+
+	case 'bcrypt':
+		grails.plugin.springsecurity.securityConfigType = 'Annotation'
+		grails.plugin.springsecurity.password.algorithm = 'bcrypt'
+		break
+
+	case 'misc':
+		grails.plugin.springsecurity.securityConfigType = 'Annotation'
+		grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'
+		grails.plugin.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
+		grails.plugin.springsecurity.useSwitchUserFilter = true
+		grails.plugin.springsecurity.failureHandler.exceptionMappings = [
+			'org.springframework.security.authentication.LockedException':             '/testUser/accountLocked',
+			'org.springframework.security.authentication.DisabledException':           '/testUser/accountDisabled',
+			'org.springframework.security.authentication.AccountExpiredException':     '/testUser/accountExpired',
+			'org.springframework.security.authentication.CredentialsExpiredException': '/testUser/passwordExpired'
+		]
+		grails.web.url.converter = 'hyphenated'
+		break
+
+	case 'requestmap':
+		grails.plugin.springsecurity.securityConfigType = 'Requestmap'
+		break
+
+	case 'static':
+		grails.plugin.springsecurity.securityConfigType = 'InterceptUrlMap'
+		grails.plugin.springsecurity.interceptUrlMap = [
+			'/secureannotated/admineither': ['ROLE_ADMIN', 'ROLE_ADMIN2'],
+			'/secureannotated/expression': ["authentication.name == 'admin1'"],
+			'/secureannotated/**': 'ROLE_ADMIN',
+			'/**': 'IS_AUTHENTICATED_ANONYMOUSLY'
+		]
+		break
+}'''
 
 	config.withWriter { it.writeLine contents }
+
+	File urlMappings = new File(testprojectRoot, 'grails-app/conf/UrlMappings.groovy')
+	contents = urlMappings.text
+
+	contents = contents.replace('''"500"(view:'/error')''', '''"500"(view:'/error')
+		"401"(view:'/error401')
+		"403"(view:'/error403')
+''')
+
+	urlMappings.withWriter { it.writeLine contents }
 }
 
 private void copySampleFiles() {
@@ -126,15 +233,25 @@ private void copySampleFiles() {
 		fileset(dir: projectfiles.path) {
 			include name: 'FooBarController.groovy'
 			include name: 'HackController.groovy'
+			include name: 'LogoutController.groovy'
 			include name: 'Secure*Controller.groovy'
 			include name: 'TagLibTestController.groovy'
+		}
+	}
+
+	ant.copy(todir: "$testprojectRoot/grails-app/views") {
+		fileset(dir: projectfiles.path) {
+			include name: 'error.gsp'
+			include name: 'error401.gsp'
+			include name: 'error403.gsp'
 		}
 	}
 
 	ant.mkdir dir: "$testprojectRoot/grails-app/views/tagLibTest"
 	ant.copy file: "${projectfiles.path}/test.gsp", todir: "$testprojectRoot/grails-app/views/tagLibTest"
 
-	ant.copy file: "${projectfiles.path}/error.gsp", todir: "$testprojectRoot/grails-app/views"
+	ant.mkdir dir: "$testprojectRoot/grails-app/views/logout"
+	ant.copy file: "${projectfiles.path}/logout.index.gsp", tofile: "$testprojectRoot/grails-app/views/logout/index.gsp"
 
 	ant.copy(todir: "$testprojectRoot/grails-app/services") {
 		fileset(dir: projectfiles.path) {
@@ -236,7 +353,8 @@ private void init(String name, config) {
 	appName = 'spring-security-core-test-' + name
 	testprojectRoot = "$projectDir/$appName"
 
-	dotGrails = config.dotGrails + '/' + config.grailsVersion
+	grailsVersion = config.grailsVersion
+	dotGrails = config.dotGrails + '/' + grailsVersion
 }
 
 private void error(String message) {
