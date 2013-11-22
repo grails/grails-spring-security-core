@@ -21,7 +21,7 @@ class RequestmapTest extends AbstractSecurityWebTest {
 
 		verifyListSize 22
 
-		get '/testRequestmap/edit/21'
+		get '/testRequestmap/edit/22'
 		assertContentContains 'Edit TestRequestmap'
 		clickButton 'Update'
 		assertContentContains 'Show TestRequestmap'
@@ -29,7 +29,7 @@ class RequestmapTest extends AbstractSecurityWebTest {
 
 		verifyListSize 22
 
-		get '/testRequestmap/show/21'
+		get '/testRequestmap/show/22'
 		clickButton 'Delete'
 
 		verifyXPath "//div[@class='message']", '.*TestRequestmap.*deleted.*', true
