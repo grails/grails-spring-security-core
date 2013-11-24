@@ -135,6 +135,11 @@ switch (testconfig) {
 		grails.testing.patterns = ['Role', 'User', 'StaticSecurity']
 		break
 }'''
+
+	String serverPort = '8' + grailsVersion.replaceAll('\\.', '')
+	contents += """
+grails.server.port.http = $serverPort"""
+
 	buildConfig.withWriter { it.writeLine contents }
 
 	callGrails grailsHome, testprojectRoot, 'dev', 'compile'
@@ -341,7 +346,7 @@ private void init(String name, config) {
 
 	def pluginZip = new File(basedir, "grails-spring-security-core-${pluginVersion}.zip")
 	if (!pluginZip.exists()) {
-		error "plugin $pluginZip.absolutePath not found"
+//		error "plugin $pluginZip.absolutePath not found"
 	}
 
 	grailsHome = config.grailsHome
