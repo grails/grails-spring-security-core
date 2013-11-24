@@ -14,8 +14,11 @@
  */
 package grails.plugin.springsecurity.web.authentication;
 
+import java.io.IOException;
+
 import grails.plugin.springsecurity.SpringSecurityUtils;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -47,6 +50,16 @@ public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEnt
 		}
 
 		return getLoginFormUrl();
+	}
+
+	@Override
+	public void commence(final HttpServletRequest req, final HttpServletResponse res, final AuthenticationException e) throws IOException, ServletException {
+		if ("true".equalsIgnoreCase(req.getHeader("nopage"))) {
+			res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+			return;
+		}
+
+		super.commence(req, res, e);
 	}
 
 	/**
