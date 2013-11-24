@@ -7,4 +7,8 @@ class ScaffoldPage extends Page {
 		heading { $('h1') }
 		message { $('div.message').text() }
 	}
+
+	long getId() {
+		driver.currentUrl.substring(driver.currentUrl.lastIndexOf('/') + 1) as Long
+	}
 }

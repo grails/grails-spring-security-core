@@ -75,12 +75,12 @@ class RequestmapSpec extends AbstractSecuritySpec {
 	def 'delete requestmap'() {
 		when:
 			go 'testRequestmap/show/22'
-			def deletedId = id
 
 		then:
 			at ShowRequestmapPage
 
 		when:
+			def deletedId = id
 			withConfirm { deleteButton.click() }
 
 		then:
