@@ -16,7 +16,7 @@ grails.project.dependency.resolution = {
 
 	dependencies {
 
-		String springSecurityVersion = '3.2.0.RC1'
+		String springSecurityVersion = '3.2.0.RELEASE'
 
 		compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 			excludes 'aopalliance', 'aspectjrt', 'cglib-nodep', 'commons-collections', 'commons-logging',
@@ -45,7 +45,7 @@ grails.project.dependency.resolution = {
 			export = false
 		}
 
-		compile(":hibernate:$grailsVersion") {
+		compile ":hibernate:$grailsVersion", {
 			export = false
 		}
 	}

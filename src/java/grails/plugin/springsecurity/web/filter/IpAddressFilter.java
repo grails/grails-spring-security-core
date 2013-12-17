@@ -33,7 +33,7 @@ import org.codehaus.groovy.grails.web.util.WebUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.web.util.IpAddressMatcher;
+import org.springframework.security.web.util.matcher.IpAddressMatcher;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -79,7 +79,7 @@ public class IpAddressFilter extends GenericFilterBean {
 		chain.doFilter(request, response);
 	}
 
-	protected void deny(@SuppressWarnings("unused") final HttpServletRequest req, final HttpServletResponse res) throws IOException {
+	protected void deny(final HttpServletRequest req, final HttpServletResponse res) throws IOException {
 		// send 404 to hide the existence of the resource
 		res.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}

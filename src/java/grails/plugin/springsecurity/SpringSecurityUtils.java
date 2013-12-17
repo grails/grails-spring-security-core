@@ -55,8 +55,7 @@ import org.springframework.security.web.authentication.switchuser.SwitchUserFilt
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.security.web.util.AnyRequestMatcher;
-import org.springframework.security.web.util.RequestMatcher;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.util.StringUtils;
 
 /**
@@ -464,9 +463,8 @@ public final class SpringSecurityUtils {
 		Filter filter = getBean(beanName);
 		getConfiguredOrderedFilters().put(order, filter);
 		FilterChainProxy filterChain = getBean("springSecurityFilterChain");
-		RequestMatcher rm = new AnyRequestMatcher();
 		List<Filter> filters = new ArrayList<Filter>(getConfiguredOrderedFilters().values());
-		filterChain.setFilterChainMap(Collections.singletonMap(rm, filters));
+		filterChain.setFilterChainMap(Collections.singletonMap(AnyRequestMatcher.INSTANCE, filters));
 	}
 
 	/**

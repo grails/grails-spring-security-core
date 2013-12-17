@@ -32,7 +32,7 @@ import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
-import org.springframework.security.web.util.AnyRequestMatcher
+import org.springframework.security.web.util.matcher.AnyRequestMatcher
 import org.springframework.web.filter.GenericFilterBean
 
 import test.TestRole

@@ -119,9 +119,9 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import org.springframework.security.web.util.AntPathRequestMatcher
-import org.springframework.security.web.util.AnyRequestMatcher
-import org.springframework.security.web.util.RequestMatcher
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
+import org.springframework.security.web.util.matcher.AnyRequestMatcher
+import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.filter.DelegatingFilterProxy
 
 /**
