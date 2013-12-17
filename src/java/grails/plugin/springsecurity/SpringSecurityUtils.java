@@ -669,15 +669,16 @@ public final class SpringSecurityUtils {
 	private static ConfigObject mergeConfig(final ConfigObject currentConfig, final ConfigObject secondary) {
 		ConfigObject config = new ConfigObject();
 		if (secondary == null) {
-			if(currentConfig != null) {
+			if (currentConfig != null) {
 				config.putAll(currentConfig);
 			}
 		}
 		else {
-			if(currentConfig != null) {
-				config.putAll(secondary.merge(currentConfig));
-			} else {
+			if (currentConfig == null) {
 				config.putAll(secondary);
+			}
+			else {
+				config.putAll(secondary.merge(currentConfig));
 			}
 		}
 		return config;
