@@ -10,13 +10,11 @@ grails.project.dependency.resolution = {
 		grailsCentral()
 		mavenLocal()
 		mavenCentral()
-
-		mavenRepo 'http://repo.spring.io/milestone' // TODO remove
 	}
 
 	dependencies {
 
-		String springSecurityVersion = '3.2.0.RC1'
+		String springSecurityVersion = '3.2.0.RELEASE'
 
 		compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 			excludes 'aopalliance', 'aspectjrt', 'cglib-nodep', 'commons-collections', 'commons-logging',
