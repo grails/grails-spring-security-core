@@ -1,0 +1,65 @@
+package ${packageName}
+
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+class ${userClassName}${groupClassName} implements Serializable {
+
+	private static final long serialVersionUID = 1
+
+	${userClassName} ${userClassProperty}
+	${groupClassName} ${groupClassProperty}
+
+	boolean equals(other) {
+		if (!(other instanceof ${userClassName}${groupClassName})) {
+			return false
+		}
+
+		other.${userClassProperty}?.id == ${userClassProperty}?.id &&
+			other.${groupClassProperty}?.id == ${groupClassProperty}?.id
+	}
+
+	int hashCode() {
+		def builder = new HashCodeBuilder()
+		if (${userClassProperty}) builder.append(${userClassProperty}.id)
+		if (${groupClassProperty}) builder.append(${groupClassProperty}.id)
+		builder.toHashCode()
+	}
+
+	static ${userClassName}${groupClassName} get(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
+		${userClassName}${groupClassName}.where {
+			${userClassProperty} == ${userClassName}.load(${userClassProperty}Id) &&
+			${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id)
+		}.get()
+	}
+
+	static ${userClassName}${groupClassName} create(${userClassName} ${userClassProperty}, ${groupClassName} ${groupClassProperty}, boolean flush = false) {
+		new ${userClassName}${groupClassName}(${userClassProperty}: ${userClassProperty}, ${groupClassProperty}: ${groupClassProperty}).save(flush: flush, insert: true)
+	}
+
+	static boolean remove(${userClassName} u, ${groupClassName} g) {
+
+		int rowCount = ${userClassName}${groupClassName}.where {
+			${userClassProperty} == ${userClassName}.load(u.id) &&
+			${groupClassProperty} == ${groupClassName}.load(r.id)
+		}.deleteAll()
+
+		rowCount > 0
+	}
+
+	static void removeAll(${userClassName} u) {
+		${userClassName}${groupClassName}.where {
+			${userClassProperty} == ${userClassName}.load(u.id)
+		}.deleteAll()
+	}
+
+	static void removeAll(${groupClassName} g) {
+		${userClassName}${groupClassName}.where {
+			${groupClassProperty} == ${groupClassName}.load(r.id)
+		}.deleteAll()
+	}
+
+	static mapping = {
+		id composite: ['${groupClassProperty}', '${userClassProperty}']
+		version false
+	}
+}
