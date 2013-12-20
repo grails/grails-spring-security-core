@@ -10,8 +10,6 @@ grails.project.dependency.resolution = {
 		grailsCentral()
 		mavenLocal()
 		mavenCentral()
-
-		mavenRepo 'http://repo.spring.io/milestone' // TODO remove
 	}
 
 	dependencies {
