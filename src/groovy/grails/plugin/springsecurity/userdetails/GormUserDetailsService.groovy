@@ -91,8 +91,21 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 		String authoritiesPropertyName = conf.userLookup.authoritiesPropertyName
 		String authorityPropertyName = conf.authority.nameField
 
+        boolean useGroups = conf.useRoleGroups
+        String authorityGroupPropertyName = conf.authority.groupAuthorityNameField
+
 		Collection<?> userAuthorities = user."$authoritiesPropertyName"
-		def authorities = userAuthorities.collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
+        def authorities
+
+        if(useGroups){
+            if(authorityGroupPropertyName){
+                authorities = userAuthorities.collect{it."$authorityGroupPropertyName"}.flatten().unique().collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
+            } else {
+                log.warn "Attempted to use group authorities, but the authority name field for the group class has not been defined."
+            }
+        } else {
+            authorities = userAuthorities.collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
+        }
 		authorities ?: [NO_ROLE]
 	}
 

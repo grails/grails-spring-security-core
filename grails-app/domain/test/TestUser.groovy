@@ -19,7 +19,7 @@ package test
  */
 class TestUser {
 
-	static transients = ['roles', 'roleNames']
+	static transients = ['roles', 'roleNames', 'groups']
 
 	String loginName
 	String passwrrd
@@ -29,7 +29,7 @@ class TestUser {
 	boolean passwordExpired
 
 	Set<TestRole> getRoles() { TestUserRole.findAllByUser(this).collect { it.role } }
-
+    Set<TestRoleGroup> getGroups() { TestUserRoleGroup.findAllByUser(this).collect { it.group } as Set}
 	Collection<String> getRoleNames() { roles*.auth }
 
 	static constraints = {

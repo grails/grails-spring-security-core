@@ -7,3 +7,5 @@ grails-spring-security-core-*.zip.sha1
 plugin.xml
 .settings
 web-app
+*.iml
+.idea
