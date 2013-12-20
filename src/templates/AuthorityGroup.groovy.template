@@ -1,0 +1,18 @@
+package ${packageName}
+
+class ${groupClassName} {
+
+	String name
+
+	static mapping = {
+		cache true
+	}
+
+    Set<${roleClassName}> getAuthorities() {
+        ${groupClassName}${roleClassName}.findAllBy${groupClassName}(this).collect { it.${roleClassProperty} } as Set
+    }
+
+	static constraints = {
+		name blank: false, unique: true
+	}
+}

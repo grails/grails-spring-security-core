@@ -17,8 +17,11 @@ package grails.plugin.springsecurity
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 import test.TestRole
+import test.TestRoleGroup
+import test.TestRoleGroupRoles
 import test.TestUser
 import test.TestUserRole
+import test.TestUserRoleGroup
 
 /**
  * Integration tests for GormUserDetailsService.
@@ -36,6 +39,9 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	def sessionFactory
 	def userDetailsService
 
+    def securityConfigGroupPropertyNames = ["useRoleGroups", "authority.className", "authority.nameField", "authority.groupAuthorityNameField", "userLookup.authoritiesPropertyName"]
+    def securityConfigGroupPropertyValues = [:]
+
 	/**
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#setUp()
@@ -44,7 +50,9 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	protected void setUp() {
 		super.setUp()
 		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = new ConfigObject()
-
+        securityConfigGroupPropertyNames.each{
+            securityConfigGroupPropertyValues.put(it, ReflectionUtils.getConfigProperty(it))
+        }
 		assertEquals 0, TestRole.count()
 		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
 		superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save(failOnError: true)
@@ -59,6 +67,9 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+        securityConfigGroupPropertyValues.each {key, value ->
+            ReflectionUtils.setConfigProperty(key, value)
+        }
 	}
 
 	void testLoadUserByUsername_NotFound() {
@@ -105,6 +116,40 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 		assertEquals enabled, details.accountNonExpired
 		assertEquals enabled, details.accountNonLocked
 		assertEquals enabled, details.credentialsNonExpired
+		assertEquals([ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME], details.authorities*.authority.sort())
+	}
+
+	void testLoadUserByUsername_Groups() {
+		//Change the config to use authority groups
+		ReflectionUtils.setConfigProperty("useRoleGroups", true)
+		ReflectionUtils.setConfigProperty("authority.className", "test.TestRoleGroup")
+		ReflectionUtils.setConfigProperty("authority.nameField", "auth")
+		ReflectionUtils.setConfigProperty("authority.groupAuthorityNameField", "roles")
+		ReflectionUtils.setConfigProperty("userLookup.authoritiesPropertyName", "groups")
+
+		String loginName = 'loginName'
+		String password = 'password123'
+		boolean enabled = true
+
+		assertEquals 0, TestUser.count()
+		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
+		assertEquals 1, TestUser.count()
+
+		assertEquals 0, TestRoleGroup.count()
+		def roleGroup = new TestRoleGroup(name: 'testRoleGroup1').save(failOnError: true)
+		assertEquals 1, TestRoleGroup.count()
+
+		TestRoleGroupRoles.create roleGroup, adminRole
+		TestRoleGroupRoles.create roleGroup, superAdminRole, true
+		assertEquals 2, TestRoleGroupRoles.count()
+
+		assertEquals 0, TestUserRoleGroup.count()
+		TestUserRoleGroup.create user, roleGroup, true
+		assertEquals 1, TestUserRoleGroup.count()
+
+		def details = userDetailsService.loadUserByUsername(loginName)
+		assertNotNull details
+
 		assertEquals([ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME], details.authorities*.authority.sort())
 	}
 

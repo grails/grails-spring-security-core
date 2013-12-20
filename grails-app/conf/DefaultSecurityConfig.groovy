@@ -82,7 +82,9 @@ security {
 	authority {
 		className = null // must be set if using UserDetailsService
 		nameField = 'authority'
+        groupAuthorityNameField = null //must be set if using authority groups
 	}
+    useRoleGroups = false
 
 	/** authenticationProcessingFilter */
 	apf {
