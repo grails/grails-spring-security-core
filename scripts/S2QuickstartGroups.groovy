@@ -17,12 +17,12 @@ import grails.util.GrailsNameUtils
 includeTargets << new File(springSecurityCorePluginDir, 'scripts/_S2Common.groovy')
 
 USAGE = """
-Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> <group-class-name> [requestmap-class-name]
+Usage: grails s2-quickstart-groups <domain-class-package> <user-class-name> <role-class-name> <group-class-name> [requestmap-class-name]
 
 Creates a user, role and role group class (and optionally a requestmap class) in the specified package
 
-Example: grails s2-quickstart com.yourapp User Role RoleGroup
-Example: grails s2-quickstart com.yourapp Person Authority AuthorityGroup Requestmap
+Example: grails s2-quickstart-groups com.yourapp User Role RoleGroup
+Example: grails s2-quickstart-groups com.yourapp Person Authority AuthorityGroup Requestmap
 """
 
 includeTargets << grailsScript('_GrailsBootstrap')

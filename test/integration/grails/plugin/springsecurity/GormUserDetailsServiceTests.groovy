@@ -120,36 +120,32 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	}
 
 	void testLoadUserByUsername_Groups() {
-        //Change the config to use authority groups
-        ReflectionUtils.setConfigProperty("useRoleGroups", true)
-        ReflectionUtils.setConfigProperty("authority.className", "test.TestRoleGroup")
-        ReflectionUtils.setConfigProperty("authority.nameField", "auth")
-        ReflectionUtils.setConfigProperty("authority.groupAuthorityNameField", "roles")
-        ReflectionUtils.setConfigProperty("userLookup.authoritiesPropertyName", "groups")
+		//Change the config to use authority groups
+		ReflectionUtils.setConfigProperty("useRoleGroups", true)
+		ReflectionUtils.setConfigProperty("authority.className", "test.TestRoleGroup")
+		ReflectionUtils.setConfigProperty("authority.nameField", "auth")
+		ReflectionUtils.setConfigProperty("authority.groupAuthorityNameField", "roles")
+		ReflectionUtils.setConfigProperty("userLookup.authoritiesPropertyName", "groups")
 
 		String loginName = 'loginName'
 		String password = 'password123'
 		boolean enabled = true
 
-        //Create user
 		assertEquals 0, TestUser.count()
 		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
 		assertEquals 1, TestUser.count()
 
-        //Create group
-        assertEquals 0, TestRoleGroup.count()
-        def roleGroup = new TestRoleGroup(name:'testRoleGroup1').save(failOnError: true)
-        assertEquals 1, TestRoleGroup.count()
+		assertEquals 0, TestRoleGroup.count()
+		def roleGroup = new TestRoleGroup(name: 'testRoleGroup1').save(failOnError: true)
+		assertEquals 1, TestRoleGroup.count()
 
-        //Add roles to group
-        TestRoleGroupRoles.create roleGroup, adminRole
-        TestRoleGroupRoles.create roleGroup, superAdminRole, true
+		TestRoleGroupRoles.create roleGroup, adminRole
+		TestRoleGroupRoles.create roleGroup, superAdminRole, true
 		assertEquals 2, TestRoleGroupRoles.count()
 
-        //Add user to group
-        assertEquals 0, TestUserRoleGroup.count()
-        TestUserRoleGroup.create user, roleGroup, true
-        assertEquals 1, TestUserRoleGroup.count()
+		assertEquals 0, TestUserRoleGroup.count()
+		TestUserRoleGroup.create user, roleGroup, true
+		assertEquals 1, TestUserRoleGroup.count()
 
 		def details = userDetailsService.loadUserByUsername(loginName)
 		assertNotNull details
