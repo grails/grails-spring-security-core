@@ -37,10 +37,9 @@ class ${userClassName}${groupClassName} implements Serializable {
 	}
 
 	static boolean remove(${userClassName} u, ${groupClassName} g) {
-
 		int rowCount = ${userClassName}${groupClassName}.where {
 			${userClassProperty} == ${userClassName}.load(u.id) &&
-			${groupClassProperty} == ${groupClassName}.load(r.id)
+			${groupClassProperty} == ${groupClassName}.load(g.id)
 		}.deleteAll()
 
 		rowCount > 0
@@ -54,7 +53,7 @@ class ${userClassName}${groupClassName} implements Serializable {
 
 	static void removeAll(${groupClassName} g) {
 		${userClassName}${groupClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(r.id)
+			${groupClassProperty} == ${groupClassName}.load(g.id)
 		}.deleteAll()
 	}
 

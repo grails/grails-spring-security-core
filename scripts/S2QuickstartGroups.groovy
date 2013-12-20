@@ -106,7 +106,7 @@ private void updateConfig() {
         writer.writeLine "grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
         writer.writeLine "grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
         writer.writeLine "grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'"
-        writer.writeLine "grails.plugin.springsecurity.authority.groupAuthorityNameField = null //TODO: Add ${groupClassName} authority's field name. Must be set when using role groups."
+        writer.writeLine "grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'"
         writer.writeLine "grails.plugin.springsecurity.useRoleGroups = true"
         if (requestmapClassName) {
             writer.writeLine "grails.plugin.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"

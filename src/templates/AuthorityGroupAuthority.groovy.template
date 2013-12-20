@@ -27,7 +27,7 @@ class ${groupClassName}${roleClassName} implements Serializable{
 
     static ${groupClassName}${roleClassName} get(long ${groupClassProperty}Id, long ${roleClassProperty}Id) {
         ${groupClassName}${roleClassName}.where {
-            ${groupClassProperty} == ${groupClassName}.load(${groupClassName}Id) &&
+            ${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id) &&
                 ${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
         }.get()
     }
