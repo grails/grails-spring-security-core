@@ -103,7 +103,7 @@ $spockDependency
 """)
 
 	contents = contents.replace('plugins {', """plugins {
-		test "org.grails.plugins:geb:\$gebVersion"
+		test ":geb:\$gebVersion"
 		test ":spock:0.7", {
 $spockExclude
 		}
