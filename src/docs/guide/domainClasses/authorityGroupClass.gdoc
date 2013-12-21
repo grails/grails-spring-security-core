@@ -7,19 +7,19 @@ package com.mycompany.myapp
 
 class Group {
 
-	String name
+   String name
 
-	static mapping = {
-		cache true
-	}
+   static mapping = {
+      cache true
+   }
 
-	Set<Role> getAuthorities() {
-		GroupRole.findAllByGroup(this).collect { it.role } as Set
-	}
+   Set<Role> getAuthorities() {
+      GroupRole.findAllByGroup(this).collect { it.role } as Set
+   }
 
-	static constraints = {
-		name blank: false, unique: true
-	}
+   static constraints = {
+      name blank: false, unique: true
+   }
 }
 
 {code}

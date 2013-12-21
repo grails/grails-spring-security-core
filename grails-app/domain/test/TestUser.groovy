@@ -29,7 +29,7 @@ class TestUser {
 	boolean passwordExpired
 
 	Set<TestRole> getRoles() { TestUserRole.findAllByUser(this).collect { it.role } }
-    Set<TestRoleGroup> getGroups() { TestUserRoleGroup.findAllByUser(this).collect { it.group } as Set}
+	Set<TestRoleGroup> getGroups() { TestUserRoleGroup.findAllByUser(this).collect { it.group } }
 	Collection<String> getRoleNames() { roles*.auth }
 
 	static constraints = {

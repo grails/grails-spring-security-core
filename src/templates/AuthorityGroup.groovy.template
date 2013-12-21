@@ -8,9 +8,9 @@ class ${groupClassName} {
 		cache true
 	}
 
-    Set<${roleClassName}> getAuthorities() {
-        ${groupClassName}${roleClassName}.findAllBy${groupClassName}(this).collect { it.${roleClassProperty} } as Set
-    }
+	Set<${roleClassName}> getAuthorities() {
+		${groupClassName}${roleClassName}.findAllBy${groupClassName}(this).collect { it.${roleClassProperty} }
+	}
 
 	static constraints = {
 		name blank: false, unique: true

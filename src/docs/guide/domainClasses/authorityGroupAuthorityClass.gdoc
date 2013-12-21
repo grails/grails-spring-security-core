@@ -9,72 +9,77 @@ import org.apache.commons.lang.builder.HashCodeBuilder
 
 class GroupRole implements Serializable {
 
-	private static final long serialVersionUID = 1
+   private static final long serialVersionUID = 1
 
-	Group group
-	Role role
+   Group group
+   Role role
 
-	boolean equals(other) {
-		if (!(other instanceof GroupRole)) {
-			return false
-		}
+   boolean equals(other) {
+      if (!(other instanceof GroupRole)) {
+         return false
+      }
 
-		other.role?.id == role?.id &&
-				other.group?.id == group?.id
-	}
+      other.role?.id == role?.id &&
+      other.group?.id == group?.id
+   }
 
-	int hashCode() {
-		def builder = new HashCodeBuilder()
-		if (group) builder.append(group.id)
-		if (role) builder.append(role.id)
-		builder.toHashCode()
-	}
+   int hashCode() {
+      def builder = new HashCodeBuilder()
+      if (group) builder.append(group.id)
+      if (role) builder.append(role.id)
+      builder.toHashCode()
+   }
 
-	static GroupRole get(long groupId, long roleId) {
-		GroupRole.where {
-			group == Group.load(groupId) &&
-					role == Role.load(roleId)
-		}.get()
-	}
+   static GroupRole get(long groupId, long roleId) {
+      GroupRole.where {
+         group == Group.load(groupId) &&
+         role == Role.load(roleId)
+      }.get()
+   }
 
-	static GroupRole create(Group group, Role role, boolean flush = false) {
-		new GroupRole(group: group, role: role).save(flush: flush, insert: true)
-	}
+   static GroupRole create(Group group, Role role, boolean flush = false) {
+      new GroupRole(group: group, role: role).save(flush: flush, insert: true)
+   }
 
-	static boolean remove(Group g, Role r) {
-		int rowCount = GroupRole.where {
-			group == Group.load(g.id) && role == Role.load(r.id)
-		}.deleteAll()
+   static boolean remove(Group g, Role r) {
+      int rowCount = GroupRole.where {
+         group == Group.load(g.id) && role == Role.load(r.id)
+      }.deleteAll()
 
-		rowCount > 0
-	}
+      rowCount > 0
+   }
 
-	static void removeAllByRole(Role r) {
-		GroupRole.where {
-			role == Role.load(r.id)
-		}.deleteAll()
-	}
+   static void removeAllByRole(Role r) {
+      GroupRole.where {
+         role == Role.load(r.id)
+      }.deleteAll()
+   }
 
-	static void removeAllByGroup(Group g) {
-		GroupRole.where {
-			group == Group.load(g.id)
-		}.deleteAll()
-	}
+   static void removeAllByGroup(Group g) {
+      GroupRole.where {
+         group == Group.load(g.id)
+      }.deleteAll()
+   }
 
-	static constraints = {
-		role validator: { role, obj ->
-			if (get(obj.group.id, role.id)) {
-				return "rolePermission.exists"
-			}
-		}
-	}
+   static constraints = {
+      role validator: { role, obj ->
+         if (get(obj.group.id, role.id)) {
+            return "rolePermission.exists"
+         }
+      }
+   }
 
-	static mapping = {
-		autoTimestamp true
-		id composite: ['group', 'role']
-	}
+   static constraints = {
+      role validator: { r, obj ->
+         if (get(obj.group.id, r.id)) {
+            return 'rolePermission.exists'
+         }
+      }
+   }
+
+   static mapping = {
+      id composite: ['group', 'role']
+      version false
+   }
 }
-
 {code}
-
-  

@@ -36,11 +36,14 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	private TestRole adminRole
 	private TestRole superAdminRole
 
+	private securityConfigGroupPropertyNames = ['useRoleGroups', 'authority.className', 'authority.nameField',
+	                                            'authority.groupAuthorityNameField', 'userLookup.authoritiesPropertyName']
+	private securityConfigGroupPropertyValues = securityConfigGroupPropertyNames.collectEntries { String name ->
+		[(name): ReflectionUtils.getConfigProperty(name)]
+	}
+
 	def sessionFactory
 	def userDetailsService
-
-    def securityConfigGroupPropertyNames = ["useRoleGroups", "authority.className", "authority.nameField", "authority.groupAuthorityNameField", "userLookup.authoritiesPropertyName"]
-    def securityConfigGroupPropertyValues = [:]
 
 	/**
 	 * {@inheritDoc}
@@ -50,9 +53,6 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	protected void setUp() {
 		super.setUp()
 		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = new ConfigObject()
-        securityConfigGroupPropertyNames.each{
-            securityConfigGroupPropertyValues.put(it, ReflectionUtils.getConfigProperty(it))
-        }
 		assertEquals 0, TestRole.count()
 		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
 		superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save(failOnError: true)
@@ -67,9 +67,9 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
-        securityConfigGroupPropertyValues.each {key, value ->
-            ReflectionUtils.setConfigProperty(key, value)
-        }
+		securityConfigGroupPropertyValues.each { key, value ->
+			ReflectionUtils.setConfigProperty key, value
+		}
 	}
 
 	void testLoadUserByUsername_NotFound() {
@@ -121,11 +121,11 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 
 	void testLoadUserByUsername_Groups() {
 		//Change the config to use authority groups
-		ReflectionUtils.setConfigProperty("useRoleGroups", true)
-		ReflectionUtils.setConfigProperty("authority.className", "test.TestRoleGroup")
-		ReflectionUtils.setConfigProperty("authority.nameField", "auth")
-		ReflectionUtils.setConfigProperty("authority.groupAuthorityNameField", "roles")
-		ReflectionUtils.setConfigProperty("userLookup.authoritiesPropertyName", "groups")
+		ReflectionUtils.setConfigProperty 'useRoleGroups', true
+		ReflectionUtils.setConfigProperty 'authority.className', 'test.TestRoleGroup'
+		ReflectionUtils.setConfigProperty 'authority.nameField', 'auth'
+		ReflectionUtils.setConfigProperty 'authority.groupAuthorityNameField', 'roles'
+		ReflectionUtils.setConfigProperty 'userLookup.authoritiesPropertyName', 'groups'
 
 		String loginName = 'loginName'
 		String password = 'password123'

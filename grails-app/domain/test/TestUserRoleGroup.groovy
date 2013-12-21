@@ -3,54 +3,55 @@ package test
 /**
  * @author <a href='mailto:th3morg@gmail.com'>Ryan Morgan</a>
  */
-class TestUserRoleGroup implements Serializable{
-    TestUser user
-    TestRoleGroup group
+class TestUserRoleGroup implements Serializable {
 
-    boolean equals(other) {
-        if (!(other instanceof TestUserRoleGroup)) {
-            return false
-        }
+	private static final long serialVersionUID = 1
 
-        other.user?.id == user?.id &&
-                other.group?.id == group?.id
-    }
+	TestUser user
+	TestRoleGroup group
 
-    static TestUserRoleGroup get(long userId, long roleId) {
-        TestUserRoleGroup.where {
-            user == TestUser.load(userId) &&
-                    group == TestRoleGroup.load(roleId)
-        }.get()
-    }
+	boolean equals(other) {
+		if (!(other instanceof TestUserRoleGroup)) {
+			return false
+		}
 
-    static TestUserRoleGroup create(TestUser user, TestRoleGroup role, boolean flush = false) {
-        new TestUserRoleGroup(user: user, group: role).save(flush: flush, insert: true)
-    }
+		other.user?.id == user?.id && other.group?.id == group?.id
+	}
 
-    static boolean remove(TestUser u, TestRoleGroup r) {
+	static TestUserRoleGroup get(long userId, long roleId) {
+		TestUserRoleGroup.where {
+			user == TestUser.load(userId) &&
+			group == TestRoleGroup.load(roleId)
+		}.get()
+	}
 
-        int rowCount = TestUserRoleGroup.where {
-            user == TestUser.load(u.id) &&
-                    group == TestRoleGroup.load(r.id)
-        }.deleteAll()
+	static TestUserRoleGroup create(TestUser user, TestRoleGroup role, boolean flush = false) {
+		new TestUserRoleGroup(user: user, group: role).save(flush: flush, insert: true)
+	}
 
-        rowCount > 0
-    }
+	static boolean remove(TestUser u, TestRoleGroup r) {
+		int rowCount = TestUserRoleGroup.where {
+			user == TestUser.load(u.id) &&
+			group == TestRoleGroup.load(r.id)
+		}.deleteAll()
 
-    static void removeAll(TestUser u) {
-        TestUserRoleGroup.where {
-            user == TestUser.load(u.id)
-        }.deleteAll()
-    }
+		rowCount > 0
+	}
 
-    static void removeAll(TestRoleGroup r) {
-        TestUserRoleGroup.where {
-            group == TestRoleGroup.load(r.id)
-        }.deleteAll()
-    }
+	static void removeAll(TestUser u) {
+		TestUserRoleGroup.where {
+			user == TestUser.load(u.id)
+		}.deleteAll()
+	}
 
-    static mapping = {
-        id composite: ['group', 'user']
-    }
+	static void removeAll(TestRoleGroup r) {
+		TestUserRoleGroup.where {
+			group == TestRoleGroup.load(r.id)
+		}.deleteAll()
+	}
 
+	static mapping = {
+		id composite: ['group', 'user']
+		version false
+	}
 }
