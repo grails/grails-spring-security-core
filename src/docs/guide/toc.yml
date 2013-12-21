@@ -8,6 +8,9 @@ domainClasses:
   personClass: Person Class
   authorityClass: Authority Class
   personAuthorityClass: PersonAuthority Class
+  authorityGroupClass: Group Class
+  personAuthorityGroupClass: PersonGroup Class
+  authorityGroupAuthorityClass: GroupAuthority Class
   requestmapClass: Requestmap Class
 requestMappings:
   title: Configuring Request Mappings to Secure URLs
