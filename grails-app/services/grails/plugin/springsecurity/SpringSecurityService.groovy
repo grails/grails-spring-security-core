@@ -89,6 +89,24 @@ class SpringSecurityService {
 	}
 
 	/**
+	 * Get a proxy for the domain class instance associated with the current authentication. Use this when you
+	 * want the user only for its id, e.g. as a proxy for the foreign key in queries like "CreditCard.findAllByUser(user)"
+	 *
+	 * @return the proxy
+	 */
+	Object loadCurrentUser() {
+		if (!isLoggedIn()) {
+			return null
+		}
+
+		// load() requires an id, so this only works if there's an id property in the principal
+		Assert.isInstanceOf GrailsUser, principal
+
+		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
+		grailsApplication.getClassForName(className).load(principal.id)
+	}
+
+	/**
 	 * Encode the password using the configured PasswordEncoder.
 	 */
 	String encodePassword(String password, salt = null) {

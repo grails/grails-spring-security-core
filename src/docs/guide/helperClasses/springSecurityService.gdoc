@@ -5,7 +5,9 @@ def springSecurityService
 {code}
 
 h4. getCurrentUser()
-Retrieves a domain class instance for the currently authenticated user. During authentication a user/person domain class instance is loaded to get the user's password, roles, etc. and the id of the instance is saved. This method uses the id and the domain class to re-load the instance.
+Retrieves a domain class instance for the currently authenticated user. During authentication a user/person domain class instance is retrieved to get the user's password, roles, etc. and the id of the instance is saved. This method uses the id and the domain class to re-load the instance, or the username if the @UserDetails@ instance is not a @GrailsUser@.
+
+If you do not need domain class data other than the id, you should use the @loadCurrentUser@ method instead.
 
 Example:
 
@@ -16,6 +18,29 @@ class SomeController {
 
    def someAction() {
       def user = springSecurityService.currentUser
+      ...
+   }
+}
+{code}
+
+h4. loadCurrentUser()
+Often it is not necessary to retrieve the entire domain class instance, for example when using it in a query where only the id is needed as a foreign key. This method uses the GORM @load@ method to create a proxy instance. This will never be null, but can be invalid if the id doesn't correspond to a row in the database, although this is very unlikely in this scenario because the instance would have been there during authentication.
+
+If you need other data than just the id, use the @getCurrentUser@ method instead.
+
+Example:
+
+{code}
+class SomeController {
+
+   def springSecurityService
+
+   def someAction() {
+      def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
+      if (user) {
+         CreditCard card = CreditCard.findByIdAndUser(params.id as Long, user)
+         ...
+      }
       ...
    }
 }
