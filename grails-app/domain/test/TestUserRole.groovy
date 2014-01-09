@@ -31,7 +31,7 @@ class TestUserRole implements Serializable {
 			return false
 		}
 
-		other.user.id == user.id && other.role.id == role.id
+		other.user?.id == user?.id && other.role?.id == role?.id
 	}
 
 	int hashCode() {
@@ -48,30 +48,57 @@ class TestUserRole implements Serializable {
 		}.get()
 	}
 
+	static boolean exists(long userId, long roleId) {
+		TestUserRole.where {
+			user == TestUser.load(userId) &&
+			role == TestRole.load(roleId)
+		}.count() > 0
+	}
+
 	static TestUserRole create(TestUser user, TestRole role, boolean flush = false) {
-		new TestUserRole(user: user, role: role).save(flush: flush, insert: true)
+		def instance = new TestUserRole(user: user, role: role)
+		instance.save(flush: flush, insert: true)
+		instance
 	}
 
 	static boolean remove(TestUser u, TestRole r, boolean flush = false) {
-
 		int rowCount = TestUserRole.where {
 			user == TestUser.load(u.id) &&
 			role == TestRole.load(r.id)
 		}.deleteAll()
 
+		if (flush) { TestUserRole.withSession { it.flush() } }
+
 		rowCount > 0
 	}
 
-	static void removeAll(TestUser u) {
+	static void removeAll(TestUser u, boolean flush = false) {
 		TestUserRole.where {
 			user == TestUser.load(u.id)
 		}.deleteAll()
+
+		if (flush) { TestUserRole.withSession { it.flush() } }
 	}
 
-	static void removeAll(TestRole r) {
+	static void removeAll(TestRole r, boolean flush = false) {
 		TestUserRole.where {
 			role == TestRole.load(r.id)
 		}.deleteAll()
+
+		if (flush) { TestUserRole.withSession { it.flush() } }
+	}
+
+	static constraints = {
+		role validator: { TestRole r, TestUserRole ur ->
+			if (ur.role == null) return
+			boolean existing = false
+			TestUserRole.withNewSession {
+				existing = TestUserRole.exists(ur.user.id, r.id)
+			}
+			if (existing) {
+				return 'userRole.exists'
+			}
+		}
 	}
 
 	static mapping = {

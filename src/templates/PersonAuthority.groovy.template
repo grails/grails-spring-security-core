@@ -15,7 +15,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 		}
 
 		other.${userClassProperty}?.id == ${userClassProperty}?.id &&
-			other.${roleClassProperty}?.id == ${roleClassProperty}?.id
+		other.${roleClassProperty}?.id == ${roleClassProperty}?.id
 	}
 
 	int hashCode() {
@@ -32,30 +32,63 @@ class ${userClassName}${roleClassName} implements Serializable {
 		}.get()
 	}
 
+	static boolean exists(long ${userClassProperty}Id, long ${roleClassProperty}Id) {
+		${userClassName}${roleClassName}.where {
+			${userClassProperty} == ${userClassName}.load(${userClassProperty}Id) &&
+			${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
+		}.count() > 0
+	}
+
 	static ${userClassName}${roleClassName} create(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
-		new ${userClassName}${roleClassName}(${userClassProperty}: ${userClassProperty}, ${roleClassProperty}: ${roleClassProperty}).save(flush: flush, insert: true)
+		def instance = new ${userClassName}${roleClassName}(${userClassProperty}: ${userClassProperty}, ${roleClassProperty}: ${roleClassProperty})
+		instance.save(flush: flush, insert: true)
+		instance
 	}
 
 	static boolean remove(${userClassName} u, ${roleClassName} r, boolean flush = false) {
+		if (u == null || r == null) return false
 
 		int rowCount = ${userClassName}${roleClassName}.where {
 			${userClassProperty} == ${userClassName}.load(u.id) &&
 			${roleClassProperty} == ${roleClassName}.load(r.id)
 		}.deleteAll()
 
+		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
+
 		rowCount > 0
 	}
 
-	static void removeAll(${userClassName} u) {
+	static void removeAll(${userClassName} u, boolean flush = false) {
+		if (u == null) return
+
 		${userClassName}${roleClassName}.where {
 			${userClassProperty} == ${userClassName}.load(u.id)
 		}.deleteAll()
+
+		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
 	}
 
-	static void removeAll(${roleClassName} r) {
+	static void removeAll(${roleClassName} r, boolean flush = false) {
+		if (r == null) return
+
 		${userClassName}${roleClassName}.where {
 			${roleClassProperty} == ${roleClassName}.load(r.id)
 		}.deleteAll()
+
+		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
+	}
+
+	static constraints = {
+		${roleClassProperty} validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
+			if (ur.${userClassProperty} == null) return
+			boolean existing = false
+			${userClassName}${roleClassName}.withNewSession {
+				existing = ${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)
+			}
+			if (existing) {
+				return 'userRole.exists'
+			}
+		}
 	}
 
 	static mapping = {

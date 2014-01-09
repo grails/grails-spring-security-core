@@ -2,7 +2,7 @@ package ${packageName}
 
 import org.apache.commons.lang.builder.HashCodeBuilder
 
-class ${groupClassName}${roleClassName} implements Serializable{
+class ${groupClassName}${roleClassName} implements Serializable {
 
 	private static final long serialVersionUID = 1
 
@@ -15,7 +15,7 @@ class ${groupClassName}${roleClassName} implements Serializable{
 		}
 
 		other.${roleClassProperty}?.id == ${roleClassProperty}?.id &&
-				other.${groupClassProperty}?.id == ${groupClassProperty}?.id
+		other.${groupClassProperty}?.id == ${groupClassProperty}?.id
 	}
 
 	int hashCode() {
@@ -32,34 +32,61 @@ class ${groupClassName}${roleClassName} implements Serializable{
 		}.get()
 	}
 
-	static ${groupClassName}${roleClassName} create(${groupClassName} role, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
-		new ${groupClassName}${roleClassName}(${groupClassProperty}: role, ${roleClassProperty}: ${roleClassProperty}).save(flush: flush, insert: true)
+	static boolean exists(long ${groupClassProperty}Id, long ${roleClassProperty}Id) {
+		${groupClassName}${roleClassName}.where {
+			${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id) &&
+			${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
+		}.count() > 0
 	}
 
-	static boolean remove(${groupClassName} g, ${roleClassName} r) {
+	static ${groupClassName}${roleClassName} create(${groupClassName} ${groupClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
+		def instance = new ${groupClassName}${roleClassName}(${groupClassProperty}: ${groupClassProperty}, ${roleClassProperty}: ${roleClassProperty})
+		instance.save(flush: flush, insert: true)
+		instance
+	}
+
+	static boolean remove(${groupClassName} rg, ${roleClassName} r, boolean flush = false) {
+		if (rg == null || r == null) return false
+
 		int rowCount = ${groupClassName}${roleClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(g.id) && ${roleClassProperty} == ${roleClassName}.load(r.id)
+			${groupClassProperty} == ${groupClassName}.load(rg.id) &&
+			${roleClassProperty} == ${roleClassName}.load(r.id)
 		}.deleteAll()
+
+		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
 
 		rowCount > 0
 	}
 
-	static void removeAllBy${roleClassName}(${roleClassName} r) {
+	static void removeAll(${roleClassName} r, boolean flush = false) {
+		if (r == null) return
+
 		${groupClassName}${roleClassName}.where {
 			${roleClassProperty} == ${roleClassName}.load(r.id)
 		}.deleteAll()
+
+		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
 	}
 
-	static void removeAllBy${groupClassName}(${groupClassName} g) {
+	static void removeAll(${groupClassName} rg, boolean flush = false) {
+		if (rg == null) return
+
 		${groupClassName}${roleClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(g.id)
+			${groupClassProperty} == ${groupClassName}.load(rg.id)
 		}.deleteAll()
+
+		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
 	}
 
 	static constraints = {
-		${roleClassProperty} validator: { r, obj ->
-			if (get(obj.${groupClassProperty}.id, r.id)) {
-				return 'rolePermission.exists'
+		${roleClassProperty} validator: { ${roleClassName} r, ${groupClassName}${roleClassName} rg ->
+			if (rg.${groupClassProperty} == null) return
+			boolean existing = false
+			${groupClassName}${roleClassName}.withNewSession {
+				existing = ${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)
+			}
+			if (existing) {
+				return 'roleGroup.exists'
 			}
 		}
 	}

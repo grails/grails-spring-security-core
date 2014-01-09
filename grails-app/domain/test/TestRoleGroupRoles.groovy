@@ -1,5 +1,7 @@
 package test
 
+import org.apache.commons.lang.builder.HashCodeBuilder
+
 /**
  * @author <a href='mailto:th3morg@gmail.com'>Ryan Morgan</a>
  */
@@ -7,7 +9,7 @@ class TestRoleGroupRoles implements Serializable {
 
 	private static final long serialVersionUID = 1
 
-	TestRoleGroup group
+	TestRoleGroup roleGroup
 	TestRole role
 
 	boolean equals(other) {
@@ -15,50 +17,77 @@ class TestRoleGroupRoles implements Serializable {
 			return false
 		}
 
-		other.role?.id == role?.id && other.group?.id == group?.id
+		other.role?.id == role?.id && other.roleGroup?.id == roleGroup?.id
 	}
 
-	static TestRoleGroupRoles get(long roleId, long permissionId) {
+	int hashCode() {
+		def builder = new HashCodeBuilder()
+		if (roleGroup) builder.append(roleGroup.id)
+		if (role) builder.append(role.id)
+		builder.toHashCode()
+	}
+
+	static TestRoleGroupRoles get(long roleGroupId, long roleId) {
 		TestRoleGroupRoles.where {
-			group == TestRoleGroup.load(roleId) &&
-			role == TestRole.load(permissionId)
+			roleGroup == TestRoleGroup.load(roleGroupId) &&
+			role == TestRole.load(roleId)
 		}.get()
 	}
 
-	static TestRoleGroupRoles create(TestRoleGroup role, TestRole permission, boolean flush = false) {
-		new TestRoleGroupRoles(group: role, role: permission).save(flush: flush, insert: true)
+	static boolean exists(long roleGroupId, long roleId) {
+		TestRoleGroupRoles.where {
+			roleGroup == TestRoleGroup.load(roleGroupId) &&
+			role == TestRole.load(roleId)
+		}.count() > 0
 	}
 
-	static boolean remove(TestRoleGroup r, TestRole p) {
+	static TestRoleGroupRoles create(TestRoleGroup roleGroup, TestRole role, boolean flush = false) {
+		def instance = new TestRoleGroupRoles(roleGroup: roleGroup, role: role)
+		instance.save(flush: flush, insert: true)
+		instance
+	}
+
+	static boolean remove(TestRoleGroup rg, TestRole r, boolean flush = false) {
 		int rowCount = TestRoleGroupRoles.where {
-			group == TestRoleGroup.load(r.id) && role == TestRole.load(p.id)
+			roleGroup == TestRoleGroup.load(rg.id) && role == TestRole.load(r.id)
 		}.deleteAll()
+
+		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
 
 		rowCount > 0
 	}
 
-	static void removeAllByPermission(TestRole p) {
+	static void removeAll(TestRole r, boolean flush = false) {
 		TestRoleGroupRoles.where {
-			role == TestRole.load(p.id)
+			role == TestRole.load(r.id)
 		}.deleteAll()
+
+		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
 	}
 
-	static void removeAllByRole(TestRoleGroup r) {
+	static void removeAll(TestRoleGroup rg, boolean flush = false) {
 		TestRoleGroupRoles.where {
-			group == TestRoleGroup.load(r.id)
+			roleGroup == TestRoleGroup.load(rg.id)
 		}.deleteAll()
+
+		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
 	}
 
 	static constraints = {
-		role validator: { r, obj ->
-			if (get(obj.group.id, r.id)) {
-				return "rolePermission.exists"
+		role validator: { TestRole r, TestRoleGroupRoles rg ->
+			if (rg.roleGroup == null) return
+			boolean existing = false
+			TestRoleGroupRoles.withNewSession {
+				existing = TestRoleGroupRoles.exists(rg.roleGroup.id, r.id)
+			}
+			if (existing) {
+				return 'roleGroup.exists'
 			}
 		}
 	}
 
 	static mapping = {
-		id composite: ['group', 'role']
+		id composite: ['roleGroup', 'role']
 		version false
 	}
 }

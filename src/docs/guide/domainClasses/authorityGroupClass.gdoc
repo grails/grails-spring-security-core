@@ -1,11 +1,11 @@
 This Spring Security plugin provides you the option of creating an access inheritance level between 'person' and 'authority': the 'group'. The next three classes you will read about (including this one) are only used in a 'person'/'group'/'authority' implementation. Rather than giving a 'person' authorities directly, you can create a 'group', map authorities to it, and then map a 'person' to that 'group'. For applications that have a one or more groups of users who need the same level of access, having one or more 'group' instances makes managing changes to access levels easier because the authorities that make up that access level are encapsulated in the 'group', and a single change will affect all of the users.
 
-Assuming you chose run the [s2-quickstart-groups|Scripts] script instead of the [s2-quickstart|Scripts] script and use @com.mycompany.myapp@ as your package and @Group@ and @Role@ as your class names, you'll generate this class:
+If you run the [s2-quickstart|Scripts] script with the group name specified and use @com.mycompany.myapp@ as your package and @RoleGroup@ and @Role@ as your class names, you'll generate this class:
 
 {code}
 package com.mycompany.myapp
 
-class Group {
+class RoleGroup {
 
    String name
 
@@ -14,7 +14,7 @@ class Group {
    }
 
    Set<Role> getAuthorities() {
-      GroupRole.findAllByGroup(this).collect { it.role } as Set
+      RoleGroupRole.findAllByRoleGroup(this).collect { it.role }
    }
 
    static constraints = {
@@ -24,11 +24,11 @@ class Group {
 
 {code}
 
-When running the [s2-quickstart-groups|Scripts] script the 'person' class will be generated a little differently to accommodate the use of groups. Assuming you use @com.mycompany.myapp@ as your package and @User@ and @Group@ as your class names, the @getAuthorities()@ method will be generated like so:
+When running the [s2-quickstart|Scripts] script with the group name specified, the 'person' class will be generated differently to accommodate the use of groups. Assuming you use @com.mycompany.myapp@ as your package and @User@ and @RoleGroup@ as your class names, the @getAuthorities()@ method will be generated like so:
 
 {code}
-Set<Group> getAuthorities() {
-    UserGroup.findAllByUser(this).collect { it.group } as Set
+Set<RoleGroup> getAuthorities() {
+   UserRoleGroup.findAllByUser(this).collect { it.roleGroup }
 }
 {code}
 
