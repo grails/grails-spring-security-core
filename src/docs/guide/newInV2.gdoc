@@ -28,6 +28,13 @@ h5. bcrypt by default
 
 The default password hashing algorithm is now bcrypt since it is a very robust hashing approach. [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2] is similar and is also supported. You  can still use any message digest algorithm that is supported in your JDK; see [this Java page|http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
 
+New applications should use bcrypt or PBKDF2, but if you didn't change the default settings in previous versions of the plugin and want to continue using the same algorithm, use these settings:
+
+{code}
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.password.hash.iterations = 1
+{code}
+
 h5. Session Fixation Prevention by default
 
 Session Fixation Prevention is now enabled by default, but can be disabled with
