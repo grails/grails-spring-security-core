@@ -14,11 +14,14 @@
  */
 package grails.plugin.springsecurity
 
+import grails.plugin.springsecurity.userdetails.GrailsUser
+
 import javax.servlet.http.HttpServletRequest
 
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.Assert
 
 /**
  * Utility methods.
@@ -74,8 +77,15 @@ class SpringSecurityService {
 		}
 
 		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		String usernamePropName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
-		grailsApplication.getClassForName(className).findWhere((usernamePropName): principal.username)
+		def User = grailsApplication.getClassForName(className)
+
+		if (principal instanceof GrailsUser) {
+			User.get principal.id
+		}
+		else {
+			String usernamePropName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
+			User.findWhere((usernamePropName): principal.username)
+		}
 	}
 
 	/**
