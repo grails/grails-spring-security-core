@@ -299,7 +299,7 @@ public final class SpringSecurityUtils {
 		}
 
 		// check the SavedRequest's headers
-		HttpSession httpSession = SecurityRequestHolder.getRequest().getSession(false);
+		HttpSession httpSession = request.getSession(false);
 		if (httpSession != null) {
 			SavedRequest savedRequest = (SavedRequest)httpSession.getAttribute(SAVED_REQUEST);
 			if (savedRequest != null) {
