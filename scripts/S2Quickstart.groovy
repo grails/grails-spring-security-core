@@ -17,11 +17,13 @@ import grails.util.GrailsNameUtils
 includeTargets << new File(springSecurityCorePluginDir, 'scripts/_S2Common.groovy')
 
 USAGE = """
-Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name]
+Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name] [--groupClassName=group-class-name]
 
-Creates a user and role class (and optionally a requestmap class) in the specified package
+Creates a user and role class (and optionally a requestmap class) in the specified package.
+If you specify a role-group name with the groupClassName argument, role/group classes will also be generated.
 
 Example: grails s2-quickstart com.yourapp User Role
+Example: grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup
 Example: grails s2-quickstart com.yourapp Person Authority Requestmap
 """
 
@@ -31,6 +33,7 @@ packageName = ''
 userClassName = ''
 roleClassName = ''
 requestmapClassName = ''
+groupClassName = ''
 
 target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	depends(checkVersion, configureProxy, packageApp, classpath)
@@ -71,7 +74,9 @@ private boolean configure() {
 	                      userClassProperty: GrailsNameUtils.getPropertyName(userClassName),
 	                      roleClassName: roleClassName,
 	                      roleClassProperty: GrailsNameUtils.getPropertyName(roleClassName),
-	                      requestmapClassName: requestmapClassName]
+	                      requestmapClassName: requestmapClassName,
+	                      groupClassName: groupClassName,
+	                      groupClassProperty: groupClassName ? GrailsNameUtils.getPropertyName(groupClassName) : null]
 
 	true
 }
@@ -84,6 +89,11 @@ private void createDomains() {
 	generateFile "$templateDir/PersonAuthority.groovy.template", "$appDir/domain/${dir}${userClassName}${roleClassName}.groovy"
 	if (requestmapClassName) {
 		generateFile "$templateDir/Requestmap.groovy.template", "$appDir/domain/${dir}${requestmapClassName}.groovy"
+	}
+	if (groupClassName) {
+		generateFile "$templateDir/AuthorityGroup.groovy.template", "$appDir/domain/${dir}${groupClassName}.groovy"
+		generateFile "$templateDir/PersonAuthorityGroup.groovy.template", "$appDir/domain/${dir}${userClassName}${groupClassName}.groovy"
+		generateFile "$templateDir/AuthorityGroupAuthority.groovy.template", "$appDir/domain/${dir}${groupClassName}${roleClassName}.groovy"
 	}
 }
 
@@ -101,6 +111,10 @@ private void updateConfig() {
 		writer.writeLine "grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
 		writer.writeLine "grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
 		writer.writeLine "grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'"
+		if (groupClassName) {
+			writer.writeLine "grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'"
+			writer.writeLine "grails.plugin.springsecurity.useRoleGroups = true"
+		}
 		if (requestmapClassName) {
 			writer.writeLine "grails.plugin.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
 			writer.writeLine "grails.plugin.springsecurity.securityConfigType = 'Requestmap'"
@@ -122,13 +136,16 @@ private void updateConfig() {
 private parseArgs() {
 	def args = argsMap.params
 
+	groupClassName = argsMap.groupClassName
+	String groupClassNameMessage = groupClassName ? ", and role/group classes for $groupClassName" : ''
+
 	if (3 == args.size()) {
-		printMessage "Creating User class ${args[1]} and Role class ${args[2]} in package ${args[0]}"
+		printMessage "Creating User class ${args[1]} and Role class ${args[2]}$groupClassNameMessage in package ${args[0]}"
 		return args
 	}
 
 	if (4 == args.size()) {
-		printMessage "Creating User class ${args[1]}, Role class ${args[2]}, and Requestmap class ${args[3]} in package ${args[0]}"
+		printMessage "Creating User class ${args[1]}, Role class ${args[2]}, and Requestmap class ${args[3]}$groupClassNameMessage in package ${args[0]}"
 		return args
 	}
 
