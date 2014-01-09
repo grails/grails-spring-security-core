@@ -12,9 +12,7 @@ The prefix used in @Config.groovy@ for the plugin's configuration settings has c
 
 h4. More aggressively secure by default
 
-In 1.x it was assumed that defaulting pages to not be secured, and configuring guarded URLs as needed, was a more pragmatic approach. Now however, all URLs are blocked
-unless there is a request mapping rule. The assumption behind this change is that if you forget to guard a new URL, it can take a long time to discover that users had
-access, whereas if you forget when using the "pessimistic" approach, nobody can access the URL and the error will be quickly discovered. This approach is more work, but much safer.
+In 1.x it was assumed that defaulting pages to not be secured, and configuring guarded URLs as needed, was a more pragmatic approach. Now however, all URLs are blocked unless there is a request mapping rule. The assumption behind this change is that if you forget to guard a new URL, it can take a long time to discover that users had access, whereas if you forget when using the "pessimistic" approach, nobody can access the URL and the error will be quickly discovered. This approach is more work, but much safer.
 
 This is described in more detail [here|guide:requestMappings].
 
@@ -40,8 +38,7 @@ grails.plugin.springsecurity.useSessionFixationPrevention = false
 
 h4. \@Secured annotation
 
-As of Grails 2.0, controller actions can be defined as closures or methods, with methods being preferred. The \@Secured annotation no longer supports being defined
-on controller action closures, so you will need to convert them to real methods.
+As of Grails 2.0, controller actions can be defined as closures or methods, with methods being preferred. The \@Secured annotation no longer supports being defined on controller action closures, so you will need to convert them to real methods.
 
 You can also specify the HTTP method that an annotation is defined for (e.g. when using REST). When doing this you must explicitly name the @value@ attribute, e.g.
 
@@ -91,10 +88,7 @@ One small change is that there is no longer a default value for the domain class
 
 h4. SecurityContextHolder strategy
 
-You can now define the @SecurityContextHolder@ strategy. By default it is stored in a @ThreadLocal@, but you can also configure it to use an @InheritableThreadLocal@
-to maintain the context in new threads, or a custom class that implements the @org.springframework.security.core.context.SecurityContextHolderStrategy@ interface. To change
-the strategy, set the @grails.plugin.springsecurity.sch.strategyName@ config property to @"MODE_THREADLOCAL"@ (the default) to use a @ThreadLocal@, @"MODE_INHERITABLETHREADLOCAL"@
-to use an @InheritableThreadLocal@, or the name of a class that implements @SecurityContextHolderStrategy@.
+You can now define the @SecurityContextHolder@ strategy. By default it is stored in a @ThreadLocal@, but you can also configure it to use an @InheritableThreadLocal@ to maintain the context in new threads, or a custom class that implements the @org.springframework.security.core.context.SecurityContextHolderStrategy@ interface. To change the strategy, set the @grails.plugin.springsecurity.sch.strategyName@ config property to @"MODE_THREADLOCAL"@ (the default) to use a @ThreadLocal@, @"MODE_INHERITABLETHREADLOCAL"@ to use an @InheritableThreadLocal@, or the name of a class that implements @SecurityContextHolderStrategy@.
 
 h4. Debug filter
 
@@ -130,9 +124,7 @@ h4. Miscellaneous changes
 
 h5. AuthenticationDetailsSource
 
-Previously you could configure the details class that was constructed by the @authenticationDetailsSource@ bean by setting the @authenticationDetails.authClass@ 
-property. In Spring Security 3.2 this isn't possible because @WebAuthenticationDetailsSource@ always returns a @WebAuthenticationDetails@. But you
-can still customize the details class by creating a class that implements the [AuthenticationDetailsSource|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationDetailsSource.html] interface, e.g.:
+Previously you could configure the details class that was constructed by the @authenticationDetailsSource@ bean by setting the @authenticationDetails.authClass@ property. In Spring Security 3.2 this isn't possible because @WebAuthenticationDetailsSource@ always returns a @WebAuthenticationDetails@. But you can still customize the details class by creating a class that implements the [AuthenticationDetailsSource|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationDetailsSource.html] interface, e.g.:
 
 {code}
 package com.mycompany;

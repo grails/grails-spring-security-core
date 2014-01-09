@@ -85,7 +85,7 @@ class DisableSpec extends AbstractSecuritySpec {
 	}
 
 	def 'expire account'() {
-		
+
 		when:
 			login 'user1', 'p4ssw0rd'
 
@@ -126,7 +126,6 @@ class DisableSpec extends AbstractSecuritySpec {
 
 	def 'expire password'() {
 
-		
 		when:
 			login 'user1', 'p4ssw0rd'
 
