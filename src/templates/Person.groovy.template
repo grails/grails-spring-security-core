@@ -22,8 +22,8 @@ class ${userClassName} {
 		password column: '`password`'
 	}
 
-	Set<<% out << (groupClassName ?: roleClassName) %>> getAuthorities() {
-		${userClassName}<% out << groupClassName ?: roleClassName %>.findAllBy${userClassName}(this).collect { it.<% out << (groupClassProperty ?: roleClassProperty) %> }
+	Set<${groupClassName ?: roleClassName}> getAuthorities() {
+		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this).collect { it.${groupClassProperty ?: roleClassProperty} }
 	}
 
 	def beforeInsert() {
