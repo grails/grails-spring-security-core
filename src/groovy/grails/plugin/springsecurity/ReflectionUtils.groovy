@@ -173,7 +173,7 @@ class ReflectionUtils {
 
 		for (String token : tokens) {
 			ConfigAttribute config = new SecurityConfig(token)
-			boolean supports = !expressions || token.startsWith('RUN_AS') || supports(config, roleVoter) || supports(config, authenticatedVoter)
+			boolean supports = !expressions || token.startsWith('RUN_AS') || token.startsWith('SCOPE') || supports(config, roleVoter) || supports(config, authenticatedVoter)
 			if (supports) {
 				configAttributes << config
 			}
