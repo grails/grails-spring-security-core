@@ -14,7 +14,7 @@ grails.project.dependency.resolution = {
 
 	dependencies {
 
-		String springSecurityVersion = '3.2.0.RELEASE'
+		String springSecurityVersion = '3.2.1.RELEASE'
 
 		compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 			excludes 'aopalliance', 'aspectjrt', 'cglib-nodep', 'commons-collections', 'commons-logging',
@@ -29,8 +29,8 @@ grails.project.dependency.resolution = {
 			excludes 'aopalliance', 'commons-codec', 'commons-logging', 'fest-assert', 'groovy', 'hsqldb',
 			         'jcl-over-slf4j', 'junit', 'logback-classic', 'mockito-core', 'powermock-api-mockito',
 			         'powermock-api-support', 'powermock-core', 'powermock-module-junit4',
-			         'powermock-module-junit4-common', 'powermock-reflect', 'spock-core', 'spring-aop',
-			         'spring-beans', 'spring-context', 'spring-core', 'spring-expression', 'spring-jdbc',
+			         'powermock-module-junit4-common', 'powermock-reflect', 'spock-core', 'spring-beans',
+			         'spring-context', 'spring-core', 'spring-expression', 'spring-jdbc',
 			         'spring-security-core', 'spring-test', 'spring-tx', 'spring-web', 'spring-webmvc',
 			         'tomcat-servlet-api'
 		}
