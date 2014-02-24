@@ -226,7 +226,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		compileClassMap(classRoleMap);
 
 		if (log.isTraceEnabled()) {
-			log.trace("configs: {0}", getConfigAttributeMap());
+			log.trace("configs: {}", getConfigAttributeMap());
 		}
 	}
 
@@ -334,7 +334,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			String key = pattern.toLowerCase();
 			InterceptedUrl replaced = storeMapping(key, method, configAttributes);
 			if (replaced != null) {
-				log.warn("replaced rule for '{0}' with tokens {1} with tokens {2}", new Object[] { key, replaced.getConfigAttributes(), configAttributes });
+				log.warn("replaced rule for '{}' with tokens {} with tokens {}", new Object[] { key, replaced.getConfigAttributes(), configAttributes });
 			}
 		}
 	}

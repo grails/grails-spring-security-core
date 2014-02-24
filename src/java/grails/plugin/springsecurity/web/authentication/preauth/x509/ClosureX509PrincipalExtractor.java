@@ -45,7 +45,7 @@ public class ClosureX509PrincipalExtractor implements X509PrincipalExtractor {
 
 		if (username == null) {
 			throw new BadCredentialsException(messages.getMessage("SubjectDnX509PrincipalExtractor.noMatching",
-					new Object[] {subjectDN}, "No matching pattern was found in subject DN: {0}"));
+					new Object[] {subjectDN}, "No matching pattern was found in subject DN: {}"));
 		}
 
 		log.debug("Extracted Principal name is '{}'", username);

@@ -40,7 +40,7 @@ public class RequestmapFilterInvocationDefinition extends AbstractFilterInvocati
 		catch (RuntimeException e) {
 			log.warn("Exception initializing; this is ok if it's at startup and due " +
 					"to GORM not being initialized yet since the first web request will " +
-					"re-initialize. Error message is: {0}", e.getMessage());
+					"re-initialize. Error message is: {}", e.getMessage());
 		}
 	}
 
@@ -56,7 +56,7 @@ public class RequestmapFilterInvocationDefinition extends AbstractFilterInvocati
 		}
 
 		if (log.isTraceEnabled()) {
-			log.trace("configs: {0}", getConfigAttributeMap());
+			log.trace("configs: {}", getConfigAttributeMap());
 		}
 	}
 
