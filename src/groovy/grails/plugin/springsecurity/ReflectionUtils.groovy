@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.access.expression.WebExpressionConfigAttribute
+import grails.util.Holders
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.plugins.web.api.ResponseMimeTypesApi
@@ -202,7 +203,7 @@ class ReflectionUtils {
 
 	private static GrailsApplication getApplication() {
 		if (!application) {
-			application = org.codehaus.groovy.grails.commons.ApplicationHolder.application
+			application = Holders.grailsApplication
 		}
 		application
 	}
