@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity;
 
 import grails.plugin.springsecurity.web.SecurityRequestHolder;
+import grails.plugin.springsecurity.web.filter.DebugFilter;
 import grails.util.Environment;
 import groovy.lang.Closure;
 import groovy.lang.GroovyClassLoader;
@@ -462,7 +463,14 @@ public final class SpringSecurityUtils {
 
 		Filter filter = getBean(beanName);
 		getConfiguredOrderedFilters().put(order, filter);
-		FilterChainProxy filterChain = getBean("springSecurityFilterChain");
+		FilterChainProxy filterChain;
+		Object bean = getBean("springSecurityFilterChain");
+		if (bean instanceof DebugFilter) {
+			filterChain = ((DebugFilter)bean).getFilterChainProxy();
+		}
+		else {
+			filterChain = (FilterChainProxy)bean;
+		}
 		List<Filter> filters = new ArrayList<Filter>(getConfiguredOrderedFilters().values());
 		filterChain.setFilterChainMap(Collections.singletonMap(AnyRequestMatcher.INSTANCE, filters));
 	}
