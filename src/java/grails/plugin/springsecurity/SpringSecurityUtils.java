@@ -58,6 +58,7 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.matcher.AnyRequestMatcher;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 /**
  * Helper methods.
@@ -296,6 +297,12 @@ public final class SpringSecurityUtils {
 
 		// look for an ajax=true parameter
 		if ("true".equals(request.getParameter("ajax"))) {
+			return true;
+		}
+
+		// process multipart requests
+		MultipartHttpServletRequest multipart = ((MultipartHttpServletRequest)request.getAttribute("org.springframework.web.multipart.MultipartHttpServletRequest"));
+		if (multipart != null && "true".equals(multipart.getParameter("ajax"))) {
 			return true;
 		}
 
