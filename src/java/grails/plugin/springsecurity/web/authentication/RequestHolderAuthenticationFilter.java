@@ -59,7 +59,11 @@ public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthentic
 		if (storeLastUsername) {
 			// Place the last username attempted into HttpSession for views
 			HttpSession session = request.getSession(false);
-			if (session != null || getAllowSessionCreation()) {
+			if (session == null && getAllowSessionCreation()) {
+				session = request.getSession();
+			}
+
+			if (session != null) {
 				String username = obtainUsername(request);
 				if (username == null) {
 					username = "";
