@@ -1,4 +1,4 @@
-/* Copyright 2006-2013 SpringSource.
+/* Copyright 2006-2014 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -196,8 +196,8 @@ public final class SpringSecurityUtils {
  	}
 
 	public static boolean ifAllGranted(final Collection<? extends GrantedAuthority> roles) {
-		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
-		return inferred.containsAll(roles);
+		Set<String> inferredNames = authoritiesToRoles(findInferredAuthorities(getPrincipalAuthorities()));
+		return inferredNames.containsAll(authoritiesToRoles(roles));
 	}
 
 	/**
@@ -210,7 +210,7 @@ public final class SpringSecurityUtils {
 	}
 
 	public static boolean ifNotGranted(final Collection<? extends GrantedAuthority> roles) {
-		Collection<? extends GrantedAuthority>inferred = findInferredAuthorities(getPrincipalAuthorities());
+		Collection<? extends GrantedAuthority> inferred = findInferredAuthorities(getPrincipalAuthorities());
 		Set<String> grantedCopy = retainAll(inferred, roles);
 		return grantedCopy.isEmpty();
 	}
