@@ -18,13 +18,16 @@ includeTargets << new File(springSecurityCorePluginDir, 'scripts/_S2Common.groov
 
 USAGE = """
 Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name] [--groupClassName=group-class-name]
+       or grails s2-quickstart --uiOnly
 
 Creates a user and role class (and optionally a requestmap class) in the specified package.
 If you specify a role-group name with the groupClassName argument, role/group classes will also be generated.
+If you specify the uiOnly flag, no domain classes are created but the plugin settings are initialized (useful with LDAP, Mock, Shibboleth, etc.)
 
 Example: grails s2-quickstart com.yourapp User Role
 Example: grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup
 Example: grails s2-quickstart com.yourapp Person Authority Requestmap
+Example: grails s2-quickstart --uiOnly
 """
 
 includeTargets << grailsScript('_GrailsBootstrap')
@@ -34,6 +37,7 @@ userClassName = ''
 roleClassName = ''
 requestmapClassName = ''
 groupClassName = ''
+uiOnly = false
 
 target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	depends(checkVersion, configureProxy, packageApp, classpath)
@@ -42,10 +46,22 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 		return 1
 	}
 
-	createDomains()
+	if (!uiOnly) {
+		createDomains()
+	}
 	updateConfig()
 
-	printMessage """
+	if (uiOnly) {
+		printMessage """
+*******************************************************
+* Your grails-app/conf/Config.groovy has been updated *
+* with security settings; please verify that the      *
+* values are correct.                                 *
+*******************************************************
+"""
+	}
+	else {
+		printMessage """
 *******************************************************
 * Created security-related domain classes. Your       *
 * grails-app/conf/Config.groovy has been updated with *
@@ -53,6 +69,7 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 * please verify that the values are correct.          *
 *******************************************************
 """
+	}
 }
 
 private boolean configure() {
@@ -64,6 +81,10 @@ private boolean configure() {
 
 	if (argValues.size() == 4) {
 		(packageName, userClassName, roleClassName, requestmapClassName) = argValues
+	}
+	else if (argValues.size() == 1 && argValues[0] == 'uiOnly') {
+		uiOnly = true
+		return true
 	}
 	else {
 		(packageName, userClassName, roleClassName) = argValues
@@ -108,9 +129,11 @@ private void updateConfig() {
 		writer.newLine()
 		writer.newLine()
 		writer.writeLine '// Added by the Spring Security Core plugin:'
-		writer.writeLine "grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
-		writer.writeLine "grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
-		writer.writeLine "grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'"
+		if (!uiOnly) {
+			writer.writeLine "grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
+			writer.writeLine "grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
+			writer.writeLine "grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'"
+		}
 		if (groupClassName) {
 			writer.writeLine "grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'"
 			writer.writeLine "grails.plugin.springsecurity.useRoleGroups = true"
@@ -134,6 +157,12 @@ private void updateConfig() {
 }
 
 private parseArgs() {
+
+	if (argsMap.uiOnly) {
+		printMessage 'Configuring Spring Security; not generating domain classes'
+		return ['uiOnly']
+	}
+
 	def args = argsMap.params
 
 	groupClassName = argsMap.groupClassName
