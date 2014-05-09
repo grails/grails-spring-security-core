@@ -200,14 +200,14 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_1,ROLE_2,ROLE_3')
 		assertTrue SpringSecurityUtils.ifAllGranted('ROLE_3')
 		assertFalse SpringSecurityUtils.ifAllGranted('ROLE_4')
-		
+
 		assertTrue SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1')])
 		assertTrue SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_2')])
 		assertTrue SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2')])
 		assertTrue SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2'), new SimpleGrantedAuthority('ROLE_3')])
 		assertTrue SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_3')])
 		assertFalse SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_4')])
-		
+
 		assertTrue SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1')])
 		assertTrue SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_2')])
 		assertTrue SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2')])
@@ -225,7 +225,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1,ROLE_2')
 		assertFalse SpringSecurityUtils.ifNotGranted('ROLE_1,ROLE_2,ROLE_3')
 		assertTrue SpringSecurityUtils.ifNotGranted('ROLE_3')
-		
+
 		assertFalse SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_1')])
 		assertFalse SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_2')])
 		assertFalse SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2')])
@@ -319,7 +319,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
 		def ctx = [getBean: { String name -> roleHierarchy }] as ApplicationContext
 		def application = new FakeApplication(mainContext: ctx)
-		org.codehaus.groovy.grails.commons.ApplicationHolder.application = application
+		grails.util.Holders.grailsApplication = application
 		SpringSecurityUtils.application = application
 	}
 
@@ -332,8 +332,8 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SecurityTestUtils.logout()
 		SpringSecurityUtils.resetSecurityConfig()
-		org.codehaus.groovy.grails.commons.ApplicationHolder.application = null
-		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		grails.util.Holders.grailsApplication = null
+		grails.util.Holders.config = null
 		SpringSecurityUtils.application = null
 		ReflectionUtils.application = null
 		SecurityRequestHolder.reset()
