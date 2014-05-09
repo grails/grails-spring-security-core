@@ -323,7 +323,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
      		   return ctx;
     		}
 		}
-		grails.util.Holders.grailsApplication = application
+		org.codehaus.groovy.grails.commons.ApplicationHolder.application = application
 		SpringSecurityUtils.application = application
 	}
 
@@ -336,8 +336,8 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SecurityTestUtils.logout()
 		SpringSecurityUtils.resetSecurityConfig()
-		grails.util.Holders.grailsApplication = null
-		grails.utils.Holders.config = null
+		org.codehaus.groovy.grails.commons.ApplicationHolder.application = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 		SpringSecurityUtils.application = null
 		ReflectionUtils.application = null
 		SecurityRequestHolder.reset()

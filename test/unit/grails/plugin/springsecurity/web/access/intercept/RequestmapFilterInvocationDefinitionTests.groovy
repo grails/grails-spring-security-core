@@ -36,7 +36,7 @@ class RequestmapFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		grails.utils.Holders.config = null
+		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 	}
 
 	void testSplit() {
