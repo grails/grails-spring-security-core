@@ -67,7 +67,7 @@ public class MutableLogoutFilter extends LogoutFilter {
 			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
 			if (log.isDebugEnabled()) {
-				log.debug("Logging out user '{0}' and transferring to logout destination", auth);
+				log.debug("Logging out user '{}' and transferring to logout destination", auth);
 			}
 
 			for (LogoutHandler handler : handlers) {

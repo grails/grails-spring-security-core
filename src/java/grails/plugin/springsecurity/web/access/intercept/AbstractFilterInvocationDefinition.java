@@ -138,7 +138,7 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 
 			if (iu.getHttpMethod() != null && requestMethod != null && iu.getHttpMethod() != HttpMethod.valueOf(requestMethod)) {
 				if (log.isDebugEnabled()) {
-					log.debug("Request '{0} {1}' doesn't match '{2} {3}'", new Object[] { requestMethod, url, iu.getHttpMethod(), iu.getPattern() });
+					log.debug("Request '{} {}' doesn't match '{} {}'", new Object[] { requestMethod, url, iu.getHttpMethod(), iu.getPattern() });
 				}
 				continue;
 			}
@@ -148,7 +148,7 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 					configAttributes = iu.getConfigAttributes();
 					configAttributePattern = iu.getPattern();
 					if (log.isTraceEnabled()) {
-						log.trace("new candidate for '{0}': '{1}':{2}", new Object[] { url, iu.getPattern(), configAttributes });
+						log.trace("new candidate for '{}': '{}':{}", new Object[] { url, iu.getPattern(), configAttributes });
 					}
 					if (stopAtFirstMatch) {
 						break;
@@ -159,10 +159,10 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 
 		if (log.isTraceEnabled()) {
 			if (configAttributes == null) {
-				log.trace("no config for '{0}'", url);
+				log.trace("no config for '{}'", url);
 			}
 			else {
-				log.trace("config for '{0}' is '{1}':{2}", new Object[] { url, configAttributePattern, configAttributes });
+				log.trace("config for '{}' is '{}':{}", new Object[] { url, configAttributePattern, configAttributes });
 			}
 		}
 
@@ -260,7 +260,7 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 
 		InterceptedUrl replaced = storeMapping(key, method, Collections.unmodifiableCollection(configAttributes));
 		if (replaced != null) {
-			log.warn("replaced rule for '{0}' with roles {1} with roles {2}", new Object[] { key, replaced.getConfigAttributes(), configAttributes });
+			log.warn("replaced rule for '{}' with roles {} with roles {}", new Object[] { key, replaced.getConfigAttributes(), configAttributes });
 		}
 	}
 
