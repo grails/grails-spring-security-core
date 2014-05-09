@@ -95,7 +95,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		grails.utils.Holders.config = null
 		SecurityRequestHolder.reset()
 	}
 }
