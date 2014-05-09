@@ -317,8 +317,12 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 
 	private void initRoleHierarchy(String hierarchy) {
 		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
-		def ctx = [getBean: { String name -> roleHierarchy }] as ApplicationContext
-		def application = new FakeApplication(mainContext: ctx)
+		def ctx = [getBean: { String name -> roleHierarchy }, containsBean: { String name -> true }] as ApplicationContext
+		def application = new FakeApplication() {
+			public ApplicationContext getMainContext() {
+     		   return ctx;
+    		}
+		}
 		org.codehaus.groovy.grails.commons.ApplicationHolder.application = application
 		SpringSecurityUtils.application = application
 	}

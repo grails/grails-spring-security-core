@@ -22,6 +22,10 @@ import java.text.SimpleDateFormat
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 
 import test.TestPersistentLogin
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
+import org.junit.*
+import static org.junit.Assert.*
 
 /**
  * Integration tests for <code>GormPersistentTokenRepository</code>, based on the tests
@@ -29,7 +33,8 @@ import test.TestPersistentLogin
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class GormPersistentTokenRepositoryTests extends GroovyTestCase {
+ @TestMixin(IntegrationTestMixin)
+class GormPersistentTokenRepositoryTests {
 
 	private static final String DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss'
 	private static final Date DATE = new SimpleDateFormat(DATE_FORMAT).parse(
@@ -45,20 +50,20 @@ class GormPersistentTokenRepositoryTests extends GroovyTestCase {
 	// can't use sql to verify results with regular transaction-based tests
 	static transactional = false
 
-	@Override
-	protected void setUp() {
-		super.setUp()
+	@Before
+	void setUp() {		
 		sql = new Sql(dataSource)
 		repo.grailsApplication = grailsApplication
 	}
 
-	@Override
-	protected void tearDown() {
+	@After
+	void tearDown() {
 		sessionFactory.currentSession.clear()
 		sql.executeUpdate 'delete from persistent_logins'
 		assertEquals 0, TestPersistentLogin.count()
 	}
 
+	@Test
 	void testCreateNewTokenInsertsCorrectData() {
 		Date currentDate = new Date()
 		def token = new PersistentRememberMeToken('joeuser', 'joesseries', 'atoken', currentDate)

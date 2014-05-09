@@ -80,7 +80,7 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 	}
 
 	void testGetAuthentication() {
-		assertNull service.authentication
+		assertNull service.authentication.principal
 		authenticate 'role1'
 		assertNotNull service.authentication
 	}

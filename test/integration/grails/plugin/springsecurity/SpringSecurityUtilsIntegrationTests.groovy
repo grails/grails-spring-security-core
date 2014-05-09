@@ -39,12 +39,19 @@ import test.TestRole
 import test.TestUser
 import test.TestUserRole
 
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
+import org.junit.*
+import static org.junit.Assert.*
+
+
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class SpringSecurityUtilsIntegrationTests{
 
 	def grailsApplication
 	def springSecurityFilterChain
@@ -53,9 +60,8 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 	private String username = 'username'
 	private TestUser testUser
 
-	@Override
-	protected void setUp() {
-		super.setUp()
+	@Before
+	void setUp() {
 		def user = new TestUser(loginName: username, enabld: true,
 			passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
 		testUser = user
@@ -67,9 +73,8 @@ class SpringSecurityUtilsIntegrationTests extends GroovyTestCase {
 		TestUserRole.create user, role, true
 	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
+	@After
+	void tearDown() {
 		SecurityContextHolder.clearContext() // logout
 	}
 

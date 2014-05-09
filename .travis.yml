@@ -1,0 +1,12 @@
+language: groovy
+jdk:
+- openjdk7
+- oraclejdk7
+before_script:
+- rm -rf target
+script: ./travis-build.sh
+env:
+  global:
+  - secure: L6I7/s1Em2qORjlBpj1uex1VM127glPIk4Bm58u3mvIOYC1vk/zC8lVjPCXk6tk3M4A4YMbz3rW0IFKNkF84TgKo25uQpKUk/Fc5vZp/DkRqLm4am6iTZIKP7iscd5YONiaGkyOshL8Ls/M4Ee0XMrZlbYXiJCpcysUDnmyPorE=
+  - secure: gxZkUNwg41OTHnn83Yr0/SmAFkcvCTcUwCC320xoztMOptu3HXNKbE2Ov5S6/X7/c9gSIjmL/WILX0hvNCFzjuypqKyZZb8fVUgTILqOvmVc/hkIXYW/tNg9CAM//SF2Oq8ig60SnJ6tB+9DVLs4AxKKWatnVrwk1N1rC3KyY44=
+  - secure: qzBRjSX7V0xm/TH7X1QerNwG0l/jmtmuzKHQO+qgspm5jC9w9F6ygpCl70ICXNqXwzjE8Dq4bc5peud06Q5hvE6yEpRGBBWu0VEaeoZeHmVTuzChLXCtVqsKlwjGgOtv2aV/gV+Ubnstf8+CG5HYGkjnbqujbDacN/zSxmRDUdc=

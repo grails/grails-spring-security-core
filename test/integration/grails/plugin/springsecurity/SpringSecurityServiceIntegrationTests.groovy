@@ -17,12 +17,19 @@ package grails.plugin.springsecurity
 import test.TestRequestmap
 import test.TestRole
 
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
+import org.junit.*
+import static org.junit.Assert.*
+
+
 /**
  * Integration tests for SpringSecurityService.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SpringSecurityServiceIntegrationTests extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class SpringSecurityServiceIntegrationTests {
 
 	def sessionFactory
 	SpringSecurityService springSecurityService
@@ -32,10 +39,8 @@ class SpringSecurityServiceIntegrationTests extends GroovyTestCase {
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Override
-	protected void setUp() {
-		super.setUp()
-
+	@Before
+	void setUp() {
 		oldConfig = SpringSecurityUtils.securityConfig
 
 		def requestMapConfig = SpringSecurityUtils.securityConfig.requestMap
@@ -131,9 +136,9 @@ class SpringSecurityServiceIntegrationTests extends GroovyTestCase {
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	@Override
-	protected void tearDown() {
-		super.tearDown()
+	@After
+	void tearDown() {
+	
 		SpringSecurityUtils.securityConfig = oldConfig
 	}
 }

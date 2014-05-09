@@ -23,12 +23,18 @@ import test.TestUser
 import test.TestUserRole
 import test.TestUserRoleGroup
 
+import grails.test.mixin.integration.IntegrationTestMixin
+import grails.test.mixin.*
+import org.junit.*
+import static org.junit.Assert.*
+
 /**
  * Integration tests for GormUserDetailsService.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class GormUserDetailsServiceTests extends GroovyTestCase {
+@TestMixin(IntegrationTestMixin)
+class GormUserDetailsServiceTests  {
 
 	private static final String ADMIN_ROLE_NAME = 'ROLE_ADMIN'
 	private static final String SUPER_ADMIN_ROLE_NAME = 'ROLE_SUPERADMIN'
@@ -49,9 +55,8 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#setUp()
 	 */
-	@Override
-	protected void setUp() {
-		super.setUp()
+	@Before
+	void setUp() {
 		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = new ConfigObject()
 		assertEquals 0, TestRole.count()
 		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
@@ -63,9 +68,8 @@ class GormUserDetailsServiceTests extends GroovyTestCase {
 	 * {@inheritDoc}
 	 * @see junit.framework.TestCase#tearDown()
 	 */
-	@Override
-	protected void tearDown() {
-		super.tearDown()
+	@After
+	void tearDown() {
 		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
 		securityConfigGroupPropertyValues.each { key, value ->
 			ReflectionUtils.setConfigProperty key, value

@@ -129,7 +129,7 @@ import org.springframework.web.filter.DelegatingFilterProxy
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '2.0-RC2'
+	String version = '2.0-SNAPSHOT'
 	String grailsVersion = '2.0.0 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
