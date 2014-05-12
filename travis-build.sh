@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 rm -rf *.zip
+source ~/.gvm/bin/gvm-init.sh
 gvm install grails 2.0.4
 gvm install grails 2.1.4
 gvm install grails 2.2.5
