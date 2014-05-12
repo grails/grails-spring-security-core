@@ -1,39 +1,10 @@
 #!/bin/bash
 set -e
 rm -rf *.zip
-rm -rf ~/.gvm
-curl -s get.gvmtool.net > ~/install_gvm.sh
-chmod 775 ~/install_gvm.sh
-~/install_gvm.sh
-echo "gvm_auto_answer=true" > ~/.gvm/etc/config
-source ~/.gvm/bin/gvm-init.sh
-
-gvm install grails 2.0.4
-gvm install grails 2.1.4
-gvm install grails 2.2.5
-gvm install grails 2.3.8
-gvm use grails 2.3.8
-grails refresh-dependencies --non-interactive
-grails test-app --non-interactive
-grails package-plugin --non-interactive
-grails doc --pdf --non-interactive
-
-cd target/testapps/spring-security-test/spring-security-core-test-v20
-gvm use grails 2.0.4
-ant
-cd ../../../..
-cd target/testapps/spring-security-test/spring-security-core-test-v21
-gvm use grails 2.1.4
-ant
-cd ../../../..
-cd target/testapps/spring-security-test/spring-security-core-test-v22
-gvm use grails 2.2.5
-ant
-cd ../../../..
-cd target/testapps/spring-security-test/spring-security-core-test-v23
-gvm use grails 2.3.8
-ant
-cd ../../../..
+./grailsw refresh-dependencies --non-interactive
+./grailsw test-app --non-interactive
+./grailsw package-plugin --non-interactive
+./grailsw doc --pdf --non-interactive
 
 filename=$(find . -name "grails-*.zip" | head -1)
 filename=$(basename $filename)
@@ -67,7 +38,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "grails-plugins/grails-
   fi
 
 
-  grails publish-plugin --no-scm --allow-overwrite --non-interactive
+  ./grailsw publish-plugin --no-scm --allow-overwrite --non-interactive
 else
   echo "Not on master branch, so not publishing"
   echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
