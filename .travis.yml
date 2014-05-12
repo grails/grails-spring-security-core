@@ -1,6 +1,5 @@
 language: groovy
 jdk:
-- openjdk7
 - oraclejdk7
 before_script:
 - rm -rf target
