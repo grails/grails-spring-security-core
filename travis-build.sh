@@ -1,13 +1,6 @@
 #!/bin/bash
 set -e
 rm -rf *.zip
-rm -rf ~/.gvm
-curl -s get.gvmtool.net > ~/install_gvm.sh
-chmod 775 ~/install_gvm.sh
-~/install_gvm.sh
-echo "gvm_auto_answer=true" > ~/.gvm/etc/config
-source ~/.gvm/bin/gvm-init.sh
-
 gvm install grails 2.0.4
 gvm install grails 2.1.4
 gvm install grails 2.2.5

@@ -1,9 +1,15 @@
 language: groovy
 jdk:
-- openjdk7
 - oraclejdk7
 before_script:
 - rm -rf target
+- rm -rf ~/.gvm
+- curl -s get.gvmtool.net > ~/install_gvm.sh
+- chmod 775 ~/install_gvm.sh
+- ~/install_gvm.sh
+- echo "gvm_auto_answer=true" > ~/.gvm/etc/config
+- curl -s https://raw.github.com/ctoestreich/gvm/master/src/main/bash/gvm-install.sh > ~/.gvm/src/gvm-install.sh
+- source ~/.gvm/bin/gvm-init.sh
 script: ./travis-build.sh
 env:
   global:
