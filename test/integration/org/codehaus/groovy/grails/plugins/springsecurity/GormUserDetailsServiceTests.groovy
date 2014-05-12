@@ -14,7 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 import test.TestRole

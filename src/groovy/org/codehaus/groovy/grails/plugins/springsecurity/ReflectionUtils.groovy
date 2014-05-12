@@ -14,7 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ApplicationHolder
+import grails.util.Holders
 import org.codehaus.groovy.grails.commons.GrailsApplication
 
 /**
@@ -97,7 +97,7 @@ class ReflectionUtils {
 
 	private static GrailsApplication getApplication() {
 		if (!application) {
-			application = ApplicationHolder.application
+			application = Holders.grailsApplication
 		}
 		application
 	}

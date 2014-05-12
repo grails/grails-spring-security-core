@@ -14,7 +14,7 @@
  */
 package org.codehaus.groovy.grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.codehaus.groovy.grails.web.util.WebUtils

@@ -14,7 +14,7 @@
  */
 package grails.plugins.springsecurity
 
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 import org.codehaus.groovy.grails.plugins.springsecurity.SecurityTestUtils
 import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl

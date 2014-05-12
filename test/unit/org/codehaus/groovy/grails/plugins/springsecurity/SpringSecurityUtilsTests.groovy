@@ -17,7 +17,7 @@ package org.codehaus.groovy.grails.plugins.springsecurity
 import grails.plugins.springsecurity.SecurityConfigType
 
 import org.codehaus.groovy.grails.commons.ApplicationHolder as AH
-import org.codehaus.groovy.grails.commons.ConfigurationHolder as CH
+import grails.util.Holders as CH
 import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
