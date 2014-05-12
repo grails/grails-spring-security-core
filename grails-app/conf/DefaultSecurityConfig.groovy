@@ -77,6 +77,13 @@ security {
 	apf.allowSessionCreation = true
 	apf.postOnly = true
 
+	// securityContextRepository
+	scr.allowSessionCreation = true
+	scr.disableUrlRewriting = false
+
+	// securityContextPersistenceFilter
+	scpf.forceEagerSessionCreation = false	
+
 	// failureHandler
 	failureHandler.defaultFailureUrl = '/login/authfail?login_error=1'
 	failureHandler.ajaxAuthFailUrl = '/login/authfail?ajax=true'
