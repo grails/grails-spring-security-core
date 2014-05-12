@@ -114,7 +114,7 @@ import org.codehaus.groovy.grails.plugins.springsecurity.WebExpressionVoter
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '1.2.7.4-SNAPSHOT'
+	String version = '1.2.7.4'
 	String grailsVersion = '1.2.2 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate']
