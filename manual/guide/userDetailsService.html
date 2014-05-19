@@ -1,0 +1,239 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>10 Custom UserDetailsService 2.0-RC3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>6</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClassProperties.html"><strong>7</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authentication.html"><strong>8</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>9</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/userDetailsService.html"><strong>10</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/hierarchicalRoles.html"><strong>13</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/switchUser.html"><strong>14</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/filters.html"><strong>15</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/channelSecurity.html"><strong>16</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/ip.html"><strong>17</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sessionFixation.html"><strong>18</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logoutHandlers.html"><strong>19</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/voters.html"><strong>20</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/miscProperties.html"><strong>21</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/tutorials.html"><strong>22</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/controllerMetaClassMethods.html"><strong>23</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>9</strong><span>Authentication Providers</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>10 Custom UserDetailsService - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 2.0-RC3</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h1 id="userDetailsService">10 Custom UserDetailsService</h1>
+When you authenticate users from a database using <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/dao/DaoAuthenticationProvider.html" target="blank">DaoAuthenticationProvider</a> (the default mode in the plugin if you have not enabled OpenID, LDAP, and so on), an implementation of <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html" target="blank">UserDetailsService</a> is required. This class is responsible for returning a concrete implementation of <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html" target="blank">UserDetails</a>. The plugin provides <code>grails.plugin.springsecurity.userdetails. GormUserDetailsService</code> as its <code>UserDetailsService</code> implementation and <code>grails.plugin.springsecurity.userdetails. GrailsUser</code> (which extends Spring Security's <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html" target="blank">User</a>) as its <code>UserDetails</code> implementation.<p class="paragraph"/>You can extend or replace <code>GormUserDetailsService</code> with your own implementation by defining a bean in <code>grails-app/conf/spring/resources.groovy</code> (or <code>resources.xml</code>) with the same bean name, <code>userDetailsService</code>. This works because application beans are configured after plugin beans and there can only be one bean for each name. The plugin uses an extension of <code>UserDetailsService</code>, <code>grails.plugin.springsecurity.userdetails. GrailsUserDetailsService</code>, which adds the method <code>UserDetails loadUserByUsername(String username, boolean loadRoles)</code> to support use cases like in LDAP where you often infer all roles from LDAP but might keep application-specific user details in the database. Create the class in <code>src/groovy</code> and not in <code>grails-app/services</code> - although the interface name includes "Service", this is just a coincidence and the bean wouldn't benefit from being a Grails service.<p class="paragraph"/>In the following example, the <code>UserDetails</code> and <code>GrailsUserDetailsService</code> implementation adds the full name of the user domain class in addition to the standard information. If you extract extra data from your domain class, you are less likely to need to reload the user from the database. Most of your common data can be kept along with your security credentials.<p class="paragraph"/>This example adds in a <code>fullName</code> field. Keeping the full name cached avoids hitting the database just for that lookup. <code>GrailsUser</code> already adds the <code>id</code> value from the domain class to so we can do a more efficient database load of the user. If all you have is the username, then you need to call <code>User.findByUsername(principal.username)</code>, but if you have the id you can call <code>User.get(principal.id)</code>. Even if you have a unique index on the <code>username</code> database column, loading by primary key is usually more efficient because it takes advantage of Hibernate's first-level and second-level caches.<p class="paragraph"/>There is not much to implement other than your application-specific lookup code:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.userdetails.GrailsUser<p class="paragraph"/><span class="java&#45;keyword">import</span> org.springframework.security.core.GrantedAuthority
+<span class="java&#45;keyword">import</span> org.springframework.security.core.userdetails.User<p class="paragraph"/>class MyUserDetails <span class="java&#45;keyword">extends</span> GrailsUser &#123;<p class="paragraph"/>   <span class="java&#45;keyword">final</span> <span class="java&#45;object">String</span> fullName<p class="paragraph"/>   MyUserDetails(<span class="java&#45;object">String</span> username, <span class="java&#45;object">String</span> password, <span class="java&#45;object">boolean</span> enabled,
+                 <span class="java&#45;object">boolean</span> accountNonExpired, <span class="java&#45;object">boolean</span> credentialsNonExpired,
+                 <span class="java&#45;object">boolean</span> accountNonLocked,
+                 Collection&#60;GrantedAuthority&#62; authorities,
+                 <span class="java&#45;object">long</span> id, <span class="java&#45;object">String</span> fullName) &#123;
+      <span class="java&#45;keyword">super</span>(username, password, enabled, accountNonExpired,
+            credentialsNonExpired, accountNonLocked, authorities, id)<p class="paragraph"/>      <span class="java&#45;keyword">this</span>.fullName = fullName
+   &#125;
+&#125;</pre></div><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.SpringSecurityUtils
+<span class="java&#45;keyword">import</span> grails.plugin.springsecurity.userdetails.GrailsUser
+<span class="java&#45;keyword">import</span> grails.plugin.springsecurity.userdetails.GrailsUserDetailsService
+<span class="java&#45;keyword">import</span> org.springframework.security.core.authority.GrantedAuthorityImpl
+<span class="java&#45;keyword">import</span> org.springframework.security.core.userdetails.UserDetails
+<span class="java&#45;keyword">import</span> org.springframework.security.core.userdetails.UsernameNotFoundException<p class="paragraph"/>class MyUserDetailsService <span class="java&#45;keyword">implements</span> GrailsUserDetailsService &#123;<p class="paragraph"/>   /&#42;&#42;
+    &#42; Some Spring Security classes (e.g. RoleHierarchyVoter) expect at least
+    &#42; one role, so we give a user with no granted roles <span class="java&#45;keyword">this</span> one which gets
+    &#42; past that restriction but doesn't grant anything.
+    &#42;/
+   <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> List NO_ROLES = &#91;<span class="java&#45;keyword">new</span> GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)&#93;<p class="paragraph"/>   UserDetails loadUserByUsername(<span class="java&#45;object">String</span> username, <span class="java&#45;object">boolean</span> loadRoles)
+            <span class="java&#45;keyword">throws</span> UsernameNotFoundException &#123;
+      <span class="java&#45;keyword">return</span> loadUserByUsername(username)
+   &#125;<p class="paragraph"/>   UserDetails loadUserByUsername(<span class="java&#45;object">String</span> username) <span class="java&#45;keyword">throws</span> UsernameNotFoundException &#123;<p class="paragraph"/>      User.withTransaction &#123; status &#45;&#62;<p class="paragraph"/>         User user = User.findByUsername(username)
+         <span class="java&#45;keyword">if</span> (!user) <span class="java&#45;keyword">throw</span> <span class="java&#45;keyword">new</span> UsernameNotFoundException(
+                      'User not found', username)<p class="paragraph"/>         def authorities = user.authorities.collect &#123;
+             <span class="java&#45;keyword">new</span> GrantedAuthorityImpl(it.authority)
+         &#125;<p class="paragraph"/>         <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">new</span> MyUserDetails(user.username, user.password, user.enabled,
+            !user.accountExpired, !user.passwordExpired,
+            !user.accountLocked, authorities ?: NO_ROLES, user.id,
+            user.firstName + <span class="java&#45;quote">" "</span> + user.lastName)
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/>The lookup code is wrapped in a <code>withTransaction</code> block to avoid lazy loading exceptions when accessing the <code>authorities</code> collection. There are obviously no database updates here but this is a convenient way to keep the Hibernate <code>Session</code> open to enable accessing the roles.<p class="paragraph"/>To use your implementation, register it in <code>grails-app/conf/spring/resources.groovy</code> like this:<p class="paragraph"/><div class="code"><pre>beans = &#123;
+   userDetailsService(com.mycompany.myapp.MyUserDetailsService)
+&#125;</pre></div><p class="paragraph"/>Another option for loading users and roles from the database is to subclass <code>grails.plugin.springsecurity.userdetails. GormUserDetailsService</code> - the methods are all protected so you can override as needed.<p class="paragraph"/>This approach works with all beans defined in <code>SpringSecurityCoreGrailsPlugin.doWithSpring()</code> - you can replace or subclass any of the Spring beans to provide your own functionality when the standard extension mechanisms are insufficient.<p class="paragraph"/><h4>Flushing the Cached Authentication</h4>
+If you store mutable data in your custom <code>UserDetails</code> implementation (such as full name in the preceding example), be sure to rebuild the <code>Authentication</code> if it changes. <code>springSecurityService</code> has a <code>reauthenticate</code> method that does this for you:<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+      def user = &#8230;
+      // update user data
+      user.save()
+      springSecurityService.reauthenticate user.username
+      &#8230;
+   &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/authenticationProviders.html">&lt;&lt; <strong>9</strong><span>Authentication Providers</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

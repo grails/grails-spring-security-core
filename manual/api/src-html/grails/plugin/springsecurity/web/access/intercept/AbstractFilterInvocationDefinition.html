@@ -1,0 +1,387 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2014 SpringSource.<a name="line.1"></a>
+<span class="sourceLineNo">002</span> *<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.3"></a>
+<span class="sourceLineNo">004</span> * you may not use this file except in compliance with the License.<a name="line.4"></a>
+<span class="sourceLineNo">005</span> * You may obtain a copy of the License at<a name="line.5"></a>
+<span class="sourceLineNo">006</span> *<a name="line.6"></a>
+<span class="sourceLineNo">007</span> *      http://www.apache.org/licenses/LICENSE-2.0<a name="line.7"></a>
+<span class="sourceLineNo">008</span> *<a name="line.8"></a>
+<span class="sourceLineNo">009</span> * Unless required by applicable law or agreed to in writing, software<a name="line.9"></a>
+<span class="sourceLineNo">010</span> * distributed under the License is distributed on an "AS IS" BASIS,<a name="line.10"></a>
+<span class="sourceLineNo">011</span> * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.<a name="line.11"></a>
+<span class="sourceLineNo">012</span> * See the License for the specific language governing permissions and<a name="line.12"></a>
+<span class="sourceLineNo">013</span> * limitations under the License.<a name="line.13"></a>
+<span class="sourceLineNo">014</span> */<a name="line.14"></a>
+<span class="sourceLineNo">015</span>package grails.plugin.springsecurity.web.access.intercept;<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>import grails.plugin.springsecurity.InterceptedUrl;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import grails.util.GrailsUtil;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import grails.util.Metadata;<a name="line.19"></a>
+<span class="sourceLineNo">020</span><a name="line.20"></a>
+<span class="sourceLineNo">021</span>import java.util.ArrayList;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import java.util.Collection;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import java.util.Collections;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import java.util.Iterator;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.util.LinkedHashSet;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.util.List;<a name="line.26"></a>
+<span class="sourceLineNo">027</span><a name="line.27"></a>
+<span class="sourceLineNo">028</span>import javax.servlet.http.HttpServletRequest;<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>import org.slf4j.Logger;<a name="line.30"></a>
+<span class="sourceLineNo">031</span>import org.slf4j.LoggerFactory;<a name="line.31"></a>
+<span class="sourceLineNo">032</span>import org.springframework.beans.factory.InitializingBean;<a name="line.32"></a>
+<span class="sourceLineNo">033</span>import org.springframework.context.support.MessageSourceAccessor;<a name="line.33"></a>
+<span class="sourceLineNo">034</span>import org.springframework.http.HttpMethod;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>import org.springframework.security.access.ConfigAttribute;<a name="line.35"></a>
+<span class="sourceLineNo">036</span>import org.springframework.security.access.SecurityConfig;<a name="line.36"></a>
+<span class="sourceLineNo">037</span>import org.springframework.security.access.vote.AuthenticatedVoter;<a name="line.37"></a>
+<span class="sourceLineNo">038</span>import org.springframework.security.access.vote.RoleVoter;<a name="line.38"></a>
+<span class="sourceLineNo">039</span>import org.springframework.security.core.SpringSecurityMessageSource;<a name="line.39"></a>
+<span class="sourceLineNo">040</span>import org.springframework.security.web.FilterInvocation;<a name="line.40"></a>
+<span class="sourceLineNo">041</span>import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;<a name="line.41"></a>
+<span class="sourceLineNo">042</span>import org.springframework.util.AntPathMatcher;<a name="line.42"></a>
+<span class="sourceLineNo">043</span>import org.springframework.util.Assert;<a name="line.43"></a>
+<span class="sourceLineNo">044</span>import org.springframework.util.StringUtils;<a name="line.44"></a>
+<span class="sourceLineNo">045</span><a name="line.45"></a>
+<span class="sourceLineNo">046</span>/**<a name="line.46"></a>
+<span class="sourceLineNo">047</span> * @author &lt;a href='mailto:burt@burtbeckwith.com'&gt;Burt Beckwith&lt;/a&gt;<a name="line.47"></a>
+<span class="sourceLineNo">048</span> */<a name="line.48"></a>
+<span class="sourceLineNo">049</span>public abstract class AbstractFilterInvocationDefinition implements FilterInvocationSecurityMetadataSource, InitializingBean {<a name="line.49"></a>
+<span class="sourceLineNo">050</span><a name="line.50"></a>
+<span class="sourceLineNo">051</span>        protected static final Collection&lt;ConfigAttribute&gt; DENY;<a name="line.51"></a>
+<span class="sourceLineNo">052</span>        static {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                Collection&lt;ConfigAttribute&gt; list = new ArrayList&lt;ConfigAttribute&gt;(1);<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                list.add(new SecurityConfig("_DENY_"));<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                DENY = Collections.unmodifiableCollection(list);<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        }<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>        protected boolean rejectIfNoRule;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>        protected RoleVoter roleVoter;<a name="line.59"></a>
+<span class="sourceLineNo">060</span>        protected AuthenticatedVoter authenticatedVoter;<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        protected final List&lt;InterceptedUrl&gt; compiled = Collections.synchronizedList(new ArrayList&lt;InterceptedUrl&gt;());<a name="line.61"></a>
+<span class="sourceLineNo">062</span>   protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();<a name="line.62"></a>
+<span class="sourceLineNo">063</span>        protected AntPathMatcher urlMatcher = new AntPathMatcher();<a name="line.63"></a>
+<span class="sourceLineNo">064</span>        protected boolean initialized;<a name="line.64"></a>
+<span class="sourceLineNo">065</span>        protected boolean grails23Plus;<a name="line.65"></a>
+<span class="sourceLineNo">066</span><a name="line.66"></a>
+<span class="sourceLineNo">067</span>        protected final Logger log = LoggerFactory.getLogger(getClass());<a name="line.67"></a>
+<span class="sourceLineNo">068</span><a name="line.68"></a>
+<span class="sourceLineNo">069</span>        /**<a name="line.69"></a>
+<span class="sourceLineNo">070</span>         * Allows subclasses to be externally reset.<a name="line.70"></a>
+<span class="sourceLineNo">071</span>         * @throws Exception<a name="line.71"></a>
+<span class="sourceLineNo">072</span>         */<a name="line.72"></a>
+<span class="sourceLineNo">073</span>        public void reset() throws Exception {<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                // override if necessary<a name="line.74"></a>
+<span class="sourceLineNo">075</span>        }<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>        /**<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * {@inheritDoc}<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         * @see org.springframework.security.access.SecurityMetadataSource#getAttributes(java.lang.Object)<a name="line.79"></a>
+<span class="sourceLineNo">080</span>         */<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        public Collection&lt;ConfigAttribute&gt; getAttributes(Object object) throws IllegalArgumentException {<a name="line.81"></a>
+<span class="sourceLineNo">082</span>                Assert.isTrue(object != null &amp;&amp; supports(object.getClass()), "Object must be a FilterInvocation");<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>                FilterInvocation filterInvocation = (FilterInvocation)object;<a name="line.84"></a>
+<span class="sourceLineNo">085</span><a name="line.85"></a>
+<span class="sourceLineNo">086</span>                String url = determineUrl(filterInvocation);<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>                Collection&lt;ConfigAttribute&gt; configAttributes;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                try {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        configAttributes = findConfigAttributes(url, filterInvocation.getRequest().getMethod());<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                }<a name="line.91"></a>
+<span class="sourceLineNo">092</span>                catch (RuntimeException e) {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                        throw e;<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                }<a name="line.94"></a>
+<span class="sourceLineNo">095</span>                catch (Exception e) {<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                        throw new RuntimeException(e);<a name="line.96"></a>
+<span class="sourceLineNo">097</span>                }<a name="line.97"></a>
+<span class="sourceLineNo">098</span><a name="line.98"></a>
+<span class="sourceLineNo">099</span>                if ((configAttributes == null || configAttributes.isEmpty()) &amp;&amp; rejectIfNoRule) {<a name="line.99"></a>
+<span class="sourceLineNo">100</span>                        // return something that cannot be valid; this will cause the voters to abstain or deny<a name="line.100"></a>
+<span class="sourceLineNo">101</span>                        return DENY;<a name="line.101"></a>
+<span class="sourceLineNo">102</span>                }<a name="line.102"></a>
+<span class="sourceLineNo">103</span><a name="line.103"></a>
+<span class="sourceLineNo">104</span>                return configAttributes;<a name="line.104"></a>
+<span class="sourceLineNo">105</span>        }<a name="line.105"></a>
+<span class="sourceLineNo">106</span><a name="line.106"></a>
+<span class="sourceLineNo">107</span>        protected String determineUrl(final FilterInvocation filterInvocation) {<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                return lowercaseAndStripQuerystring(calculateUri(filterInvocation.getHttpRequest()));<a name="line.108"></a>
+<span class="sourceLineNo">109</span>        }<a name="line.109"></a>
+<span class="sourceLineNo">110</span><a name="line.110"></a>
+<span class="sourceLineNo">111</span>        protected boolean stopAtFirstMatch() {<a name="line.111"></a>
+<span class="sourceLineNo">112</span>                return false;<a name="line.112"></a>
+<span class="sourceLineNo">113</span>        }<a name="line.113"></a>
+<span class="sourceLineNo">114</span><a name="line.114"></a>
+<span class="sourceLineNo">115</span>        // for testing<a name="line.115"></a>
+<span class="sourceLineNo">116</span>        public InterceptedUrl getInterceptedUrl(final String url, final HttpMethod httpMethod) throws Exception {<a name="line.116"></a>
+<span class="sourceLineNo">117</span><a name="line.117"></a>
+<span class="sourceLineNo">118</span>                initialize();<a name="line.118"></a>
+<span class="sourceLineNo">119</span><a name="line.119"></a>
+<span class="sourceLineNo">120</span>                for (InterceptedUrl iu : compiled) {<a name="line.120"></a>
+<span class="sourceLineNo">121</span>                        if (iu.getHttpMethod() == httpMethod &amp;&amp; iu.getPattern().equals(url)) {<a name="line.121"></a>
+<span class="sourceLineNo">122</span>                                return iu;<a name="line.122"></a>
+<span class="sourceLineNo">123</span>                        }<a name="line.123"></a>
+<span class="sourceLineNo">124</span>                }<a name="line.124"></a>
+<span class="sourceLineNo">125</span><a name="line.125"></a>
+<span class="sourceLineNo">126</span>                return null;<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        }<a name="line.127"></a>
+<span class="sourceLineNo">128</span><a name="line.128"></a>
+<span class="sourceLineNo">129</span>        protected Collection&lt;ConfigAttribute&gt; findConfigAttributes(final String url, final String requestMethod) throws Exception {<a name="line.129"></a>
+<span class="sourceLineNo">130</span><a name="line.130"></a>
+<span class="sourceLineNo">131</span>                initialize();<a name="line.131"></a>
+<span class="sourceLineNo">132</span><a name="line.132"></a>
+<span class="sourceLineNo">133</span>                Collection&lt;ConfigAttribute&gt; configAttributes = null;<a name="line.133"></a>
+<span class="sourceLineNo">134</span>                String configAttributePattern = null;<a name="line.134"></a>
+<span class="sourceLineNo">135</span><a name="line.135"></a>
+<span class="sourceLineNo">136</span>                boolean stopAtFirstMatch = stopAtFirstMatch();<a name="line.136"></a>
+<span class="sourceLineNo">137</span>                for (InterceptedUrl iu : compiled) {<a name="line.137"></a>
+<span class="sourceLineNo">138</span><a name="line.138"></a>
+<span class="sourceLineNo">139</span>                        if (iu.getHttpMethod() != null &amp;&amp; requestMethod != null &amp;&amp; iu.getHttpMethod() != HttpMethod.valueOf(requestMethod)) {<a name="line.139"></a>
+<span class="sourceLineNo">140</span>                                if (log.isDebugEnabled()) {<a name="line.140"></a>
+<span class="sourceLineNo">141</span>                                        log.debug("Request '{} {}' doesn't match '{} {}'", new Object[] { requestMethod, url, iu.getHttpMethod(), iu.getPattern() });<a name="line.141"></a>
+<span class="sourceLineNo">142</span>                                }<a name="line.142"></a>
+<span class="sourceLineNo">143</span>                                continue;<a name="line.143"></a>
+<span class="sourceLineNo">144</span>                        }<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>                        if (urlMatcher.match(iu.getPattern(), url)) {<a name="line.146"></a>
+<span class="sourceLineNo">147</span>                                if (configAttributes == null || urlMatcher.match(configAttributePattern, iu.getPattern())) {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>                                        configAttributes = iu.getConfigAttributes();<a name="line.148"></a>
+<span class="sourceLineNo">149</span>                                        configAttributePattern = iu.getPattern();<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                                        if (log.isTraceEnabled()) {<a name="line.150"></a>
+<span class="sourceLineNo">151</span>                                                log.trace("new candidate for '{}': '{}':{}", new Object[] { url, iu.getPattern(), configAttributes });<a name="line.151"></a>
+<span class="sourceLineNo">152</span>                                        }<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                                        if (stopAtFirstMatch) {<a name="line.153"></a>
+<span class="sourceLineNo">154</span>                                                break;<a name="line.154"></a>
+<span class="sourceLineNo">155</span>                                        }<a name="line.155"></a>
+<span class="sourceLineNo">156</span>                                }<a name="line.156"></a>
+<span class="sourceLineNo">157</span>                        }<a name="line.157"></a>
+<span class="sourceLineNo">158</span>                }<a name="line.158"></a>
+<span class="sourceLineNo">159</span><a name="line.159"></a>
+<span class="sourceLineNo">160</span>                if (log.isTraceEnabled()) {<a name="line.160"></a>
+<span class="sourceLineNo">161</span>                        if (configAttributes == null) {<a name="line.161"></a>
+<span class="sourceLineNo">162</span>                                log.trace("no config for '{}'", url);<a name="line.162"></a>
+<span class="sourceLineNo">163</span>                        }<a name="line.163"></a>
+<span class="sourceLineNo">164</span>                        else {<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                                log.trace("config for '{}' is '{}':{}", new Object[] { url, configAttributePattern, configAttributes });<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                        }<a name="line.166"></a>
+<span class="sourceLineNo">167</span>                }<a name="line.167"></a>
+<span class="sourceLineNo">168</span><a name="line.168"></a>
+<span class="sourceLineNo">169</span>                return configAttributes;<a name="line.169"></a>
+<span class="sourceLineNo">170</span>        }<a name="line.170"></a>
+<span class="sourceLineNo">171</span><a name="line.171"></a>
+<span class="sourceLineNo">172</span>        protected void initialize() throws Exception {<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                // override if necessary<a name="line.173"></a>
+<span class="sourceLineNo">174</span>        }<a name="line.174"></a>
+<span class="sourceLineNo">175</span><a name="line.175"></a>
+<span class="sourceLineNo">176</span>        /**<a name="line.176"></a>
+<span class="sourceLineNo">177</span>         * {@inheritDoc}<a name="line.177"></a>
+<span class="sourceLineNo">178</span>         * @see org.springframework.security.access.SecurityMetadataSource#supports(java.lang.Class)<a name="line.178"></a>
+<span class="sourceLineNo">179</span>         */<a name="line.179"></a>
+<span class="sourceLineNo">180</span>        public boolean supports(Class&lt;?&gt; clazz) {<a name="line.180"></a>
+<span class="sourceLineNo">181</span>                return FilterInvocation.class.isAssignableFrom(clazz);<a name="line.181"></a>
+<span class="sourceLineNo">182</span>        }<a name="line.182"></a>
+<span class="sourceLineNo">183</span><a name="line.183"></a>
+<span class="sourceLineNo">184</span>        /**<a name="line.184"></a>
+<span class="sourceLineNo">185</span>         * {@inheritDoc}<a name="line.185"></a>
+<span class="sourceLineNo">186</span>         * @see org.springframework.security.access.SecurityMetadataSource#getAllConfigAttributes()<a name="line.186"></a>
+<span class="sourceLineNo">187</span>         */<a name="line.187"></a>
+<span class="sourceLineNo">188</span>        public Collection&lt;ConfigAttribute&gt; getAllConfigAttributes() {<a name="line.188"></a>
+<span class="sourceLineNo">189</span>                try {<a name="line.189"></a>
+<span class="sourceLineNo">190</span>                        initialize();<a name="line.190"></a>
+<span class="sourceLineNo">191</span>                }<a name="line.191"></a>
+<span class="sourceLineNo">192</span>                catch (Exception e) {<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                        GrailsUtil.deepSanitize(e);<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                        log.error(e.getMessage(), e);<a name="line.194"></a>
+<span class="sourceLineNo">195</span>                }<a name="line.195"></a>
+<span class="sourceLineNo">196</span><a name="line.196"></a>
+<span class="sourceLineNo">197</span>                Collection&lt;ConfigAttribute&gt; all = new LinkedHashSet&lt;ConfigAttribute&gt;();<a name="line.197"></a>
+<span class="sourceLineNo">198</span>                for (InterceptedUrl iu : compiled) {<a name="line.198"></a>
+<span class="sourceLineNo">199</span>                        all.addAll(iu.getConfigAttributes());<a name="line.199"></a>
+<span class="sourceLineNo">200</span>                }<a name="line.200"></a>
+<span class="sourceLineNo">201</span>                return Collections.unmodifiableCollection(all);<a name="line.201"></a>
+<span class="sourceLineNo">202</span>        }<a name="line.202"></a>
+<span class="sourceLineNo">203</span><a name="line.203"></a>
+<span class="sourceLineNo">204</span>        protected String calculateUri(final HttpServletRequest request) {<a name="line.204"></a>
+<span class="sourceLineNo">205</span>                String url = request.getRequestURI().substring(request.getContextPath().length());<a name="line.205"></a>
+<span class="sourceLineNo">206</span>                int semicolonIndex = url.indexOf(";");<a name="line.206"></a>
+<span class="sourceLineNo">207</span>                return semicolonIndex == -1 ? url : url.substring(0, semicolonIndex);<a name="line.207"></a>
+<span class="sourceLineNo">208</span>        }<a name="line.208"></a>
+<span class="sourceLineNo">209</span><a name="line.209"></a>
+<span class="sourceLineNo">210</span>        protected String lowercaseAndStripQuerystring(final String url) {<a name="line.210"></a>
+<span class="sourceLineNo">211</span><a name="line.211"></a>
+<span class="sourceLineNo">212</span>                String fixed = url.toLowerCase();<a name="line.212"></a>
+<span class="sourceLineNo">213</span><a name="line.213"></a>
+<span class="sourceLineNo">214</span>                int firstQuestionMarkIndex = fixed.indexOf("?");<a name="line.214"></a>
+<span class="sourceLineNo">215</span>                if (firstQuestionMarkIndex != -1) {<a name="line.215"></a>
+<span class="sourceLineNo">216</span>                        fixed = fixed.substring(0, firstQuestionMarkIndex);<a name="line.216"></a>
+<span class="sourceLineNo">217</span>                }<a name="line.217"></a>
+<span class="sourceLineNo">218</span><a name="line.218"></a>
+<span class="sourceLineNo">219</span>                return fixed;<a name="line.219"></a>
+<span class="sourceLineNo">220</span>        }<a name="line.220"></a>
+<span class="sourceLineNo">221</span><a name="line.221"></a>
+<span class="sourceLineNo">222</span>        protected AntPathMatcher getUrlMatcher() {<a name="line.222"></a>
+<span class="sourceLineNo">223</span>                return urlMatcher;<a name="line.223"></a>
+<span class="sourceLineNo">224</span>        }<a name="line.224"></a>
+<span class="sourceLineNo">225</span><a name="line.225"></a>
+<span class="sourceLineNo">226</span>        /**<a name="line.226"></a>
+<span class="sourceLineNo">227</span>         * For debugging.<a name="line.227"></a>
+<span class="sourceLineNo">228</span>         * @return an unmodifiable map of {@link AnnotationFilterInvocationDefinition}ConfigAttributeDefinition<a name="line.228"></a>
+<span class="sourceLineNo">229</span>         * keyed by compiled patterns<a name="line.229"></a>
+<span class="sourceLineNo">230</span>         */<a name="line.230"></a>
+<span class="sourceLineNo">231</span>        public List&lt;InterceptedUrl&gt; getConfigAttributeMap() {<a name="line.231"></a>
+<span class="sourceLineNo">232</span>                return Collections.unmodifiableList(compiled);<a name="line.232"></a>
+<span class="sourceLineNo">233</span>        }<a name="line.233"></a>
+<span class="sourceLineNo">234</span><a name="line.234"></a>
+<span class="sourceLineNo">235</span>        // fixes extra spaces, trailing commas, etc.<a name="line.235"></a>
+<span class="sourceLineNo">236</span>        protected List&lt;String&gt; split(final String value) {<a name="line.236"></a>
+<span class="sourceLineNo">237</span>                if (!value.startsWith("ROLE_") &amp;&amp; !value.startsWith("IS_")) {<a name="line.237"></a>
+<span class="sourceLineNo">238</span>                        // an expression<a name="line.238"></a>
+<span class="sourceLineNo">239</span>                        return Collections.singletonList(value);<a name="line.239"></a>
+<span class="sourceLineNo">240</span>                }<a name="line.240"></a>
+<span class="sourceLineNo">241</span><a name="line.241"></a>
+<span class="sourceLineNo">242</span>                String[] parts = StringUtils.commaDelimitedListToStringArray(value);<a name="line.242"></a>
+<span class="sourceLineNo">243</span>                List&lt;String&gt; cleaned = new ArrayList&lt;String&gt;();<a name="line.243"></a>
+<span class="sourceLineNo">244</span>                for (String part : parts) {<a name="line.244"></a>
+<span class="sourceLineNo">245</span>                        part = part.trim();<a name="line.245"></a>
+<span class="sourceLineNo">246</span>                        if (part.length() &gt; 0) {<a name="line.246"></a>
+<span class="sourceLineNo">247</span>                                cleaned.add(part);<a name="line.247"></a>
+<span class="sourceLineNo">248</span>                        }<a name="line.248"></a>
+<span class="sourceLineNo">249</span>                }<a name="line.249"></a>
+<span class="sourceLineNo">250</span>                return cleaned;<a name="line.250"></a>
+<span class="sourceLineNo">251</span>        }<a name="line.251"></a>
+<span class="sourceLineNo">252</span><a name="line.252"></a>
+<span class="sourceLineNo">253</span>        protected void compileAndStoreMapping(InterceptedUrl iu) {<a name="line.253"></a>
+<span class="sourceLineNo">254</span>                String pattern = iu.getPattern();<a name="line.254"></a>
+<span class="sourceLineNo">255</span>                HttpMethod method = iu.getHttpMethod();<a name="line.255"></a>
+<span class="sourceLineNo">256</span><a name="line.256"></a>
+<span class="sourceLineNo">257</span>                String key = pattern.toLowerCase();<a name="line.257"></a>
+<span class="sourceLineNo">258</span><a name="line.258"></a>
+<span class="sourceLineNo">259</span>                Collection&lt;ConfigAttribute&gt; configAttributes = iu.getConfigAttributes();<a name="line.259"></a>
+<span class="sourceLineNo">260</span><a name="line.260"></a>
+<span class="sourceLineNo">261</span>                InterceptedUrl replaced = storeMapping(key, method, Collections.unmodifiableCollection(configAttributes));<a name="line.261"></a>
+<span class="sourceLineNo">262</span>                if (replaced != null) {<a name="line.262"></a>
+<span class="sourceLineNo">263</span>                        log.warn("replaced rule for '{}' with roles {} with roles {}", new Object[] { key, replaced.getConfigAttributes(), configAttributes });<a name="line.263"></a>
+<span class="sourceLineNo">264</span>                }<a name="line.264"></a>
+<span class="sourceLineNo">265</span>        }<a name="line.265"></a>
+<span class="sourceLineNo">266</span><a name="line.266"></a>
+<span class="sourceLineNo">267</span>        protected InterceptedUrl storeMapping(final String pattern, final HttpMethod method,<a name="line.267"></a>
+<span class="sourceLineNo">268</span>                        final Collection&lt;ConfigAttribute&gt; configAttributes) {<a name="line.268"></a>
+<span class="sourceLineNo">269</span><a name="line.269"></a>
+<span class="sourceLineNo">270</span>                InterceptedUrl existing = null;<a name="line.270"></a>
+<span class="sourceLineNo">271</span>                for (Iterator&lt;InterceptedUrl&gt; iter = compiled.iterator(); iter.hasNext(); ) {<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                        InterceptedUrl iu = iter.next();<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                        if (iu.getPattern().equals(pattern) &amp;&amp; iu.getHttpMethod() == method) {<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                                existing = iu;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                                iter.remove();<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                                break;<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                        }<a name="line.277"></a>
+<span class="sourceLineNo">278</span>                }<a name="line.278"></a>
+<span class="sourceLineNo">279</span><a name="line.279"></a>
+<span class="sourceLineNo">280</span>                compiled.add(new InterceptedUrl(pattern, method, configAttributes));<a name="line.280"></a>
+<span class="sourceLineNo">281</span><a name="line.281"></a>
+<span class="sourceLineNo">282</span>                return existing;<a name="line.282"></a>
+<span class="sourceLineNo">283</span>        }<a name="line.283"></a>
+<span class="sourceLineNo">284</span><a name="line.284"></a>
+<span class="sourceLineNo">285</span>        protected void resetConfigs() {<a name="line.285"></a>
+<span class="sourceLineNo">286</span>                compiled.clear();<a name="line.286"></a>
+<span class="sourceLineNo">287</span>        }<a name="line.287"></a>
+<span class="sourceLineNo">288</span><a name="line.288"></a>
+<span class="sourceLineNo">289</span>        /**<a name="line.289"></a>
+<span class="sourceLineNo">290</span>         * For admin/debugging - find all config attributes that apply to the specified URL (doesn't consider request method restrictions).<a name="line.290"></a>
+<span class="sourceLineNo">291</span>         * @param url the URL<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * @return matching attributes<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         */<a name="line.293"></a>
+<span class="sourceLineNo">294</span>        public Collection&lt;ConfigAttribute&gt; findMatchingAttributes(final String url) {<a name="line.294"></a>
+<span class="sourceLineNo">295</span>                for (InterceptedUrl iu : compiled) {<a name="line.295"></a>
+<span class="sourceLineNo">296</span>                        if (urlMatcher.match(iu.getPattern(), url)) {<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                                return iu.getConfigAttributes();<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                        }<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                }<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                return Collections.emptyList();<a name="line.300"></a>
+<span class="sourceLineNo">301</span>        }<a name="line.301"></a>
+<span class="sourceLineNo">302</span><a name="line.302"></a>
+<span class="sourceLineNo">303</span>        /**<a name="line.303"></a>
+<span class="sourceLineNo">304</span>         * Dependency injection for whether to reject if there's no matching rule.<a name="line.304"></a>
+<span class="sourceLineNo">305</span>         * @param reject if true, reject access unless there's a pattern for the specified resource<a name="line.305"></a>
+<span class="sourceLineNo">306</span>         */<a name="line.306"></a>
+<span class="sourceLineNo">307</span>        public void setRejectIfNoRule(final boolean reject) {<a name="line.307"></a>
+<span class="sourceLineNo">308</span>                rejectIfNoRule = reject;<a name="line.308"></a>
+<span class="sourceLineNo">309</span>        }<a name="line.309"></a>
+<span class="sourceLineNo">310</span><a name="line.310"></a>
+<span class="sourceLineNo">311</span>        public void afterPropertiesSet() {<a name="line.311"></a>
+<span class="sourceLineNo">312</span>                String version = Metadata.getCurrent().getGrailsVersion();<a name="line.312"></a>
+<span class="sourceLineNo">313</span>                grails23Plus = !version.startsWith("2.0") &amp;&amp; !version.startsWith("2.1") &amp;&amp; !version.startsWith("2.2");<a name="line.313"></a>
+<span class="sourceLineNo">314</span>        }<a name="line.314"></a>
+<span class="sourceLineNo">315</span>}<a name="line.315"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

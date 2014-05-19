@@ -1,0 +1,216 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>4.3 Requestmap Instances Stored in the Database 2.0-RC3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClassProperties.html"><strong>7</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/authentication.html"><strong>8</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>9</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/userDetailsService.html"><strong>10</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/hierarchicalRoles.html"><strong>13</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/switchUser.html"><strong>14</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/filters.html"><strong>15</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/channelSecurity.html"><strong>16</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/ip.html"><strong>17</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/sessionFixation.html"><strong>18</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/logoutHandlers.html"><strong>19</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/voters.html"><strong>20</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/miscProperties.html"><strong>21</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/tutorials.html"><strong>22</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/controllerMetaClassMethods.html"><strong>23</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Required and Optional Domain Classes</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>4.3 Requestmap Instances Stored in the Database - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 2.0-RC3</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="requestmapInstances">4.3 Requestmap Instances Stored in the Database</h2>
+With this approach you use the <code>Requestmap</code> domain class to store mapping entries in the database. <code>Requestmap</code> has a <code>url</code> property that contains the secured URL pattern and a <code>configAttribute</code> property containing a comma-delimited list of required roles and/or tokens such as <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code>.<p class="paragraph"/>To use <code>Requestmap</code> entries, specify <code>securityConfigType="Requestmap"</code>:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.securityConfigType = <span class="java&#45;quote">"Requestmap"</span></pre></div><p class="paragraph"/>You create <code>Requestmap</code> entries as you create entries in any Grails domain class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">for</span> (<span class="java&#45;object">String</span> url in &#91;
+      '/', '/index', '/index.gsp', '/&#42;&#42;/favicon.ico',
+      '/&#42;&#42;/js/&#42;&#42;', '/&#42;&#42;/css/&#42;&#42;', '/&#42;&#42;/images/&#42;&#42;',
+      '/login', '/login.&#42;', '/login/&#42;',
+      '/logout', '/logout.&#42;', '/logout/&#42;'&#93;) &#123;
+   <span class="java&#45;keyword">new</span> Requestmap(url: url, configAttribute: 'permitAll').save()
+&#125;<p class="paragraph"/><span class="java&#45;keyword">new</span> Requestmap(url: '/profile/&#42;&#42;',    configAttribute: 'ROLE_USER').save()
+<span class="java&#45;keyword">new</span> Requestmap(url: '/admin/&#42;&#42;',      configAttribute: 'ROLE_ADMIN').save()
+<span class="java&#45;keyword">new</span> Requestmap(url: '/admin/role/&#42;&#42;', configAttribute: 'ROLE_SUPERVISOR').save()
+<span class="java&#45;keyword">new</span> Requestmap(url: '/admin/user/&#42;&#42;', configAttribute: 'ROLE_ADMIN,ROLE_SUPERVISOR').save()
+<span class="java&#45;keyword">new</span> Requestmap(url: '/j_spring_security_switch_user',
+               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save()</pre></div><p class="paragraph"/>The <code>configAttribute</code> value can have a single value or have multiple comma-delimited values. In this example only users with <code>ROLE_ADMIN</code> or <code>ROLE_SUPERVISOR</code> can access <code>/admin/user/&#42;&#42;</code> urls, and only users with <code>ROLE_SWITCH_USER</code> can access the switch-user url (<code>/j_spring_security_switch_user</code>) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, or <code>IS_AUTHENTICATED_ANONYMOUSLY</code> (or their corresponding SpEL expressions) with one or more roles means the user must have one of the roles and satisty the <code>IS_AUTHENTICATED</code> rule.<p class="paragraph"/>Unlike the <a href="../guide/single.html#configGroovyMap" class="guide">Config.groovy Map approach</a>, you do not need to revise the <code>Requestmap</code> entry order because the plugin calculates the most specific rule that applies to the current request.<p class="paragraph"/><h4>Requestmap Cache</h4><p class="paragraph"/><code>Requestmap</code> entries are cached for performance, but caching affects runtime configurability. If you create, edit, or delete an instance, the cache must be flushed and repopulated to be consistent with the database. You can call <code>springSecurityService.clearCachedRequestmaps()</code> to do this. For example, if you create a <code>RequestmapController</code> the <code>save</code> action should look like this (and the update and delete actions should similarly call <code>clearCachedRequestmaps()</code>):<p class="paragraph"/><div class="code"><pre>class RequestmapController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   ...<p class="paragraph"/>   def save() &#123;
+      def requestmapInstance = <span class="java&#45;keyword">new</span> Requestmap(params)
+      <span class="java&#45;keyword">if</span> (!requestmapInstance.save(flush: <span class="java&#45;keyword">true</span>)) &#123;
+         render view: 'create', model: &#91;requestmapInstance: requestmapInstance&#93;
+         <span class="java&#45;keyword">return</span>
+      &#125;<p class="paragraph"/>      springSecurityService.clearCachedRequestmaps()<p class="paragraph"/>      flash.message = <span class="java&#45;quote">"$&#123;message(code: '<span class="java&#45;keyword">default</span>.created.message', args: &#91;message(code: 'requestmap.label', <span class="java&#45;keyword">default</span>: 'Requestmap'), requestmapInstance.id&#93;)&#125;"</span>
+      redirect action: 'show', id: requestmapInstance.id
+   &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Required and Optional Domain Classes</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>23 Controller MetaClass Methods 2.0-RC3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>6</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClassProperties.html"><strong>7</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authentication.html"><strong>8</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>9</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/userDetailsService.html"><strong>10</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/hierarchicalRoles.html"><strong>13</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/switchUser.html"><strong>14</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/filters.html"><strong>15</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/channelSecurity.html"><strong>16</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/ip.html"><strong>17</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sessionFixation.html"><strong>18</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logoutHandlers.html"><strong>19</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/voters.html"><strong>20</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/miscProperties.html"><strong>21</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/tutorials.html"><strong>22</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/controllerMetaClassMethods.html"><strong>23</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/tutorials.html">&lt;&lt; <strong>22</strong><span>Tutorials</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>23 Controller MetaClass Methods - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 2.0-RC3</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h1 id="controllerMetaClassMethods">23 Controller MetaClass Methods</h1>
+The plugin registers some convenience methods into all controllers in your application. All are accessor methods, so they can be called as methods or properties. They include:<p class="paragraph"/><h4>isLoggedIn</h4><p class="paragraph"/>Returns <code>true</code> if there is an authenticated user.<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def someAction() &#123;
+      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         &#8230;
+      &#125;<p class="paragraph"/>      ...<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (!isLoggedIn()) &#123;
+         &#8230;
+      &#125;<p class="paragraph"/>      // or<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (loggedIn) &#123;
+         &#8230;
+      &#125;<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (!loggedIn) &#123;
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>getPrincipal</h4><p class="paragraph"/>Retrieves the current authenticated user's Principal (a <code>GrailsUser</code> instance unless you've customized this) or <code>null</code> if not authenticated.<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def someAction() &#123;
+      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> username = getPrincipal().username
+         &#8230;
+      &#125;<p class="paragraph"/>      // or<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> username = principal.username
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>getAuthenticatedUser</h4><p class="paragraph"/>Loads the user domain class instance from the database that corresponds to the currently authenticated user, or <code>null</code> if not authenticated. This is the equivalent of adding a dependency injection for <code>springSecurityService</code> and calling <code>PersonDomainClassName.get(springSecurityService.principal.id)</code> (the typical way that this is often done).<p class="paragraph"/><div class="code"><pre>class MyController &#123;<p class="paragraph"/>   def someAction() &#123;
+      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> email = getAuthenticatedUser().email
+         &#8230;
+      &#125;<p class="paragraph"/>      // or<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (isLoggedIn()) &#123;
+         <span class="java&#45;object">String</span> email = authenticatedUser.email
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/tutorials.html">&lt;&lt; <strong>22</strong><span>Tutorials</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

@@ -1,8 +1,0 @@
-cobertura.ser
-*.log
-/target
-grails-spring-security-core-*.zip
-grails-spring-security-core-*.zip.sha1
-plugin.xml
-.settings
-web-app

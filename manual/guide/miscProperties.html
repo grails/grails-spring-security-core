@@ -1,0 +1,197 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>21 Miscellaneous Properties 2.0-RC3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>6</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClassProperties.html"><strong>7</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authentication.html"><strong>8</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>9</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/userDetailsService.html"><strong>10</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/hierarchicalRoles.html"><strong>13</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/switchUser.html"><strong>14</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/filters.html"><strong>15</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/channelSecurity.html"><strong>16</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/ip.html"><strong>17</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sessionFixation.html"><strong>18</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logoutHandlers.html"><strong>19</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/voters.html"><strong>20</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/miscProperties.html"><strong>21</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/tutorials.html"><strong>22</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/controllerMetaClassMethods.html"><strong>23</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/voters.html">&lt;&lt; <strong>20</strong><span>Voters</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/tutorials.html"><strong>22</strong><span>Tutorials</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>21 Miscellaneous Properties - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 2.0-RC3</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h1 id="miscProperties">21 Miscellaneous Properties</h1>
+<table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>active</td><td><code>true</code></td><td>Whether the plugin is enabled.</td></tr><tr class="table-even"><td>printStatusMessages</td><td><code>true</code></td><td>Whether to print status messages such as "Configuring Spring Security Core ..."</td></tr><tr class="table-odd"><td>rejectIfNoRule</td><td><code>true</code></td><td>'strict' mode where a request mapping is required for all resources; if <code>true</code> make sure to allow <code>IS_AUTHENTICATED_ ANONYMOUSLY</code> for '/', '/js/&#42;&#42;', '/css/&#42;&#42;', '/images/&#42;&#42;', '/login/&#42;&#42;', '/logout/&#42;&#42;', and so on.</td></tr><tr class="table-even"><td>anon. key</td><td>'foo'</td><td>anonymousProcessingFilter key.</td></tr><tr class="table-odd"><td>atr. anonymousClass</td><td>grails.plugin.springsecurity. authentication. GrailsAnonymous AuthenticationToken</td><td>Anonymous token class.</td></tr><tr class="table-even"><td>useHttpSession EventPublisher</td><td><code>false</code></td><td>If <code>true</code>, an <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/session/HttpSessionEventPublisher.html" target="blank">HttpSession EventPublisher</a> will be configured.</td></tr><tr class="table-odd"><td>cacheUsers</td><td><code>false</code></td><td>If <code>true</code>, logins are cached using an <code>EhCache</code>. See <a href="../guide/single.html#locking" class="guide">Account Locking and Forcing Password Change, under User Cache</a>.</td></tr><tr class="table-even"><td>useSecurity EventListener</td><td><code>false</code></td><td>If <code>true</code>, configure <code>SecurityEventListener</code>. See <a href="../guide/single.html#events" class="guide">Events</a>.</td></tr><tr class="table-odd"><td>dao. reflectionSalt SourceProperty</td><td>none</td><td>Which property to use for the reflection-based salt source. See <a href="../guide/single.html#salt" class="guide">Salted Passwords</a></td></tr><tr class="table-even"><td>dao. hideUserNot FoundExceptions</td><td><code>true</code></td><td>if <code>true</code>, throws a new <code>BadCredentialsException</code> if a username is not found or the password is incorrect, but if <code>false</code> re-throws the <code>UsernameNot FoundException</code> thrown by <code>UserDetailsService</code> (considered less secure than throwing <code>BadCredentialsException</code> for both exceptions)</td></tr><tr class="table-odd"><td>requestCache. createSession</td><td><code>true</code></td><td>Whether caching <code>SavedRequest</code> can trigger the creation of a session.</td></tr><tr class="table-even"><td>roleHierarchy</td><td>none</td><td>Hierarchical role definition. See <a href="../guide/single.html#hierarchicalRoles" class="guide">Hierarchical Role Definition</a>.</td></tr><tr class="table-odd"><td>voterNames</td><td>&#91;'authenticatedVoter', 'roleVoter', 'closureVoter'&#93;</td><td>Bean names of voters. See <a href="../guide/single.html#voters" class="guide">Voters</a>.</td></tr><tr class="table-even"><td>providerNames</td><td>&#91;'daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'&#93;</td><td>Bean names of authentication providers. See <a href="../guide/single.html#authenticationProviders" class="guide">Authentication Providers</a>.</td></tr><tr class="table-odd"><td>securityConfigType</td><td>'Annotation'</td><td>Type of request mapping to use, one of "Annotation", "Requestmap", or "InterceptUrlMap" (or the corresponding enum value from <code>SecurityConfigType</code>). See <a href="../guide/single.html#requestMappings" class="guide">Configuring Request Mappings to Secure URLs</a>.</td></tr><tr class="table-even"><td>controllerAnnotations. lowercase</td><td><code>true</code></td><td>Whether to do URL comparisons using lowercase.</td></tr><tr class="table-odd"><td>controllerAnnotations. staticRules</td><td>none</td><td>Extra rules that cannot be mapped using annotations.</td></tr><tr class="table-even"><td>interceptUrlMap</td><td>none</td><td>Request mapping definition when using "InterceptUrlMap". See <a href="../guide/single.html#configGroovyMap" class="guide">Simple Map in Config.groovy</a>.</td></tr><tr class="table-odd"><td>registerLoggerListener</td><td><code>false</code></td><td>If <code>true</code>, registers a <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/event/LoggerListener.html" target="blank">LoggerListener</a> that logs interceptor-related application events.</td></tr><tr class="table-even"><td>scr. allowSessionCreation</td><td><code>true</code></td><td>Whether to allow creating a session in the <code>securityContextRepository</code> bean</td></tr><tr class="table-odd"><td>scr. disableUrlRewriting</td><td><code>true</code></td><td>Whether to disable URL rewriting (and the jsessionid attribute)</td></tr><tr class="table-even"><td>scr. springSecurity ContextKey</td><td><code>HttpSessionSecurity ContextRepository. SPRING_SECURITY_ CONTEXT_KEY</code></td><td>The HTTP session key to store the <code>SecurityContext</code> under</td></tr><tr class="table-odd"><td>scpf. forceEager SessionCreation</td><td><code>false</code></td><td>Whether to eagerly create a session in the <code>securityContextRepository</code> bean</td></tr><tr class="table-even"><td>sch. strategyName</td><td><code>SecurityContextHolder. MODE_THREADLOCAL</code></td><td>The strategy to use for storing the <code>SecurityContext</code> - can be one of <code>MODE_THREADLOCAL</code>, <code>MODE_INHERITABLETHREADLOCAL</code>, or <code>MODE_GLOBAL</code>, or the name of a class implementing <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolderStrategy.html" target="blank">SecurityContextHolderStrategy</a></td></tr><tr class="table-odd"><td>debug. useFilter</td><td><code>false</code></td><td>Whether to use the <code>DebugFilter</code> to log request debug information to the console</td></tr><tr class="table-even"><td>providerManager. eraseCredentials AfterAuthentication</td><td><code>true</code></td><td>Whether to remove the password from the <code>Authentication</code> and its child objects after successful authentication</td></tr></table>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/voters.html">&lt;&lt; <strong>20</strong><span>Voters</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/tutorials.html"><strong>22</strong><span>Tutorials</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
