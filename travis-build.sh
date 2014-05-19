@@ -27,7 +27,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "grails-plugins/grails-
     git clone https://${GH_TOKEN}@github.com/$TRAVIS_REPO_SLUG.git -b gh-pages gh-pages --single-branch > /dev/null
     cd gh-pages
     git rm -rf .
-    cp -r ../target/docs/. ./
+    cp -r ../docs/. ./
     git add *
     git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
     git push origin HEAD
