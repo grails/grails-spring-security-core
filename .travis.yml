@@ -6,6 +6,8 @@ before_script:
 script: ./travis-build.sh
 env:
   global:
-  - secure: L6I7/s1Em2qORjlBpj1uex1VM127glPIk4Bm58u3mvIOYC1vk/zC8lVjPCXk6tk3M4A4YMbz3rW0IFKNkF84TgKo25uQpKUk/Fc5vZp/DkRqLm4am6iTZIKP7iscd5YONiaGkyOshL8Ls/M4Ee0XMrZlbYXiJCpcysUDnmyPorE=
-  - secure: gxZkUNwg41OTHnn83Yr0/SmAFkcvCTcUwCC320xoztMOptu3HXNKbE2Ov5S6/X7/c9gSIjmL/WILX0hvNCFzjuypqKyZZb8fVUgTILqOvmVc/hkIXYW/tNg9CAM//SF2Oq8ig60SnJ6tB+9DVLs4AxKKWatnVrwk1N1rC3KyY44=
-  - secure: qzBRjSX7V0xm/TH7X1QerNwG0l/jmtmuzKHQO+qgspm5jC9w9F6ygpCl70ICXNqXwzjE8Dq4bc5peud06Q5hvE6yEpRGBBWu0VEaeoZeHmVTuzChLXCtVqsKlwjGgOtv2aV/gV+Ubnstf8+CG5HYGkjnbqujbDacN/zSxmRDUdc=
+  - GIT_NAME="Graeme Rocher"
+  - GIT_EMAIL="graeme.rocher@gmail.com"
+  - secure: VI543AeqcYzijvWuB+c6mdb615LiM/N78PQJs1va0bPpXu8Xs0oIS7oUC/Un4BKx/g6gDee6jwPBcSJxWg6YBTyjm1TQnxcLrVsbiBab7BVvizKM7jeNwiv6DfEW+n0SJRiQXQuYd/LKC6g98tisGHBNn8ARSenOckHGroAG4lU=
+  - secure: nScXgpO/7z1OTF9jNscWIS2ufLdOfshkHvHL//H1n1LdB2Sqfm5r64dMBGYWMcRzV+1F6jiGVZheKaBiDZmrmWS6bkMJrejgGU2SYPqPR8JGZGv/z1NLzJ3Ekt7lju2MGk/Io3o6DtvAr/k+G6PTrysWSQI/+aswZFIFl9B9Rg8=
+  - secure: dfnrq1gwF4ihKaRY1r2OqOvuo357JQ/QMWOiSMdG8VHrTB+brraUd98TWj6Q/ZYEV6OWm0r83E27OsXwrhi51VT0IdYYYd5bvG7msInzxxc+qGPzWEpmgeqSGnNqhYCBoVMHBt5/xIn+t9zSoiBAFEZDXNZ9NTHYihaQe2mMHns=
