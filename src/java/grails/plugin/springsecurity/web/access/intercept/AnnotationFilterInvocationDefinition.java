@@ -158,13 +158,25 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		String controllerName = mapping.getControllerName();
 
 		if (isController(controllerName, actionName)) {
-			if (!StringUtils.hasLength(actionName) || "null".equals(actionName)) {
-				actionName = "index";
+			return createControllerUri(controllerName, actionName);
+		}
+		
+		if (grails23Plus && controllerName != null) {
+			String namespace = mapping.getNamespace();
+			if(namespace != null) {
+				String fullControllerName = resolveFullControllerName(controllerName, namespace);
+				return createControllerUri(fullControllerName, actionName);
 			}
-			return (SLASH + controllerName + SLASH + actionName).trim();
 		}
 
 		return null;
+	}
+	
+	protected String createControllerUri(String controllerName, String actionName) {
+		if (!StringUtils.hasLength(actionName) || "null".equals(actionName)) {
+			actionName = "index";
+		}
+		return (SLASH + controllerName + SLASH + actionName).trim();
 	}
 
 	protected boolean isController(final String controllerName, final String actionName) {
@@ -379,7 +391,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			final List<InterceptedUrl> classClosureMap) {
 
 		Class<?> clazz = controllerClass.getClazz();
-		String controllerName = grailsUrlConverter.toUrlElement(controllerClass.getName());
+		String controllerName = resolveFullControllerName(controllerClass);
 
 		Annotation annotation = clazz.getAnnotation(org.springframework.security.access.annotation.Secured.class);
 		if (annotation == null) {
@@ -407,6 +419,29 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		if (closureAnnotatedActionNames != null && !closureAnnotatedActionNames.isEmpty()) {
 			actionClosureMap.put(controllerName, closureAnnotatedActionNames);
 		}
+	}
+
+	protected String resolveFullControllerName(
+			final GrailsControllerClass controllerClass) {
+		String controllerName = controllerClass.getName();
+		String namespace = null;
+		if (grails23Plus) {
+			namespace = controllerClass.getNamespace();
+			if (namespace != null) {
+				namespace = grailsUrlConverter.toUrlElement(namespace);
+			}
+		}
+		return resolveFullControllerName(grailsUrlConverter.toUrlElement(controllerName), namespace);
+	}
+
+	protected String resolveFullControllerName(String controllerNameInUrlFormat,
+			String namespaceInUrlFormat) {
+		StringBuilder fullControllerName = new StringBuilder();
+		if (namespaceInUrlFormat != null) {
+			fullControllerName.append(namespaceInUrlFormat).append(":");
+		}
+		fullControllerName.append(controllerNameInUrlFormat);
+		return fullControllerName.toString();
 	}
 
 	protected List<InterceptedUrl> findActionRoles(final Class<?> clazz) {
