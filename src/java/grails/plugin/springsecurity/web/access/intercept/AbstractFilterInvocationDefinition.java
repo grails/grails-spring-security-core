@@ -21,9 +21,9 @@ import grails.util.Metadata;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -58,8 +58,8 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 	protected boolean rejectIfNoRule;
 	protected RoleVoter roleVoter;
 	protected AuthenticatedVoter authenticatedVoter;
-	protected final List<InterceptedUrl> compiled = Collections.synchronizedList(new ArrayList<InterceptedUrl>());
-   protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+	protected final List<InterceptedUrl> compiled = new CopyOnWriteArrayList<InterceptedUrl>();
+	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 	protected AntPathMatcher urlMatcher = new AntPathMatcher();
 	protected boolean initialized;
 	protected boolean grails23Plus;
@@ -268,13 +268,15 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 			final Collection<ConfigAttribute> configAttributes) {
 
 		InterceptedUrl existing = null;
-		for (Iterator<InterceptedUrl> iter = compiled.iterator(); iter.hasNext(); ) {
-			InterceptedUrl iu = iter.next();
+		for (InterceptedUrl iu : compiled) {
 			if (iu.getPattern().equals(pattern) && iu.getHttpMethod() == method) {
 				existing = iu;
-				iter.remove();
 				break;
 			}
+		}
+		
+		if(existing != null) {
+			compiled.remove(existing);
 		}
 
 		compiled.add(new InterceptedUrl(pattern, method, configAttributes));
