@@ -20,6 +20,7 @@ import grails.web.UrlConverter;
 import groovy.lang.Closure;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -447,7 +448,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	protected List<InterceptedUrl> findActionRoles(final Class<?> clazz) {
 		List<InterceptedUrl> actionRoles = new ArrayList<InterceptedUrl>();
 		for (Method method : clazz.getDeclaredMethods()) {
-			Annotation annotation = findAnnotation(method.getAnnotations());
+			Annotation annotation = findSecuredAnnotation(method);
 			if (annotation != null) {
 				Collection<String> values = getValue(annotation);
 				if (!values.isEmpty()) {
@@ -474,12 +475,15 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		return closureClass == grails.plugin.springsecurity.annotation.Secured.class ? null : closureClass;
 	}
 
-	protected Annotation findAnnotation(final Annotation[] annotations) {
-		for (Annotation annotation : annotations) {
-			if (annotation.annotationType() == grails.plugin.springsecurity.annotation.Secured.class ||
-			    annotation.annotationType() == org.springframework.security.access.annotation.Secured.class) {
-				return annotation;
-			}
+	protected Annotation findSecuredAnnotation(final AccessibleObject annotatedTarget) {
+		Annotation annotation; 
+		annotation = annotatedTarget.getAnnotation(grails.plugin.springsecurity.annotation.Secured.class);
+		if (annotation != null) {
+			return annotation;
+		}
+		annotation = annotatedTarget.getAnnotation(org.springframework.security.access.annotation.Secured.class);
+		if (annotation != null) {
+			return annotation;
 		}
 		return null;
 	}
