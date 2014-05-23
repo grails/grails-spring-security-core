@@ -12,11 +12,12 @@ Here's the updated @grails-app/views/layouts/main.gsp@:
 <html>
 
 <head>
-<title><g:layoutTitle default="Grails" /></title>
-<link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
-<link rel="shortcut icon" type="image/x-icon"
+   <title><g:layoutTitle default="Grails" /></title>
+   <link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" />
+   <link rel="shortcut icon" type="image/x-icon"
       href="${resource(dir:'images',file:'favicon.ico')}" />
-<g:layoutHead />
+   <g:layoutHead />
+   <r:layoutResources />
 </head>
 
 <body>
@@ -40,22 +41,20 @@ Here's the updated @grails-app/views/layouts/main.gsp@:
       </span>
 
    </div>
-
-   <g:javascript src='application.js' />
-   <g:javascript library='prototype' />
-   <g:javascript src='prototype/scriptaculous.js?load=effects' />
+   <!-- http://dev.iceburg.net/jquery/jqModal/ -->
+   <g:javascript src='jqModal.js' />
 
    <g:render template='/includes/ajaxLogin'/>
 
    <g:layoutBody />
-
+   <r:layoutResources />
    </body>
 </html>
 {code}
 
 Note these changes:
 
-* The prototype and scriptaculous libraries are included for Ajax support and to hide and show the login form.
+* The jqModal (jQuery) library is included for Ajax support and to hide and show the login form.
 * There is an include of the template @/includes/ajaxLogin@ (see the code below).
 * There is a <span> positioned in the top-right that shows the username and a logout link when logged in, and a login link otherwise.
 
@@ -64,10 +63,8 @@ Here is the content of the login form template (@grails-app/views/includes/_ajax
 {code}
 <style>
 #ajaxLogin {
-   margin: 15px 0px; padding: 0px;
-   text-align: center;
+   background-color: #EEEEFF
    display: none;
-   position: absolute;
 }
 #ajaxLogin .inner {
    width: 260px;
@@ -105,83 +102,102 @@ Here is the content of the login form template (@grails-app/views/includes/_ajax
 .errorMessage { color: red; }
 </style>
 
-<div id='ajaxLogin'>
-   <div class='inner'>
-   <div class='fheader'>Please Login..</div>
-   <form action='${request.contextPath}/j_spring_security_check' method='POST'
-       id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'>
-      <p>
-         <label for='username'>Login ID</label>
-         <input type='text' class='text_' name='j_username' id='username' />
-      </p>
-      <p>
-         <label for='password'>Password</label>
-         <input type='password' class='text_' name='j_password' id='password' />
-      </p>
-      <p>
-         <label for='remember_me'>Remember me</label>
-         <input type='checkbox' class='chk' id='remember_me'
-                name='_spring_security_remember_me'/>
-      </p>
-      <p>
-         <a href='javascript:void(0)' onclick='authAjax(); return false;'>Login</a>
-         <a href='javascript:void(0)' onclick='cancelLogin(); return false;'>Cancel</a>
-      </p>
-   </form>
-    <div style='display: none; text-align: left;' id='loginMessage'></div>
-   </div>
+<div id='ajaxLogin' class="jqmWindow" style="z-index: 3000;">
+      <div class='inner'>
+		<div class='fheader'>Please Login..</div>
+		<form action='${request.contextPath}/j_spring_security_check' method='POST'
+			 id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'>
+			<p>
+				<label for='username'>Login ID</label>
+				<input type='text' class='text_' name='j_username' id='username' />
+			</p>
+			<p>
+				<label for='password'>Password</label>
+				<input type='password' class='text_' name='j_password' id='password' />
+			</p>
+			<p>
+				<label for='remember_me'>Remember me</label>
+				<input type='checkbox' class='chk' id='remember_me'
+						 name='_spring_security_remember_me'/>
+			</p>
+			<p>
+				<span class="button" id="authAjax">Login</span>
+				<span class="button" id="cancelLogin">Cancel</span>
+			</p>
+		</form>
+		<div style='display: none; text-align: left;' id='loginMessage'></div>
+	</div>
 </div>
 
 <script type='text/javascript'>
-
-// center the form
-Event.observe(window, 'load', function() {
-   var ajaxLogin = $('ajaxLogin');
-   $('ajaxLogin').style.left = ((document.body.getDimensions().width -
-                                 ajaxLogin.getDimensions().width) / 2) + 'px';
-   $('ajaxLogin').style.top = ((document.body.getDimensions().height -
-                                ajaxLogin.getDimensions().height) / 2) + 'px';
+var onLogin;
+$.ajaxSetup({
+      beforeSend : function(xhr, event) {
+		// save the 'success' function for later use
+		onLogin = event.success;
+	},
+	statusCode: {
+		// Set up a global AJAX error handler to handle the 401
+		// unauthorized responses. If a 401 status code comes back,
+		// the user is no longer logged-into the system and can not
+		// use it properly.
+		401: function() {
+			showLogin();
+		}
+	}
 });
 
-function showLogin() {
-   $('ajaxLogin').style.display = 'block';
+function showLogin() { 
+	var ajaxLogin = $('#ajaxLogin'); 
+	ajaxLogin.css('text-align','center');
+      // use jqModal to show and align login panel
+	ajaxLogin.jqmShow();
 }
 
-function cancelLogin() {
-   Form.enable(document.ajaxLoginForm);
-   Element.hide('ajaxLogin');
+function cancelLogin() { 
+	$('#ajaxLogin').jqmHide();	
 }
 
-function authAjax() {
-   Form.enable(document.ajaxLoginForm);
-   Element.update('loginMessage', 'Sending request ...');
-   Element.show('loginMessage');
+function authAjax() { 
+	$('#loginMessage').html('Sending request ...').show();
 
-   var form = document.ajaxLoginForm;
-   var params = Form.serialize(form);
-   Form.disable(form);
-   new Ajax.Request(form.action, {
-      method: 'POST',
-      postBody: params,
-      onSuccess: function(response) {
-         Form.enable(document.ajaxLoginForm);
-         var responseText = response.responseText || '[]';
-         var json = responseText.evalJSON();
-         if (json.success) {
-            Element.hide('ajaxLogin');
-            $('loginLink').update('Logged in as ' + json.username +
-                                  ' (<%=link(controller: 'logout') { 'Logout' }%>)');
-         }
-         else if (json.error) {
-            Element.update('loginMessage', "<span class='errorMessage'>" +
-                                           json.error + '</error>');
-         }
-         else {
-            Element.update('loginMessage', responseText);
-         }
-      }
-   });
+	var form = $('#ajaxLoginForm');
+	var config = {
+		type : 'post'
+		,url : form.attr('action')
+		,data : form.serialize()
+		,async : false
+		,dataType : 'JSON'
+		,success: function(response) {
+			form[0].reset();
+			$('#loginMessage').empty();
+			$('#ajaxLogin').jqmHide();
+			if (onLogin) {
+				// execute the saved event.success function
+				onLogin(response);
+			}
+		}
+		,error : function (response) {
+			var responseText = response.responseText || '[]'; 
+			var json = responseText.evalJSON(); 
+			if (json.error) { 
+				$('#loginMessage').html("<span class='errorMessage'>" + json.error + '</error>'); 
+			} else { 
+				$('#loginMessage').html(responseText); 
+			} 
+		}
+		,beforeSend : function(xhr, event) {
+			//console.log("overriding default behaviour");
+		}
+	}
+	$.ajax(config);
 }
+
+$(function() {
+	$('#ajaxLogin').jqm({modal: true, trigger: 'span.jqmTrigger'});
+	$('#authAjax').click(authAjax);
+	$('#cancelLogin').click(cancelLogin);
+});
 </script>
 {code}
 
@@ -190,6 +206,7 @@ The important aspects of this code are:
 * The form posts to the same URL as the regular form, @j_spring_security_check@. In fact, the form is identical, including the remember-me checkbox, except that the submit button is replaced with a hyperlink.
 * Error messages are displayed within the popup <div>.
 * Because there is no page redirect after successful login, the Javascript replaces the login link to give a visual indication that the user is logged in.
+* The original jQuery "success" function is retried with the results from the original request.
 * Details of logout are not shown; you do this by redirecting the user to @/j_spring_security_logout@.
 
 h4. How Does Ajax login Work?
@@ -234,6 +251,24 @@ For example consider this Ajax form:
            src="<g:createLinkTo dir='/images' file='spinner.gif'/>"
    />
 </g:form>
+{code}
+
+or
+
+{code}
+<script>
+      var detailConfig = {
+		type      : 'post'
+		,async    : false
+		,returnType : 'html'
+		,url      : '/post/addPostAjax'
+		,success  : function(data) {
+                  $('#firstPost').html(data);
+			clearPost(e);
+		}
+	}
+	$.ajax(detailConfig
+</script>
 {code}
 
 Most of the attributes are typical, but the @on401@ attribute is the key to making Ajax logins work. As long as the @LoginController@ sends a 401 error code the need to authenticate can be easily handled.
