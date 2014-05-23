@@ -201,6 +201,25 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		assertOutputEquals '', """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
 	}
 
+    void testLinkViaExpression() {
+        String body = "Test link"
+
+        assertOutputEquals '', """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
+
+        authenticate 'role1'
+        assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
+    }
+
+    void testLinkViaUrl() {
+        String body = "Test link"
+
+        assertOutputEquals '', """<sec:link controller="testController" action="testAction"></sec:link>"""
+
+        // role 'roleInMap' mapped to controller via interceptUrlMap in Config.groovy
+        authenticate 'roleInMap'
+        assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction">${body}</sec:link>"""
+    }
+
 	private void switchUser() {
 		def filter = new SwitchUserFilter()
 		def request = new MockHttpServletRequest('POST', '/j_spring_security_switch_user')
