@@ -193,7 +193,8 @@ class SecurityTagLib {
      */
     def link = { attrs, body ->
         // retain original attributes for later, since hasAccess() removes ones necessary to create a link
-        def origAttrsMinusExpression = [:] << { attrs.remove('expression'); attrs }()
+        def origAttrsMinusExpression = new HashMap(attrs)
+        origAttrsMinusExpression.remove('expression')
         if (hasAccess(attrs, 'link')) {
             out << g.link(origAttrsMinusExpression, body)
         }
@@ -218,7 +219,6 @@ class SecurityTagLib {
 		if (!springSecurityService.isLoggedIn()) {
 			return false
 		}
-
 		def auth = springSecurityService.authentication
 		String expressionText = attrs.remove('expression')
 		if (expressionText) {
@@ -245,6 +245,7 @@ class SecurityTagLib {
 		}
 
 		String method = attrs.remove('method') ?: 'GET'
+
 		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
 	}
 
