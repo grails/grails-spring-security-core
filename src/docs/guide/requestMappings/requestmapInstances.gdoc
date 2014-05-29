@@ -11,7 +11,7 @@ You create @Requestmap@ entries as you create entries in any Grails domain class
 {code}
 for (String url in [
       '/', '/index', '/index.gsp', '/**/favicon.ico',
-      '/**/js/**', '/**/css/**', '/**/images/**',
+      '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**',
       '/login', '/login.*', '/login/*',
       '/logout', '/logout.*', '/logout/*']) {
    new Requestmap(url: url, configAttribute: 'permitAll').save()

@@ -146,6 +146,7 @@ private void updateConfig() {
 		writer.writeLine "\t'/':                              ['permitAll'],"
 		writer.writeLine "\t'/index':                         ['permitAll'],"
 		writer.writeLine "\t'/index.gsp':                     ['permitAll'],"
+        writer.writeLine "\t'/assets/**':                     ['permitAll'],"
 		writer.writeLine "\t'/**/js/**':                      ['permitAll'],"
 		writer.writeLine "\t'/**/css/**':                     ['permitAll'],"
 		writer.writeLine "\t'/**/images/**':                  ['permitAll'],"
