@@ -180,7 +180,7 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 		super.tearDown()
 		ReflectionUtils.application = null
 		SpringSecurityUtils.resetSecurityConfig()
-		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		grails.util.Holders.config = null
 	}
 }
 

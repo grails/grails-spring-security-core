@@ -24,7 +24,7 @@ import javax.servlet.ServletContext
 
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
 import org.codehaus.groovy.grails.commons.GrailsClass
-import org.codehaus.groovy.grails.web.context.ServletContextHolder
+import grails.util.Holders
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
@@ -247,7 +247,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	protected void tearDown() {
 		super.tearDown()
 		RequestContextHolder.resetRequestAttributes()
-		ServletContextHolder.servletContext = null
+		grails.util.Holders.servletContext = null
 	}
 }
 
