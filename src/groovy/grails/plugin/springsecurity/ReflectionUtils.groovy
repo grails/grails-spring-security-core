@@ -203,7 +203,7 @@ class ReflectionUtils {
 
 	private static GrailsApplication getApplication() {
 		if (!application) {
-			application = Holders.grailsApplication
+			application = Holders.getGrailsApplication()
 		}
 		application
 	}
