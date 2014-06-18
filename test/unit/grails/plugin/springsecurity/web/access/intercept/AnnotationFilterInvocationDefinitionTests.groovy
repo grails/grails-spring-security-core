@@ -247,7 +247,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	protected void tearDown() {
 		super.tearDown()
 		RequestContextHolder.resetRequestAttributes()
-		grails.util.Holders.servletContext = null
+		grails.util.Holders.setServletContext(null)
 	}
 }
 

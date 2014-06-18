@@ -53,7 +53,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		grails.util.Holders.config = null
+		grails.util.Holders.setConfig(null)
 	}
 
 	/**

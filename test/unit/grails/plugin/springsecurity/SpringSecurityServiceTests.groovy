@@ -41,7 +41,7 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 		super.setUp()
 		service = new SpringSecurityService()
 		def config = new ConfigObject()
-		grails.util.Holders.config = config
+		grails.util.Holders.setConfig(config)
 		ReflectionUtils.application = new DefaultGrailsApplication(config: config)
 	}
 
@@ -108,7 +108,7 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SecurityTestUtils.logout()
-		grails.util.Holders.config = null
+		grails.util.Holders.setConfig(null)
 		SpringSecurityUtils.securityConfig = null
 		ReflectionUtils.application = null
 	}

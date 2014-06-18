@@ -57,7 +57,7 @@ class GormUserDetailsServiceTests  {
 	 */
 	@Before
 	void setUp() {
-		grails.util.Holders.config = new ConfigObject()
+		grails.util.Holders.setConfig(new ConfigObject())
 		assertEquals 0, TestRole.count()
 		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
 		superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save(failOnError: true)
@@ -70,7 +70,7 @@ class GormUserDetailsServiceTests  {
 	 */
 	@After
 	void tearDown() {
-		grails.util.Holders.config = null
+		grails.util.Holders.setConfig(null)
 		securityConfigGroupPropertyValues.each { key, value ->
 			ReflectionUtils.setConfigProperty key, value
 		}
