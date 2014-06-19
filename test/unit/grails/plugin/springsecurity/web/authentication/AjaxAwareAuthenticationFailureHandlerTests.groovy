@@ -97,7 +97,7 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		grails.util.Holders.setConfig(null)
 		SecurityRequestHolder.reset()
 	}
 }

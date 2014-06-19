@@ -110,6 +110,6 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		org.codehaus.groovy.grails.commons.ConfigurationHolder.config = null
+		grails.util.Holders.setConfig(null)
 	}
 }
