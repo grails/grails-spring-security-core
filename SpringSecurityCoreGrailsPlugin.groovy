@@ -136,7 +136,6 @@ class SpringSecurityCoreGrailsPlugin {
 
 	List pluginExcludes = [
 		'grails-app/domain/**',
-		'scripts/CreateS2TestApps.groovy',
 		'docs/**',
 		'src/docs/**'
 	]
