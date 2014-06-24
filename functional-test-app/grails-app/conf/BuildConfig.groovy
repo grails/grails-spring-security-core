@@ -49,18 +49,16 @@ mavenRepo 'http://repo.spring.io/milestone' // TODO remove
     }
 
     
-	String gebVersion = '0.9.2'
-	String seleniumVersion = '2.32.0'
+	String gebVersion = '0.9.3'
+	String seleniumVersion = '2.42.2'
 
 	dependencies {
 		test "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
 		test "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
-		test 'com.github.detro.ghostdriver:phantomjsdriver:1.0.1', {
+		test 'com.github.detro:phantomjsdriver:1.2.0', {
 			transitive = false
 		}
-		test "org.gebish:geb-spock:$gebVersion"
-		test "org.spockframework:spock-grails-support:0.7-groovy-2.0"
-
+        test "org.gebish:geb-spock:0.9.3"
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes e.g.
         // runtime 'mysql:mysql-connector-java:5.1.27'
         // runtime 'org.postgresql:postgresql:9.3-1100-jdbc41'
@@ -68,24 +66,21 @@ mavenRepo 'http://repo.spring.io/milestone' // TODO remove
 
     plugins {
 		test ":geb:$gebVersion"
-		test ":spock:0.7", {
-			exclude "spock-grails-support"
-		}
 
-		runtime ":spring-security-core:2.0-RC2"
+		runtime ":spring-security-core:2.0-SNAPSHOT"
 
         // plugins for the build system only
-        build ":tomcat:7.0.52.1"
+        build ":tomcat:7.0.54"
 
         // plugins for the compile step
         compile ":scaffolding:2.0.3"
-        compile ':cache:1.1.2'
+        compile ':cache:1.1.7'
 
         // plugins needed at runtime but not for compilation
-        runtime ":hibernate:3.6.10.13" // or ":hibernate4:4.3.5.1"
+        runtime ":hibernate:3.6.10.16" // or ":hibernate4:4.3.5.1"
         runtime ":database-migration:1.4.0"
-        runtime ":jquery:1.11.0.2"
-        runtime ":resources:1.2.7"
+        runtime ":jquery:1.11.1"
+        runtime ":resources:1.2.8"
         // Uncomment these (or add new ones) to enable additional resources capabilities
         //runtime ":zipped-resources:1.0.1"
         //runtime ":cached-resources:1.1"
