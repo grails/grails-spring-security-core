@@ -4,6 +4,8 @@ rm -rf *.zip
 ./grailsw refresh-dependencies --non-interactive
 ./grailsw test-app --non-interactive
 ./grailsw package-plugin --non-interactive
+./grailsw maven-install --non-interactive
+./functional-test-app/run_functional_tests.sh
 ./grailsw doc --pdf --non-interactive
 
 filename=$(find . -name "grails-*.zip" | head -1)
