@@ -560,7 +560,7 @@ public final class SpringSecurityUtils {
 	 */
 	public static Object doWithAuth(@SuppressWarnings("rawtypes") final Closure closure) {
 		boolean set = false;
-		if (SecurityContextHolder.getContext().getAuthentication() == null) {
+		if (SecurityContextHolder.getContext().getAuthentication() == null && SecurityRequestHolder.getRequest() != null) {
 			HttpSession httpSession = SecurityRequestHolder.getRequest().getSession(false);
 			SecurityContext securityContext = null;
 			if (httpSession != null) {
