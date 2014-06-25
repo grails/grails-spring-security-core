@@ -23,7 +23,7 @@ class BCryptSpec extends AbstractSecuritySpec {
 		then:
 			at ShowUserPage
 			username == 'user1'
-			enabled == true
+			userEnabled == true
 
 		when:
 			to ListUserPage

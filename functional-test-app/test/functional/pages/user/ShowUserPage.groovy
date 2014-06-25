@@ -7,6 +7,6 @@ class ShowUserPage extends ShowPage {
 		editButton(to: EditUserPage) { $('a', text: 'Edit') }
 		deleteButton(to: ListUserPage) { $('input', value: 'Delete') }
 		username { $('td#username').text() }
-		enabled { $('td#userEnabled').text() == 'True' }
+		userEnabled { $('td#userEnabled').text() == 'True' }
 	}
 }

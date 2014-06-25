@@ -32,7 +32,7 @@ class UserSpec extends AbstractSecuritySpec {
 		then:
 			at ShowUserPage
 			username == 'new_user'
-			enabled == true
+			userEnabled == true
 	}
 
 	def 'edit the details'() {
@@ -67,7 +67,7 @@ class UserSpec extends AbstractSecuritySpec {
 
 			def row = userRow(0)
 			row.username == 'new_user2'
-			!row.enabled
+			!row.userEnabled
 	}
 
 	def 'show user'() {

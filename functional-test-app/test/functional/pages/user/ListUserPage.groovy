@@ -25,7 +25,7 @@ class UserRow extends Module {
 		cellText { i -> cell(i).text() }
 		cellHrefText{ i -> cell(i).find('a').text() }
 		username { cellText(1) }
-		enabled { 'True' == cellText(2) }
+		userEnabled { 'True' == cellText(2) }
 		showLink(to: ShowUserPage) { cell(0).find('a') }
 	}
 }
