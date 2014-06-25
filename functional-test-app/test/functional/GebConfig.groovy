@@ -11,6 +11,13 @@ import org.openqa.selenium.remote.DesiredCapabilities
 //driver = { new ChromeDriver() }
 driver = { new PhantomJSDriver(new DesiredCapabilities()) }
 
+// standalone usage, running tests in IDE
+if (!System.getProperty("grails.env")) {
+	reportsDir = new File("target/geb-reports")
+	baseUrl = 'http://localhost:8238/functional-test-app/'
+	driver = { new ChromeDriver() }
+}
+
 environments {
 
 	// run as 'grails -Dgeb.env=phantomjs test-app'
@@ -31,3 +38,5 @@ environments {
 		driver = { new FirefoxDriver() }
 	}
 }
+
+
