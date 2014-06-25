@@ -6,7 +6,11 @@
 	<property name='grails' value='grails' />
 
 	<target name='clean'>
-		<exec executable='${grails}' failonerror='true'><arg value='clean'/></exec>
+		<exec executable='${grails}' failonerror='true'>
+			<arg value='-refresh-dependencies'/>
+			<arg value='clean'/>
+			<arg value='--non-interactive'/>
+		</exec>
 	</target>
 
 	<target name='test-static'     description='Run Static tests'     depends='clean, init-static,     test-app' />
@@ -66,7 +70,12 @@
 
 	<target name='test-app'>
 		<exec executable='${grails}' failonerror='true'>
+			<arg value='compile'/>
+			<arg value='--non-interactive'/>
+		</exec>		
+		<exec executable='${grails}' failonerror='true'>
 			<arg value='test-app'/>
+			<arg value='--non-interactive'/>
 			<arg value='-functional'/>
 		</exec>
 	</target>
