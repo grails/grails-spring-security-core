@@ -133,7 +133,8 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
    	then:
    		at ListRequestmapPage
-   		requestmapRows.size() == 21 // initial 21 from BootStrap
+   		def initialSize = requestmapRows.size() // initial 22 from BootStrap
+		initialSize in [22,23]
 
 		when:
 			newRequestmapButton.click()
@@ -154,7 +155,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
    	then:
    		at ListRequestmapPage
-   		requestmapRows.size() == 22
+   		requestmapRows.size() == initialSize + 1
 
 		when:
 			newRequestmapButton.click()
@@ -175,7 +176,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 			at ListRequestmapPage
-			requestmapRows.size() == 23
+			requestmapRows.size() == initialSize + 2
 
 		when:
 			newRequestmapButton.click()
@@ -196,7 +197,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 			at ListRequestmapPage
-			requestmapRows.size() == 24
+			requestmapRows.size() == initialSize + 3
 	}
 
 	def 'secured urls not visible without login'() {

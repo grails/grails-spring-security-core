@@ -23,6 +23,6 @@ class BootStrap {
 			Requestmap.newInstance(url: url, configAttribute: 'permitAll').save(flush: true, failOnError: true)
 		}
 
-		assert 21 == Requestmap.count()
+		assert 22 == Requestmap.count()
 	}
 }
