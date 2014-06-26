@@ -77,6 +77,15 @@ class SpringSecurityUtilsIntegrationTests{
 		}
 	}
 
+	@AfterClass
+	static void remoteTestUsers() {
+		TestUser.withNewTransaction {
+			TestUserRole.deleteAll(TestUserRole.list())
+			TestRole.deleteAll(TestRole.list())
+			TestUser.deleteAll(TestUser.list())
+		}
+	}
+
 	@After
 	void tearDown() {
 		SecurityContextHolder.clearContext() // logout
