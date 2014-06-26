@@ -6,9 +6,16 @@ import pages.LoginPage
 import pages.LogoutPage
 
 abstract class AbstractSecuritySpec extends GebReportingSpec {
-
+	def setupSpec() {
+		resetDatabase()
+	}
+	
 	def cleanup() {
 		logout()
+	}
+	
+	protected void resetDatabase() {
+		go browser.baseUrl + 'testData/reset'
 	}
 
 	protected String getContent(String url) {
