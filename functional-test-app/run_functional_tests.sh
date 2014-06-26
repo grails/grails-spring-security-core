@@ -1,8 +1,17 @@
 #!/bin/bash
 source ~/.gvm/bin/gvm-init.sh
-gvm use grails 2.3.11
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 set +xe
-ant
+
+function run_test {
+	GRAILS_VERSION=$1
+	gvm use grails $GRAILS_VERSION
+	set +xe
+	./upgrade_app.sh
+	ant
+}
+
+run_test 2.3.11
+run_test 2.4.2
