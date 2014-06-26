@@ -16,6 +16,8 @@ if (!System.getProperty("grails.env")) {
 	reportsDir = new File("target/geb-reports")
 	baseUrl = 'http://localhost:8238/functional-test-app/'
 	driver = { new ChromeDriver() }
+	// don't close browser window when test finishes
+	quitCachedDriverOnShutdown = false
 }
 
 environments {
