@@ -26,7 +26,9 @@ class HackController {
 	}
 
 	def setUserProperty() {
-		TestUser.findByUsername(params.user).properties = params
+		def user=TestUser.findByUsername(params.user)
+		user.properties = params
+		user.save(flush:true)
 		userCache.removeUserFromCache params.user
 		render 'ok'
 	}

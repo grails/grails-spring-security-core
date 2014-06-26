@@ -25,7 +25,7 @@ class TestUserController {
 	def save() {
 
 		def person = new TestUser(params)
-		if (person.save()) {
+		if (person.save(flush:true)) {
 			addRoles person
 			redirect action: 'show', id: person.id
 		}
@@ -77,7 +77,7 @@ class TestUserController {
 		def oldPassword = person.password
 		person.properties = params
 
-		if (person.save()) {
+		if (person.save(flush:true)) {
 			TestUserTestRole.removeAll person
 			addRoles person
 			redirect action: 'show', id: person.id
