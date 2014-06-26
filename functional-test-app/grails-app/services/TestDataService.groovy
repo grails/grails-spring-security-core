@@ -57,10 +57,10 @@ class TestDataService {
 						 '/login', '/login/**', '/logout', '/logout/**',
 						 '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
 						 '/testRequestmap', '/testRequestmap/**',
-						 '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole']) {
+						 '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']) {
 			Requestmap.newInstance(url: url, configAttribute: 'permitAll').save(flush: true, failOnError: true)
 		}
 
-		assert 25 == Requestmap.count()
+		assert 26 == Requestmap.count()
 	}
 }

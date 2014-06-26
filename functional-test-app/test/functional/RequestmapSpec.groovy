@@ -7,13 +7,13 @@ import spock.lang.Stepwise
 @Stepwise
 class RequestmapSpec extends AbstractSecuritySpec {
 
-	def 'there are 25 initially'() {
+	def 'there are 26 initially'() {
 		when:
 			go 'testRequestmap/list?max=100'
 
 		then:
 			at ListRequestmapPage
-			requestmapRows.size() == 25
+			requestmapRows.size() == 26
 	}
 
 	def 'add a requestmap'() {
@@ -39,7 +39,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 
 		then:
 			at ListRequestmapPage
-			requestmapRows.size() == 26
+			requestmapRows.size() == 27
 	}
 
 	def 'edit the details'() {
@@ -50,7 +50,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 			at ListRequestmapPage
 
 		when:
-			requestmapRow(25).showLink.click()
+			requestmapRow(26).showLink.click()
 
 		then:
 			at ShowRequestmapPage
@@ -80,7 +80,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 			at ListRequestmapPage
 
 		when:
-			requestmapRow(25).showLink.click()
+			requestmapRow(26).showLink.click()
 
 		then:
 			at ShowRequestmapPage
@@ -97,6 +97,6 @@ class RequestmapSpec extends AbstractSecuritySpec {
 			go 'testRequestmap/list?max=100'
 
 		then:
-			requestmapRows.size() == 25
+			requestmapRows.size() == 26
 	}
 }

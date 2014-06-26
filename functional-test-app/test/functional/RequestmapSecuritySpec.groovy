@@ -133,8 +133,8 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
    	then:
    		at ListRequestmapPage
-   		def initialSize = requestmapRows.size() // initial 22 from BootStrap
-		initialSize in [25,26]
+   		def initialSize = requestmapRows.size()
+		initialSize in [26,27]
 
 		when:
 			newRequestmapButton.click()
