@@ -58,19 +58,23 @@ class SpringSecurityUtilsIntegrationTests{
 	def springSecurityService
 
 	private String username = 'username'
-	private TestUser testUser
+	private static TestUser testUser
 
 	@Before
 	void setUp() {
-		def user = new TestUser(loginName: username, enabld: true,
-			passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
-		testUser = user
-		def role = new TestRole(auth: 'ROLE_ADMIN', description: 'admin').save(failOnError: true)
-		TestUserRole.create user, role, true
+		if(testUser == null) {
+			TestUser.withNewTransaction {
+				def user = new TestUser(loginName: username, enabld: true,
+					passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+				testUser = user
+				def role = new TestRole(auth: 'ROLE_ADMIN', description: 'admin').save(failOnError: true)
+				TestUserRole.create user, role, true
 
-		user = new TestUser(loginName: 'other', enabld: true,
-			passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
-		TestUserRole.create user, role, true
+				user = new TestUser(loginName: 'other', enabld: true,
+					passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+				TestUserRole.create user, role, true
+			}
+		}
 	}
 
 	@After
@@ -148,18 +152,24 @@ class SpringSecurityUtilsIntegrationTests{
 		SpringSecurityUtils.reauthenticate username, null
 		assertTrue springSecurityService.loggedIn
 
+		Throwable otherException=null
 		Thread.start {
-
-			assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
-
-			SpringSecurityUtils.doWithAuth {
-				assertTrue springSecurityService.loggedIn
-				assertEquals username, springSecurityService.principal.username
+			try {
+				assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
+	
+				SpringSecurityUtils.doWithAuth username, {
+					assertTrue springSecurityService.loggedIn
+					assertEquals username, springSecurityService.principal.username
+				}
+	
+				assertFalse "should have reset auth", springSecurityService.loggedIn
+			} catch (Throwable e) {
+				otherException=e
 			}
-
-			assertFalse "should have reset auth", springSecurityService.loggedIn
 		}.join()
-
+		if(otherException) {
+			throw otherException
+		}
 		assertTrue "should still be authenticated in main thread", springSecurityService.loggedIn
 	}
 
@@ -167,17 +177,24 @@ class SpringSecurityUtilsIntegrationTests{
 
 		assertFalse springSecurityService.loggedIn
 
+		Throwable otherException=null
 		Thread.start {
-
-			assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
-
-			SpringSecurityUtils.doWithAuth username, {
-				assertTrue springSecurityService.loggedIn
-				assertEquals username, springSecurityService.principal.username
+			try {
+				assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
+	
+				SpringSecurityUtils.doWithAuth username, {
+					assertTrue springSecurityService.loggedIn
+					assertEquals username, springSecurityService.principal.username
+				}
+	
+				assertFalse "should have reset auth", springSecurityService.loggedIn
+			} catch (Throwable e) {
+				otherException=e
 			}
-
-			assertFalse "should have reset auth", springSecurityService.loggedIn
 		}.join()
+		if(otherException) {
+			throw otherException
+		}
 
 		assertFalse "should still be unauthenticated in main thread", springSecurityService.loggedIn
 	}
@@ -188,18 +205,24 @@ class SpringSecurityUtilsIntegrationTests{
 		SpringSecurityUtils.reauthenticate username, null
 		assertTrue springSecurityService.loggedIn
 
+		Throwable otherException=null
 		Thread.start {
-
-			assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
-
-			SpringSecurityUtils.doWithAuth 'other', {
-				assertTrue springSecurityService.loggedIn
-				assertEquals 'other', springSecurityService.principal.username
+			try {
+				assertFalse "shouldn't appear authenticated in a new thread", springSecurityService.loggedIn
+	
+				SpringSecurityUtils.doWithAuth 'other', {
+					assertTrue springSecurityService.loggedIn
+					assertEquals 'other', springSecurityService.principal.username
+				}
+	
+				assertFalse "should have reset auth", springSecurityService.loggedIn
+			} catch (Throwable e) {
+				otherException=e
 			}
-
-			assertTrue 'should still be authenticated', springSecurityService.loggedIn
-			assertEquals 'should have reset auth to previous', username, springSecurityService.principal.username
 		}.join()
+		if(otherException) {
+			throw otherException
+		}
 
 		assertTrue 'should still be authenticated', springSecurityService.loggedIn
 		assertEquals 'should still be unauthenticated in main thread', username, springSecurityService.principal.username
