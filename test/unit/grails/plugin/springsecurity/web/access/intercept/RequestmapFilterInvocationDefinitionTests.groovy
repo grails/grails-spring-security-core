@@ -22,8 +22,6 @@ import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.FilterInvocation
 
-import test.TestRequestmap
-
 /**
  * Unit tests for RequestmapFilterInvocationDefinition.
  *
