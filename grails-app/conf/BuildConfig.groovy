@@ -2,6 +2,12 @@ if(System.getenv('TRAVIS_BRANCH')) {
     grails.project.repos.grailsCentral.username = System.getenv("GRAILS_CENTRAL_USERNAME")
     grails.project.repos.grailsCentral.password = System.getenv("GRAILS_CENTRAL_PASSWORD")    
 }
+grails.project.class.dir = "target/classes"
+grails.project.test.class.dir = "target/test-classes"
+grails.project.test.reports.dir = "target/test-reports"
+grails.project.work.dir = "target/work"
+grails.project.target.level = 1.6
+grails.project.source.level = 1.6
 
 grails.project.work.dir = 'target'
 grails.project.docs.output.dir = 'docs/manual' // for backwards-compatibility, the docs are checked into gh-pages branch
