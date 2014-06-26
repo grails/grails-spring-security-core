@@ -5,6 +5,9 @@ rm -rf *.zip
 ./grailsw test-app --non-interactive
 ./grailsw package-plugin --non-interactive
 ./grailsw maven-install --non-interactive
+./travis_install_grails_versions.sh
+
+./integration-test-app/run_integration_tests.sh
 ./functional-test-app/run_functional_tests.sh
 ./grailsw doc --pdf --non-interactive
 
