@@ -3,12 +3,12 @@ source ~/.gvm/bin/gvm-init.sh
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
-set +xe
 
 function run_test {
 	GRAILS_VERSION=$1
-	gvm use grails $GRAILS_VERSION
 	set +xe
+	gvm use grails $GRAILS_VERSION
+	set -xe
 	./upgrade_app.sh
 	ant
 }
