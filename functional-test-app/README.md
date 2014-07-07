@@ -6,8 +6,7 @@ Functional tests use [Geb](http://www.gebish.org/)
 Prerequisites:
 - [phantomjs](http://phantomjs.org/) for running Geb tests in headless mode (default)
 - [chromedriver](https://code.google.com/p/selenium/wiki/ChromeDriver) (for Chrome support)
-- Apache Ant
-- GVM
+- [GVM](http://gvmtool.net/) for switching between Grails versions
 
 On Mac OSX, you can install phantomjs and chromedriver with homebrew
 ```
@@ -18,9 +17,9 @@ brew install chromedriver
 Running tests
 =============
 ```
-gvm use grails 2.3.11
-ant
+./run_functional_tests.sh 2.4.2 2.3.11
 ```
+This runs the functional tests with Grails 2.4.2 and 2.3.11 versions.
 
 Debugging tests
 ===============

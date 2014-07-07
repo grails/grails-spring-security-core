@@ -14,8 +14,19 @@ function run_test {
 	set +xe
 	gvm use grails $GRAILS_VERSION
 	set -xe
+	
 	./upgrade_app.sh
-	ant
+
+	rm -rf target
+	grails -refresh-dependencies clean --non-interactive
+	grails compile --non-interactive
+	
+	TESTGROUPS="static annotation requestmap basic misc bcrypt"
+	for TESTGROUP in $TESTGROUPS; do
+		echo $TESTGROUP > testconfig
+		grails test-app --non-interactive -functional
+		mv target/test-reports target/test-reports-$TESTGROUP
+	done
 }
 
 for use_grails_version in $use_grails_versions; do
