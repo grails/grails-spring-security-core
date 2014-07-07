@@ -102,7 +102,7 @@ def file = new File('testconfig')
 String testconfig = file.exists() ? file.text.trim() : ''
 switch (testconfig) {
 	case 'annotation':
-		grails.testing.patterns = ['Role', 'User', 'AnnotationSecurity', 'NamespaceSecurity']
+		grails.testing.patterns = ['Role', 'User', 'AnnotationSecurity', 'NamespaceSecurity', 'InheritanceSecurity']
 		break
 	case 'basic':
 		grails.testing.patterns = ['Role', 'User', 'BasicAuthSecurity']

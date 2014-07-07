@@ -79,7 +79,7 @@ class TestDataService {
 
 	public addTestUsers() {
 		println 'Adding test users'
-		addTestUser('testuser', ['ROLE_USER'])
+		addTestUser('testuser', ['ROLE_USER', 'ROLE_BASE', 'ROLE_EXTENDED'])
 		addTestUser('testuser_books', ['ROLE_BOOKS'])
 		addTestUser('testuser_movies', ['ROLE_MOVIES'])
 		addTestUser('testuser_books_and_movies', ['ROLE_BOOKS', 'ROLE_MOVIES'])
