@@ -18,6 +18,6 @@ function run_test {
 	ant
 }
 
-for use_grails_version in "$use_grails_versions"; do
+for use_grails_version in $use_grails_versions; do
 	run_test "$use_grails_version"
 done
