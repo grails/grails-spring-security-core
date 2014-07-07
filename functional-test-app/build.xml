@@ -21,50 +21,26 @@
 	<target name='test-bcrypt'     description='Run BCrypt tests'     depends='clean, init-bcrypt,     test-app' />
 
 	<target name='init-static'>
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
-		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
-		      overwrite='true' />
-
 		<echo file='testconfig'>static</echo>
 	</target>
 
 	<target name='init-annotation'>
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
-		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
-		      overwrite='true' />
-
 		<echo file='testconfig'>annotation</echo>
 	</target>
 
 	<target name='init-requestmap'>
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
-		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
-		      overwrite='true' />
-
 		<echo file='testconfig'>requestmap</echo>
 	</target>
 
 	<target name='init-basic'>
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
-		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
-		      overwrite='true' />
-
 		<echo file='testconfig'>basic</echo>
 	</target>
 
 	<target name='init-misc'>
-		<copy file='grails-app/controllers/com/testapp/TestUserController_usingSalt_groovy'
-		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
-		      overwrite='true' />
-
 		<echo file='testconfig'>misc</echo>
 	</target>
 
 	<target name='init-bcrypt'>
-		<copy file='grails-app/controllers/com/testapp/TestUserController_noSalt_groovy'
-		      tofile='grails-app/controllers/com/testapp/TestUserController.groovy'
-		      overwrite='true' />
-
 		<echo file='testconfig'>bcrypt</echo>
 	</target>
 
