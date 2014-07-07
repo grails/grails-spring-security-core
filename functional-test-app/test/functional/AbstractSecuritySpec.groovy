@@ -26,6 +26,10 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	protected String getSessionValue(String name) {
 		getContent 'hack/getSessionValue?name=' + name
 	}
+	
+	protected String getPageSource() {
+		browser.driver.pageSource
+	}
 
 	protected void login(String user, String pwd, boolean remember = false) {
 		to LoginPage

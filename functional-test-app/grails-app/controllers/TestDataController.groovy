@@ -6,4 +6,9 @@ class TestDataController {
 		testDataService.returnToInitialState()
 		render 'OK'
 	}
+	
+	def addTestUsers() {
+		testDataService.addTestUsers()
+		render 'OK'
+	}
 }

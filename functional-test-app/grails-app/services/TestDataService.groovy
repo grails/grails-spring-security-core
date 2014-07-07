@@ -1,5 +1,11 @@
 import grails.plugin.springsecurity.SpringSecurityUtils
-import groovy.sql.Sql;
+import groovy.sql.Sql
+import rest.Book
+import rest.Movie
+
+import com.testapp.TestRole
+import com.testapp.TestUser
+import com.testapp.TestUserTestRole
 
 class TestDataService {
 	def grailsApplication
@@ -43,24 +49,49 @@ class TestDataService {
 	}
 	
 	void enterInitialData() {
-		if (SpringSecurityUtils.securityConfigType != 'Requestmap') {
-			return
-		}
+		Book.findOrSaveByTitle("TestBook")
+		Movie.findOrSaveByTitle("TestMovie")
 		
-		String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
-		def Requestmap = grailsApplication.getClassForName(requestMapClassName)
-		if (Requestmap.count()) {
-			return
+		if(System.getProperty('add_test_users')) {
+			addTestUsers()
 		}
 
-		for (url in ['/', '/index', '/index.gsp', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
-						 '/login', '/login/**', '/logout', '/logout/**',
-						 '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
-						 '/testRequestmap', '/testRequestmap/**',
-						 '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']) {
-			Requestmap.newInstance(url: url, configAttribute: 'permitAll').save(flush: true, failOnError: true)
+		switch (SpringSecurityUtils.securityConfigType) {
+			case 'Requestmap':
+				String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
+				def Requestmap = grailsApplication.getClassForName(requestMapClassName)
+				if (Requestmap.count()) {
+					return
+				}
+		
+				for (url in ['/', '/index', '/index.gsp', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
+								 '/login', '/login/**', '/logout', '/logout/**',
+								 '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
+								 '/testRequestmap', '/testRequestmap/**',
+								 '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']) {
+					Requestmap.newInstance(url: url, configAttribute: 'permitAll').save(flush: true, failOnError: true)
+				}
+		
+				assert 26 == Requestmap.count()
+				break
 		}
+	}
 
-		assert 26 == Requestmap.count()
+	public addTestUsers() {
+		println 'Adding test users'
+		addTestUser('testuser', ['ROLE_USER'])
+		addTestUser('testuser_books', ['ROLE_BOOKS'])
+		addTestUser('testuser_movies', ['ROLE_MOVIES'])
+		addTestUser('testuser_books_and_movies', ['ROLE_BOOKS', 'ROLE_MOVIES'])
+	}
+	
+	public TestUser addTestUser(String username, List<String> roles) {
+		def testUser = new TestUser(username:username, password:'password')
+		testUser.save(flush:true, failOnError:true)
+		roles.each { role ->
+			def testRole = TestRole.findOrSaveByAuthority(role)
+			new TestUserTestRole(testUser: testUser, testRole: testRole).save(flush:true, failOnError:true)
+		}
+		testUser
 	}
 }
