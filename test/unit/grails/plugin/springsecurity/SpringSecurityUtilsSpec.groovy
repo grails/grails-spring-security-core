@@ -1,5 +1,6 @@
 package grails.plugin.springsecurity
 
+import grails.test.mixin.TestMixin
 import grails.test.mixin.support.GrailsUnitTestMixin
 
 import javax.servlet.FilterChain
@@ -15,29 +16,59 @@ import spock.lang.Specification
 
 @TestMixin(GrailsUnitTestMixin)
 class SpringSecurityUtilsSpec extends Specification {
+	static def originalfilterChainMap
+
 	def setupSpec() {
 		SpringSecurityUtils.setApplication(grailsApplication)
 		defineBeans {
 			dummyFilter(DummyFilter)
 			firstDummy(DummyFilter)
-			defaultFilterChain(DefaultSecurityFilterChain, AnyRequestMatcher.INSTANCE, firstDummy)
+			secondDummy(DummyFilter)
+			defaultFilterChain(DefaultSecurityFilterChain, AnyRequestMatcher.INSTANCE, [firstDummy, secondDummy])
 			springSecurityFilterChain(FilterChainProxy, defaultFilterChain)
 		}
+		originalfilterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
+	}
+	
+	def setup() {
+		SpringSecurityUtils.setApplication(grailsApplication)
+		SpringSecurityUtils.registerFilter("firstDummy", 100)
+		SpringSecurityUtils.registerFilter("secondDummy", 200)
+		SpringSecurityUtils.getOrderedFilters().each { order, filterName -> 
+			def filter = applicationContext.getBean(filterName)
+			SpringSecurityUtils.getConfiguredOrderedFilters()[order] = filter
+		}
+		applicationContext.springSecurityFilterChain.filterChainMap = originalfilterChainMap
 	}
 
 	def "should retain existing chainmap"() {
-		expect:
-		SpringSecurityUtils.application != null
-		SpringSecurityUtils.registerFilter("firstDummy", 100)
-		SpringSecurityUtils.getOrderedFilters().each { order, filterName -> 
-			 def filter = applicationContext.getBean(filterName)
-			 SpringSecurityUtils.getConfiguredOrderedFilters()[order] = filter
-		}
+		when:
 		SpringSecurityUtils.clientRegisterFilter("dummyFilter", 101)
+		then:
 		def filterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
 		def filters = filterChainMap.values()[0]
-		filters.size() == 2
+		filters.size() == 3
 		filters[1] == applicationContext.dummyFilter
+	}
+	
+	def "should add as first in existing chainmap"() {
+		when:
+		SpringSecurityUtils.clientRegisterFilter("dummyFilter", 99)
+		then:
+		def filterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
+		def filters = filterChainMap.values()[0]
+		filters.size() == 3
+		filters[0] == applicationContext.dummyFilter
+	}
+
+	def "should add as last in existing chainmap"() {
+		when:
+		SpringSecurityUtils.clientRegisterFilter("dummyFilter", 201)
+		then:
+		def filterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
+		def filters = filterChainMap.values()[0]
+		filters.size() == 3
+		filters[2] == applicationContext.dummyFilter
 	}
 }
 
