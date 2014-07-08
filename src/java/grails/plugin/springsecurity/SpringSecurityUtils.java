@@ -28,8 +28,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -56,7 +58,7 @@ import org.springframework.security.web.authentication.switchuser.SwitchUserFilt
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.savedrequest.SavedRequest;
-import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -460,16 +462,27 @@ public final class SpringSecurityUtils {
 	 */
 	@SuppressWarnings("deprecation")
 	public static void clientRegisterFilter(final String beanName, final int order) {
+		Map<Integer, Filter> orderedFilters = SpringSecurityUtils.getConfiguredOrderedFilters();
 
-		Filter oldFilter = getConfiguredOrderedFilters().get(order);
+		Filter oldFilter = orderedFilters.get(order);
 		if (oldFilter != null) {
-			throw new IllegalArgumentException("Cannot register filter '" + beanName +
-					"' at position " + order + "; '" + oldFilter +
-					"' is already registered in that position");
+			throw new IllegalArgumentException("Cannot register filter '" + beanName + "' at position " + order + "; '"
+					+ oldFilter + "' is already registered in that position");
 		}
 
 		Filter filter = getBean(beanName);
-		getConfiguredOrderedFilters().put(order, filter);
+		orderedFilters.put(order, filter);
+
+		FilterChainProxy filterChain = getFilterChainProxy();
+
+		Map<RequestMatcher, List<Filter>> filterChainMap = filterChain.getFilterChainMap();
+		Map<RequestMatcher, List<Filter>> fixedFilterChainMap = mergeFilterChainMap(orderedFilters, filter, order,
+				filterChainMap);
+
+		filterChain.setFilterChainMap(fixedFilterChainMap);
+	}
+
+	private static FilterChainProxy getFilterChainProxy() {
 		FilterChainProxy filterChain;
 		Object bean = getBean("springSecurityFilterChain");
 		if (bean instanceof DebugFilter) {
@@ -478,8 +491,27 @@ public final class SpringSecurityUtils {
 		else {
 			filterChain = (FilterChainProxy)bean;
 		}
-		List<Filter> filters = new ArrayList<Filter>(getConfiguredOrderedFilters().values());
-		filterChain.setFilterChainMap(Collections.singletonMap(AnyRequestMatcher.INSTANCE, filters));
+		return filterChain;
+	}
+
+	private static Map<RequestMatcher, List<Filter>> mergeFilterChainMap(Map<Integer, Filter> orderedFilters,
+			Filter filter, final int order, Map<RequestMatcher, List<Filter>> filterChainMap) {
+		Map<Filter, Integer> filterToPosition = new HashMap<Filter, Integer>();
+		for (Map.Entry<Integer, Filter> entry : orderedFilters.entrySet()) {
+			filterToPosition.put(entry.getValue(), entry.getKey());
+		}
+		Map<RequestMatcher, List<Filter>> fixedFilterChainMap = new LinkedHashMap<RequestMatcher, List<Filter>>();
+		for (Entry<RequestMatcher, List<Filter>> entry : filterChainMap.entrySet()) {
+			List<Filter> filters = new ArrayList<Filter>(entry.getValue());
+			int indexOfFilterBeforeTargetFilter = 0;
+			while (indexOfFilterBeforeTargetFilter < filters.size()
+					&& filterToPosition.get(filters.get(indexOfFilterBeforeTargetFilter)) < order) {
+				indexOfFilterBeforeTargetFilter++;
+			}
+			filters.add(indexOfFilterBeforeTargetFilter, filter);
+			fixedFilterChainMap.put(entry.getKey(), filters);
+		}
+		return fixedFilterChainMap;
 	}
 
 	/**

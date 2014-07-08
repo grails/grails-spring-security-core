@@ -130,7 +130,9 @@ class SpringSecurityUtilsIntegrationTests{
 		assertEquals 9, map.size()
 		assertTrue map[410] instanceof DummyFilter
 
-		def filters = springSecurityFilterChain.filterChainMap[new AnyRequestMatcher()]
+		def filterChainMap = springSecurityFilterChain.filterChainMap
+		def filters = filterChainMap.values()[0]
+		
 		assertTrue filters[0] instanceof SecurityContextPersistenceFilter
 		assertTrue filters[1] instanceof LogoutFilter
 		assertTrue filters[2] instanceof DummyFilter
