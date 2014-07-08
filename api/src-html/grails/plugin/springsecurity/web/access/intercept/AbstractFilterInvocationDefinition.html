@@ -29,9 +29,9 @@
 <span class="sourceLineNo">021</span>import java.util.ArrayList;<a name="line.21"></a>
 <span class="sourceLineNo">022</span>import java.util.Collection;<a name="line.22"></a>
 <span class="sourceLineNo">023</span>import java.util.Collections;<a name="line.23"></a>
-<span class="sourceLineNo">024</span>import java.util.Iterator;<a name="line.24"></a>
-<span class="sourceLineNo">025</span>import java.util.LinkedHashSet;<a name="line.25"></a>
-<span class="sourceLineNo">026</span>import java.util.List;<a name="line.26"></a>
+<span class="sourceLineNo">024</span>import java.util.LinkedHashSet;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import java.util.List;<a name="line.25"></a>
+<span class="sourceLineNo">026</span>import java.util.concurrent.CopyOnWriteArrayList;<a name="line.26"></a>
 <span class="sourceLineNo">027</span><a name="line.27"></a>
 <span class="sourceLineNo">028</span>import javax.servlet.http.HttpServletRequest;<a name="line.28"></a>
 <span class="sourceLineNo">029</span><a name="line.29"></a>
@@ -66,8 +66,8 @@
 <span class="sourceLineNo">058</span>        protected boolean rejectIfNoRule;<a name="line.58"></a>
 <span class="sourceLineNo">059</span>        protected RoleVoter roleVoter;<a name="line.59"></a>
 <span class="sourceLineNo">060</span>        protected AuthenticatedVoter authenticatedVoter;<a name="line.60"></a>
-<span class="sourceLineNo">061</span>        protected final List&lt;InterceptedUrl&gt; compiled = Collections.synchronizedList(new ArrayList&lt;InterceptedUrl&gt;());<a name="line.61"></a>
-<span class="sourceLineNo">062</span>   protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();<a name="line.62"></a>
+<span class="sourceLineNo">061</span>        protected final List&lt;InterceptedUrl&gt; compiled = new CopyOnWriteArrayList&lt;InterceptedUrl&gt;();<a name="line.61"></a>
+<span class="sourceLineNo">062</span>        protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();<a name="line.62"></a>
 <span class="sourceLineNo">063</span>        protected AntPathMatcher urlMatcher = new AntPathMatcher();<a name="line.63"></a>
 <span class="sourceLineNo">064</span>        protected boolean initialized;<a name="line.64"></a>
 <span class="sourceLineNo">065</span>        protected boolean grails23Plus;<a name="line.65"></a>
@@ -276,51 +276,53 @@
 <span class="sourceLineNo">268</span>                        final Collection&lt;ConfigAttribute&gt; configAttributes) {<a name="line.268"></a>
 <span class="sourceLineNo">269</span><a name="line.269"></a>
 <span class="sourceLineNo">270</span>                InterceptedUrl existing = null;<a name="line.270"></a>
-<span class="sourceLineNo">271</span>                for (Iterator&lt;InterceptedUrl&gt; iter = compiled.iterator(); iter.hasNext(); ) {<a name="line.271"></a>
-<span class="sourceLineNo">272</span>                        InterceptedUrl iu = iter.next();<a name="line.272"></a>
-<span class="sourceLineNo">273</span>                        if (iu.getPattern().equals(pattern) &amp;&amp; iu.getHttpMethod() == method) {<a name="line.273"></a>
-<span class="sourceLineNo">274</span>                                existing = iu;<a name="line.274"></a>
-<span class="sourceLineNo">275</span>                                iter.remove();<a name="line.275"></a>
-<span class="sourceLineNo">276</span>                                break;<a name="line.276"></a>
-<span class="sourceLineNo">277</span>                        }<a name="line.277"></a>
-<span class="sourceLineNo">278</span>                }<a name="line.278"></a>
-<span class="sourceLineNo">279</span><a name="line.279"></a>
-<span class="sourceLineNo">280</span>                compiled.add(new InterceptedUrl(pattern, method, configAttributes));<a name="line.280"></a>
+<span class="sourceLineNo">271</span>                for (InterceptedUrl iu : compiled) {<a name="line.271"></a>
+<span class="sourceLineNo">272</span>                        if (iu.getPattern().equals(pattern) &amp;&amp; iu.getHttpMethod() == method) {<a name="line.272"></a>
+<span class="sourceLineNo">273</span>                                existing = iu;<a name="line.273"></a>
+<span class="sourceLineNo">274</span>                                break;<a name="line.274"></a>
+<span class="sourceLineNo">275</span>                        }<a name="line.275"></a>
+<span class="sourceLineNo">276</span>                }<a name="line.276"></a>
+<span class="sourceLineNo">277</span>                <a name="line.277"></a>
+<span class="sourceLineNo">278</span>                if(existing != null) {<a name="line.278"></a>
+<span class="sourceLineNo">279</span>                        compiled.remove(existing);<a name="line.279"></a>
+<span class="sourceLineNo">280</span>                }<a name="line.280"></a>
 <span class="sourceLineNo">281</span><a name="line.281"></a>
-<span class="sourceLineNo">282</span>                return existing;<a name="line.282"></a>
-<span class="sourceLineNo">283</span>        }<a name="line.283"></a>
-<span class="sourceLineNo">284</span><a name="line.284"></a>
-<span class="sourceLineNo">285</span>        protected void resetConfigs() {<a name="line.285"></a>
-<span class="sourceLineNo">286</span>                compiled.clear();<a name="line.286"></a>
-<span class="sourceLineNo">287</span>        }<a name="line.287"></a>
-<span class="sourceLineNo">288</span><a name="line.288"></a>
-<span class="sourceLineNo">289</span>        /**<a name="line.289"></a>
-<span class="sourceLineNo">290</span>         * For admin/debugging - find all config attributes that apply to the specified URL (doesn't consider request method restrictions).<a name="line.290"></a>
-<span class="sourceLineNo">291</span>         * @param url the URL<a name="line.291"></a>
-<span class="sourceLineNo">292</span>         * @return matching attributes<a name="line.292"></a>
-<span class="sourceLineNo">293</span>         */<a name="line.293"></a>
-<span class="sourceLineNo">294</span>        public Collection&lt;ConfigAttribute&gt; findMatchingAttributes(final String url) {<a name="line.294"></a>
-<span class="sourceLineNo">295</span>                for (InterceptedUrl iu : compiled) {<a name="line.295"></a>
-<span class="sourceLineNo">296</span>                        if (urlMatcher.match(iu.getPattern(), url)) {<a name="line.296"></a>
-<span class="sourceLineNo">297</span>                                return iu.getConfigAttributes();<a name="line.297"></a>
-<span class="sourceLineNo">298</span>                        }<a name="line.298"></a>
-<span class="sourceLineNo">299</span>                }<a name="line.299"></a>
-<span class="sourceLineNo">300</span>                return Collections.emptyList();<a name="line.300"></a>
-<span class="sourceLineNo">301</span>        }<a name="line.301"></a>
-<span class="sourceLineNo">302</span><a name="line.302"></a>
-<span class="sourceLineNo">303</span>        /**<a name="line.303"></a>
-<span class="sourceLineNo">304</span>         * Dependency injection for whether to reject if there's no matching rule.<a name="line.304"></a>
-<span class="sourceLineNo">305</span>         * @param reject if true, reject access unless there's a pattern for the specified resource<a name="line.305"></a>
-<span class="sourceLineNo">306</span>         */<a name="line.306"></a>
-<span class="sourceLineNo">307</span>        public void setRejectIfNoRule(final boolean reject) {<a name="line.307"></a>
-<span class="sourceLineNo">308</span>                rejectIfNoRule = reject;<a name="line.308"></a>
-<span class="sourceLineNo">309</span>        }<a name="line.309"></a>
-<span class="sourceLineNo">310</span><a name="line.310"></a>
-<span class="sourceLineNo">311</span>        public void afterPropertiesSet() {<a name="line.311"></a>
-<span class="sourceLineNo">312</span>                String version = Metadata.getCurrent().getGrailsVersion();<a name="line.312"></a>
-<span class="sourceLineNo">313</span>                grails23Plus = !version.startsWith("2.0") &amp;&amp; !version.startsWith("2.1") &amp;&amp; !version.startsWith("2.2");<a name="line.313"></a>
-<span class="sourceLineNo">314</span>        }<a name="line.314"></a>
-<span class="sourceLineNo">315</span>}<a name="line.315"></a>
+<span class="sourceLineNo">282</span>                compiled.add(new InterceptedUrl(pattern, method, configAttributes));<a name="line.282"></a>
+<span class="sourceLineNo">283</span><a name="line.283"></a>
+<span class="sourceLineNo">284</span>                return existing;<a name="line.284"></a>
+<span class="sourceLineNo">285</span>        }<a name="line.285"></a>
+<span class="sourceLineNo">286</span><a name="line.286"></a>
+<span class="sourceLineNo">287</span>        protected void resetConfigs() {<a name="line.287"></a>
+<span class="sourceLineNo">288</span>                compiled.clear();<a name="line.288"></a>
+<span class="sourceLineNo">289</span>        }<a name="line.289"></a>
+<span class="sourceLineNo">290</span><a name="line.290"></a>
+<span class="sourceLineNo">291</span>        /**<a name="line.291"></a>
+<span class="sourceLineNo">292</span>         * For admin/debugging - find all config attributes that apply to the specified URL (doesn't consider request method restrictions).<a name="line.292"></a>
+<span class="sourceLineNo">293</span>         * @param url the URL<a name="line.293"></a>
+<span class="sourceLineNo">294</span>         * @return matching attributes<a name="line.294"></a>
+<span class="sourceLineNo">295</span>         */<a name="line.295"></a>
+<span class="sourceLineNo">296</span>        public Collection&lt;ConfigAttribute&gt; findMatchingAttributes(final String url) {<a name="line.296"></a>
+<span class="sourceLineNo">297</span>                for (InterceptedUrl iu : compiled) {<a name="line.297"></a>
+<span class="sourceLineNo">298</span>                        if (urlMatcher.match(iu.getPattern(), url)) {<a name="line.298"></a>
+<span class="sourceLineNo">299</span>                                return iu.getConfigAttributes();<a name="line.299"></a>
+<span class="sourceLineNo">300</span>                        }<a name="line.300"></a>
+<span class="sourceLineNo">301</span>                }<a name="line.301"></a>
+<span class="sourceLineNo">302</span>                return Collections.emptyList();<a name="line.302"></a>
+<span class="sourceLineNo">303</span>        }<a name="line.303"></a>
+<span class="sourceLineNo">304</span><a name="line.304"></a>
+<span class="sourceLineNo">305</span>        /**<a name="line.305"></a>
+<span class="sourceLineNo">306</span>         * Dependency injection for whether to reject if there's no matching rule.<a name="line.306"></a>
+<span class="sourceLineNo">307</span>         * @param reject if true, reject access unless there's a pattern for the specified resource<a name="line.307"></a>
+<span class="sourceLineNo">308</span>         */<a name="line.308"></a>
+<span class="sourceLineNo">309</span>        public void setRejectIfNoRule(final boolean reject) {<a name="line.309"></a>
+<span class="sourceLineNo">310</span>                rejectIfNoRule = reject;<a name="line.310"></a>
+<span class="sourceLineNo">311</span>        }<a name="line.311"></a>
+<span class="sourceLineNo">312</span><a name="line.312"></a>
+<span class="sourceLineNo">313</span>        public void afterPropertiesSet() {<a name="line.313"></a>
+<span class="sourceLineNo">314</span>                String version = Metadata.getCurrent().getGrailsVersion();<a name="line.314"></a>
+<span class="sourceLineNo">315</span>                grails23Plus = !version.startsWith("2.0") &amp;&amp; !version.startsWith("2.1") &amp;&amp; !version.startsWith("2.2");<a name="line.315"></a>
+<span class="sourceLineNo">316</span>        }<a name="line.316"></a>
+<span class="sourceLineNo">317</span>}<a name="line.317"></a>
 
 
 

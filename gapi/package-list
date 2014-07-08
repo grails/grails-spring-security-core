@@ -19,4 +19,3 @@ grails.plugin.springsecurity.web.authentication.preauth.x509
 grails.plugin.springsecurity.web.authentication.rememberme
 grails.plugin.springsecurity.web.authentication.switchuser
 grails.plugin.springsecurity.web.filter
-test

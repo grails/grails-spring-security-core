@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4 Configuring Request Mappings to Secure URLs 2.0-RC3</title>
+    <title>4 Configuring Request Mappings to Secure URLs 2.0-RC4</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -137,7 +137,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC3</p>
+                    <p><strong>Version:</strong> 2.0-RC4</p>
 
                     
                 </div>
@@ -175,6 +175,7 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = <span class="java&#45
    '/':               &#91;'permitAll'&#93;,
    '/index':          &#91;'permitAll'&#93;,
    '/index.gsp':      &#91;'permitAll'&#93;,
+   '/assets/&#42;&#42;':      &#91;'permitAll'&#93;,
    '/&#42;&#42;/js/&#42;&#42;':       &#91;'permitAll'&#93;,
    '/&#42;&#42;/css/&#42;&#42;':      &#91;'permitAll'&#93;,
    '/&#42;&#42;/images/&#42;&#42;':   &#91;'permitAll'&#93;,
@@ -253,6 +254,7 @@ To use the <code>Config.groovy</code> Map to secure URLs, first specify <code>se
    '/':                  &#91;'permitAll'&#93;,
    '/index':             &#91;'permitAll'&#93;,
    '/index.gsp':         &#91;'permitAll'&#93;,
+   '/assets/&#42;&#42;':         &#91;'permitAll'&#93;,
    '/&#42;&#42;/js/&#42;&#42;':          &#91;'permitAll'&#93;,
    '/&#42;&#42;/css/&#42;&#42;':         &#91;'permitAll'&#93;,
    '/&#42;&#42;/images/&#42;&#42;':      &#91;'permitAll'&#93;,
@@ -270,7 +272,7 @@ To use the <code>Config.groovy</code> Map to secure URLs, first specify <code>se
 <h2 id="requestmapInstances">4.3 Requestmap Instances Stored in the Database</h2>
 With this approach you use the <code>Requestmap</code> domain class to store mapping entries in the database. <code>Requestmap</code> has a <code>url</code> property that contains the secured URL pattern and a <code>configAttribute</code> property containing a comma-delimited list of required roles and/or tokens such as <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code>.<p class="paragraph"/>To use <code>Requestmap</code> entries, specify <code>securityConfigType="Requestmap"</code>:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.securityConfigType = <span class="java&#45;quote">"Requestmap"</span></pre></div><p class="paragraph"/>You create <code>Requestmap</code> entries as you create entries in any Grails domain class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">for</span> (<span class="java&#45;object">String</span> url in &#91;
       '/', '/index', '/index.gsp', '/&#42;&#42;/favicon.ico',
-      '/&#42;&#42;/js/&#42;&#42;', '/&#42;&#42;/css/&#42;&#42;', '/&#42;&#42;/images/&#42;&#42;',
+      '/assets/&#42;&#42;', '/&#42;&#42;/js/&#42;&#42;', '/&#42;&#42;/css/&#42;&#42;', '/&#42;&#42;/images/&#42;&#42;',
       '/login', '/login.&#42;', '/login/&#42;',
       '/logout', '/logout.&#42;', '/logout/&#42;'&#93;) &#123;
    <span class="java&#45;keyword">new</span> Requestmap(url: url, configAttribute: 'permitAll').save()
