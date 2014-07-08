@@ -25,7 +25,7 @@ perl -i -p -e 'open FILE, "</tmp/inputfile.txt"; my($input)=do { local $/; <FILE
 cat > /tmp/inputfile.txt <<EOF
 		test ":geb:\$gebVersion"
 
-		runtime ":spring-security-core:2.0-SNAPSHOT"
+		runtime ":spring-security-core:2.0-RC4"
 EOF
 perl -i -p -e 'open FILE, "</tmp/inputfile.txt"; my($input)=do { local $/; <FILE> }; s/(plugins {)/$1\n$input/' grails-app/conf/BuildConfig.groovy
 

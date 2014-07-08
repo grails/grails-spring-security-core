@@ -67,7 +67,7 @@ mavenRepo 'http://repo.spring.io/milestone' // TODO remove
     plugins {
 		test ":geb:$gebVersion"
 
-		runtime ":spring-security-core:2.0-SNAPSHOT"
+		runtime ":spring-security-core:2.0-RC4"
 
         // plugins for the build system only
         build ":tomcat:7.0.54"
