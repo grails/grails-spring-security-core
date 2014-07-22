@@ -43,6 +43,17 @@ class SecurityTagLib {
 	] as FilterChain
 
 	protected Map<String, Expression> expressionCache = [:]
+	
+	static returnObjectForTags = ['getUserObject']
+	
+	/**
+         * Returns userObject for current user
+         */
+        def getUserObject = {
+            if (springSecurityService.isLoggedIn()) {
+                return springSecurityService.getCurrentUser()
+            }
+        }
 
 	/**
 	 * Renders the body if all of the specified roles are granted to the user. Roles are
