@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>23 Tutorials 1.2.7.3</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/1%20Introduction%20to%20the%20Spring%20Security%20Plugin.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/2%20Differences%20Between%20the%20Spring%20Security%20and%20Acegi%20Plugins.html"><strong>2</strong><span>Differences Between the Spring Security and Acegi Plugins</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/3%20Migrating%20from%20the%20Acegi%20Plugin.html"><strong>3</strong><span>Migrating from the Acegi Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/4%20Required%20and%20Optional%20Domain%20Classes.html"><strong>4</strong><span>Required and Optional Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/5%20Configuring%20Request%20Mappings%20to%20Secure%20URLs.html"><strong>5</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/6%20Helper%20Classes.html"><strong>6</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/7%20Events.html"><strong>7</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/8%20User,%20Authority%20(Role),%20and%20Requestmap%20Properties.html"><strong>8</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/9%20Authentication.html"><strong>9</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/10%20Authentication%20Providers.html"><strong>10</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/11%20Custom%20UserDetailsService.html"><strong>11</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/12%20Password%20and%20Account%20Protection.html"><strong>12</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/13%20URL%20Properties.html"><strong>13</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/14%20Hierarchical%20Roles.html"><strong>14</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/15%20Switch%20User.html"><strong>15</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/16%20Filters.html"><strong>16</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/17%20Channel%20Security.html"><strong>17</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/18%20IP%20Address%20Restrictions.html"><strong>18</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/19%20Session%20Fixation%20Prevention.html"><strong>19</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/20%20Logout%20Handlers.html"><strong>20</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/21%20Voters.html"><strong>21</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/22%20Miscellaneous%20Properties.html"><strong>22</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/23%20Tutorials.html"><strong>23</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/25%20Internationalization.html"><strong>25</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/22%20Miscellaneous%20Properties.html">&lt;&lt; <strong>22</strong><span>Miscellaneous Properties</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>23 Tutorials - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 1.2.7.3</p>
+
+                    
+                </div>
+
+                
+                <div id="table-of-content">
+                    <h2>Table of Contents</h2>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#23.1%20Using%20Controller%20Annotations%20to%20Secure%20URLs"><strong>23.1</strong><span>Using Controller Annotations to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0px"><a href="#23.2%20Migration%20From%20the%20Acegi%20Plugin"><strong>23.2</strong><span>Migration From the Acegi Plugin</span></a>
+                    </div>
+                    
+                </div>
+                
+
+                
+
+<h1 id="23 Tutorials">23 Tutorials</h1>
+
+
+
+<h2 id="23.1 Using Controller Annotations to Secure URLs">23.1 Using Controller Annotations to Secure URLs</h2>
+<h4>1. Create your Grails application.</h4><p class="paragraph"/><div class="code"><pre>$ grails create&#45;app bookstore
+$ cd bookstore</pre></div>
+<h4>2. Install the plugin.</h4>
+<div class="code"><pre>$ grails install&#45;plugin spring&#45;security&#45;core</pre></div>
+<h4>3. Create the User and Role domain classes.</h4>
+<div class="code"><pre>$ grails s2&#45;quickstart com.testapp User Role</pre></div><p class="paragraph"/>You can choose your names for your domain classes and package; these are just examples.<p class="paragraph"/><blockquote class="note">
+Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "User" or "Group", make sure they are not reserved keywords in your database.
+</blockquote><p class="paragraph"/>The script creates this User class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">package</span> test<p class="paragraph"/>class User &#123;<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
+   <span class="java&#45;object">String</span> password
+   <span class="java&#45;object">boolean</span> enabled
+   <span class="java&#45;object">boolean</span> accountExpired
+   <span class="java&#45;object">boolean</span> accountLocked
+   <span class="java&#45;object">boolean</span> passwordExpired<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
+      username blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
+      password blank: <span class="java&#45;keyword">false</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      password column: '`password`'
+   &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
+      UserRole.findAllByUser(<span class="java&#45;keyword">this</span>).collect &#123; it.role &#125; as Set
+   &#125;<p class="paragraph"/>   def beforeInsert() &#123;
+      encodePassword()
+   &#125;<p class="paragraph"/>   def beforeUpdate() &#123;
+      <span class="java&#45;keyword">if</span> (isDirty('password')) &#123;
+         encodePassword()
+      &#125;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">protected</span> void encodePassword() &#123;
+      password = springSecurityService.encodePassword(password)
+   &#125;
+&#125;</pre></div><p class="paragraph"/><blockquote class="note">
+Earlier versions of the plugin didn't include password encryption logic in the domain class, but it makes the code a lot cleaner.
+</blockquote><p class="paragraph"/>and this Role class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/>class Role &#123;<p class="paragraph"/>   <span class="java&#45;object">String</span> authority<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      cache <span class="java&#45;keyword">true</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
+      authority blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
+   &#125;
+&#125;</pre></div><p class="paragraph"/>and a domain class that maps the many-to-many join class, <code>UserRole</code>:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>class UserRole <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   User user
+   Role role<p class="paragraph"/>   <span class="java&#45;object">boolean</span> equals(other) &#123;
+      <span class="java&#45;keyword">if</span> (!(other <span class="java&#45;keyword">instanceof</span> UserRole)) &#123;
+         <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
+      &#125;<p class="paragraph"/>      other.user?.id == user?.id &#38;&#38;
+         other.role?.id == role?.id
+   &#125;<p class="paragraph"/>   <span class="java&#45;object">int</span> hashCode() &#123;
+      def builder = <span class="java&#45;keyword">new</span> HashCodeBuilder()
+      <span class="java&#45;keyword">if</span> (user) builder.append(user.id)
+      <span class="java&#45;keyword">if</span> (role) builder.append(role.id)
+      builder.toHashCode()
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole get(<span class="java&#45;object">long</span> userId, <span class="java&#45;object">long</span> roleId) &#123;
+      find 'from UserRole where user.id=:userId and role.id=:roleId',
+         &#91;userId: userId, roleId: roleId&#93;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole create(User user, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      <span class="java&#45;keyword">new</span> UserRole(user: user, role: role).save(flush: flush, insert: <span class="java&#45;keyword">true</span>)
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User user, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      UserRole instance = UserRole.findByUserAndRole(user, role)
+      <span class="java&#45;keyword">if</span> (!instance) &#123;
+         <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
+      &#125;<p class="paragraph"/>      instance.delete(flush: flush)
+      <span class="java&#45;keyword">true</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(User user) &#123;
+      executeUpdate 'DELETE FROM UserRole WHERE user=:user', &#91;user: user&#93;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      id composite: &#91;'role', 'user'&#93;
+      version <span class="java&#45;keyword">false</span>
+   &#125;
+&#125;</pre></div><p class="paragraph"/>It also creates some UI controllers and GSPs:
+<ul class="star">
+<li><code>grails-app/controllers/LoginController.groovy</code></li>
+<li><code>grails-app/controllers/LogoutController.groovy</code></li>
+<li><code>grails-app/views/auth.gsp</code></li>
+<li><code>grails-app/views/denied.gsp</code></li>
+</ul><p class="paragraph"/>The script has edited <code>grails-app/conf/Config.groovy</code> and added the configuration for your domain classes. Make sure that the changes are correct.<p class="paragraph"/><blockquote class="note">
+These generated files are not part of the plugin - these are your application files. They are examples to get you started, so you can edit them as you please. They contain the minimum needed for the plugin.
+</blockquote><p class="paragraph"/>The plugin has no support for CRUD actions and GSPs for your domain classes; the <code>spring-security-ui</code> plugin will supply a UI for those. So for now you will create roles and users in <code>grails-app/conf/BootStrap.groovy</code>. (See step 7.)<p class="paragraph"/><h4>4. Create a controller that will be restricted by role.</h4>
+<div class="code"><pre>$ grails create&#45;controller com.testapp.Secure</pre></div><p class="paragraph"/>This command creates <code>grails-app/controllers/com/testapp/ SecureController.groovy</code>. Add some output so you can verify that things are working:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/>class SecureController &#123;
+   def index = &#123;
+      render 'Secure access only'
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>5. Start the server.</h4>
+<div class="code"><pre>$ grails run&#45;app</pre></div><p class="paragraph"/><h4>6. Before you secure the page, navigate to <a href="http://localhost:8080/bookstore/secure" target="blank">http://localhost:8080/bookstore/secure</a> to verify that you can see the page without being logged in.</h4><p class="paragraph"/><h4>7. Shut down the app (using CTRL-C) and edit grails-app/conf/BootStrap.groovy to add the security objects that you need.</h4><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> com.testapp.Role
+<span class="java&#45;keyword">import</span> com.testapp.User
+<span class="java&#45;keyword">import</span> com.testapp.UserRole<p class="paragraph"/>class BootStrap &#123;<p class="paragraph"/>   def init = &#123; servletContext &#45;&#62;<p class="paragraph"/>      def adminRole = <span class="java&#45;keyword">new</span> Role(authority: 'ROLE_ADMIN').save(flush: <span class="java&#45;keyword">true</span>)
+      def userRole = <span class="java&#45;keyword">new</span> Role(authority: 'ROLE_USER').save(flush: <span class="java&#45;keyword">true</span>)<p class="paragraph"/>      def testUser = <span class="java&#45;keyword">new</span> User(username: 'me', enabled: <span class="java&#45;keyword">true</span>, password: 'password')
+      testUser.save(flush: <span class="java&#45;keyword">true</span>)<p class="paragraph"/>      UserRole.create testUser, adminRole, <span class="java&#45;keyword">true</span><p class="paragraph"/>      assert User.count() == 1
+      assert Role.count() == 2
+      assert UserRole.count() == 1
+   &#125;
+&#125;</pre></div><p class="paragraph"/>Some things to note about the preceding <code>BootStrap.groovy</code>:
+<ul class="star">
+<li>The example does not use a traditional GORM many-to-many mapping for the User&#60;-&#62;Role relationship; instead you are mapping the join table with the <code>UserRole</code> class. This performance optimization helps significantly when many users have one or more common roles.</li>
+<li>We explicitly flushed the creates because <code>BootStrap</code> does not run in a transaction or OpenSessionInView.</li>
+</ul><p class="paragraph"/><h4>8. Edit grails-app/controllers/SecureController.groovy to import the annotation class and apply the annotation to restrict access.</h4><p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugins.springsecurity.Secured<p class="paragraph"/>class SecureController &#123;<p class="paragraph"/>   @Secured(&#91;'ROLE_ADMIN'&#93;)
+   def index = &#123;
+      render 'Secure access only'
+   &#125;
+&#125;</pre></div><p class="paragraph"/>or<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugins.springsecurity.Secured<p class="paragraph"/>@Secured(&#91;'ROLE_ADMIN'&#93;)
+class SecureController &#123;
+   def index = &#123;
+      render 'Secure access only'
+   &#125;
+&#125;</pre></div><p class="paragraph"/>You can annotate the entire controller or individual actions. In this case you have only one action, so you can do either.<p class="paragraph"/><h4>9. Run grails run-app again and navigate to <a href="http://localhost:8080/bookstore/secure" target="blank">http://localhost:8080/bookstore/secure</a>.</h4><p class="paragraph"/>This time, you should be presented with the login page. Log in with the username and password you used for the test user, and you should again be able to see the secure page.<p class="paragraph"/><h4>10. Test the Remember Me functionality.</h4>
+Check the checkbox, and once you've tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a is cookie stored, you should not need to log in again. Logout at any time by navigating to <a href="http://localhost:8080/bookstore/logout" target="blank">http://localhost:8080/bookstore/logout</a>.<p class="paragraph"/><h4>11. Optionally, create a CRUD UI to work with users and roles.</h4><p class="paragraph"/><h5>Run grails generate-all for the domain classes:</h5><p class="paragraph"/><div class="code"><pre>$ grails generate&#45;all com.testapp.User</pre></div><p class="paragraph"/><div class="code"><pre>$ grails generate&#45;all com.testapp.Role</pre></div><p class="paragraph"/>Since the User domain class handles password encryption, there are no changes required in the generated controllers.
+
+
+
+<h2 id="23.2 Migration From the Acegi Plugin">23.2 Migration From the Acegi Plugin</h2>
+In this tutorial we'll discuss the general steps required to migrate from the Acegi plugin to the Spring Security Core plugin. A lot of the material here comes from <a href="http://grails.1312388.n4.nabble.com/Migrating-Acegi-plugin-to-new-Security-plugin-td2290399.html" target="blank">an email</a> that Lubos Pochman sent to the <a href="http://www.grails.org/Mailing+lists" target="blank">User mailing list</a> documenting the steps he took to upgrade from the Acegi plugin.<p class="paragraph"/>This isn't a standard step-by-step tutorial since every application is different and the steps required will vary from project to project. Instead these are guidelines and things to keep in mind. You should also read <a href="../guide/single.html#2%20Differences%20Between%20the%20Spring%20Security%20and%20Acegi%20Plugins" class="guide">Section 2</a> and <a href="../guide/single.html#3%20Migrating%20from%20the%20Acegi%20Plugin" class="guide">Section 3</a>.<p class="paragraph"/>The first thing to do is uninstall the Acegi plugin
+<div class="code"><pre>$ grails uninstall&#45;plugin acegi</pre></div>
+and install Spring Security Core
+<div class="code"><pre>$ grails install&#45;plugin spring&#45;security&#45;core</pre></div><p class="paragraph"/>If this were a new project the next step would be to run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script but you wouldn't do this for an existing project where you already have a User and Role class, so it's a good idea to work through the <a href="../guide/single.html#23.1%20Using%20Controller%20Annotations%20to%20Secure%20URLs" class="guide">bookstore tutorial</a> and use the files generated in that project. The files that the script generates are
+<ul class="star">
+<li><code>grails-app/domain/com/testapp/User.groovy</code></li>
+<li><code>grails-app/domain/com/testapp/Role.groovy</code></li>
+<li><code>grails-app/domain/com/testapp/UserRole.groovy</code></li>
+<li><code>grails-app/controllers/LoginController.groovy</code></li>
+<li><code>grails-app/controllers/LogoutController.groovy</code></li>
+<li><code>grails-app/views/login/auth.gsp</code></li>
+<li><code>grails-app/views/login/denied.gsp</code></li>
+</ul><p class="paragraph"/>Migrate any changes you made in <code>LoginController.groovy</code>, <code>LogoutController.groovy</code>, <code>auth.gsp</code> and <code>denied.gsp</code>, and overwrite your files with those. Do the same for <code>User.groovy</code> and <code>Role.groovy</code>, and move <code>UserRole.groovy</code> into your project.<p class="paragraph"/><h4>User and Role UI</h4><p class="paragraph"/>You can use the standard Grails <code>generate-all</code> script to create a UI to manage Users and Roles as described in the previous tutorial, or for a more complete solution use the <a href="http://grails.org/plugin/spring-security-ui" target="blank">Spring Security UI</a> plugin.<p class="paragraph"/><h4>authenticateService</h4><p class="paragraph"/>The utility service in Spring Security Core is <code>SpringSecurityService</code>, so you need to replace <code>def authenticateService</code> with <code>def springSecurityService</code>. Many of the methods have the same names and signatures but there are some differences:
+<ul class="star">
+<li><code>principal()</code> was renamed to <code>getPrincipal()</code></li>
+<li><code>ifAllGranted()</code>, <code>ifNotGranted()</code>, and <code>ifAnyGranted()</code> were removed; use <code>org.codehaus.groovy.grails.plugins.springsecurity. SpringSecurityUtils.ifAllGranted()</code>, <code>ifNotGranted()</code>, and <code>ifAnyGranted()</code> instead</li>
+<li><code>getSecurityConfig()</code> was removed, use <code>SpringSecurityUtils.getSecurityConfig()</code> instead</li>
+</ul><p class="paragraph"/>One significant change between the plugins is that the <code>UserDetails</code> implementation (<code>GrailsUser</code>) no longer has a reference to the domain class instance. This was intended to make it easy to access User class data that's not available in the <code>Principal</code> but it has frustrating side effects due to being a disconnected Hibernate object. Instead <code>GrailsUser</code> stores the user's id so you can conveniently retrieve the instance when needed. So instead of<p class="paragraph"/><div class="code"><pre>def user = authenticateService.userDomain()
+user = User.get(user.id)</pre></div><p class="paragraph"/>use this instead:<p class="paragraph"/><div class="code"><pre>def user = User.get(springSecurityService.principal.id)</pre></div><p class="paragraph"/><h4>Role granting</h4><p class="paragraph"/>The Acegi plugin uses a standard Grails many-to-many relationship (i.e. using <code>hasMany</code> and <code>belongsTo</code>) between User and Role but this will have performance problems if you have many users. Spring Security Core also uses a many-to-many relationship but maps the join table as a domain class instead of using collections. In the Acegi plugin you would grant a role to a user using
+<div class="code"><pre>Role role = &#8230;
+User user = &#8230;
+role.addToPeople(user)</pre></div><p class="paragraph"/>and remove the grant with
+<div class="code"><pre>Role role = &#8230;
+User user = &#8230;
+role.removeFromPeople(user)</pre></div><p class="paragraph"/>In Spring Security Core you use the helper methods in <code>UserRole</code>
+<div class="code"><pre>Role role = &#8230;
+User user = &#8230;
+UserRole.create user, role</pre></div><p class="paragraph"/>and<p class="paragraph"/><div class="code"><pre>Role role = &#8230;
+User user = &#8230;
+UserRole.remove user, role</pre></div><p class="paragraph"/>which directly insert or delete rows in the User/Role join table.<p class="paragraph"/><h4>SecurityConfig.groovy</h4><p class="paragraph"/>Configuration settings are now stored in <code>grails-app/conf/Config.groovy</code> along with the rest of the application configuration. The primary motiviation for this change is to easily support environment-specific security settings. Migrate settings from <code>SecurityConfig.groovy</code> to <code>Config.groovy</code> (see <a href="../guide/single.html#3%20Migrating%20from%20the%20Acegi%20Plugin" class="guide">this summary</a> for the new names.<p class="paragraph"/>In particular it's important that the following properties be configured (replace class and package names to match your domain classes):
+<div class="code"><pre>grails. plugins. springsecurity. userLookup. userDomainClassName =
+         'com.yourcompany.yourapp.User'
+grails. plugins. springsecurity. userLookup. authorityJoinClassName =
+         'com.yourcompany.yourapp.UserRole'
+grails. plugins. springsecurity. authority. className =
+         'com.yourcompany.yourapp.Role'</pre></div><p class="paragraph"/>Delete <code>SecurityConfig.groovy</code> when you're finished.<p class="paragraph"/><h4>Controller annotations</h4><p class="paragraph"/>The <code>Secured</code> annotation changed from <code>org.codehaus.groovy.grails.plugins. springsecurity.Secured</code> to <code>grails.plugins.springsecurity.Secured</code>. Consider using <a href="../guide/single.html#5.4%20Using%20Expressions%20to%20Create%20Descriptive,%20Fine-Grained%20Rules" class="guide">SpEL expressions</a> since they're a lot more powerful and expressive than simple role names.<p class="paragraph"/><h4>Security tags</h4>
+<ul class="star">
+<li>tag names now start with 'if' instead of 'is', and the <code>role</code> attribute changed to <code>roles</code>, so for example change <code>&#60;g:ifAnyGranted role='...'&#62;</code> to <code>&#60;sec:ifAnyGranted roles='...'&#62;</code></li>
+<li>use <code>&#60;sec:username/&#62;</code> instead of <code>&#60;g:loggedInUserInfo(field:'username')}/&#62;</code> - use <code>&#60;sec:loggedInUserInfo&#62;</code> to render other <code>GrailsUser</code> attributes</li>
+</ul><p class="paragraph"/>See more details about the taglibs in <a href="../guide/single.html#6%20Helper%20Classes" class="guide">Section 6</a>.
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/22%20Miscellaneous%20Properties.html">&lt;&lt; <strong>22</strong><span>Miscellaneous Properties</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/24%20Controller%20MetaClass%20Methods.html"><strong>24</strong><span>Controller MetaClass Methods</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+
+<script type="text/javascript">
+	var _gaq = _gaq || [];
+	_gaq.push(['_setAccount', 'UA-16219500-1']);
+	_gaq.push(['_trackPageview']);
+
+	(function() {
+		var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	})();
+</script>
+</body>
+</html>
