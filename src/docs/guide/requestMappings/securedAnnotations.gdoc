@@ -33,6 +33,19 @@ class SecureAnnotatedController {
 
 you must be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@.
 
+In addition, you can define a closure in the annotation which will be called during access checking. The closure must return @true@ or @false@ and has all of the methods and properties that are available when using SpEL expressions, since the closure's @delegate@ is set to a subclass of @WebSecurityExpressionRoot@, and also the Spring @ApplicationContext@ as the @ctx@ property:
+
+{code}
+@Secured(closure = {
+   assert request
+   assert ctx
+   authentication.name == 'admin1'
+})
+def someMethod() {
+   ...
+}
+{code}
+
 Often most actions in a controller require similar access rules, so you can also define annotations at the class level:
 
 {code}
