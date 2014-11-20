@@ -138,7 +138,6 @@ class SpringSecurityServiceIntegrationTests {
 	 */
 	@After
 	void tearDown() {
-	
 		SpringSecurityUtils.securityConfig = oldConfig
 	}
 }

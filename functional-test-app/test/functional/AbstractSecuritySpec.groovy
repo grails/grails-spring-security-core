@@ -9,11 +9,11 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	def setupSpec() {
 		resetDatabase()
 	}
-	
+
 	def cleanup() {
 		logout()
 	}
-	
+
 	protected void resetDatabase() {
 		go browser.baseUrl + 'testData/reset'
 	}
@@ -26,7 +26,7 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	protected String getSessionValue(String name) {
 		getContent 'hack/getSessionValue?name=' + name
 	}
-	
+
 	protected String getPageSource() {
 		browser.driver.pageSource
 	}

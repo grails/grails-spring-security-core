@@ -15,13 +15,13 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
-
-import javax.servlet.http.HttpServletRequest
-
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder as SCH
+import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.Assert
+
+import javax.servlet.http.HttpServletRequest
 
 /**
  * Utility methods.

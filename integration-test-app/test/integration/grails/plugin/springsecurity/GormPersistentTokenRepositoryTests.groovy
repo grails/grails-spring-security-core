@@ -51,7 +51,7 @@ class GormPersistentTokenRepositoryTests {
 	static transactional = false
 
 	@Before
-	void setUp() {		
+	void setUp() {
 		sql = new Sql(dataSource)
 		repo.grailsApplication = grailsApplication
 	}

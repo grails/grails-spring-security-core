@@ -147,18 +147,18 @@ $.ajaxSetup({
 	}
 });
 
-function showLogin() { 
-	var ajaxLogin = $('#ajaxLogin'); 
+function showLogin() {
+	var ajaxLogin = $('#ajaxLogin');
 	ajaxLogin.css('text-align','center');
       // use jqModal to show and align login panel
 	ajaxLogin.jqmShow();
 }
 
-function cancelLogin() { 
-	$('#ajaxLogin').jqmHide();	
+function cancelLogin() {
+	$('#ajaxLogin').jqmHide();
 }
 
-function authAjax() { 
+function authAjax() {
 	$('#loginMessage').html('Sending request ...').show();
 
 	var form = $('#ajaxLoginForm');
@@ -178,13 +178,13 @@ function authAjax() {
 			}
 		}
 		,error : function (response) {
-			var responseText = response.responseText || '[]'; 
-			var json = responseText.evalJSON(); 
-			if (json.error) { 
-				$('#loginMessage').html("<span class='errorMessage'>" + json.error + '</error>'); 
-			} else { 
-				$('#loginMessage').html(responseText); 
-			} 
+			var responseText = response.responseText || '[]';
+			var json = responseText.evalJSON();
+			if (json.error) {
+				$('#loginMessage').html("<span class='errorMessage'>" + json.error + '</error>');
+			} else {
+				$('#loginMessage').html(responseText);
+			}
 		}
 		,beforeSend : function(xhr, event) {
 			//console.log("overriding default behaviour");

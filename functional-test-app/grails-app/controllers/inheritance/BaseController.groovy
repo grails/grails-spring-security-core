@@ -12,7 +12,7 @@ class BaseController {
 	def delete() {
 		render 'DELETED'
 	}
-	
+
 	def update() {
 		render 'BaseController - UPDATED'
 	}

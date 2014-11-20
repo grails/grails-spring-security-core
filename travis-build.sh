@@ -16,7 +16,7 @@ filename=$(basename $filename)
 plugin=${filename:7}
 plugin=${plugin/.zip/}
 plugin=${plugin/-SNAPSHOT/}
-version="${plugin#*-}"; 
+version="${plugin#*-}";
 plugin=${plugin/"-$version"/}
 
 echo "Publishing plugin grails-spring-security-core with version $version"
@@ -43,7 +43,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "grails-plugins/grails-
   fi
 
 
-  ./grailsw publish-plugin --no-scm --allow-overwrite --non-interactive
+  ./grailsw publish-plugin --allow-overwrite --non-interactive
 else
   echo "Not on master branch, so not publishing"
   echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"

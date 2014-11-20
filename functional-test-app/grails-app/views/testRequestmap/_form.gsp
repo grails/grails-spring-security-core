@@ -23,7 +23,6 @@
 <div class="fieldcontain ${hasErrors(bean: testRequestmapInstance, field: 'httpMethod', 'error')} ">
 	<label for="httpMethod">
 		<g:message code="testRequestmap.httpMethod.label" default="Http Method" />
-		
 	</label>
 	<g:select name="httpMethod" from="${org.springframework.http.HttpMethod?.values()}" keys="${org.springframework.http.HttpMethod.values()*.name()}" value="${testRequestmapInstance?.httpMethod?.name()}"  noSelection="['': '']"/>
 

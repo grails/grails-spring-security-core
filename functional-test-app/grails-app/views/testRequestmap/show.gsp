@@ -22,34 +22,24 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<ol class="property-list testRequestmap">
-			
 				<g:if test="${testRequestmapInstance?.url}">
 				<li class="fieldcontain">
 					<span id="url-label" class="property-label"><g:message code="testRequestmap.url.label" default="Url" /></span>
-					
 						<span class="property-value" aria-labelledby="url-label"><g:fieldValue bean="${testRequestmapInstance}" field="url"/></span>
-					
 				</li>
 				</g:if>
-			
 				<g:if test="${testRequestmapInstance?.configAttribute}">
 				<li class="fieldcontain">
 					<span id="configAttribute-label" class="property-label"><g:message code="testRequestmap.configAttribute.label" default="Config Attribute" /></span>
-					
 						<span class="property-value" aria-labelledby="configAttribute-label"><g:fieldValue bean="${testRequestmapInstance}" field="configAttribute"/></span>
-					
 				</li>
 				</g:if>
-			
 				<g:if test="${testRequestmapInstance?.httpMethod}">
 				<li class="fieldcontain">
 					<span id="httpMethod-label" class="property-label"><g:message code="testRequestmap.httpMethod.label" default="Http Method" /></span>
-					
 						<span class="property-value" aria-labelledby="httpMethod-label"><g:fieldValue bean="${testRequestmapInstance}" field="httpMethod"/></span>
-					
 				</li>
 				</g:if>
-			
 			</ol>
 			<g:form url="[resource:testRequestmapInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">

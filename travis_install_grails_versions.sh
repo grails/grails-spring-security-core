@@ -4,7 +4,7 @@ function install_grails {
 	if [ -f $HOME/.grails/wrapper/$GRAILS_VERSION/grails-$GRAILS_VERSION/bin/grails ]; then
 		cd ~/.gvm/grails
 		if [ ! -e $GRAILS_VERSION ]; then
-			# reuse grails version from wrapper 
+			# reuse grails version from wrapper
 			ln -s $HOME/.grails/wrapper/$GRAILS_VERSION/grails-$GRAILS_VERSION $GRAILS_VERSION
 			cd $GRAILS_VERSION/bin
 			if [ ! -x grails ]; then
@@ -20,10 +20,10 @@ function install_grails {
 			set -e
 			cd /tmp
 			curl -O http://dist.springframework.org.s3.amazonaws.com/release/GRAILS/grails-${GRAILS_VERSION}.zip
-			unzip grails-${GRAILS_VERSION}.zip -d ~/.gvm/grails/ 
+			unzip grails-${GRAILS_VERSION}.zip -d ~/.gvm/grails/
 			mv ~/.gvm/grails/{grails-${GRAILS_VERSION},${GRAILS_VERSION}}
 			rm grails-${GRAILS_VERSION}.zip
-			)	
+			)
 		fi
 	fi
 }

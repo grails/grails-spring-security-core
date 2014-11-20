@@ -7,7 +7,7 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 	def setupSpec() {
 		go 'testData/addTestUsers'
 	}
-	
+
 	def setup() {
 		browser.clearCookiesQuietly()
 	}
@@ -15,54 +15,54 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 	def 'should redirect to login page for anonymous'() {
 		when:
 			go uri
-			
+
 		then:
 			at LoginPage
-			
+
 		where:
 			uri << ['api/v1/books','api/v1/movies','api/v1/books.json','api/v1/movies.json']
 	}
 
-		
+
 	def 'api not allowed for testuser'() {
 		when:
 			login 'testuser', 'password'
 
 		then:
 			at IndexPage
-			
+
 		when:
 			go('api/v1/books' + format)
-			
+
 		then:
 			$('.errors').text() == "Sorry, you're not authorized to view this page."
-			
+
 		when:
 			go('api/v1/movies' + format)
-			
+
 		then:
 			$('.errors').text() == "Sorry, you're not authorized to view this page."
-			
+
 		where:
 			format << ['', '.json']
 	}
-	
+
 	def 'verify security for testuser_books'() {
 		when:
 			login 'testuser_books', 'password'
 
 		then:
 			at IndexPage
-			
+
 		when:
 			go('api/v1/books' + format)
-			
+
 		then:
 			pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
-			
+
 		when:
 			go('api/v1/movies' + format)
-			
+
 		then:
 			$('.errors').text() == "Sorry, you're not authorized to view this page."
 		where:
@@ -75,16 +75,16 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 			at IndexPage
-			
+
 		when:
 			go('api/v1/books' + format)
-			
+
 		then:
 			$('.errors').text() == "Sorry, you're not authorized to view this page."
-			
+
 		when:
 			go('api/v1/movies' + format)
-			
+
 		then:
 			pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
 		where:
@@ -97,16 +97,16 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 			at IndexPage
-			
+
 		when:
 			go('api/v1/books' + format)
-			
+
 		then:
 			pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
-			
+
 		when:
 			go('api/v1/movies' + format)
-			
+
 		then:
 			pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
 		where:

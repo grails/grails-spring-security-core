@@ -43,9 +43,9 @@ class SecurityTagLib {
 	] as FilterChain
 
 	protected Map<String, Expression> expressionCache = [:]
-	
+
 	static returnObjectForTags = ['getUserObject']
-	
+
 	/**
          * Returns userObject for current user
          */

@@ -48,7 +48,7 @@ mavenRepo 'http://repo.spring.io/milestone' // TODO remove
         //mavenRepo "http://repository.jboss.com/maven2/"
     }
 
-    
+
 	String gebVersion = '0.9.3'
 	String seleniumVersion = '2.42.2'
 
