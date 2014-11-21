@@ -3,10 +3,6 @@ if (System.getenv('TRAVIS_BRANCH')) {
 	grails.project.repos.grailsCentral.password = System.getenv("GRAILS_CENTRAL_PASSWORD")
 }
 grails.project.work.dir = 'target'
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
-
-grails.project.work.dir = 'target'
 grails.project.docs.output.dir = 'docs/manual' // for backwards-compatibility, the docs are checked into gh-pages branch
 
 grails.project.dependency.resolver = 'maven'
@@ -43,6 +39,8 @@ grails.project.dependency.resolution = {
 			         'spring-security-core', 'spring-test', 'spring-tx', 'spring-web', 'spring-webmvc',
 			         'tomcat-servlet-api'
 		}
+
+		compile 'net.sf.ehcache:ehcache-core:2.6.9'
 	}
 
 	plugins {

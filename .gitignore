@@ -9,6 +9,4 @@ plugin.xml
 /web-app
 *.iml
 .idea
-.classpath
-.project
 /target-eclipse
