@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		String url = null;
 		try {
                         javax.servlet.ServletContext servletContext = (ServletContext)grails.util.Holders.getServletContext();
-                               // servlet.ServletContext  = 
+                               // servlet.ServletContext  =
 			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,servletContext );
 			WebUtils.storeGrailsWebRequest(grailsRequest);
 
@@ -163,7 +163,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		if (isController(controllerName, actionName)) {
 			return createControllerUri(controllerName, actionName);
 		}
-		
+
 		if (grails23Plus && controllerName != null) {
 			String namespace = mapping.getNamespace();
 			if(namespace != null) {
@@ -174,7 +174,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		return null;
 	}
-	
+
 	protected String createControllerUri(String controllerName, String actionName) {
 		if (!StringUtils.hasLength(actionName) || "null".equals(actionName)) {
 			actionName = "index";
@@ -478,7 +478,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	}
 
 	protected Annotation findSecuredAnnotation(final AccessibleObject annotatedTarget) {
-		Annotation annotation; 
+		Annotation annotation;
 		annotation = annotatedTarget.getAnnotation(grails.plugin.springsecurity.annotation.Secured.class);
 		if (annotation != null) {
 			return annotation;
