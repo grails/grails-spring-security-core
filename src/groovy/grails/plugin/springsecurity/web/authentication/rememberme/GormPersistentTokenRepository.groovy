@@ -60,7 +60,10 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 		def persistentToken
 		def clazz = lookupDomainClass()
 		if (clazz) {
-			persistentToken = clazz.get(seriesId)
+			// join an existing transaction if one is active
+			clazz.withTransaction { status ->
+				persistentToken = clazz.get(seriesId)
+			}
 		}
 		if (!persistentToken) {
 			return null
