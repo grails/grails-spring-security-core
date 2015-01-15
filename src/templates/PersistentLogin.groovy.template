@@ -1,26 +1,38 @@
 ${packageDeclaration}
 
-class ${className} {
+import org.apache.commons.lang.builder.HashCodeBuilder
 
-	String id
+class ${className} implements Serializable {
+
+	private static final long serialVersionUID = 1
+
+	String series
 	String username
 	String token
 	Date lastUsed
 
-	static constraints = {
-		username maxSize: 64
-		token maxSize: 64
-		id maxSize: 64
+	@Override
+	int hashCode() {
+		new HashCodeBuilder().append(series).append(username).toHashCode()
 	}
 
-	static transients = ['series']
+	@Override
+	boolean equals(other) {
+		is(other) || (
+			other instanceof ${className} &&
+			other.series == series &&
+			other.username == username)
+	}
 
-	void setSeries(String series) { id = series }
-	String getSeries() { id }
+	static constraints = {
+		series maxSize: 64
+		token maxSize: 64
+		username maxSize: 64
+	}
 
 	static mapping = {
-		table 'persistent_logins'
-		id column: 'series', generator: 'assigned'
+		table 'persistent_login'
+		id name: 'series', generator: 'assigned'
 		version false
 	}
 }

@@ -1,15 +1,38 @@
 package ${packageName}
 
-class ${userClassName} {
+class ${userClassName} implements Serializable {
+
+	private static final long serialVersionUID = 1
 
 	transient springSecurityService
 
 	String username
 	String password
-	boolean enabled = true
-	boolean accountExpired
-	boolean accountLocked
-	boolean passwordExpired
+	Boolean enabled = true
+	Boolean accountExpired = false
+	Boolean accountLocked = false
+	Boolean passwordExpired = false
+
+	${userClassName}(String username, String password) {
+		this()
+		this.username = username
+		this.password = password
+	}
+
+	@Override
+	int hashCode() {
+		username?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof ${userClassName} && other.username == username)
+	}
+
+	@Override
+	String toString() {
+		username
+	}
 
 	static transients = ['springSecurityService']
 
@@ -23,7 +46,7 @@ class ${userClassName} {
 	}
 
 	Set<${groupClassName ?: roleClassName}> getAuthorities() {
-		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this).collect { it.${groupClassProperty ?: roleClassProperty} }
+		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this)*.${groupClassProperty ?: roleClassProperty}
 	}
 
 	def beforeInsert() {
