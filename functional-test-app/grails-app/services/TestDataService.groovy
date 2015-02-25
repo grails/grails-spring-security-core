@@ -59,7 +59,8 @@ class TestDataService {
 		switch (SpringSecurityUtils.securityConfigType) {
 			case 'Requestmap':
 				String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
-				def Requestmap = grailsApplication.getClassForName(requestMapClassName)
+				def Requestmap = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
+                        Class.forName(requestMapClassName) : grailsApplication.getClassForName(requestMapClassName)
 				if (Requestmap.count()) {
 					return
 				}

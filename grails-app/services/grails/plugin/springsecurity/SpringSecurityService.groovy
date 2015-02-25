@@ -77,7 +77,12 @@ class SpringSecurityService {
 		}
 
 		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		def User = grailsApplication.getClassForName(className)
+		def User
+		if (SpringSecurityUtils.securityConfig.userLookup.useExternalClasses) {
+			User = Class.forName(className)
+		} else {
+			User = grailsApplication.getClassForName(className)
+		}
 
 		if (principal instanceof GrailsUser) {
 			User.get principal.id
@@ -103,7 +108,13 @@ class SpringSecurityService {
 		Assert.isInstanceOf GrailsUser, principal
 
 		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		grailsApplication.getClassForName(className).load(principal.id)
+		def clazz
+		if (SpringSecurityUtils.securityConfig.userLookup.useExternalClasses) {
+			clazz = Class.forName(className)
+		} else {
+			grailsApplication.getClassForName(className)
+		}
+		clazz.load(principal.id)
 	}
 
 	/**
@@ -164,7 +175,12 @@ class SpringSecurityService {
 		}
 
 		// remove the role grant from all users
-		def joinClass = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
+		def joinClass
+        if (SpringSecurityUtils.securityConfig.userLookup.useExternalClasses) {
+            joinClass = Class.forName(conf.userLookup.authorityJoinClassName)
+        } else {
+            joinClass = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
+        }
 		joinClass.removeAll role
 
 		role.delete(flush: true)
@@ -229,7 +245,8 @@ class SpringSecurityService {
 	}
 
 	protected List findRequestmapsByRole(String roleName, conf) {
-		def domainClass = grailsApplication.getClassForName(conf.requestMap.className)
+		def domainClass = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
+                Class.forName(conf.requestMap.className) : grailsApplication.getClassForName(conf.requestMap.className)
 		String configAttributeName = conf.requestMap.configAttributeField
 		domainClass.withCriteria {
 			like configAttributeName, "%$roleName%"

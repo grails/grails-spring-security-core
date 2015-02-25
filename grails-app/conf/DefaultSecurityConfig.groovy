@@ -78,6 +78,8 @@ security {
 		accountLockedPropertyName = 'accountLocked'
 		passwordExpiredPropertyName = 'passwordExpired'
 		authorityJoinClassName = null // must be set if using UserDetailsService
+
+		useExternalClasses = false
 	}
 	authority {
 		className = null // must be set if using UserDetailsService
