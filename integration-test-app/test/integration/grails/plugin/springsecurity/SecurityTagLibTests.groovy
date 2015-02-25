@@ -243,8 +243,8 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 
 		filter.doFilter request, response, chain
 
-		assertFalse chainCalled
-		assertTrue onAuthenticationSuccessCalled
+		assert !chainCalled
+		assert onAuthenticationSuccessCalled
 	}
 
 	private void authenticate(String roles) {
@@ -258,10 +258,6 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		SCH.context.authentication = authentication
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()

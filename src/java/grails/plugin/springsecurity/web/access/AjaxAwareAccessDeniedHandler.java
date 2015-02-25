@@ -45,12 +45,6 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 	protected boolean useForward = true;
 	protected RequestCache requestCache;
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.access.AccessDeniedHandler#handle(
-	 * 	javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
-	 * 	org.springframework.security.access.AccessDeniedException)
-	 */
 	public void handle(final HttpServletRequest request, final HttpServletResponse response,
 			final AccessDeniedException e) throws IOException, ServletException {
 
@@ -166,10 +160,6 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 		requestCache = cache;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
 	public void afterPropertiesSet() {
 		Assert.notNull(portResolver, "portResolver is required");
 		Assert.notNull(authenticationTrustResolver, "authenticationTrustResolver is required");

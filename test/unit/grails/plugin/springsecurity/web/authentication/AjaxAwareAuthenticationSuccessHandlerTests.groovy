@@ -16,7 +16,7 @@ package grails.plugin.springsecurity.web.authentication
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-
+import grails.util.Holders
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -37,10 +37,6 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 	private MockHttpServletRequest request = new MockHttpServletRequest()
 	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
@@ -59,12 +55,12 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
 
-		assertEquals AJAX_SUCCESS_URL, handler.determineTargetUrl(
+		assert AJAX_SUCCESS_URL == handler.determineTargetUrl(
 				request, new MockHttpServletResponse())
 	}
 
 	void testDetermineTargetUrl_NotAjax() {
-		assertEquals DEFAULT_TARGET_URL, handler.determineTargetUrl(
+		assert DEFAULT_TARGET_URL == handler.determineTargetUrl(
 				new MockHttpServletRequest(), new MockHttpServletResponse())
 	}
 
@@ -81,19 +77,15 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 
 		handler.onAuthenticationSuccess(request, response, authentication)
 
-		assertTrue removeRequestCalled
-		assertEquals expectedRedirect, redirectUrl
+		assert removeRequestCalled
+		assert expectedRedirect == redirectUrl
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.securityConfig = null
-		grails.util.Holders.setConfig(null)
+		Holders.config = null
 		SecurityRequestHolder.reset()
 	}
 }

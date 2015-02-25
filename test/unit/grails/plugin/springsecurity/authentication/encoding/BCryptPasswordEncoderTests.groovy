@@ -36,8 +36,8 @@ class BCryptPasswordEncoderTests extends GroovyTestCase {
 		String password = 'passw0rd'
 		String encoded = encoder.encodePassword(password, null)
 		String encodedAgain = encoder.encodePassword(password, null)
-		assertFalse encoded.equals(encodedAgain)
-		assertTrue encoder.isPasswordValid(encoded, password, null)
+		assert encoded != encodedAgain
+		assert encoder.isPasswordValid(encoded, password, null)
 	}
 
 	@Override

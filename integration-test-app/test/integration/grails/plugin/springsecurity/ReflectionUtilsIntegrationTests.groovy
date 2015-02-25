@@ -22,12 +22,12 @@ import test.TestRequestmap
 class ReflectionUtilsIntegrationTests extends GroovyTestCase {
 
 	void testLoadAllRequestmaps() {
-		assertEquals 0, ReflectionUtils.loadAllRequestmaps().size()
+		assert !ReflectionUtils.loadAllRequestmaps()
 
 		10.times {
 			new TestRequestmap(urlPattern: "/url$it", rolePattern: "ROLE_$it").save(flush: true)
 		}
 
-		assertEquals 10, ReflectionUtils.loadAllRequestmaps().size()
+		assert 10 == ReflectionUtils.loadAllRequestmaps().size()
 	}
 }

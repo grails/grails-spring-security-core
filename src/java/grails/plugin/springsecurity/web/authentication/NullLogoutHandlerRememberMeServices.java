@@ -26,11 +26,6 @@ import org.springframework.security.web.authentication.logout.LogoutHandler;
  */
 public class NullLogoutHandlerRememberMeServices extends NullRememberMeServices implements LogoutHandler {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.logout.LogoutHandler#logout(
-	 * 	javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, org.springframework.security.core.Authentication)
-	 */
 	public void logout(final HttpServletRequest req, final HttpServletResponse res, final Authentication a) {
 		// no-op
 	}

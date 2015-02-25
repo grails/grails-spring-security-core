@@ -39,6 +39,7 @@ package com.mycompany.myapp
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.plugin.springsecurity.userdetails.GrailsUserDetailsService
+import grails.transaction.Transactional
 import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -57,28 +58,26 @@ class MyUserDetailsService implements GrailsUserDetailsService {
       return loadUserByUsername(username)
    }
 
+   @Transactional(readOnly=true, noRollbackFor=[IllegalArgumentException, UsernameNotFoundException])
    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-      User.withTransaction { status ->
+      User user = User.findByUsername(username)
+      if (!user) throw new UsernameNotFoundException(
+                   'User not found', username)
 
-         User user = User.findByUsername(username)
-         if (!user) throw new UsernameNotFoundException(
-                      'User not found', username)
-
-         def authorities = user.authorities.collect {
-             new GrantedAuthorityImpl(it.authority)
-         }
-
-         return new MyUserDetails(user.username, user.password, user.enabled,
-            !user.accountExpired, !user.passwordExpired,
-            !user.accountLocked, authorities ?: NO_ROLES, user.id,
-            user.firstName + " " + user.lastName)
+      def authorities = user.authorities.collect {
+         new GrantedAuthorityImpl(it.authority)
       }
+
+      return new MyUserDetails(user.username, user.password, user.enabled,
+         !user.accountExpired, !user.passwordExpired,
+         !user.accountLocked, authorities ?: NO_ROLES, user.id,
+         user.firstName + " " + user.lastName)
    }
 }
 {code}
 
-The lookup code is wrapped in a @withTransaction@ block to avoid lazy loading exceptions when accessing the @authorities@ collection. There are obviously no database updates here but this is a convenient way to keep the Hibernate @Session@ open to enable accessing the roles.
+The <code>loadUserByUsername</code> method is transactional, but read-only, to avoid lazy loading exceptions when accessing the @authorities@ collection. There are obviously no database updates here but this is a convenient way to keep the Hibernate @Session@ open to enable accessing the roles.
 
 To use your implementation, register it in @grails-app/conf/spring/resources.groovy@ like this:
 

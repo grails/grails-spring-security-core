@@ -23,10 +23,6 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class GrailsAnonymousAuthenticationProvider implements AuthenticationProvider {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.AuthenticationProvider#authenticate(org.springframework.security.core.Authentication)
-	 */
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		return supports(authentication.getClass()) ? authentication : null;
 	}

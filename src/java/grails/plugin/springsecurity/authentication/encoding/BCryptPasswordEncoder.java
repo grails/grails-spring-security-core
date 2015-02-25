@@ -34,21 +34,11 @@ public class BCryptPasswordEncoder implements org.springframework.security.authe
 		delegate = new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder(logRounds);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#encodePassword(
-	 * 	java.lang.String, java.lang.Object)
-	 */
 	public String encodePassword(String rawPass, Object salt) {
       checkSalt(salt);
 		return delegate.encode(rawPass);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#isPasswordValid(
-	 * 	java.lang.String, java.lang.String, java.lang.Object)
-	 */
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
       checkSalt(salt);
 		return delegate.matches(rawPass, encPass);

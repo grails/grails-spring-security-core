@@ -38,10 +38,6 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 	private MockHttpServletRequest request = new MockHttpServletRequest()
 	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
@@ -61,12 +57,12 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 		SCH.context.authentication = new RememberMeAuthenticationToken('username', 'password', null)
 
-		assertNull request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+		assert !request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
 		handler.handle request, response, new AccessDeniedException('fail')
-		assertNotNull request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+		assert request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
 
-		assertEquals 'http://localhost/fail', response.redirectedUrl
-		assertNull response.forwardedUrl
+		assert 'http://localhost/fail' == response.redirectedUrl
+		assert !response.forwardedUrl
 	}
 
 	void testHandleAuthenticatedRememberMeForward() {
@@ -75,12 +71,12 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 		SCH.context.authentication = new RememberMeAuthenticationToken('username', 'password', null)
 
-		assertNull request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+		assert !request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
 		handler.handle request, response, new AccessDeniedException('fail')
-		assertNotNull request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+		assert request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
 
-		assertNull response.redirectedUrl
-		assertEquals '/fail', response.forwardedUrl
+		assert !response.redirectedUrl
+		assert '/fail' == response.forwardedUrl
 	}
 
 	void testHandleAuthenticatedAjaxRedirect() {
@@ -90,8 +86,8 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assertEquals 'http://localhost/ajaxFail', response.redirectedUrl
-		assertNull response.forwardedUrl
+		assert 'http://localhost/ajaxFail' == response.redirectedUrl
+		assert !response.forwardedUrl
 	}
 
 	void testHandleAuthenticatedAjaxForward() {
@@ -101,8 +97,8 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assertEquals '/ajaxFail', response.forwardedUrl
-		assertNull response.redirectedUrl
+		assert '/ajaxFail' == response.forwardedUrl
+		assert !response.redirectedUrl
 	}
 
 	void testHandleAuthenticatedNotAjaxRedirect() {
@@ -110,8 +106,8 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assertEquals 'http://localhost/fail', response.redirectedUrl
-		assertNull response.forwardedUrl
+		assert 'http://localhost/fail' == response.redirectedUrl
+		assert !response.forwardedUrl
 	}
 
 	void testHandleAuthenticatedNotAjaxForward() {
@@ -119,14 +115,10 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assertEquals '/fail', response.forwardedUrl
-		assertNull response.redirectedUrl
+		assert '/fail' == response.forwardedUrl
+		assert !response.redirectedUrl
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()

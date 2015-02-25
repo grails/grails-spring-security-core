@@ -34,10 +34,6 @@ class AuthenticatedVetoableDecisionManagerTests extends GroovyTestCase {
 
 	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()

@@ -60,11 +60,6 @@ public class IpAddressFilter extends GenericFilterBean {
 	protected List<InterceptedUrl> restrictions;
 	protected boolean allowLocalhost = true;
 
-	/**
-	 * {@inheritDoc}
-	 * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-	 * 	javax.servlet.FilterChain)
-	 */
 	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 				throws IOException, ServletException {
 
@@ -84,10 +79,6 @@ public class IpAddressFilter extends GenericFilterBean {
 		res.sendError(HttpServletResponse.SC_NOT_FOUND);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.web.filter.GenericFilterBean#initFilterBean()
-	 */
 	@Override
 	protected void initFilterBean() {
 		Assert.notNull(restrictions, "ipRestrictions map is required");

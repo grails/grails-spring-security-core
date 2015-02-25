@@ -14,9 +14,9 @@
  */
 package grails.plugin.springsecurity.web.authentication;
 
-import java.io.IOException;
-
 import grails.plugin.springsecurity.SpringSecurityUtils;
+
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

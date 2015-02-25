@@ -26,6 +26,6 @@ class NullSaltSourceTests extends GroovyTestCase {
 
 	void testGetSalt() {
 		def user = new User('username', 'password', true, true, true, true, [new SimpleGrantedAuthority('ROLE_USER')])
-		assertNull new NullSaltSource().getSalt(user)
+		assert !new NullSaltSource().getSalt(user)
 	}
 }

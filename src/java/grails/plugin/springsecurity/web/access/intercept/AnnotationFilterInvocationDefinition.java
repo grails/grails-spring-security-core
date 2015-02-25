@@ -16,6 +16,7 @@ package grails.plugin.springsecurity.web.access.intercept;
 
 import grails.plugin.springsecurity.InterceptedUrl;
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute;
+import grails.util.Holders;
 import grails.web.UrlConverter;
 import groovy.lang.Closure;
 
@@ -32,15 +33,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
+
 import org.codehaus.groovy.grails.commons.ControllerArtefactHandler;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.commons.GrailsClass;
 import org.codehaus.groovy.grails.commons.GrailsControllerClass;
 import org.codehaus.groovy.grails.plugins.web.api.ResponseMimeTypesApi;
-import grails.util.Holders;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
@@ -93,9 +94,8 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		String url = null;
 		try {
-                        javax.servlet.ServletContext servletContext = (ServletContext)grails.util.Holders.getServletContext();
-                               // servlet.ServletContext  =
-			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,servletContext );
+			ServletContext servletContext = (ServletContext)Holders.getServletContext();
+			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,servletContext);
 			WebUtils.storeGrailsWebRequest(grailsRequest);
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
@@ -166,7 +166,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		if (grails23Plus && controllerName != null) {
 			String namespace = mapping.getNamespace();
-			if(namespace != null) {
+			if (namespace != null) {
 				String fullControllerName = resolveFullControllerName(controllerName, namespace);
 				return createControllerUri(fullControllerName, actionName);
 			}

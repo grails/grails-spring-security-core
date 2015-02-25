@@ -18,7 +18,7 @@ import grails.plugin.springsecurity.FakeApplication
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-
+import grails.util.Holders
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 
@@ -38,10 +38,6 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 	private MockHttpServletRequest request = new MockHttpServletRequest()
 	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
@@ -60,7 +56,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 
 		entryPoint.commence request, response, null
 
-		assertEquals loginFormUrl, response.forwardedUrl
+		assert loginFormUrl == response.forwardedUrl
 	}
 
 	/**
@@ -72,7 +68,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 
 		entryPoint.commence request, response, null
 
-		assertEquals ajaxLoginFormUrl, response.forwardedUrl
+		assert ajaxLoginFormUrl == response.forwardedUrl
 	}
 
 	/**
@@ -86,16 +82,12 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 		entryPoint.ajaxLoginFormUrl = '/foo'
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		grails.util.Holders.setConfig(null)
+		Holders.config = null
 		SecurityRequestHolder.reset()
 	}
 }

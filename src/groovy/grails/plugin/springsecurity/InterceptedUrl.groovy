@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity
 
+import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
@@ -25,6 +26,7 @@ import org.springframework.security.access.ConfigAttribute
  */
 @EqualsAndHashCode(includes='pattern,access,httpMethod')
 @ToString
+@CompileStatic
 class InterceptedUrl {
 	String pattern
 	Collection<ConfigAttribute> configAttributes = Collections.emptyList()

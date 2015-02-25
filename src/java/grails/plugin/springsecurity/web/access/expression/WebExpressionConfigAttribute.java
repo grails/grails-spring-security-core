@@ -46,10 +46,6 @@ public class WebExpressionConfigAttribute implements ConfigAttribute {
 		return expression;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.access.ConfigAttribute#getAttribute()
-	 */
 	public String getAttribute() {
 		return null;
 	}

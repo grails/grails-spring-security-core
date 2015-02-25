@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity
 
+import grails.util.Holders
 import org.springframework.security.access.event.AbstractAuthorizationEvent
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -33,10 +34,6 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	private SecurityEventListener listener
 	private closures
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
@@ -45,15 +42,11 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		SpringSecurityUtils.securityConfig = closures
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		grails.util.Holders.setConfig(null)
+		Holders.config = null
 	}
 
 	/**
@@ -67,7 +60,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		listener.onApplicationEvent(new InteractiveAuthenticationSuccessEvent(
 				new TestingAuthenticationToken("", ""), getClass()))
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -81,7 +74,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		listener.onApplicationEvent new AuthenticationFailureBadCredentialsEvent(
 				new TestingAuthenticationToken("", ""), new BadCredentialsException('bad credentials'))
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -95,7 +88,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		listener.onApplicationEvent(new AuthenticationSuccessEvent(
 				new TestingAuthenticationToken("", "")))
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -108,7 +101,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 
 		listener.onApplicationEvent(new TestAuthorizationEvent())
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -125,7 +118,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 
 		listener.onApplicationEvent(new AuthenticationSwitchUserEvent(authentication, targetUser))
 
-		assertTrue called
+		assert called
 	}
 }
 

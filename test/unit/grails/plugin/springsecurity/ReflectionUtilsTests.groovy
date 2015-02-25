@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.access.intercept.AnnotationFilterInvocationDefinitionTests
+import grails.util.Holders
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -23,10 +24,6 @@ class ReflectionUtilsTests extends GroovyTestCase {
 
 	private FakeApplication application
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
@@ -38,78 +35,74 @@ class ReflectionUtilsTests extends GroovyTestCase {
 
 	void testSetConfigProperty() {
 		def foo = application.config.grails.plugin.springsecurity.foo
-		assertTrue foo instanceof ConfigObject
-		assertEquals 0, foo.size()
+		assert foo instanceof ConfigObject
+		assert 0 == foo.size()
 
 		ReflectionUtils.setConfigProperty 'foo', 'bar'
-		assertEquals 'bar', application.config.grails.plugin.springsecurity.foo
+		assert 'bar' == application.config.grails.plugin.springsecurity.foo
 	}
 
 	void testGetConfigProperty() {
 		def d = ReflectionUtils.getConfigProperty('a.b.c')
-		assertTrue d instanceof ConfigObject
-		assertEquals 0, d.size()
+		assert d instanceof ConfigObject
+		assert 0 == d.size()
 
 		ReflectionUtils.setConfigProperty 'a.b.c', 'd'
-		assertEquals 'd', ReflectionUtils.getConfigProperty('a.b.c')
-		assertEquals 'd', application.config.grails.plugin.springsecurity.a.b.c
+		assert 'd' == ReflectionUtils.getConfigProperty('a.b.c')
+		assert 'd' == application.config.grails.plugin.springsecurity.a.b.c
 	}
 
 	void testGetRoleAuthority() {
 		String authorityName = 'ROLE_FOO'
 		def role = [authority: authorityName]
-		assertEquals authorityName, ReflectionUtils.getRoleAuthority(role)
+		assert authorityName == ReflectionUtils.getRoleAuthority(role)
 	}
 
 	void testGetRequestmapUrl() {
 		String url = '/admin/**'
 		def requestmap = [url: url]
-		assertEquals url, ReflectionUtils.getRequestmapUrl(requestmap)
+		assert url == ReflectionUtils.getRequestmapUrl(requestmap)
 	}
 
 	void testGetRequestmapConfigAttribute() {
 		String configAttribute = 'ROLE_ADMIN'
 		def requestmap = [configAttribute: configAttribute]
-		assertEquals configAttribute, ReflectionUtils.getRequestmapConfigAttribute(requestmap)
+		assert configAttribute == ReflectionUtils.getRequestmapConfigAttribute(requestmap)
 	}
 
 	void testAsList() {
 		def list = ReflectionUtils.asList(null)
-		assertTrue list instanceof List
-		assertEquals 0, list.size()
+		assert list instanceof List
+		assert !list
 
 		list = ReflectionUtils.asList([1,2,3])
-		assertTrue list instanceof List
-		assertEquals 3, list.size()
+		assert list instanceof List
+		assert 3 == list.size()
 
 		String[] strings = ['a', 'b']
 		list = ReflectionUtils.asList(strings)
-		assertTrue list instanceof List
-		assertEquals 2, list.size()
+		assert list instanceof List
+		assert 2 == list.size()
 	}
 
 	void testSplitMap() {
 		def map = [a: 'b', c: ['d', 'e']]
 		List<InterceptedUrl> split = ReflectionUtils.splitMap(map)
-		assertEquals 2, split.size()
+		assert 2 == split.size()
 
 /*		for (InterceptedUrl iu in split) {
-			assertTrue key instanceof String
-			assertTrue value instanceof List
+			assert key instanceof String
+			assert value instanceof List
 		}
-		assertEquals(['b'], split.a)
-		assertEquals(['d', 'e'], split.c)
+		assert ['b'] == split.a
+		assert ['d', 'e'] == split.c
 */	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		grails.util.Holders.setConfig(null)
+		Holders.config = null
 	}
 }

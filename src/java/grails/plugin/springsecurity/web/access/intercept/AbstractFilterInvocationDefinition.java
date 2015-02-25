@@ -48,12 +48,7 @@ import org.springframework.util.StringUtils;
  */
 public abstract class AbstractFilterInvocationDefinition implements FilterInvocationSecurityMetadataSource, InitializingBean {
 
-	protected static final Collection<ConfigAttribute> DENY;
-	static {
-		Collection<ConfigAttribute> list = new ArrayList<ConfigAttribute>(1);
-		list.add(new SecurityConfig("_DENY_"));
-		DENY = Collections.unmodifiableCollection(list);
-	}
+	protected static final Collection<ConfigAttribute> DENY = Collections.singletonList((ConfigAttribute)new SecurityConfig("_DENY_"));
 
 	protected boolean rejectIfNoRule;
 	protected RoleVoter roleVoter;
@@ -74,10 +69,6 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 		// override if necessary
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.access.SecurityMetadataSource#getAttributes(java.lang.Object)
-	 */
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
 		Assert.isTrue(object != null && supports(object.getClass()), "Object must be a FilterInvocation");
 
@@ -173,18 +164,10 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 		// override if necessary
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.access.SecurityMetadataSource#supports(java.lang.Class)
-	 */
 	public boolean supports(Class<?> clazz) {
 		return FilterInvocation.class.isAssignableFrom(clazz);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.access.SecurityMetadataSource#getAllConfigAttributes()
-	 */
 	public Collection<ConfigAttribute> getAllConfigAttributes() {
 		try {
 			initialize();
@@ -275,7 +258,7 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 			}
 		}
 
-		if(existing != null) {
+		if (existing != null) {
 			compiled.remove(existing);
 		}
 

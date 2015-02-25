@@ -25,11 +25,6 @@ import org.springframework.security.core.userdetails.UserDetails;
  */
 public class NullSaltSource implements SaltSource {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.dao.SaltSource#getSalt(
-	 * 	org.springframework.security.core.userdetails.UserDetails)
-	 */
 	public Object getSalt(final UserDetails user) {
 		return null;
 	}

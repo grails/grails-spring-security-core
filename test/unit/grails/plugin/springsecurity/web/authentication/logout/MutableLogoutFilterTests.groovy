@@ -31,8 +31,7 @@ import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuc
 class MutableLogoutFilterTests extends GroovyTestCase {
 
 	private final String afterLogoutUrl = '/loggedout'
-	private final logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler(
-			defaultTargetUrl: afterLogoutUrl)
+	private final logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler(defaultTargetUrl: afterLogoutUrl)
 	private final handlers = []
 	private final filter = new MutableLogoutFilter(logoutSuccessHandler)
 
@@ -65,13 +64,13 @@ class MutableLogoutFilterTests extends GroovyTestCase {
 
 		// not a logout url, so chain.doFilter() is called
 		filter.doFilter request1, response1, chain1
-		assertNull response1.redirectedUrl
+		assert !response1.redirectedUrl
 
 		filter.doFilter request2, response2, chain2
-		assertNotNull response2.redirectedUrl
+		assert response2.redirectedUrl
 
-		assertTrue chain1Called
-		assertFalse chain2Called
-		assertEquals 5, logoutCount
+		assert chain1Called
+		assert !chain2Called
+		assert 5 == logoutCount
 	}
 }

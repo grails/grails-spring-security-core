@@ -16,6 +16,9 @@ package grails.plugin.springsecurity.annotation;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes;
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
+import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -48,5 +51,10 @@ public class SecuredClosureDelegate extends WebSecurityExpressionRoot {
 
 	public ApplicationContext getCtx() {
 		return ctx;
+	}
+
+	public GrailsParameterMap getParams() {
+		GrailsWebRequest gwr = (GrailsWebRequest)request.getAttribute(GrailsApplicationAttributes.WEB_REQUEST);
+		return gwr == null ? null : gwr.getParams();
 	}
 }

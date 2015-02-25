@@ -67,6 +67,8 @@ security {
 	// user caching
 	cacheUsers = false
 
+	useExternalClasses = false
+
 	// user and role class properties
 	userLookup {
 		userDomainClassName = null // must be set if using UserDetailsService
@@ -78,8 +80,6 @@ security {
 		accountLockedPropertyName = 'accountLocked'
 		passwordExpiredPropertyName = 'passwordExpired'
 		authorityJoinClassName = null // must be set if using UserDetailsService
-
-		useExternalClasses = false
 	}
 	authority {
 		className = null // must be set if using UserDetailsService

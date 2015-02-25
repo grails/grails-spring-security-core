@@ -36,12 +36,6 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 
 	protected String ajaxAuthenticationFailureUrl;
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler#onAuthenticationFailure(
-	 * 	javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
-	 * 	org.springframework.security.core.AuthenticationException)
-	 */
 	@Override
 	public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response,
 			final AuthenticationException exception) throws IOException, ServletException {
@@ -63,10 +57,6 @@ public class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthe
 		ajaxAuthenticationFailureUrl = url;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
 	public void afterPropertiesSet() {
 		Assert.notNull(ajaxAuthenticationFailureUrl, "ajaxAuthenticationFailureUrl is required");
 	}

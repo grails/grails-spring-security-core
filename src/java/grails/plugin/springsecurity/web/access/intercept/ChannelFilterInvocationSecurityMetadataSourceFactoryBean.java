@@ -41,34 +41,18 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 	protected Map<String, String> definition;
 	protected DefaultFilterInvocationSecurityMetadataSource source;
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.FactoryBean#getObject()
-	 */
 	public FilterInvocationSecurityMetadataSource getObject() {
 		return source;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.FactoryBean#getObjectType()
-	 */
 	public Class<DefaultFilterInvocationSecurityMetadataSource> getObjectType() {
 		return DefaultFilterInvocationSecurityMetadataSource.class;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.FactoryBean#isSingleton()
-	 */
 	public boolean isSingleton() {
 		return true;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
 	public void afterPropertiesSet() {
 		Assert.notNull(definition, "definition map is required");
 		Assert.notNull(urlMatcher, "urlMatcher is required");

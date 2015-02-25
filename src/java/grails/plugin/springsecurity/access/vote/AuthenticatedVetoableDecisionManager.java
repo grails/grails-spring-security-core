@@ -33,10 +33,6 @@ import org.springframework.security.core.Authentication;
  */
 public class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.access.AccessDecisionManager#decide(org.springframework.security.core.Authentication, java.lang.Object, java.util.Collection)
-	 */
 	public void decide(final Authentication authentication, final Object object, final Collection<ConfigAttribute> configAttributes)
 			throws AccessDeniedException, InsufficientAuthenticationException {
 

@@ -51,11 +51,6 @@ public class MutableLogoutFilter extends LogoutFilter {
 		logoutSuccessHandler = successHandler;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.logout.LogoutFilter#doFilter(
-	 * 	javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
-	 */
 	@Override
 	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 			throws IOException, ServletException {
