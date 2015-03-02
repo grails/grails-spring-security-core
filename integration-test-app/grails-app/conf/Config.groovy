@@ -162,6 +162,8 @@ grails {
             interceptUrlMap = [
                 '/testController/**':   ['roleInMap']
             ]
+
+            logout.additionalHandlerNames =[ 'screamingBratLogoutHandler']
 		}
 	}
 }
