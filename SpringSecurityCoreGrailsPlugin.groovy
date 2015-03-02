@@ -1137,9 +1137,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		if (conf.x509.subjectDnClosure) {
-			x509PrincipalExtractor(ClosureX509PrincipalExtractor) {
-				subjectDnRegex = conf.x509.subjectDnClosure
-			}
+			x509PrincipalExtractor(ClosureX509PrincipalExtractor)
 		}
 		else {
 			x509PrincipalExtractor(SubjectDnX509PrincipalExtractor) {
