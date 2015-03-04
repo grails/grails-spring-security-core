@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import grails.transaction.Transactional
+
 import org.codehaus.groovy.grails.commons.ClassPropertyFetcher
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.springframework.core.annotation.AnnotationUtils
@@ -21,7 +23,6 @@ import org.springframework.security.authentication.AuthenticationTrustResolverIm
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * Unit tests for SpringSecurityService.

@@ -90,12 +90,16 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 		fid.initialize()
 		assert 2 == fid.configAttributeMap.size()
 
-		def attributes = fid.configAttributeMap[new InterceptedUrl()]
+		def interceptedUrls = ([] + fid.configAttributeMap).sort { it.pattern }
+		assert interceptedUrls[0].pattern == '/bar/**'
+		assert !interceptedUrls[0].httpMethod
+		assert null == interceptedUrls[0].https
+		assert interceptedUrls[0].configAttributes*.attribute.sort() == ['ROLE_BAR', 'ROLE_BAZ']
 
-		fid.resetConfigs()
-
-		fid.initialize()
-		assert !fid.configAttributeMap
+		assert interceptedUrls[1].pattern == '/foo/**'
+		assert interceptedUrls[1].httpMethod == HttpMethod.POST
+		assert null == interceptedUrls[1].https
+		assert interceptedUrls[1].configAttributes*.attribute == ['ROLE_ADMIN']
 	}
 
 	void testDetermineUrl() {
