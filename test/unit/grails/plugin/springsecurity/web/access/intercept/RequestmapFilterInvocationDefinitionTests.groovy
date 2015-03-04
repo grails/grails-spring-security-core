@@ -16,7 +16,7 @@ package grails.plugin.springsecurity.web.access.intercept
 
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.util.Holders
+
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -34,7 +34,6 @@ class RequestmapFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		Holders.config = null
 	}
 
 	void testSplit() {
@@ -75,7 +74,6 @@ class RequestmapFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	}
 
 	void testReset() {
-		def ctx = initCtx()
 
 		fid.roleVoter = ctx.getBean('roleVoter')
 		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
@@ -88,7 +86,6 @@ class RequestmapFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	}
 
 	void testInitialize() {
-		def ctx = initCtx()
 
 		fid.roleVoter = ctx.getBean('roleVoter')
 		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')

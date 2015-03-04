@@ -16,7 +16,7 @@ package grails.plugin.springsecurity.web.authentication
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.util.Holders
+
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.BadCredentialsException
@@ -44,9 +44,7 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 		}
 		handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
 
-		def config = new ConfigObject()
-		config.ajaxHeader = 'ajaxHeader'
-		SpringSecurityUtils.securityConfig = config
+		SpringSecurityUtils.securityConfig = [ajaxHeader: 'ajaxHeader'] as ConfigObject
 
 		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
 		assert redirectCalled
@@ -65,9 +63,7 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 		}
 		handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
 
-		def config = new ConfigObject()
-		config.ajaxHeader = 'ajaxHeader'
-		SpringSecurityUtils.securityConfig = config
+		SpringSecurityUtils.securityConfig = [ajaxHeader: 'ajaxHeader'] as ConfigObject
 
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
 		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
@@ -93,7 +89,6 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		Holders.config = null
 		SecurityRequestHolder.reset()
 	}
 }

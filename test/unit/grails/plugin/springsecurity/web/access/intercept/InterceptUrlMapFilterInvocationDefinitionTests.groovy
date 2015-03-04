@@ -17,7 +17,7 @@ package grails.plugin.springsecurity.web.access.intercept
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.util.Holders
+
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsWebRequest
 import org.codehaus.groovy.grails.web.util.WebUtils
@@ -63,8 +63,6 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 				['/foo/**': 'ROLE_ADMIN',
 				 '/bar/**': ['ROLE_BAR', 'ROLE_BAZ']])
 
-		def ctx = initCtx()
-
 		fid.roleVoter = ctx.getBean('roleVoter')
 		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
 
@@ -86,7 +84,6 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 
 		fid.roleVoter = new RoleVoter()
 		fid.authenticatedVoter = new AuthenticatedVoter()
-//		fid.expressionHandler = new DefaultWebSecurityExpressionHandler()
 
 		assert !fid.configAttributeMap
 
@@ -171,7 +168,6 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 		super.tearDown()
 		ReflectionUtils.application = null
 		SpringSecurityUtils.resetSecurityConfig()
-		Holders.config = null
 	}
 }
 

@@ -15,7 +15,6 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.util.Holders
 
 import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
@@ -76,7 +75,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	 * Test getPrincipalAuthorities() when not authenticated.
 	 */
 	void testGetPrincipalAuthoritiesNoAuth() {
-		assert SpringSecurityUtils.getPrincipalAuthorities().empty
+		assert !SpringSecurityUtils.principalAuthorities
 	}
 
 	/**
@@ -84,21 +83,18 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	 */
 	void testGetPrincipalAuthoritiesNoRoles() {
 		SecurityTestUtils.authenticate()
-		assert SpringSecurityUtils.getPrincipalAuthorities().empty
+		assert !SpringSecurityUtils.principalAuthorities
 	}
 
 	/**
 	 * Test getPrincipalAuthorities().
 	 */
 	void testGetPrincipalAuthorities() {
-		def authorities = []
-		(1..10).each { i ->
-			authorities << new SimpleGrantedAuthority("role${i}")
-		}
+		def authorities = (1..10).collect { new SimpleGrantedAuthority("role$it") }
 
-		SecurityTestUtils.authenticate(null, null, authorities)
+		SecurityTestUtils.authenticate null, null, authorities
 
-		assert authorities == SpringSecurityUtils.getPrincipalAuthorities()
+		assert authorities == SpringSecurityUtils.principalAuthorities
 	}
 
 	/**
@@ -315,13 +311,9 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	private void initRoleHierarchy(String hierarchy) {
 		def roleHierarchy = new RoleHierarchyImpl(hierarchy: hierarchy)
 		def ctx = [getBean: { String name -> roleHierarchy }, containsBean: { String name -> true }] as ApplicationContext
-		def application = new FakeApplication() {
-			public ApplicationContext getMainContext() {
-     		   return ctx;
-    		}
+		SpringSecurityUtils.application = new FakeApplication() {
+			ApplicationContext getMainContext() { ctx }
 		}
-		Holders.grailsApplication = application
-		SpringSecurityUtils.application = application
 	}
 
 	@Override
@@ -329,8 +321,6 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SecurityTestUtils.logout()
 		SpringSecurityUtils.resetSecurityConfig()
-		Holders.grailsApplication = null
-		Holders.config = null
 		SpringSecurityUtils.application = null
 		ReflectionUtils.application = null
 		SecurityRequestHolder.reset()

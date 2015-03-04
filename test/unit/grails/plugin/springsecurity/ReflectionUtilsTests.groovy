@@ -14,9 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.plugin.springsecurity.web.access.intercept.AnnotationFilterInvocationDefinitionTests
-import grails.util.Holders
-
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
@@ -27,10 +24,8 @@ class ReflectionUtilsTests extends GroovyTestCase {
 	@Override
 	protected void setUp() {
 		super.setUp()
-		def tests = new AnnotationFilterInvocationDefinitionTests()
-		tests.setUp()
-		tests.initCtx()
-		application = tests.application
+		def app = TestUtils.createTestApplication()
+		application = ReflectionUtils.application = app.application
 	}
 
 	void testSetConfigProperty() {
@@ -103,6 +98,5 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		Holders.config = null
 	}
 }

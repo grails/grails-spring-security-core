@@ -39,7 +39,6 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
 
-
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
  *
@@ -73,7 +72,7 @@ class SpringSecurityUtilsIntegrationTests {
 	}
 
 	@AfterClass
-	static void remoteTestUsers() {
+	static void removeTestUsers() {
 		TestUser.withNewTransaction {
 			TestUserRole.deleteAll(TestUserRole.list())
 			TestRole.deleteAll(TestRole.list())
@@ -88,7 +87,7 @@ class SpringSecurityUtilsIntegrationTests {
 
 	void testClientRegisterFilter() {
 
-		def map = SpringSecurityUtils.getConfiguredOrderedFilters()
+		def map = SpringSecurityUtils.configuredOrderedFilters
 		assert 8 == map.size()
 		assert map[300] instanceof SecurityContextPersistenceFilter
 		assert map[400] instanceof LogoutFilter
@@ -158,7 +157,7 @@ class SpringSecurityUtilsIntegrationTests {
 		SpringSecurityUtils.reauthenticate username, null
 		assert springSecurityService.loggedIn
 
-		Throwable otherException=null
+		Throwable otherException
 		Thread.start {
 			try {
 				assert springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
@@ -169,7 +168,8 @@ class SpringSecurityUtilsIntegrationTests {
 				}
 
 				assert !springSecurityService.loggedIn, "should have reset auth"
-			} catch (Throwable e) {
+			}
+			catch (Throwable e) {
 				otherException = e
 			}
 		}.join()
@@ -183,7 +183,7 @@ class SpringSecurityUtilsIntegrationTests {
 
 		assert !springSecurityService.loggedIn
 
-		Throwable otherException=null
+		Throwable otherException
 		Thread.start {
 			try {
 				assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
@@ -194,7 +194,8 @@ class SpringSecurityUtilsIntegrationTests {
 				}
 
 				assert !springSecurityService.loggedIn, "should have reset auth"
-			} catch (Throwable e) {
+			}
+			catch (Throwable e) {
 				otherException=e
 			}
 		}.join()
@@ -211,7 +212,7 @@ class SpringSecurityUtilsIntegrationTests {
 		SpringSecurityUtils.reauthenticate username, null
 		assert springSecurityService.loggedIn
 
-		Throwable otherException=null
+		Throwable otherException
 		Thread.start {
 			try {
 				assert springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
@@ -222,8 +223,9 @@ class SpringSecurityUtilsIntegrationTests {
 				}
 
 				assert !springSecurityService.loggedIn, "should have reset auth"
-			} catch (Throwable e) {
-				otherException=e
+			}
+			catch (Throwable e) {
+				otherException = e
 			}
 		}.join()
 		if (otherException) {

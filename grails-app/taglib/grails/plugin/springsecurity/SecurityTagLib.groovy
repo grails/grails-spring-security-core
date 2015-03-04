@@ -44,17 +44,6 @@ class SecurityTagLib {
 
 	protected Map<String, Expression> expressionCache = [:]
 
-	static returnObjectForTags = ['getUserObject']
-
-	/**
-         * Returns userObject for current user
-         */
-        def getUserObject = {
-            if (springSecurityService.isLoggedIn()) {
-                return springSecurityService.getCurrentUser()
-            }
-        }
-
 	/**
 	 * Renders the body if all of the specified roles are granted to the user. Roles are
 	 * specified in the 'roles' attribute which is a comma-delimited string.
@@ -230,6 +219,7 @@ class SecurityTagLib {
 		if (!springSecurityService.isLoggedIn()) {
 			return false
 		}
+
 		def auth = springSecurityService.authentication
 		String expressionText = attrs.remove('expression')
 		if (expressionText) {
@@ -247,11 +237,11 @@ class SecurityTagLib {
 				throwTagError "Tag [$tagName] requires an expression, a URL, or controller/action/mapping attributes to create a URL"
 			}
 			if (mapping) {
-				url = g.createLink(mapping: mapping).toString()
+				url = g.createLink(mapping: mapping)
 			}
 			else {
 				String action = attrs.remove('action')
-				url = g.createLink(controller: controller, action: action, base: '/').toString()
+				url = g.createLink(controller: controller, action: action, base: '/')
 			}
 		}
 

@@ -4,6 +4,7 @@ import spock.lang.Stepwise
 
 @Stepwise
 class InheritanceSecuritySpec extends AbstractSecuritySpec {
+
 	def setupSpec() {
 		go 'testData/addTestUsers'
 	}
@@ -22,7 +23,6 @@ class InheritanceSecuritySpec extends AbstractSecuritySpec {
 		where:
 			uri << ['base/index', 'extended/index', 'base/delete', 'extended/delete', 'base/update', 'extended/update']
 	}
-
 
 	def 'verify security for testuser'() {
 		when:
@@ -67,9 +67,7 @@ class InheritanceSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 			pageSource =~ /ExtendedController - UPDATED/
-
 	}
-
 
 	def 'verify security for other user'() {
 		when:
@@ -114,7 +112,5 @@ class InheritanceSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 			$('.errors').text() == "Sorry, you're not authorized to view this page."
-
 	}
-
 }

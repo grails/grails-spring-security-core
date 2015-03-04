@@ -163,12 +163,12 @@ function authAjax() {
 
 	var form = $('#ajaxLoginForm');
 	var config = {
-		type : 'post'
-		,url : form.attr('action')
-		,data : form.serialize()
-		,async : false
-		,dataType : 'JSON'
-		,success: function(response) {
+		type: 'post',
+		url: form.attr('action'),
+		data: form.serialize(),
+		async: false,
+		dataType: 'JSON',
+		success: function(response) {
 			form[0].reset();
 			$('#loginMessage').empty();
 			$('#ajaxLogin').jqmHide();
@@ -176,17 +176,18 @@ function authAjax() {
 				// execute the saved event.success function
 				onLogin(response);
 			}
-		}
-		,error : function (response) {
+		},
+		error: function (response) {
 			var responseText = response.responseText || '[]';
 			var json = responseText.evalJSON();
 			if (json.error) {
 				$('#loginMessage').html("<span class='errorMessage'>" + json.error + '</error>');
-			} else {
+			}
+			else {
 				$('#loginMessage').html(responseText);
 			}
-		}
-		,beforeSend : function(xhr, event) {
+		},
+		beforeSend: function(xhr, event) {
 			//console.log("overriding default behaviour");
 		}
 	}
@@ -257,17 +258,18 @@ or
 
 {code}
 <script>
-      var detailConfig = {
-		type      : 'post'
-		,async    : false
-		,returnType : 'html'
-		,url      : '/post/addPostAjax'
-		,success  : function(data) {
-                  $('#firstPost').html(data);
-			clearPost(e);
-		}
+var detailConfig = {
+	type: 'post',
+	async: false,
+	returnType: 'html',
+	url: '/post/addPostAjax',
+	success: function(data) {
+		$('#firstPost').html(data);
+		clearPost(e);
 	}
-	$.ajax(detailConfig
+};
+
+$.ajax(detailConfig);
 </script>
 {code}
 

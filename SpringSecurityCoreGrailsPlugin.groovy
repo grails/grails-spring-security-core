@@ -624,7 +624,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		filterNames.each { int order, String name ->
 			def filter = ctx.getBean(name)
 			allConfiguredFilters[name] = filter
-			SpringSecurityUtils.getConfiguredOrderedFilters()[order] = filter
+			SpringSecurityUtils.configuredOrderedFilters[order] = filter
 		}
 
 		if (conf.filterChain.chainMap) {
@@ -666,7 +666,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		filterChain.filterChainMap = filterChainMap
 
 		// build voters list here to give dependent plugins a chance to register some
-		def voterNames = conf.voterNames ?: SpringSecurityUtils.getVoterNames()
+		def voterNames = conf.voterNames ?: SpringSecurityUtils.voterNames
 		ctx.accessDecisionManager.decisionVoters = createBeanList(voterNames, ctx)
 
 		// build providers list here to give dependent plugins a chance to register some
@@ -675,7 +675,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			providerNames.addAll conf.providerNames
 		}
 		else {
-			providerNames.addAll SpringSecurityUtils.getProviderNames()
+			providerNames.addAll SpringSecurityUtils.providerNames
 			if (conf.useX509) {
 				providerNames << 'x509AuthenticationProvider'
 			}
@@ -683,12 +683,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 		ctx.authenticationManager.providers = createBeanList(providerNames, ctx)
 
 		// build handlers list here to give dependent plugins a chance to register some
-		def logoutHandlerNames = conf.logout.handlerNames ?: SpringSecurityUtils.getLogoutHandlerNames()
+		def logoutHandlerNames = conf.logout.handlerNames ?: SpringSecurityUtils.logoutHandlerNames
 		ctx.logoutHandlers.clear()
 		ctx.logoutHandlers.addAll createBeanList(logoutHandlerNames, ctx)
 
 		// build after-invocation provider names here to give dependent plugins a chance to register some
-		def afterInvocationManagerProviderNames = conf.afterInvocationManagerProviderNames ?: SpringSecurityUtils.getAfterInvocationManagerProviderNames()
+		def afterInvocationManagerProviderNames = conf.afterInvocationManagerProviderNames ?: SpringSecurityUtils.afterInvocationManagerProviderNames
 		if (afterInvocationManagerProviderNames) {
 			ctx.afterInvocationManager.providers = createBeanList(afterInvocationManagerProviderNames, ctx)
 		}
@@ -889,7 +889,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		closureVoter(ClosureVoter)
 
 		// create the default list here, will be replaced in doWithApplicationContext
-		def voters = createRefList(SpringSecurityUtils.getVoterNames())
+		def voters = createRefList(SpringSecurityUtils.voterNames)
 
 		/** accessDecisionManager */
 		accessDecisionManager(AuthenticatedVetoableDecisionManager) {
@@ -901,7 +901,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private configureAuthenticationManager = { conf ->
 
 		// create the default list here, will be replaced in doWithApplicationContext
-		def providerRefs = createRefList(SpringSecurityUtils.getProviderNames())
+		def providerRefs = createRefList(SpringSecurityUtils.providerNames)
 
 		/** authenticationManager */
 		authenticationManager(ProviderManager) {
@@ -998,7 +998,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			}
 
 			// add in filters contributed by secondary plugins
-			orderedNames.putAll SpringSecurityUtils.getOrderedFilters()
+			orderedNames.putAll SpringSecurityUtils.orderedFilters
 		}
 
 		orderedNames

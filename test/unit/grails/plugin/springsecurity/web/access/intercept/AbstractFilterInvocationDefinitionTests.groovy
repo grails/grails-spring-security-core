@@ -15,36 +15,23 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import grails.plugin.springsecurity.ReflectionUtils
-import groovy.util.GroovyTestCase;
-
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.springframework.security.access.vote.AuthenticatedVoter
-import org.springframework.security.access.vote.RoleVoter
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-import org.springframework.web.context.WebApplicationContext
+import grails.plugin.springsecurity.TestUtils
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 abstract class AbstractFilterInvocationDefinitionTests extends GroovyTestCase {
 
-	protected final TestApplication application = new TestApplication()
+	protected TestApplication application
+	protected ctx
+	protected Map beans
 
 	protected void setUp() {
 		super.setUp()
-		ReflectionUtils.application = application
-	}
-
-	protected initCtx() {
-		def beans = [(GrailsApplication.APPLICATION_ID): application,
-						 webExpressionHandler: new DefaultWebSecurityExpressionHandler(),
-						 roleVoter: new RoleVoter(),
-						 authenticatedVoter: new AuthenticatedVoter()]
-
-		def ctx = [getBean: { String name, Class<?> c = null -> beans[name] },
-					  containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
-		application.mainContext = ctx
-		ctx
+		def app = TestUtils.createTestApplication()
+		application = ReflectionUtils.application = app.application
+		beans = app.beans
+		ctx = app.ctx
 	}
 
 	protected void tearDown() {

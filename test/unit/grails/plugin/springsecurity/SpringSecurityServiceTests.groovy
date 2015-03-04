@@ -14,7 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.util.Holders
 import org.codehaus.groovy.grails.commons.ClassPropertyFetcher
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.springframework.core.annotation.AnnotationUtils
@@ -31,15 +30,12 @@ import org.springframework.transaction.annotation.Transactional
  */
 class SpringSecurityServiceTests extends GroovyTestCase {
 
-	private SpringSecurityService service
+	private SpringSecurityService service = new SpringSecurityService()
 
 	@Override
 	protected void setUp() {
 		super.setUp()
-		service = new SpringSecurityService()
-		def config = new ConfigObject()
-		Holders.config = config
-		ReflectionUtils.application = new DefaultGrailsApplication(config: config)
+		ReflectionUtils.application = new DefaultGrailsApplication(config: new ConfigObject())
 	}
 
 	/**
@@ -63,7 +59,7 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 	 * Test encodePassword().
 	 */
 	void testEncodePassword() {
-		service.passwordEncoder = [encodePassword: { String pwd, Object salt -> pwd + '_encoded' }]
+		service.passwordEncoder = [encodePassword: { String pwd, salt -> pwd + '_encoded' }]
 		assert 'passw0rd_encoded' == service.encodePassword('passw0rd')
 	}
 
@@ -101,7 +97,6 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SecurityTestUtils.logout()
-		Holders.config = null
 		SpringSecurityUtils.securityConfig = null
 		ReflectionUtils.application = null
 	}

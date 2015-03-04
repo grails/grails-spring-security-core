@@ -16,7 +16,7 @@ package grails.plugin.springsecurity.web.authentication
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.util.Holders
+
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -43,9 +43,7 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 		handler.defaultTargetUrl = DEFAULT_TARGET_URL
 		handler.ajaxSuccessUrl = AJAX_SUCCESS_URL
 
-		def config = new ConfigObject()
-		config.ajaxHeader = 'ajaxHeader'
-		SpringSecurityUtils.securityConfig = config
+		SpringSecurityUtils.securityConfig = [ajaxHeader: 'ajaxHeader'] as ConfigObject
 		SecurityRequestHolder.set request, response
 	}
 
@@ -71,7 +69,7 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 		SavedRequest savedRequest = [getRedirectUrl: { -> expectedRedirect }] as SavedRequest
 		boolean removeRequestCalled = false
 		handler.requestCache = [removeRequest: { req, res -> removeRequestCalled = true },
-		                         getRequest: { req, res -> savedRequest }] as RequestCache
+		                        getRequest: { req, res -> savedRequest }] as RequestCache
 		String redirectUrl
 		handler.redirectStrategy = [sendRedirect: { req, res, url -> redirectUrl = url }] as RedirectStrategy
 
@@ -85,7 +83,6 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.securityConfig = null
-		Holders.config = null
 		SecurityRequestHolder.reset()
 	}
 }

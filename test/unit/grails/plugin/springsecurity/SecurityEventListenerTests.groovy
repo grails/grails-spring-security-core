@@ -14,7 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.util.Holders
 import org.springframework.security.access.event.AbstractAuthorizationEvent
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.TestingAuthenticationToken
@@ -31,14 +30,12 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  */
 class SecurityEventListenerTests extends GroovyTestCase {
 
-	private SecurityEventListener listener
-	private closures
+	private SecurityEventListener listener = new SecurityEventListener()
+	private closures = new ConfigObject()
 
 	@Override
 	protected void setUp() {
 		super.setUp()
-		listener = new SecurityEventListener()
-		closures = new ConfigObject()
 		SpringSecurityUtils.securityConfig = closures
 	}
 
@@ -46,7 +43,6 @@ class SecurityEventListenerTests extends GroovyTestCase {
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		Holders.config = null
 	}
 
 	/**
@@ -127,6 +123,6 @@ class SecurityEventListenerTests extends GroovyTestCase {
  */
 class TestAuthorizationEvent extends AbstractAuthorizationEvent {
 	TestAuthorizationEvent() {
-		super(new Object())
+		super(42)
 	}
 }

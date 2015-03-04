@@ -24,7 +24,6 @@ import javax.servlet.ServletContext
 
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
 import org.codehaus.groovy.grails.commons.GrailsClass
-import grails.util.Holders
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
@@ -172,7 +171,6 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		ServletContext servletContext = new MockServletContext()
 
-		def ctx = initCtx()
 		servletContext.setAttribute WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx
 
 		def mappingEvaluator = new DefaultUrlMappingEvaluator(servletContext)
@@ -247,12 +245,11 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	protected void tearDown() {
 		super.tearDown()
 		RequestContextHolder.resetRequestAttributes()
-		Holders.servletContext = null
 	}
 }
 
 class TestApplication extends FakeApplication {
-	GrailsClass getArtefactForFeature(String artefactType, Object featureID) { [:] as GrailsClass }
+	GrailsClass getArtefactForFeature(String artefactType, featureID) { [:] as GrailsClass }
 }
 
 class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocationDefinition {
