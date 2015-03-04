@@ -20,6 +20,9 @@ import grails.test.mixin.integration.IntegrationTestMixin
 import org.junit.After
 import org.junit.Before
 
+import test.TestRequestmap
+import test.TestRole
+
 /**
  * Integration tests for SpringSecurityService.
  *

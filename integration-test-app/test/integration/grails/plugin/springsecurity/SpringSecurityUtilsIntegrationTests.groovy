@@ -39,6 +39,10 @@ import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
 
+import test.TestRole
+import test.TestUser
+import test.TestUserRole
+
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
  *
@@ -160,7 +164,7 @@ class SpringSecurityUtilsIntegrationTests {
 		Throwable otherException
 		Thread.start {
 			try {
-				assert springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
+				assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
 
 				SpringSecurityUtils.doWithAuth username, {
 					assert springSecurityService.loggedIn
@@ -215,7 +219,7 @@ class SpringSecurityUtilsIntegrationTests {
 		Throwable otherException
 		Thread.start {
 			try {
-				assert springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
+				assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
 
 				SpringSecurityUtils.doWithAuth 'other', {
 					assert springSecurityService.loggedIn

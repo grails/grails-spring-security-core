@@ -21,6 +21,13 @@ import org.junit.After
 import org.junit.Before
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
+import test.TestRole
+import test.TestRoleGroup
+import test.TestRoleGroupRoles
+import test.TestUser
+import test.TestUserRole
+import test.TestUserRoleGroup
+
 /**
  * Integration tests for GormUserDetailsService.
  *
