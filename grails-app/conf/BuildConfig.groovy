@@ -1,6 +1,6 @@
 if (System.getenv('TRAVIS_BRANCH')) {
-	grails.project.repos.grailsCentral.username = System.getenv("GRAILS_CENTRAL_USERNAME")
-	grails.project.repos.grailsCentral.password = System.getenv("GRAILS_CENTRAL_PASSWORD")
+	grails.project.repos.grailsCentral.username = System.getenv('GRAILS_CENTRAL_USERNAME')
+	grails.project.repos.grailsCentral.password = System.getenv('GRAILS_CENTRAL_PASSWORD')
 }
 grails.project.work.dir = 'target'
 grails.project.docs.output.dir = 'docs/manual' // for backwards-compatibility, the docs are checked into gh-pages branch
@@ -19,7 +19,7 @@ grails.project.dependency.resolution = {
 
 	dependencies {
 
-		String springSecurityVersion = '3.2.5.RELEASE'
+		String springSecurityVersion = '3.2.6.RELEASE'
 
 		compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 			excludes 'aopalliance', 'aspectjrt', 'cglib-nodep', 'commons-collections', 'commons-logging',
@@ -50,7 +50,7 @@ grails.project.dependency.resolution = {
 			export = false
 		}
 
-		compile ":hibernate:3.6.10.14", {
+		compile ':hibernate:3.6.10.14', {
 			export = false
 		}
 	}
