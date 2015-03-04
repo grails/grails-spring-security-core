@@ -105,7 +105,7 @@ class GormUserDetailsServiceTests  {
 		assert enabled == details.accountNonExpired
 		assert enabled == details.accountNonLocked
 		assert enabled == details.credentialsNonExpired
-		assert ([ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME] == details.authorities*.authority.sort()
+		assert [ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME] == details.authorities*.authority.sort()
 	}
 
 	void testLoadUserByUsername_Groups() {
