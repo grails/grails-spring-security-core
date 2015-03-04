@@ -1,7 +1,8 @@
-import com.testapp.TestUser
 import grails.util.Metadata
 
 import org.springframework.security.access.annotation.Secured
+
+import com.testapp.TestUser
 
 @Secured('permitAll')
 class HackController {

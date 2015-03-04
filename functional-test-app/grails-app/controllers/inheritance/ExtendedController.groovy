@@ -7,7 +7,7 @@ class ExtendedController extends BaseController {
 		render 'ExtendedController'
 	}
 
-	@Secured(["ROLE_EXTENDED"])
+	@Secured('ROLE_EXTENDED')
 	def update() {
 		render 'ExtendedController - UPDATED'
 	}

@@ -14,9 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import static org.springframework.security.authentication.dao.DaoAuthenticationProvider.USER_NOT_FOUND_PASSWORD
 import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEncoder
-
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -27,8 +26,6 @@ class DigestAuthPasswordEncoderTests extends GroovyTestCase {
 	def passwordEncoder
 
 	void testInitialize() {
-
-		String USER_NOT_FOUND_PASSWORD = DaoAuthenticationProvider.USER_NOT_FOUND_PASSWORD
 
 		def providerPasswordEncoder = daoAuthenticationProvider.passwordEncoder
 		assert passwordEncoder.is(providerPasswordEncoder)

@@ -56,18 +56,18 @@ class SpringSecurityUtilsIntegrationTests {
 
 	@Before
 	void setUp() {
-		if (testUser == null) {
-			TestUser.withNewTransaction {
-				def user = new TestUser(loginName: username, enabld: true,
-					passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
-				testUser = user
-				def role = new TestRole(auth: 'ROLE_ADMIN', description: 'admin').save(failOnError: true)
-				TestUserRole.create user, role, true
+		if (testUser) return
 
-				user = new TestUser(loginName: 'other', enabld: true,
-					passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
-				TestUserRole.create user, role, true
-			}
+		TestUser.withNewTransaction {
+			def user = new TestUser(loginName: username, enabld: true,
+				passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+			testUser = user
+			def role = new TestRole(auth: 'ROLE_ADMIN', description: 'admin').save(failOnError: true)
+			TestUserRole.create user, role, true
+
+			user = new TestUser(loginName: 'other', enabld: true,
+				passwrrd: springSecurityService.encodePassword('password')).save(failOnError: true)
+			TestUserRole.create user, role, true
 		}
 	}
 

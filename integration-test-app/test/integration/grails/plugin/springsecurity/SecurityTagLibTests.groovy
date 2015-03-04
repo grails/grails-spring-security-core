@@ -201,26 +201,26 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		assertOutputEquals '', """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
 	}
 
-    void testLinkViaExpression() {
-        String body = "Test link"
+	void testLinkViaExpression() {
+		String body = "Test link"
 
-        assertOutputEquals '', """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
+		assertOutputEquals '', """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
 
-        authenticate 'role1'
-        assertOutputEquals "test", """<sec:access expression="hasRole('role1')">test</sec:access>"""
-        assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
-    }
+		authenticate 'role1'
+		assertOutputEquals "test", """<sec:access expression="hasRole('role1')">test</sec:access>"""
+		assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
+	}
 
-    @groovy.transform.NotYetImplemented
-    void testLinkViaUrl() {
-        String body = "Test link"
+	@groovy.transform.NotYetImplemented
+	void testLinkViaUrl() {
+		String body = "Test link"
 
-        assertOutputEquals '', """<sec:link controller="testController" action="testAction"></sec:link>"""
+		assertOutputEquals '', """<sec:link controller="testController" action="testAction"></sec:link>"""
 
-        // role 'roleInMap' mapped to controller via interceptUrlMap in Config.groovy
-        authenticate 'roleInMap'
-        assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction">${body}</sec:link>"""
-    }
+		// role 'roleInMap' mapped to controller via interceptUrlMap in Config.groovy
+		authenticate 'roleInMap'
+		assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction">${body}</sec:link>"""
+	}
 
 	private void switchUser() {
 		def filter = new SwitchUserFilter()
@@ -267,35 +267,27 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 
 class NoDomainClass extends User {
 
-	private final String fullName
+	final String fullName
 
 	NoDomainClass(String username, String name, String roles) {
 		super(username, 'password', true, true, true, true, SpringSecurityUtils.parseAuthoritiesString(roles))
 		fullName = name
 	}
-
-	String getFullName() { fullName }
 }
 
 class HasDomainClass extends User {
 
-	private final String fullName
-	private final domainClass
+	final String fullName
+	final domainClass
 
 	HasDomainClass(String username, String name, String roles, dc) {
 		super(username, 'password', true, true, true, true, SpringSecurityUtils.parseAuthoritiesString(roles))
 		fullName = name
 		domainClass = dc
 	}
-
-	String getFullName() { fullName }
-
-	def getDomainClass() { domainClass }
 }
 
 class SimplePrincipal implements Principal {
 	String name
 	def domainClass
-
-	String getUsername() { name }
 }

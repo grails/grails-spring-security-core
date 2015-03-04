@@ -1,8 +1,7 @@
-
 class BootStrap {
 	def testDataService
 
-	def init = { servletContext ->
+	def init = {
 		testDataService.enterInitialData()
 	}
 }

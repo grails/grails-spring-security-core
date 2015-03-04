@@ -16,7 +16,7 @@ package grails.plugin.springsecurity
 
 import grails.test.mixin.TestMixin
 import grails.test.mixin.integration.IntegrationTestMixin
-import grails.util.Holders
+
 import org.junit.After
 import org.junit.Before
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -46,7 +46,6 @@ class GormUserDetailsServiceTests  {
 
 	@Before
 	void setUp() {
-		Holders.config = new ConfigObject()
 		assert !TestRole.count()
 		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
 		superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save(failOnError: true)
@@ -55,7 +54,6 @@ class GormUserDetailsServiceTests  {
 
 	@After
 	void tearDown() {
-		Holders.config = null
 		securityConfigGroupPropertyValues.each { key, value ->
 			ReflectionUtils.setConfigProperty key, value
 		}

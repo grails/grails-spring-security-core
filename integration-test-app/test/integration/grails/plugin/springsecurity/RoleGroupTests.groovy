@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import org.springframework.validation.Errors
-
 import test.TestRole
 import test.TestRoleGroup
 import test.TestRoleGroupRoles

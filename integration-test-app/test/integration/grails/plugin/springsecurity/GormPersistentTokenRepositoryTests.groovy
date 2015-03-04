@@ -16,17 +16,17 @@ package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
 import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
 import groovy.sql.Sql
-import org.junit.After
-import org.junit.Before
-import org.junit.Test
 
 import java.text.SimpleDateFormat
 
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 
 import test.TestPersistentLogin
-import grails.test.mixin.integration.IntegrationTestMixin
 
 /**
  * Integration tests for <code>GormPersistentTokenRepository</code>, based on the tests
@@ -118,6 +118,6 @@ class GormPersistentTokenRepositoryTests {
 	private void insertToken(String series, String username, String token, Date lastUsed) {
 		String formattedDate = new SimpleDateFormat(DATE_FORMAT).format(lastUsed)
 		sql.execute "insert into persistent_logins (series, username, token, last_used) " +
-		             "values ('$series', '$username', '$token', '$formattedDate')"
+		            "values ('$series', '$username', '$token', '$formattedDate')"
 	}
 }
