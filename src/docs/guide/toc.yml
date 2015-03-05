@@ -4,7 +4,7 @@ introduction:
   gettingStarted: Getting Started
 newInV2: What's New in Version 2.0
 domainClasses:
-  title: Required and Optional Domain Classes
+  title: Domain Classes
   personClass: Person Class
   authorityClass: Authority Class
   personAuthorityClass: PersonAuthority Class
