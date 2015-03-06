@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,23 +29,23 @@ class RequestHolderAuthenticationFilterTests extends GroovyTestCase {
 	private RequestHolderAuthenticationFilter filter = new RequestHolderAuthenticationFilter()
 
 	void testDoFilter() {
-		assertNull SecurityRequestHolder.request
-		assertNull SecurityRequestHolder.response
+		assert !SecurityRequestHolder.request
+		assert !SecurityRequestHolder.response
 
 		def request = new MockHttpServletRequest()
 		def response = new MockHttpServletResponse()
 
 		boolean chainCalled = false
 		def chain = [doFilter: { req, res ->
-			assertNotNull SecurityRequestHolder.request
-			assertNotNull SecurityRequestHolder.response
+			assert SecurityRequestHolder.request
+			assert SecurityRequestHolder.response
 			chainCalled = true
 		}] as FilterChain
 
 		filter.doFilter request, response, chain
 
-		assertTrue chainCalled
-		assertNull SecurityRequestHolder.request
-		assertNull SecurityRequestHolder.response
+		assert chainCalled
+		assert !SecurityRequestHolder.request
+		assert !SecurityRequestHolder.response
 	}
 }

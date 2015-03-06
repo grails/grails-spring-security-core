@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,11 +39,6 @@ public class DigestAuthPasswordEncoder implements org.springframework.security.a
 	protected String realm;
 	protected boolean initializing = true;
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#encodePassword(
-	 * 	java.lang.String, java.lang.Object)
-	 */
 	public String encodePassword(final String rawPass, final Object salt) {
 		String username;
 		if (initializing && "userNotFoundPassword".equals(rawPass)) {
@@ -57,11 +52,6 @@ public class DigestAuthPasswordEncoder implements org.springframework.security.a
 		return md5Hex(username + ":" + realm + ":" + rawPass);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#isPasswordValid(
-	 * 	java.lang.String, java.lang.String, java.lang.Object)
-	 */
 	public boolean isPasswordValid(final String encPass, final String rawPass, final Object salt) {
 		// the 'raw' password will already be encrypted, so compare directly
 		return encPass != null && rawPass != null ? rawPass.equals(encPass) : false;
@@ -83,10 +73,6 @@ public class DigestAuthPasswordEncoder implements org.springframework.security.a
 	   initializing = false;
    }
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.beans.factory.InitializingBean#afterPropertiesSet()
-	 */
 	public void afterPropertiesSet() {
 		Assert.hasLength(realm, "realm is required");
 	}

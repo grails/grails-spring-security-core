@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,11 +34,6 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 	protected String ajaxSuccessUrl;
 	protected RequestCache requestCache;
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler#determineTargetUrl(
-	 * 	javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-	 */
 	@Override
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
 		if (SpringSecurityUtils.isAjax(request)) {
@@ -55,12 +50,6 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 		ajaxSuccessUrl = url;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler#onAuthenticationSuccess(
-	 * 	javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse,
-	 * 	org.springframework.security.core.Authentication)
-	 */
 	@Override
 	public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
 			final Authentication authentication) throws ServletException, IOException {
@@ -73,11 +62,6 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler#setRequestCache(
-	 * 	org.springframework.security.web.savedrequest.RequestCache)
-	 */
 	@Override
 	public void setRequestCache(RequestCache cache) {
 		super.setRequestCache(cache);

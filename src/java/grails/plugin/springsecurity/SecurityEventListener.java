@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -61,11 +61,6 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
 
 	protected ApplicationContext applicationContext;
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.context.ApplicationListener#onApplicationEvent(
-	 * 	org.springframework.context.ApplicationEvent)
-	 */
 	public void onApplicationEvent(final ApplicationEvent e) {
 		if (e instanceof AbstractAuthenticationEvent) {
 			if (e instanceof InteractiveAuthenticationSuccessEvent) {
@@ -96,11 +91,6 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
 		}
 	}
 
-	/**
- 	 * {@inheritDoc}
- 	 * @see org.springframework.context.ApplicationContextAware#setApplicationContext(
- 	 * 	org.springframework.context.ApplicationContext)
- 	 */
  	public void setApplicationContext(final ApplicationContext ctx) {
  		applicationContext = ctx;
  	}

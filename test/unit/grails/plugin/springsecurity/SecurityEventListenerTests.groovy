@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,30 +30,19 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  */
 class SecurityEventListenerTests extends GroovyTestCase {
 
-	private SecurityEventListener listener
-	private closures
+	private SecurityEventListener listener = new SecurityEventListener()
+	private closures = new ConfigObject()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
-		listener = new SecurityEventListener()
-		closures = new ConfigObject()
 		SpringSecurityUtils.securityConfig = closures
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		grails.util.Holders.setConfig(null)
 	}
 
 	/**
@@ -67,7 +56,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		listener.onApplicationEvent(new InteractiveAuthenticationSuccessEvent(
 				new TestingAuthenticationToken("", ""), getClass()))
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -81,7 +70,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		listener.onApplicationEvent new AuthenticationFailureBadCredentialsEvent(
 				new TestingAuthenticationToken("", ""), new BadCredentialsException('bad credentials'))
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -95,7 +84,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		listener.onApplicationEvent(new AuthenticationSuccessEvent(
 				new TestingAuthenticationToken("", "")))
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -108,7 +97,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 
 		listener.onApplicationEvent(new TestAuthorizationEvent())
 
-		assertTrue called
+		assert called
 	}
 
 	/**
@@ -125,7 +114,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 
 		listener.onApplicationEvent(new AuthenticationSwitchUserEvent(authentication, targetUser))
 
-		assertTrue called
+		assert called
 	}
 }
 
@@ -134,6 +123,6 @@ class SecurityEventListenerTests extends GroovyTestCase {
  */
 class TestAuthorizationEvent extends AbstractAuthorizationEvent {
 	TestAuthorizationEvent() {
-		super(new Object())
+		super(42)
 	}
 }

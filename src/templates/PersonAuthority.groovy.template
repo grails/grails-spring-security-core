@@ -80,7 +80,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 
 	static constraints = {
 		${roleClassProperty} validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
-			if (ur.${userClassProperty} == null) return
+			if (ur.${userClassProperty} == null || ur.${userClassProperty}.id == null) return
 			boolean existing = false
 			${userClassName}${roleClassName}.withNewSession {
 				existing = ${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)
@@ -92,7 +92,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 	}
 
 	static mapping = {
-		id composite: ['${roleClassProperty}', '${userClassProperty}']
+		id composite: ['${userClassProperty}', '${roleClassProperty}']
 		version false
 	}
 }

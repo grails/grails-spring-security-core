@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,11 +51,6 @@ public class MutableLogoutFilter extends LogoutFilter {
 		logoutSuccessHandler = successHandler;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.logout.LogoutFilter#doFilter(
-	 * 	javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)
-	 */
 	@Override
 	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)
 			throws IOException, ServletException {

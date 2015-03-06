@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import javax.servlet.ServletContext
 
 import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
 import org.codehaus.groovy.grails.commons.GrailsClass
-import grails.util.Holders
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo
@@ -51,17 +50,17 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	private AnnotationFilterInvocationDefinition fid = new AnnotationFilterInvocationDefinition()
 
 	void testSupports() {
-		assertTrue fid.supports(FilterInvocation)
+		assert fid.supports(FilterInvocation)
 	}
 
 //	void testGetConfigAttributeDefinitions() {
-//		assertNull fid.configAttributeDefinitions
+//		assert !fid.configAttributeDefinitions
 //	}
 
 	void testLowercaseAndStripQuerystring() {
-		assertEquals '/foo/bar', fid.lowercaseAndStripQuerystring('/foo/BAR')
-		assertEquals '/foo/bar', fid.lowercaseAndStripQuerystring('/foo/bar')
-		assertEquals '/foo/bar', fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
+		assert '/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR')
+		assert '/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/bar')
+		assert '/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
 	}
 
 	void testGetAttributesNull() {
@@ -94,15 +93,15 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		request.requestURI = '/foo/bar'
 		fid.url = request.requestURI
-		assertEquals configAttribute, fid.getAttributes(filterInvocation)
+		assert configAttribute == fid.getAttributes(filterInvocation)
 
 		fid.rejectIfNoRule = false
 		request.requestURI = '/bar/foo'
 		fid.url = request.requestURI
-		assertNull fid.getAttributes(filterInvocation)
+		assert !fid.getAttributes(filterInvocation)
 
 		fid.rejectIfNoRule = true
-		assertEquals AbstractFilterInvocationDefinition.DENY, fid.getAttributes(filterInvocation)
+		assert AbstractFilterInvocationDefinition.DENY == fid.getAttributes(filterInvocation)
 
 		String moreSpecificPattern = '/foo/ba*'
 		def moreSpecificConfigAttribute = [new SecurityConfig('ROLE_SUPERADMIN')]
@@ -110,7 +109,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		request.requestURI = '/foo/bar'
 		fid.url = request.requestURI
-		assertEquals moreSpecificConfigAttribute, fid.getAttributes(filterInvocation)
+		assert moreSpecificConfigAttribute == fid.getAttributes(filterInvocation)
 	}
 
 	void testDetermineUrl_StaticRequest() {
@@ -128,7 +127,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
 
-		assertEquals 'requesturi', fid.determineUrl(filterInvocation)
+		assert 'requesturi' == fid.determineUrl(filterInvocation)
 	}
 
 	void testDetermineUrl_DynamicRequest() {
@@ -149,7 +148,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
 
-		assertEquals 'foo', fid.determineUrl(filterInvocation)
+		assert 'foo' == fid.determineUrl(filterInvocation)
 	}
 
 	void testInitialize() {
@@ -172,7 +171,6 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		ServletContext servletContext = new MockServletContext()
 
-		def ctx = initCtx()
 		servletContext.setAttribute WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx
 
 		def mappingEvaluator = new DefaultUrlMappingEvaluator(servletContext)
@@ -190,48 +188,48 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
 
-		assertEquals 16, fid.configAttributeMap.size()
+		assert 16 == fid.configAttributeMap.size()
 
 		InterceptedUrl iu
 
 		for (key in ['/classannotated', '/classannotated.*', '/classannotated/**']) {
 			iu = fid.getInterceptedUrl(key, null)
-			assertEquals 1, iu.configAttributes.size()
-			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
-			assertNull iu.httpMethod
+			assert 1 == iu.configAttributes.size()
+			assert 'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
+			assert !iu.httpMethod
 		}
 
 		for (key in ['/classannotated/list', '/classannotated/list.*', '/classannotated/list/**']) {
 			iu = fid.getInterceptedUrl(key, null)
-			assertEquals 2, iu.configAttributes.size()
-			assertEquals(['ROLE_FOO', 'ROLE_SUPERADMIN'] as Set, iu.configAttributes*.attribute as Set)
-			assertNull iu.httpMethod
+			assert 2 == iu.configAttributes.size()
+			assert ['ROLE_FOO', 'ROLE_SUPERADMIN'] as Set == iu.configAttributes*.attribute as Set
+			assert !iu.httpMethod
 		}
 
 		for (key in ['/methodannotated/list', '/methodannotated/list.*', '/methodannotated/list/**']) {
 			iu = fid.getInterceptedUrl(key, null)
-			assertEquals 1, iu.configAttributes.size()
-			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
-			assertNull iu.httpMethod
+			assert 1 == iu.configAttributes.size()
+			assert 'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
+			assert !iu.httpMethod
 		}
 
 		for (key in ['/methodannotated/bar', '/methodannotated/bar.*', '/methodannotated/bar/**']) {
 			iu = fid.getInterceptedUrl(key, HttpMethod.PUT)
-			assertEquals 1, iu.configAttributes.size()
-			assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
-			assertEquals HttpMethod.PUT, iu.httpMethod
+			assert 1 == iu.configAttributes.size()
+			assert 'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
+			assert HttpMethod.PUT == iu.httpMethod
 		}
 
 		for (key in ['/methodannotated/foo', '/methodannotated/foo.*', '/methodannotated/foo/**']) {
 			iu = fid.getInterceptedUrl(key, null)
-			assertEquals 1, iu.configAttributes.size()
-			assertTrue(iu.configAttributes.iterator().next() instanceof ClosureConfigAttribute)
-			assertNull iu.httpMethod
+			assert 1 == iu.configAttributes.size()
+			assert iu.configAttributes.iterator().next() instanceof ClosureConfigAttribute
+			assert !iu.httpMethod
 		}
 
 		iu = fid.getInterceptedUrl('/js/admin/**', null)
-		assertEquals 1, iu.configAttributes.size()
-		assertEquals 'ROLE_ADMIN', iu.configAttributes.iterator().next().attribute
+		assert 1 == iu.configAttributes.size()
+		assert 'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
 	}
 
 //	void testFindConfigAttribute() {
@@ -240,19 +238,18 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 //		def configAttribute = [new SecurityConfig('ROLE_ADMIN')]
 //		_fid.storeMapping pattern, configAttribute
 //
-//		assertEquals configAttribute, fid.findConfigAttribute('/foo/bar')
-//		assertNull fid.findConfigAttribute('/bar/foo')
+//		assert configAttribute == fid.findConfigAttribute('/foo/bar')
+//		assert !fid.findConfigAttribute('/bar/foo')
 //	}
 
 	protected void tearDown() {
 		super.tearDown()
 		RequestContextHolder.resetRequestAttributes()
-		grails.util.Holders.setServletContext(null)
 	}
 }
 
 class TestApplication extends FakeApplication {
-	GrailsClass getArtefactForFeature(String artefactType, Object featureID) { [:] as GrailsClass }
+	GrailsClass getArtefactForFeature(String artefactType, featureID) { [:] as GrailsClass }
 }
 
 class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocationDefinition {

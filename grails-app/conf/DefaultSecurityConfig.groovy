@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,8 @@ security {
 
 	// user caching
 	cacheUsers = false
+
+	useExternalClasses = false
 
 	// user and role class properties
 	userLookup {

@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,11 +25,11 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanTests extends Groo
 	private ChannelFilterInvocationSecurityMetadataSourceFactoryBean factory = new ChannelFilterInvocationSecurityMetadataSourceFactoryBean()
 
 	void testGetObjectType() {
-		assertSame DefaultFilterInvocationSecurityMetadataSource, factory.objectType
+		assert DefaultFilterInvocationSecurityMetadataSource.is(factory.objectType)
 	}
 
 	void testIsSingleton() {
-		assertTrue factory.singleton
+		assert factory.singleton
 	}
 
 	void testAfterPropertiesSet() {
@@ -57,10 +57,10 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanTests extends Groo
 		factory.afterPropertiesSet()
 
 		def object = factory.object
-		assertTrue object instanceof DefaultFilterInvocationSecurityMetadataSource
+		assert object instanceof DefaultFilterInvocationSecurityMetadataSource
 		def map = object.@requestMap
-		assertEquals 'REQUIRES_SECURE_CHANNEL',   map[new AntPathRequestMatcher('/foo1/**')].attribute[0]
-		assertEquals 'REQUIRES_INSECURE_CHANNEL', map[new AntPathRequestMatcher('/foo2/**')].attribute[0]
-		assertEquals 'ANY_CHANNEL',               map[new AntPathRequestMatcher('/foo3/**')].attribute[0]
+		assert 'REQUIRES_SECURE_CHANNEL'   == map[new AntPathRequestMatcher('/foo1/**')].attribute[0]
+		assert 'REQUIRES_INSECURE_CHANNEL' == map[new AntPathRequestMatcher('/foo2/**')].attribute[0]
+		assert 'ANY_CHANNEL'               == map[new AntPathRequestMatcher('/foo3/**')].attribute[0]
 	}
 }

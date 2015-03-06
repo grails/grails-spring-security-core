@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.userdetails
 
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.transaction.Transactional
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.slf4j.Logger
@@ -44,11 +45,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 	/** Dependency injection for the application. */
 	GrailsApplication grailsApplication
 
-	/**
-	 * {@inheritDoc}
-	 * @see grails.plugin.springsecurity.GrailsUserDetailsService#loadUserByUsername(
-	 * 	java.lang.String, boolean)
-	 */
+	@Transactional(readOnly=true, noRollbackFor=[IllegalArgumentException, UsernameNotFoundException])
 	UserDetails loadUserByUsername(String username, boolean loadRoles) throws UsernameNotFoundException {
 
 		def conf = SpringSecurityUtils.securityConfig
@@ -60,23 +57,16 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		Class<?> User = dc.clazz
 
-		User.withTransaction { status ->
-			def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
-			if (!user) {
-				log.warn "User not found: $username"
-				throw new NoStackUsernameNotFoundException()
-			}
-
-			Collection<GrantedAuthority> authorities = loadAuthorities(user, username, loadRoles)
-			createUserDetails user, authorities
+		def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
+		if (!user) {
+			log.warn "User not found: $username"
+			throw new NoStackUsernameNotFoundException()
 		}
+
+		Collection<GrantedAuthority> authorities = loadAuthorities(user, username, loadRoles)
+		createUserDetails user, authorities
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.core.userdetails.UserDetailsService#loadUserByUsername(
-	 * 	java.lang.String)
-	 */
 	UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		loadUserByUsername username, true
 	}

@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.web.authentication.rememberme
 
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.transaction.Transactional
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.plugins.support.aware.GrailsApplicationAware
@@ -35,27 +36,16 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 	/** Dependency injection for grailsApplication */
 	GrailsApplication grailsApplication
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#createNewToken(
-	 * 	org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken)
-	 */
+	@Transactional
 	void createNewToken(PersistentRememberMeToken token) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
 		// join an existing transaction if one is active
-		clazz.withTransaction { status ->
-			clazz.newInstance(username: token.username, series: token.series,
-			                  token: token.tokenValue, lastUsed: token.date).save()
-		}
+		clazz.newInstance(username: token.username, series: token.series,
+		                  token: token.tokenValue, lastUsed: token.date).save()
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#getTokenForSeries(
-	 * 	java.lang.String)
-	 */
 	PersistentRememberMeToken getTokenForSeries(String seriesId) {
 		def persistentToken
 		def clazz = lookupDomainClass()
@@ -73,47 +63,34 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 				persistentToken.token, persistentToken.lastUsed)
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#removeUserTokens(
-	 * 	java.lang.String)
-	 */
+	@Transactional
 	void removeUserTokens(String username) {
-		def clazz = lookupDomainClass()
-		if (!clazz) return
-
-		// join an existing transaction if one is active
-		clazz.withTransaction { status ->
-			// was using HQL but it breaks with NoSQL, so using a less efficient impl:
-			for (instance in clazz.findAllByUsername(username)) {
-				instance.delete()
-			}
-		}
+		lookupDomainClass()?.where { username == username }?.deleteAll()
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#updateToken(
-	 * 	java.lang.String, java.lang.String, java.util.Date)
-	 */
+	@Transactional
 	void updateToken(String series, String tokenValue, Date lastUsed) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
 		// join an existing transaction if one is active
-		clazz.withTransaction { status ->
-			def persistentLogin = clazz.get(series)
-			persistentLogin?.token = tokenValue
-			persistentLogin?.lastUsed = lastUsed
+		def persistentLogin = clazz.get(series)
+		if (!persistentLogin) {
+			return
 		}
+
+		persistentLogin.token = tokenValue
+		persistentLogin.lastUsed = lastUsed
+		persistentLogin.save()
 	}
 
 	protected Class lookupDomainClass() {
 		def conf = SpringSecurityUtils.securityConfig
 		String domainClassName = conf.rememberMe.persistentToken.domainClassName ?: ''
-		def clazz = grailsApplication.getClassForName(domainClassName)
+		def clazz = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
+                Class.forName(domainClassName) : grailsApplication.getClassForName(domainClassName)
 		if (!clazz) {
-			log.error "Persistent token class not found: '${domainClassName}'"
+			log.error "Persistent token class not found: '$domainClassName'"
 		}
 		clazz
 	}

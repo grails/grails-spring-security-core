@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import grails.transaction.Transactional
+
 import org.codehaus.groovy.grails.commons.ClassPropertyFetcher
 import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
 import org.springframework.core.annotation.AnnotationUtils
@@ -21,7 +23,6 @@ import org.springframework.security.authentication.AuthenticationTrustResolverIm
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
-import org.springframework.transaction.annotation.Transactional
 
 /**
  * Unit tests for SpringSecurityService.
@@ -30,44 +31,37 @@ import org.springframework.transaction.annotation.Transactional
  */
 class SpringSecurityServiceTests extends GroovyTestCase {
 
-	private SpringSecurityService service
+	private SpringSecurityService service = new SpringSecurityService()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
-		service = new SpringSecurityService()
-		def config = new ConfigObject()
-		grails.util.Holders.setConfig(config)
-		ReflectionUtils.application = new DefaultGrailsApplication(config: config)
+		ReflectionUtils.application = new DefaultGrailsApplication(config: new ConfigObject())
 	}
 
 	/**
 	 * Test transactional.
 	 */
 	void testTransactional() {
-		assertNull ClassPropertyFetcher.forClass(SpringSecurityService).getPropertyValue('transactional')
-		assertTrue SpringSecurityService.methods.any { AnnotationUtils.findAnnotation(it, Transactional) }
+		assert !ClassPropertyFetcher.forClass(SpringSecurityService).getPropertyValue('transactional')
+		assert SpringSecurityService.methods.any { AnnotationUtils.findAnnotation(it, Transactional) }
 	}
 
 	/**
 	 * Test getPrincipal().
 	 */
 	void testPrincipalAuthenticated() {
-		assertNull service.principal
+		assert !service.principal
 		authenticate 'role1'
-		assertNotNull service.principal
+		assert service.principal
 	}
 
 	/**
 	 * Test encodePassword().
 	 */
 	void testEncodePassword() {
-		service.passwordEncoder = [encodePassword: { String pwd, Object salt -> pwd + '_encoded' }]
-		assertEquals 'passw0rd_encoded', service.encodePassword('passw0rd')
+		service.passwordEncoder = [encodePassword: { String pwd, salt -> pwd + '_encoded' }]
+		assert 'passw0rd_encoded' == service.encodePassword('passw0rd')
 	}
 
 	void testClearCachedRequestmaps() {
@@ -76,20 +70,20 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 
 		service.clearCachedRequestmaps()
 
-		assertTrue resetCalled
+		assert resetCalled
 	}
 
 	void testGetAuthentication() {
-		assertNull service.authentication?.principal
+		assert !service.authentication?.principal
 		authenticate 'role1'
-		assertNotNull service.authentication
+		assert service.authentication
 	}
 
 	void testIsLoggedIn() {
 		service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
-		assertFalse service.isLoggedIn()
+		assert !service.isLoggedIn()
 		authenticate 'role1'
-		assertTrue service.isLoggedIn()
+		assert service.isLoggedIn()
 	}
 
 	private void authenticate(roles) {
@@ -100,15 +94,10 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 		SCH.context.authentication = authentication
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SecurityTestUtils.logout()
-		grails.util.Holders.setConfig(null)
 		SpringSecurityUtils.securityConfig = null
 		ReflectionUtils.application = null
 	}

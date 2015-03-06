@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,16 +40,14 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 		boolean redirectCalled = false
 		def sendRedirect = { req, res, url ->
 			redirectCalled = true
-			assertEquals defaultFailureUrl, url
+			assert defaultFailureUrl == url
 		}
 		handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
 
-		def config = new ConfigObject()
-		config.ajaxHeader = 'ajaxHeader'
-		SpringSecurityUtils.securityConfig = config
+		SpringSecurityUtils.securityConfig = [ajaxHeader: 'ajaxHeader'] as ConfigObject
 
 		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
-		assertTrue redirectCalled
+		assert redirectCalled
 	}
 
 	void testOnAuthenticationFailureAjax() {
@@ -61,17 +59,15 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 		boolean redirectCalled = false
 		def sendRedirect = { req, res, url ->
 			redirectCalled = true
-			assertEquals ajaxAuthenticationFailureUrl, url
+			assert ajaxAuthenticationFailureUrl == url
 		}
 		handler.redirectStrategy = [sendRedirect: sendRedirect] as RedirectStrategy
 
-		def config = new ConfigObject()
-		config.ajaxHeader = 'ajaxHeader'
-		SpringSecurityUtils.securityConfig = config
+		SpringSecurityUtils.securityConfig = [ajaxHeader: 'ajaxHeader'] as ConfigObject
 
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
 		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
-		assertTrue redirectCalled
+		assert redirectCalled
 	}
 
 	void testAfterPropertiesSet() {
@@ -89,15 +85,10 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 		SecurityRequestHolder.set request, response
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
-		grails.util.Holders.setConfig(null)
 		SecurityRequestHolder.reset()
 	}
 }

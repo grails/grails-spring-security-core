@@ -1,4 +1,4 @@
-/* Copyright 2011-2014 SpringSource.
+/* Copyright 2011-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ class BCryptPasswordEncoderTests extends GroovyTestCase {
 		String password = 'passw0rd'
 		String encoded = encoder.encodePassword(password, null)
 		String encodedAgain = encoder.encodePassword(password, null)
-		assertFalse encoded.equals(encodedAgain)
-		assertTrue encoder.isPasswordValid(encoded, password, null)
+		assert encoded != encodedAgain
+		assert encoder.isPasswordValid(encoded, password, null)
 	}
 
 	@Override

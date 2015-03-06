@@ -1,8 +1,30 @@
 package ${packageName}
 
-class ${groupClassName} {
+class ${groupClassName} implements Serializable {
+
+	private static final long serialVersionUID = 1
 
 	String name
+
+	${groupClassName}(String name) {
+		this()
+		this.name = name
+	}
+
+	@Override
+	int hashCode() {
+		name?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof ${groupClassName} && other.name == name)
+	}
+
+	@Override
+	String toString() {
+		name
+	}
 
 	static mapping = {
 		cache true

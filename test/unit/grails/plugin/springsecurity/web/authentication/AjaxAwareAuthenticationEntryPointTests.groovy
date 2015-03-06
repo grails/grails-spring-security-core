@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,10 +38,6 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 	private MockHttpServletRequest request = new MockHttpServletRequest()
 	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Override
 	protected void setUp() {
 		super.setUp()
@@ -60,7 +56,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 
 		entryPoint.commence request, response, null
 
-		assertEquals loginFormUrl, response.forwardedUrl
+		assert loginFormUrl == response.forwardedUrl
 	}
 
 	/**
@@ -72,7 +68,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 
 		entryPoint.commence request, response, null
 
-		assertEquals ajaxLoginFormUrl, response.forwardedUrl
+		assert ajaxLoginFormUrl == response.forwardedUrl
 	}
 
 	/**
@@ -86,16 +82,11 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 		entryPoint.ajaxLoginFormUrl = '/foo'
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()
 		ReflectionUtils.application = null
-		grails.util.Holders.setConfig(null)
 		SecurityRequestHolder.reset()
 	}
 }

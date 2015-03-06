@@ -1,5 +1,9 @@
 The Spring Security plugin uses hashed passwords and a digest algorithm that you specify. For enhanced protection against dictionary attacks, you should use a salt in addition to digest hashing.
 
+{note}
+Note that if you use bcrypt (the default setting) or pbkdf2, do not configure a salt (e.g. the @dao.reflectionSaltSourceProperty@ property or a custom @saltSource@ bean) because these algorithms use their own internally.
+{note}
+
 There are two approaches to using salted passwords in the plugin - defining a field in the @UserDetails@ class to access by reflection, or by directly implementing [SaltSource|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/dao/SaltSource.html] yourself.
 
 h4. dao.reflectionSaltSourceProperty

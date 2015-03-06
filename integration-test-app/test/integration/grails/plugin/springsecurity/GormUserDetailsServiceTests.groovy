@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,11 @@
  */
 package grails.plugin.springsecurity
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
+import org.junit.After
+import org.junit.Before
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 import test.TestRole
@@ -22,11 +27,6 @@ import test.TestRoleGroupRoles
 import test.TestUser
 import test.TestUserRole
 import test.TestUserRoleGroup
-
-import grails.test.mixin.integration.IntegrationTestMixin
-import grails.test.mixin.*
-import org.junit.*
-import static org.junit.Assert.*
 
 /**
  * Integration tests for GormUserDetailsService.
@@ -51,26 +51,16 @@ class GormUserDetailsServiceTests  {
 	def sessionFactory
 	def userDetailsService
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Before
 	void setUp() {
-		grails.util.Holders.setConfig(new ConfigObject())
-		assertEquals 0, TestRole.count()
+		assert !TestRole.count()
 		adminRole = new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin').save(failOnError: true)
 		superAdminRole = new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin').save(failOnError: true)
-		assertEquals 2, TestRole.count()
+		assert 2 == TestRole.count()
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@After
 	void tearDown() {
-		grails.util.Holders.setConfig(null)
 		securityConfigGroupPropertyValues.each { key, value ->
 			ReflectionUtils.setConfigProperty key, value
 		}
@@ -81,20 +71,20 @@ class GormUserDetailsServiceTests  {
 			userDetailsService.loadUserByUsername 'not_a_user'
 		}
 
-		assertTrue message.contains('not found')
+		assert message.contains('not found')
 	}
 
 	void testLoadUserByUsername_NoRoles() {
 
 		String loginName = 'loginName'
 
-		assertEquals 0, TestUser.count()
+		assert !TestUser.count()
 		new TestUser(loginName: loginName, passwrrd: 'password', enabld: true).save(failOnError: true)
-		assertEquals 1, TestUser.count()
+		assert 1 == TestUser.count()
 
 		def details = userDetailsService.loadUserByUsername(loginName)
-		assertEquals 1, details.authorities.size()
-		assertEquals 'ROLE_NO_ROLES', details.authorities.iterator().next().authority
+		assert 1 == details.authorities.size()
+		assert 'ROLE_NO_ROLES' == details.authorities.iterator().next().authority
 	}
 
 	void testLoadUserByUsername() {
@@ -103,24 +93,24 @@ class GormUserDetailsServiceTests  {
 		String password = 'password123'
 		boolean enabled = true
 
-		assertEquals 0, TestUser.count()
+		assert !TestUser.count()
 		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
-		assertEquals 1, TestUser.count()
+		assert  1 == TestUser.count()
 
 		TestUserRole.create user, adminRole
 		TestUserRole.create user, superAdminRole, true
-		assertEquals 2, TestUserRole.count()
+		assert 2 == TestUserRole.count()
 
 		def details = userDetailsService.loadUserByUsername(loginName)
-		assertNotNull details
+		assert details
 
-		assertEquals password, details.password
-		assertEquals loginName, details.username
-		assertEquals enabled, details.enabled
-		assertEquals enabled, details.accountNonExpired
-		assertEquals enabled, details.accountNonLocked
-		assertEquals enabled, details.credentialsNonExpired
-		assertEquals([ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME], details.authorities*.authority.sort())
+		assert password == details.password
+		assert loginName == details.username
+		assert enabled == details.enabled
+		assert enabled == details.accountNonExpired
+		assert enabled == details.accountNonLocked
+		assert enabled == details.credentialsNonExpired
+		assert [ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME] == details.authorities*.authority.sort()
 	}
 
 	void testLoadUserByUsername_Groups() {
@@ -135,26 +125,26 @@ class GormUserDetailsServiceTests  {
 		String password = 'password123'
 		boolean enabled = true
 
-		assertEquals 0, TestUser.count()
+		assert !TestUser.count()
 		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
-		assertEquals 1, TestUser.count()
+		assert 1 == TestUser.count()
 
-		assertEquals 0, TestRoleGroup.count()
+		assert 0 == TestRoleGroup.count()
 		def roleGroup = new TestRoleGroup(name: 'testRoleGroup1').save(failOnError: true)
-		assertEquals 1, TestRoleGroup.count()
+		assert 1 == TestRoleGroup.count()
 
 		TestRoleGroupRoles.create roleGroup, adminRole
 		TestRoleGroupRoles.create roleGroup, superAdminRole, true
-		assertEquals 2, TestRoleGroupRoles.count()
+		assert 2 == TestRoleGroupRoles.count()
 
-		assertEquals 0, TestUserRoleGroup.count()
+		assert !TestUserRoleGroup.count()
 		TestUserRoleGroup.create user, roleGroup, true
-		assertEquals 1, TestUserRoleGroup.count()
+		assert 1 == TestUserRoleGroup.count()
 
 		def details = userDetailsService.loadUserByUsername(loginName)
-		assertNotNull details
+		assert details
 
-		assertEquals([ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME], details.authorities*.authority.sort())
+		assert [ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME] == details.authorities*.authority.sort()
 	}
 
 	void testLoadUserByUsername_SkipRoles() {
@@ -163,22 +153,22 @@ class GormUserDetailsServiceTests  {
 		String password = 'password123'
 		boolean enabled = true
 
-		assertEquals 0, TestUser.count()
+		assert !TestUser.count()
 		def user = new TestUser(loginName: loginName, passwrrd: password, enabld: enabled).save(failOnError: true)
-		assertEquals 1, TestUser.count()
+		assert 1 == TestUser.count()
 
 		TestUserRole.create user, adminRole
 		TestUserRole.create user, superAdminRole, true
 
 		def details = userDetailsService.loadUserByUsername(loginName, false)
-		assertNotNull details
+		assert details
 
-		assertEquals password, details.password
-		assertEquals loginName, details.username
-		assertEquals enabled, details.enabled
-		assertEquals enabled, details.accountNonExpired
-		assertEquals enabled, details.accountNonLocked
-		assertEquals enabled, details.credentialsNonExpired
-		assertEquals 0, details.authorities.size()
+		assert password == details.password
+		assert loginName == details.username
+		assert enabled == details.enabled
+		assert enabled == details.accountNonExpired
+		assert enabled == details.accountNonLocked
+		assert enabled == details.credentialsNonExpired
+		assert !details.authorities
 	}
 }

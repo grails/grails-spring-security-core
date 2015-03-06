@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,18 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
 import groovy.sql.Sql
 
 import java.text.SimpleDateFormat
 
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 
 import test.TestPersistentLogin
-import grails.test.mixin.integration.IntegrationTestMixin
-import grails.test.mixin.*
-import org.junit.*
-import static org.junit.Assert.*
 
 /**
  * Integration tests for <code>GormPersistentTokenRepository</code>, based on the tests
@@ -51,7 +52,7 @@ class GormPersistentTokenRepositoryTests {
 	static transactional = false
 
 	@Before
-	void setUp() {		
+	void setUp() {
 		sql = new Sql(dataSource)
 		repo.grailsApplication = grailsApplication
 	}
@@ -60,7 +61,7 @@ class GormPersistentTokenRepositoryTests {
 	void tearDown() {
 		sessionFactory.currentSession.clear()
 		sql.executeUpdate 'delete from persistent_logins'
-		assertEquals 0, TestPersistentLogin.count()
+		assert 0 == TestPersistentLogin.count()
 	}
 
 	@Test
@@ -69,14 +70,14 @@ class GormPersistentTokenRepositoryTests {
 		def token = new PersistentRememberMeToken('joeuser', 'joesseries', 'atoken', currentDate)
 		repo.createNewToken token
 
-		assertEquals 1, TestPersistentLogin.count()
+		assert 1 == TestPersistentLogin.count()
 
 		def row = sql.firstRow('select * from persistent_logins')
 
-		assertEquals currentDate.time, row.last_used.time
-		assertEquals 'joeuser', row.username
-		assertEquals 'joesseries', row.series
-		assertEquals 'atoken', row.token
+		assert currentDate.time == row.last_used.time
+		assert 'joeuser' == row.username
+		assert 'joesseries' == row.series
+		assert 'atoken' == row.token
 	}
 
 	void testRetrievingTokenReturnsCorrectData() {
@@ -85,10 +86,10 @@ class GormPersistentTokenRepositoryTests {
 
 		PersistentRememberMeToken token = repo.getTokenForSeries('joesseries')
 
-		assertEquals 'joeuser', token.username
-		assertEquals 'joesseries', token.series
-		assertEquals 'atoken', token.tokenValue
-		assertEquals DATE.time, token.date.time
+		assert 'joeuser' == token.username
+		assert 'joesseries' == token.series
+		assert 'atoken' == token.tokenValue
+		assert DATE.time == token.date.time
 	}
 
 	void testRemovingUserTokensDeletesData() {
@@ -97,8 +98,7 @@ class GormPersistentTokenRepositoryTests {
 
 		repo.removeUserTokens 'joeuser'
 
-		assertEquals 0,
-			sql.firstRow("select count(*) from persistent_logins where username='joeuser'")[0]
+		assert 0 == sql.firstRow("select count(*) from persistent_logins where username='joeuser'")[0]
 	}
 
 	void testUpdatingTokenModifiesTokenValueAndLastUsed() {
@@ -108,16 +108,16 @@ class GormPersistentTokenRepositoryTests {
 
 		def row = sql.firstRow("select * from persistent_logins where series='joesseries'")
 
-		assertEquals 'joeuser', row.username
-		assertEquals 'joesseries', row.series
-		assertEquals 'newtoken', row.token
+		assert 'joeuser' == row.username
+		assert 'joesseries' == row.series
+		assert 'newtoken' == row.token
 		Date lastUsed = row.last_used
-		assertTrue lastUsed.time > date.time
+		assert lastUsed.time > date.time
 	}
 
 	private void insertToken(String series, String username, String token, Date lastUsed) {
 		String formattedDate = new SimpleDateFormat(DATE_FORMAT).format(lastUsed)
 		sql.execute "insert into persistent_logins (series, username, token, last_used) " +
-		             "values ('$series', '$username', '$token', '$formattedDate')"
+		            "values ('$series', '$username', '$token', '$formattedDate')"
 	}
 }

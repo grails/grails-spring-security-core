@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,9 @@ package grails.plugin.springsecurity
 
 import java.lang.reflect.Modifier
 
-import junit.framework.Assert
-
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 
@@ -56,7 +53,9 @@ class SecurityTestUtils {
 	}
 
 	static Authentication authenticate(roleNames, boolean useGrantedAuthorityImpl = false) {
-		def authorities = roleNames.collect { useGrantedAuthorityImpl ? new GrantedAuthorityImpl(it)  : new SimpleGrantedAuthority(it) }
+		def authorities = roleNames.collect { useGrantedAuthorityImpl ?
+			new org.springframework.security.core.authority.GrantedAuthorityImpl(it) :
+			new SimpleGrantedAuthority(it) }
 		authenticate null, null, authorities
 	}
 
@@ -68,10 +67,10 @@ class SecurityTestUtils {
 	}
 
 	static void testPrivateConstructor(Class clazz) {
-		Assert.assertEquals 1, clazz.declaredConstructors.length
+		assert 1 == clazz.declaredConstructors.length
 		def constructor = clazz.getDeclaredConstructor()
-		Assert.assertTrue Modifier.isPrivate(constructor.modifiers)
-		Assert.assertFalse constructor.accessible
+		assert Modifier.isPrivate(constructor.modifiers)
+		assert !constructor.accessible
 		constructor.accessible = true
 		constructor.newInstance()
 	}

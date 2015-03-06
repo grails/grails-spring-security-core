@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,14 +14,14 @@
  */
 package grails.plugin.springsecurity
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.integration.IntegrationTestMixin
+
+import org.junit.After
+import org.junit.Before
+
 import test.TestRequestmap
 import test.TestRole
-
-import grails.test.mixin.integration.IntegrationTestMixin
-import grails.test.mixin.*
-import org.junit.*
-import static org.junit.Assert.*
-
 
 /**
  * Integration tests for SpringSecurityService.
@@ -35,10 +35,6 @@ class SpringSecurityServiceIntegrationTests {
 	SpringSecurityService springSecurityService
 	private oldConfig
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#setUp()
-	 */
 	@Before
 	void setUp() {
 		oldConfig = SpringSecurityUtils.securityConfig
@@ -61,19 +57,19 @@ class SpringSecurityServiceIntegrationTests {
 		sessionFactory.currentSession.clear()
 
 		role = TestRole.list()[0]
-		assertEquals description, role.description
-		assertEquals authority, role.auth
+		assert description == role.description
+		assert authority == role.auth
 
 		String newDescription = 'new description'
 		String newAuthority = ''
-		assertFalse springSecurityService.updateRole(role, [description: newDescription, auth: newAuthority])
+		assert !springSecurityService.updateRole(role, [description: newDescription, auth: newAuthority])
 
 		def requestmaps = TestRequestmap.list()
-		assertEquals 'ROLE_USER', requestmaps[0].rolePattern
-		assertEquals 'ROLE_ADMIN', requestmaps[1].rolePattern
-		assertEquals 'ROLE_ADMIN,ROLE_FOO', requestmaps[2].rolePattern
-		assertEquals 'ROLE_USER,ROLE_ADMIN,ROLE_FOO', requestmaps[3].rolePattern
-		assertEquals 'ROLE_ADMIN,ROLE_FOO', requestmaps[4].rolePattern
+		assert 'ROLE_USER' == requestmaps[0].rolePattern
+		assert 'ROLE_ADMIN' == requestmaps[1].rolePattern
+		assert 'ROLE_ADMIN,ROLE_FOO' == requestmaps[2].rolePattern
+		assert 'ROLE_USER,ROLE_ADMIN,ROLE_FOO' == requestmaps[3].rolePattern
+		assert 'ROLE_ADMIN,ROLE_FOO' == requestmaps[4].rolePattern
 	}
 
 	void testUpdateRole() {
@@ -85,21 +81,21 @@ class SpringSecurityServiceIntegrationTests {
 		sessionFactory.currentSession.clear()
 
 		role = TestRole.list()[0]
-		assertEquals description, role.description
-		assertEquals authority, role.auth
+		assert description == role.description
+		assert authority == role.auth
 
 		String newDescription = 'new description'
 		String newAuthority = 'ROLE_SUPERADMIN'
-		assertTrue springSecurityService.updateRole(role, [description: newDescription, auth: newAuthority])
-		assertEquals newDescription, role.description
-		assertEquals newAuthority, role.auth
+		assert springSecurityService.updateRole(role, [description: newDescription, auth: newAuthority])
+		assert newDescription == role.description
+		assert newAuthority == role.auth
 
 		def requestmaps = TestRequestmap.list()
-		assertEquals 'ROLE_USER', requestmaps[0].rolePattern
-		assertEquals 'ROLE_SUPERADMIN', requestmaps[1].rolePattern
-		assertEquals 'ROLE_SUPERADMIN,ROLE_FOO', requestmaps[2].rolePattern
-		assertEquals 'ROLE_USER,ROLE_SUPERADMIN,ROLE_FOO', requestmaps[3].rolePattern
-		assertEquals 'ROLE_SUPERADMIN,ROLE_FOO', requestmaps[4].rolePattern
+		assert 'ROLE_USER' == requestmaps[0].rolePattern
+		assert 'ROLE_SUPERADMIN' == requestmaps[1].rolePattern
+		assert 'ROLE_SUPERADMIN,ROLE_FOO' == requestmaps[2].rolePattern
+		assert 'ROLE_USER,ROLE_SUPERADMIN,ROLE_FOO' == requestmaps[3].rolePattern
+		assert 'ROLE_SUPERADMIN,ROLE_FOO' == requestmaps[4].rolePattern
 	}
 
 	void testDeleteRole() {
@@ -111,15 +107,15 @@ class SpringSecurityServiceIntegrationTests {
 
 		sessionFactory.currentSession.clear()
 
-		assertEquals 4, TestRequestmap.count()
+		assert 4 == TestRequestmap.count()
 
-		assertEquals 'ROLE_USER', requestmaps[0].rolePattern
-		assertNull 'Should have been deleted', TestRequestmap.findByRolePattern('ROLE_ADMIN')
-		assertEquals 'ROLE_FOO', requestmaps[2].rolePattern
-		assertEquals 'ROLE_USER,ROLE_FOO', requestmaps[3].rolePattern
-		assertEquals 'ROLE_FOO', requestmaps[4].rolePattern
+		assert 'ROLE_USER' == requestmaps[0].rolePattern
+		assert !TestRequestmap.findByRolePattern('ROLE_ADMIN'), 'Should have been deleted'
+		assert 'ROLE_FOO' == requestmaps[2].rolePattern
+		assert 'ROLE_USER,ROLE_FOO' == requestmaps[3].rolePattern
+		assert 'ROLE_FOO' == requestmaps[4].rolePattern
 
-		assertNull TestRole.findByAuth('ROLE_ADMIN')
+		assert !TestRole.findByAuth('ROLE_ADMIN')
 	}
 
 	private void createTestRequestmaps() {
@@ -129,16 +125,11 @@ class SpringSecurityServiceIntegrationTests {
 		new TestRequestmap(urlPattern: '/admin/foo/**', rolePattern: 'ROLE_USER,ROLE_ADMIN,ROLE_FOO').save()
 		new TestRequestmap(urlPattern: '/admin/super/**', rolePattern: 'ROLE_ADMIN,ROLE_FOO').save()
 		sessionFactory.currentSession.flush()
-		assertEquals 5, TestRequestmap.count()
+		assert 5 == TestRequestmap.count()
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@After
 	void tearDown() {
-	
 		SpringSecurityUtils.securityConfig = oldConfig
 	}
 }

@@ -22,16 +22,12 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<ol class="property-list testRole">
-			
 				<g:if test="${testRoleInstance?.authority}">
 				<li class="fieldcontain">
 					<span id="authority-label" class="property-label"><g:message code="testRole.authority.label" default="Authority" /></span>
-					
 						<span class="property-value" aria-labelledby="authority-label"><g:fieldValue bean="${testRoleInstance}" field="authority"/></span>
-					
 				</li>
 				</g:if>
-			
 			</ol>
 			<g:form url="[resource:testRoleInstance, action:'delete']" method="DELETE">
 				<fieldset class="buttons">

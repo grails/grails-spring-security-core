@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,8 @@ import grails.plugin.springsecurity.SecurityTestUtils
 
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-/**
+
+/**
  * Unit tests for <code>SecurityRequestHolder</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -29,41 +30,37 @@ class SecurityRequestHolderTests extends GroovyTestCase {
 		def request = new MockHttpServletRequest()
 		def response = new MockHttpServletResponse()
 
-		assertNull SecurityRequestHolder.request
-		assertNull SecurityRequestHolder.response
+		assert !SecurityRequestHolder.request
+		assert !SecurityRequestHolder.response
 
 		SecurityRequestHolder.set request, response
 
-		assertSame request, SecurityRequestHolder.request
-		assertSame response, SecurityRequestHolder.response
+		assert request.is(SecurityRequestHolder.request)
+		assert response.is(SecurityRequestHolder.response)
 	}
 
 	void testReset() {
 		def request = new MockHttpServletRequest()
 		def response = new MockHttpServletResponse()
 
-		assertNull SecurityRequestHolder.request
-		assertNull SecurityRequestHolder.response
+		assert !SecurityRequestHolder.request
+		assert !SecurityRequestHolder.response
 
 		SecurityRequestHolder.set request, response
 
-		assertSame request, SecurityRequestHolder.request
-		assertSame response, SecurityRequestHolder.response
+		assert request.is(SecurityRequestHolder.request)
+		assert response.is(SecurityRequestHolder.response)
 
 		SecurityRequestHolder.reset()
 
-		assertNull SecurityRequestHolder.request
-		assertNull SecurityRequestHolder.response
+		assert !SecurityRequestHolder.request
+		assert !SecurityRequestHolder.response
 	}
 
 	void testPrivateConstructor() {
 		SecurityTestUtils.testPrivateConstructor SecurityRequestHolder
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see junit.framework.TestCase#tearDown()
-	 */
 	@Override
 	protected void tearDown() {
 		super.tearDown()

@@ -1,4 +1,4 @@
-/* Copyright 2013-2014 SpringSource.
+/* Copyright 2013-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,19 +34,11 @@ public class CryptoEncoderWrapper implements org.springframework.security.authen
 		delegate = encoder;
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#encodePassword(java.lang.String, java.lang.Object)
-	 */
 	public String encodePassword(String rawPass, Object salt) {
 		checkSalt(salt);
 		return delegate.encode(rawPass);
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.encoding.PasswordEncoder#isPasswordValid(java.lang.String, java.lang.String, java.lang.Object)
-	 */
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
 		checkSalt(salt);
 		return delegate.matches(rawPass, encPass);

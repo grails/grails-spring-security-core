@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,12 +15,12 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
+import grails.transaction.Transactional
 
 import javax.servlet.http.HttpServletRequest
 
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.transaction.annotation.Transactional
 import org.springframework.util.Assert
 
 /**
@@ -29,6 +29,8 @@ import org.springframework.util.Assert
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class SpringSecurityService {
+
+	protected static final List<String> NO_SALT = ['bcrypt', 'pbkdf2']
 
 	/** dependency injection for authenticationTrustResolver */
 	def authenticationTrustResolver
@@ -71,21 +73,32 @@ class SpringSecurityService {
 	 * Get the domain class instance associated with the current authentication.
 	 * @return the user
 	 */
-	Object getCurrentUser() {
+	def getCurrentUser() {
 		if (!isLoggedIn()) {
 			return null
 		}
 
-		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		def User = grailsApplication.getClassForName(className)
+		def User = getClassForName(securityConfig.userLookup.userDomainClassName)
 
 		if (principal instanceof GrailsUser) {
-			User.get principal.id
+			User.get currentUserId
 		}
 		else {
-			String usernamePropName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
-			User.findWhere((usernamePropName): principal.username)
+			User.findWhere((securityConfig.userLookup.usernamePropertyName): principal.username)
 		}
+	}
+
+	protected Class<?> getClassForName(String name) {
+		securityConfig.useExternalClasses ? Class.forName(name) : grailsApplication.getClassForName(name)
+	}
+
+	protected ConfigObject getSecurityConfig() { SpringSecurityUtils.securityConfig }
+
+	protected boolean useRequestmaps() { SpringSecurityUtils.securityConfigType == 'Requestmap' }
+
+	def getCurrentUserId() {
+		def principal = getPrincipal()
+		principal instanceof GrailsUser ? principal.id : null
 	}
 
 	/**
@@ -94,7 +107,7 @@ class SpringSecurityService {
 	 *
 	 * @return the proxy
 	 */
-	Object loadCurrentUser() {
+	def loadCurrentUser() {
 		if (!isLoggedIn()) {
 			return null
 		}
@@ -102,15 +115,14 @@ class SpringSecurityService {
 		// load() requires an id, so this only works if there's an id property in the principal
 		Assert.isInstanceOf GrailsUser, principal
 
-		String className = SpringSecurityUtils.securityConfig.userLookup.userDomainClassName
-		grailsApplication.getClassForName(className).load(principal.id)
+		getClassForName(securityConfig.userLookup.userDomainClassName).load(currentUserId)
 	}
 
 	/**
 	 * Encode the password using the configured PasswordEncoder.
 	 */
 	String encodePassword(String password, salt = null) {
-		if ('bcrypt' == SpringSecurityUtils.securityConfig.password.algorithm || 'pbkdf2' == SpringSecurityUtils.securityConfig.password.algorithm) {
+		if (securityConfig.password.algorithm in NO_SALT) {
 			salt = null
 		}
 		passwordEncoder.encodePassword password, salt
@@ -142,30 +154,29 @@ class SpringSecurityService {
 	 */
 	@Transactional
 	void deleteRole(role) {
-		def conf = SpringSecurityUtils.securityConfig
-		String configAttributeName = conf.requestMap.configAttributeField
+		def conf = securityConfig
+		String configAttributePropertyName = conf.requestMap.configAttributeField
 		String authorityFieldName = conf.authority.nameField
 
-		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
+		if (useRequestmaps()) {
 			String roleName = role."$authorityFieldName"
 			def requestmaps = findRequestmapsByRole(roleName, conf)
 			for (rm in requestmaps) {
-				String configAttribute = rm."$configAttributeName"
+				String configAttribute = rm."$configAttributePropertyName"
 				if (configAttribute.equals(roleName)) {
 					rm.delete(flush: true)
 				}
 				else {
 					List parts = configAttribute.split(',')*.trim()
 					parts.remove roleName
-					rm."$configAttributeName" = parts.join(',')
+					rm."$configAttributePropertyName" = parts.join(',')
 				}
 			}
 			clearCachedRequestmaps()
 		}
 
 		// remove the role grant from all users
-		def joinClass = grailsApplication.getClassForName(conf.userLookup.authorityJoinClassName)
-		joinClass.removeAll role
+		getClassForName(conf.userLookup.authorityJoinClassName).removeAll role
 
 		role.delete(flush: true)
 	}
@@ -180,8 +191,8 @@ class SpringSecurityService {
 	@Transactional
 	boolean updateRole(role, newProperties) {
 
-		def conf = SpringSecurityUtils.securityConfig
-		String configAttributeName = conf.requestMap.configAttributeField
+		def conf = securityConfig
+		String configAttributePropertyName = conf.requestMap.configAttributeField
 		String authorityFieldName = conf.authority.nameField
 
 		String oldRoleName = role."$authorityFieldName"
@@ -192,12 +203,12 @@ class SpringSecurityService {
 			return false
 		}
 
-		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
+		if (useRequestmaps()) {
 			String newRoleName = role."$authorityFieldName"
 			if (newRoleName != oldRoleName) {
 				def requestmaps = findRequestmapsByRole(oldRoleName, conf)
 				for (rm in requestmaps) {
-					rm."$configAttributeName" = rm."$configAttributeName".replace(oldRoleName, newRoleName)
+					rm."$configAttributePropertyName" = rm."$configAttributePropertyName".replace(oldRoleName, newRoleName)
 				}
 			}
 			clearCachedRequestmaps()
@@ -228,11 +239,37 @@ class SpringSecurityService {
 		SpringSecurityUtils.isAjax request
 	}
 
+	/**
+	 * Create multiple requestmap instances in a transaction.
+	 * @param data
+	 *           a list of maps where each map contains the data for one instance
+	 *           (configAttribute and url are required, httpMethod is optional)
+	 */
+	@Transactional
+	void createRequestMaps(List<Map<String, Object>> data) {
+		def requestmapClass = grailsApplication.getClassForName(conf.requestMap.className)
+		for (Map<String, Object> instanceData in data) {
+			requestmapClass.newInstance(instanceData).save(failOnError: true)
+		}
+	}
+
+	/**
+	 * Create multiple requestmap instances in a transaction that all share the same <code>configAttribute</code>.
+	 * @param urls a list of url patterns
+	 */
+	@Transactional
+	void createRequestMaps(List<String> urls, String configAttribute) {
+		def requestmapClass = grailsApplication.getClassForName(conf.requestMap.className)
+		String configAttributePropertyName = conf.requestMap.configAttributeField
+		String urlPropertyName = conf.requestMap.urlField
+		for (String url in urls) {
+			requestmapClass.newInstance((urlPropertyName): url, (configAttributePropertyName): configAttribute).save(failOnError: true)
+		}
+	}
+
 	protected List findRequestmapsByRole(String roleName, conf) {
-		def domainClass = grailsApplication.getClassForName(conf.requestMap.className)
-		String configAttributeName = conf.requestMap.configAttributeField
-		domainClass.withCriteria {
-			like configAttributeName, "%$roleName%"
+		getClassForName(conf.requestMap.className).withCriteria {
+			like conf.requestMap.configAttributeField, "%$roleName%"
 		}
 	}
 }

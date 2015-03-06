@@ -1,4 +1,4 @@
-/* Copyright 2013-2014 SpringSource.
+/* Copyright 2013-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License")
  * you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity
 
+import groovy.transform.CompileStatic
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
@@ -25,6 +26,7 @@ import org.springframework.security.access.ConfigAttribute
  */
 @EqualsAndHashCode(includes='pattern,access,httpMethod')
 @ToString
+@CompileStatic
 class InterceptedUrl {
 	String pattern
 	Collection<ConfigAttribute> configAttributes = Collections.emptyList()

@@ -1,8 +1,30 @@
 package ${packageName}
 
-class ${roleClassName} {
+class ${roleClassName} implements Serializable {
+
+	private static final long serialVersionUID = 1
 
 	String authority
+
+	${roleClassName}(String authority) {
+		this()
+		this.authority = authority
+	}
+
+	@Override
+	int hashCode() {
+		authority?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof ${roleClassName} && other.authority == authority)
+	}
+
+	@Override
+	String toString() {
+		authority
+	}
 
 	static mapping = {
 		cache true

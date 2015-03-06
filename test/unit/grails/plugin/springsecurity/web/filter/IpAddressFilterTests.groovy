@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ class IpAddressFilterTests extends GroovyTestCase {
 		request.requestURI = '/masked/shouldsucceed'
 		filter.doFilter request, response, chain
 
-		assertEquals 5, chainCount
+		assert 5 == chainCount
 	}
 
 	void testDoFilterHttpDenied() {
@@ -120,24 +120,24 @@ class IpAddressFilterTests extends GroovyTestCase {
 		request.requestURI = '/foo/bar?x=123'
 		response = new MockHttpServletResponse()
 		filter.doFilter request, response, chain
-		assertEquals 404, response.status
+		assert 404 == response.status
 
 		request.requestURI = '/bar/foo?x=123'
 		response = new MockHttpServletResponse()
 		filter.doFilter request, response, chain
-		assertEquals 404, response.status
+		assert 404 == response.status
 
 		request.requestURI = '/wahoo/list'
 		response = new MockHttpServletResponse()
 		filter.doFilter request, response, chain
-		assertEquals 404, response.status
+		assert 404 == response.status
 
 		request.requestURI = '/masked/shouldfail'
 		response = new MockHttpServletResponse()
 		filter.doFilter request, response, chain
-		assertEquals 404, response.status
+		assert 404 == response.status
 
-		assertEquals 0, chainCount
+		assert 0 == chainCount
 	}
 
 	void testDoFilterMixIPv6IPv4() {
@@ -157,8 +157,8 @@ class IpAddressFilterTests extends GroovyTestCase {
 		request.requestURI = '/masked/bar?x=123'
 		response = new MockHttpServletResponse()
 		filter.doFilter request, response, chain
-		assertEquals 404, response.status
+		assert 404 == response.status
 
-		assertEquals 0, chainCount
+		assert 0 == chainCount
 	}
 }

@@ -1,4 +1,4 @@
-/* Copyright 2013-2014 SpringSource.
+/* Copyright 2013-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,21 +23,10 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class NullAuthenticationEventPublisher implements AuthenticationEventPublisher {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.AuthenticationEventPublisher#publishAuthenticationFailure(
-	 * 	org.springframework.security.core.AuthenticationException,
-	 * 	org.springframework.security.core.Authentication)
-	 */
 	public void publishAuthenticationFailure(AuthenticationException e, Authentication a) {
 		// do nothing
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.AuthenticationEventPublisher#publishAuthenticationSuccess(
-	 * 	org.springframework.security.core.Authentication)
-	 */
 	public void publishAuthenticationSuccess(Authentication a) {
 		// do nothing
 	}

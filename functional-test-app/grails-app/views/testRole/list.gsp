@@ -23,17 +23,13 @@
 			<table>
 			<thead>
 					<tr>
-					
 						<g:sortableColumn property="authority" title="${message(code: 'testRole.authority.label', default: 'Authority')}" />
-					
 					</tr>
 				</thead>
 				<tbody>
 				<g:each in="${testRoleInstanceList}" status="i" var="testRoleInstance">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-					
 						<td><g:link action="show" id="${testRoleInstance.id}">${fieldValue(bean: testRoleInstance, field: "authority")}</g:link></td>
-					
 					</tr>
 				</g:each>
 				</tbody>

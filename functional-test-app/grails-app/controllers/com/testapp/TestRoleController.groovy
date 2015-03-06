@@ -1,7 +1,6 @@
 package com.testapp
 
 import org.springframework.dao.DataIntegrityViolationException
-
 import org.springframework.security.access.annotation.Secured
 
 @Secured('permitAll')
@@ -9,9 +8,7 @@ class TestRoleController {
 
 	def springSecurityService
 
-	def index() {
-		redirect action: 'list', params: params
-	}
+	static defaultAction = 'list'
 
 	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)

@@ -1,4 +1,4 @@
-/* Copyright 2013-2014 SpringSource.
+/* Copyright 2013-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,10 +23,6 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class GrailsAnonymousAuthenticationProvider implements AuthenticationProvider {
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.authentication.AuthenticationProvider#authenticate(org.springframework.security.core.Authentication)
-	 */
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		return supports(authentication.getClass()) ? authentication : null;
 	}

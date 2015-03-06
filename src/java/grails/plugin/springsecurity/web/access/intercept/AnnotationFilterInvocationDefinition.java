@@ -1,4 +1,4 @@
-/* Copyright 2006-2014 SpringSource.
+/* Copyright 2006-2015 SpringSource.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,15 +32,15 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletContext;
+
 import org.codehaus.groovy.grails.commons.ControllerArtefactHandler;
 import org.codehaus.groovy.grails.commons.GrailsApplication;
 import org.codehaus.groovy.grails.commons.GrailsClass;
 import org.codehaus.groovy.grails.commons.GrailsControllerClass;
 import org.codehaus.groovy.grails.plugins.web.api.ResponseMimeTypesApi;
-import grails.util.Holders;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder;
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap;
@@ -53,6 +53,7 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.util.Assert;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.context.ServletContextAware;
 
 /**
  * A {@link FilterInvocationSecurityMetadataSource} that uses rules defined with
@@ -62,14 +63,15 @@ import org.springframework.util.StringUtils;
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
+public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefinition implements ServletContextAware {
 
    protected static final String SLASH = "/";
 
-	protected UrlMappingsHolder urlMappingsHolder;
 	protected GrailsApplication application;
-	protected UrlConverter grailsUrlConverter;
 	protected ResponseMimeTypesApi responseMimeTypesApi;
+	protected ServletContext servletContext;
+	protected UrlConverter grailsUrlConverter;
+	protected UrlMappingsHolder urlMappingsHolder;
 
 	@Override
 	protected String determineUrl(final FilterInvocation filterInvocation) {
@@ -93,9 +95,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		String url = null;
 		try {
-                        javax.servlet.ServletContext servletContext = (ServletContext)grails.util.Holders.getServletContext();
-                               // servlet.ServletContext  = 
-			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response,servletContext );
+			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response, servletContext);
 			WebUtils.storeGrailsWebRequest(grailsRequest);
 
 			Map<String, Object> savedParams = copyParams(grailsRequest);
@@ -163,10 +163,10 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		if (isController(controllerName, actionName)) {
 			return createControllerUri(controllerName, actionName);
 		}
-		
+
 		if (grails23Plus && controllerName != null) {
 			String namespace = mapping.getNamespace();
-			if(namespace != null) {
+			if (namespace != null) {
 				String fullControllerName = resolveFullControllerName(controllerName, namespace);
 				return createControllerUri(fullControllerName, actionName);
 			}
@@ -174,7 +174,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		return null;
 	}
-	
+
 	protected String createControllerUri(String controllerName, String actionName) {
 		if (!StringUtils.hasLength(actionName) || "null".equals(actionName)) {
 			actionName = "index";
@@ -478,16 +478,11 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	}
 
 	protected Annotation findSecuredAnnotation(final AccessibleObject annotatedTarget) {
-		Annotation annotation; 
-		annotation = annotatedTarget.getAnnotation(grails.plugin.springsecurity.annotation.Secured.class);
+		Annotation annotation = annotatedTarget.getAnnotation(grails.plugin.springsecurity.annotation.Secured.class);
 		if (annotation != null) {
 			return annotation;
 		}
-		annotation = annotatedTarget.getAnnotation(org.springframework.security.access.annotation.Secured.class);
-		if (annotation != null) {
-			return annotation;
-		}
-		return null;
+		return annotatedTarget.getAnnotation(org.springframework.security.access.annotation.Secured.class);
 	}
 
 	protected Collection<String> getValue(final Annotation annotation) {
@@ -534,5 +529,12 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	 */
 	public void setResponseMimeTypesApi(ResponseMimeTypesApi api) {
 		responseMimeTypesApi = api;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
+	 */
+	public void setServletContext(ServletContext sc) {
+		servletContext = sc;
 	}
 }

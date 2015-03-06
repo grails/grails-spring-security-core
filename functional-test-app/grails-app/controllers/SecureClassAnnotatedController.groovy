@@ -1,6 +1,6 @@
 import org.springframework.security.access.annotation.Secured
 
-@Secured(['ROLE_ADMIN'])
+@Secured('ROLE_ADMIN')
 class SecureClassAnnotatedController {
 
 	def index() {
@@ -11,7 +11,7 @@ class SecureClassAnnotatedController {
 		render 'otherAction: you have ROLE_ADMIN'
 	}
 
-	@Secured(['ROLE_ADMIN2'])
+	@Secured('ROLE_ADMIN2')
 	def admin2() {
 		render 'admin2: you have ROLE_ADMIN2'
 	}
