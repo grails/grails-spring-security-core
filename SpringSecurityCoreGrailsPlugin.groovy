@@ -28,7 +28,6 @@ import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEn
 import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncoder
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
-import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.web.NullFilterChainValidator
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
 import grails.plugin.springsecurity.web.access.DefaultThrowableAnalyzer
@@ -98,7 +97,6 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
-import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider
 import org.springframework.security.web.authentication.preauth.x509.SubjectDnX509PrincipalExtractor
 import org.springframework.security.web.authentication.preauth.x509.X509AuthenticationFilter
@@ -464,7 +462,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		/** userDetailsService */
-		userDetailsService(GormUserDetailsService) {
+		userDetailsService(conf.userDetailsServiceClass) {
 			grailsApplication = ref('grailsApplication')
 		}
 
@@ -561,7 +559,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 				cacheManager = ref('cacheManager')
 				cacheName = 'userCache'
 			}
-			cacheManager(EhCacheManagerFactoryBean)
+			cacheManager(EhCacheManagerFactoryBean) {
+                shared = true
+            }
 		}
 		else {
 			userCache(NullUserCache)
@@ -786,7 +786,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		// create an initially empty list here, will be populated in doWithApplicationContext
 		logoutHandlers(ArrayList)
 
-		logoutSuccessHandler(SimpleUrlLogoutSuccessHandler) {
+		logoutSuccessHandler(conf.logoutSuccessHandlerClass) {
 			redirectStrategy = ref('redirectStrategy')
 			defaultTargetUrl = conf.logout.afterLogoutUrl // '/'
 			alwaysUseDefaultTargetUrl = conf.logout.alwaysUseDefaultTargetUrl // false
