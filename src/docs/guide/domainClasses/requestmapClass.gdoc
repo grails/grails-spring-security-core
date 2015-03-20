@@ -1,4 +1,4 @@
-Optionally, use this class to store request mapping entries in the database instead of defining them with annotations or in @Config.groovy@. This option makes  the class configurable at runtime; you can add, remove and edit rules without restarting your application.
+Optionally, use this class to store request mapping entries in the database instead of defining them with annotations or in @Config.groovy@. This option makes the class configurable at runtime; you can add, remove and edit rules without restarting your application.
 
 {table}
 *Property* | *Default Value* | *Meaning*

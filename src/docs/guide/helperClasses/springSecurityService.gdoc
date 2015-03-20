@@ -92,7 +92,7 @@ class SomeController {
 
 h4. getPrincipal()
 
-Retrieves the currently logged in user's @Principal@. If authenticated, the principal will be a @grails.plugin.springsecurity.userdetails.GrailsUser@, unless you  have created a custom @UserDetailsService@, in which case it will be whatever implementation of [UserDetails|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html] you use there.
+Retrieves the currently logged in user's @Principal@. If authenticated, the principal will be a @grails.plugin.springsecurity.userdetails.GrailsUser@, unless you have created a custom @UserDetailsService@, in which case it will be whatever implementation of [UserDetails|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html] you use there.
 
 If not authenticated and the [AnonymousAuthenticationFilter|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html] is active (true by default) then a standard @org.springframework.security.core.userdetails.User@ is used.
 

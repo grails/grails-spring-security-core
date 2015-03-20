@@ -38,17 +38,17 @@ class SpringSecurityService {
 	/** dependency injection for grailsApplication */
 	def grailsApplication
 
-	/** dependency injection for the password encoder */
-	def passwordEncoder
-
 	/** dependency injection for {@link FilterInvocationSecurityMetadataSource} */
 	def objectDefinitionSource
 
-	/** dependency injection for userDetailsService */
-	def userDetailsService
+	/** dependency injection for the password encoder */
+	def passwordEncoder
 
 	/** dependency injection for userCache */
 	def userCache
+
+	/** dependency injection for userDetailsService */
+	def userDetailsService
 
 	/**
 	 * Get the currently logged in user's principal. If not authenticated and the

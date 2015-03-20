@@ -710,7 +710,6 @@ public final class SpringSecurityUtils {
 	 * @param secondary new default values
 	 * @return the merged configs
 	 */
-	@SuppressWarnings("unchecked")
 	private static ConfigObject mergeConfig(final ConfigObject currentConfig, final ConfigObject secondary) {
 		ConfigObject config = new ConfigObject();
 		if (secondary == null) {

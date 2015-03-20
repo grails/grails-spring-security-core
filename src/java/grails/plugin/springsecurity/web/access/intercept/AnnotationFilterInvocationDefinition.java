@@ -221,14 +221,14 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		Assert.notNull(staticRules, "staticRules map is required");
 		Assert.notNull(mappingsHolder, "urlMappingsHolder is required");
 
+		resetConfigs();
+
+		urlMappingsHolder = mappingsHolder;
+
 		Map<String, List<InterceptedUrl>> actionRoleMap = new LinkedHashMap<String, List<InterceptedUrl>>();
 		List<InterceptedUrl> classRoleMap = new ArrayList<InterceptedUrl>();
 		Map<String, List<InterceptedUrl>> actionClosureMap = new LinkedHashMap<String, List<InterceptedUrl>>();
 		List<InterceptedUrl> classClosureMap = new ArrayList<InterceptedUrl>();
-
-		resetConfigs();
-
-		urlMappingsHolder = mappingsHolder;
 
 		for (GrailsClass controllerClass : controllerClasses) {
 			findControllerAnnotations((GrailsControllerClass)controllerClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap);
@@ -241,7 +241,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		compileClassMap(classRoleMap);
 
 		if (log.isTraceEnabled()) {
-			log.trace("configs: {}", getConfigAttributeMap());
+			log.trace("configs: " + getConfigAttributeMap());
 		}
 	}
 
@@ -378,7 +378,6 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	}
 
 	protected void doStoreMapping(final String fullPattern, final HttpMethod method, final Collection<ConfigAttribute> configAttributes) {
-
 		String key = fullPattern.toString().toLowerCase();
 		InterceptedUrl replaced = storeMapping(key, method, configAttributes);
 		if (replaced != null) {
@@ -387,7 +386,8 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		}
 	}
 
-	protected void findControllerAnnotations(final GrailsControllerClass controllerClass,
+	protected void findControllerAnnotations(
+			final GrailsControllerClass controllerClass,
 			final Map<String, List<InterceptedUrl>> actionRoleMap,
 			final List<InterceptedUrl> classRoleMap,
 			final Map<String, List<InterceptedUrl>> actionClosureMap,
@@ -424,8 +424,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		}
 	}
 
-	protected String resolveFullControllerName(
-			final GrailsControllerClass controllerClass) {
+	protected String resolveFullControllerName(final GrailsControllerClass controllerClass) {
 		String controllerName = controllerClass.getName();
 		String namespace = null;
 		if (grails23Plus) {
@@ -437,8 +436,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		return resolveFullControllerName(grailsUrlConverter.toUrlElement(controllerName), namespace);
 	}
 
-	protected String resolveFullControllerName(String controllerNameInUrlFormat,
-			String namespaceInUrlFormat) {
+	protected String resolveFullControllerName(String controllerNameInUrlFormat, String namespaceInUrlFormat) {
 		StringBuilder fullControllerName = new StringBuilder();
 		if (namespaceInUrlFormat != null) {
 			fullControllerName.append(namespaceInUrlFormat).append(":");
@@ -464,9 +462,11 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	protected List<InterceptedUrl> findActionClosures(final Class<?> clazz) {
 		List<InterceptedUrl> actionClosures = new ArrayList<InterceptedUrl>();
 		for (Method method : clazz.getDeclaredMethods()) {
-			grails.plugin.springsecurity.annotation.Secured annotation = method.getAnnotation(grails.plugin.springsecurity.annotation.Secured.class);
+			grails.plugin.springsecurity.annotation.Secured annotation = method.getAnnotation(
+					grails.plugin.springsecurity.annotation.Secured.class);
 			if (annotation != null && annotation.closure() != grails.plugin.springsecurity.annotation.Secured.class) {
-				actionClosures.add(new InterceptedUrl(grailsUrlConverter.toUrlElement(method.getName()), annotation.closure(), getHttpMethod(annotation)));
+				actionClosures.add(new InterceptedUrl(grailsUrlConverter.toUrlElement(
+						method.getName()), annotation.closure(), getHttpMethod(annotation)));
 			}
 		}
 		return actionClosures;

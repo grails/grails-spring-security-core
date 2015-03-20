@@ -80,7 +80,7 @@ class ${groupClassName}${roleClassName} implements Serializable {
 
 	static constraints = {
 		${roleClassProperty} validator: { ${roleClassName} r, ${groupClassName}${roleClassName} rg ->
-			if (rg.${groupClassProperty} == null) return
+			if (rg.${groupClassProperty} == null || rg.${groupClassProperty}.id == null) return
 			boolean existing = false
 			${groupClassName}${roleClassName}.withNewSession {
 				existing = ${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)

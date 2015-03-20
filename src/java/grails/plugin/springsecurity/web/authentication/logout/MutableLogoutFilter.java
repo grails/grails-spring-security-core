@@ -58,23 +58,19 @@ public class MutableLogoutFilter extends LogoutFilter {
 		HttpServletRequest request = (HttpServletRequest) req;
 		HttpServletResponse response = (HttpServletResponse) res;
 
-		if (requiresLogout(request, response)) {
-			Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-			if (log.isDebugEnabled()) {
-				log.debug("Logging out user '{}' and transferring to logout destination", auth);
-			}
-
-			for (LogoutHandler handler : handlers) {
-				handler.logout(request, response, auth);
-			}
-
-			logoutSuccessHandler.onLogoutSuccess(request, response, auth);
-
+		if (!requiresLogout(request, response)) {
+			chain.doFilter(request, response);
 			return;
 		}
 
-		chain.doFilter(request, response);
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		log.debug("Logging out user '{}' and transferring to logout destination", auth);
+
+		for (LogoutHandler handler : handlers) {
+			handler.logout(request, response, auth);
+		}
+
+		logoutSuccessHandler.onLogoutSuccess(request, response, auth);
 	}
 
 	/**

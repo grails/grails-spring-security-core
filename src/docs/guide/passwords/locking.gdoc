@@ -142,7 +142,7 @@ Here is a sample Quartz job that demonstrates how to find and disable users with
 {code}
 package com.mycompany.myapp
 
-class ExpirePasswordsJob  {
+class ExpirePasswordsJob {
 
    static triggers = {
       cron name: 'myTrigger', cronExpression: '0 0 0 * * ?' // midnight daily
