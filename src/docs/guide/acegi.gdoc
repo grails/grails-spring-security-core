@@ -1,1 +1,0 @@
-If you have an old application that uses the [Acegi plugin|http://grails.org/plugin/acegi/] you can use the information here to migrate to the newer approaches in this plugin. Note that these guides were written for the 1.x versions of the plugin, so you'll also need to be aware of what is new in 2.0 and above.

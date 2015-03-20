@@ -1,4 +1,4 @@
-The Spring Security plugin simplifies the integration of  [Spring Security|http://docs.spring.io/spring-security/site/index.html] (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.
+The Spring Security plugin simplifies the integration of  [Spring Security|http://docs.spring.io/spring-security/site/index.html] into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.
 
 This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.
 
