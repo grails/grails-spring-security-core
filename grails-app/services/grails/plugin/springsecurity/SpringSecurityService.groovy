@@ -81,10 +81,13 @@ class SpringSecurityService {
 		def User = getClassForName(securityConfig.userLookup.userDomainClassName)
 
 		if (principal instanceof GrailsUser) {
-			User.get currentUserId
+			User.get principal.id
 		}
 		else {
-			User.findWhere((securityConfig.userLookup.usernamePropertyName): principal.username)
+			User.createCriteria().get {
+				eq securityConfig.userLookup.usernamePropertyName, principal.username
+				cache true
+			}
 		}
 	}
 
