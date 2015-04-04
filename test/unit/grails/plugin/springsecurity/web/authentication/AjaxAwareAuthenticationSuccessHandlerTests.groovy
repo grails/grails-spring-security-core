@@ -47,21 +47,6 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 		SecurityRequestHolder.set request, response
 	}
 
-	void testDetermineTargetUrl_Ajax() {
-
-		handler.alwaysUseDefaultTargetUrl = true
-
-		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
-
-		assert AJAX_SUCCESS_URL == handler.determineTargetUrl(
-				request, new MockHttpServletResponse())
-	}
-
-	void testDetermineTargetUrl_NotAjax() {
-		assert DEFAULT_TARGET_URL == handler.determineTargetUrl(
-				new MockHttpServletRequest(), new MockHttpServletResponse())
-	}
-
 	void testOnAuthenticationSuccess() {
 		Authentication authentication = new TestingAuthenticationToken('username', 'password')
 
