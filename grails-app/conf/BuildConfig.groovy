@@ -40,7 +40,7 @@ grails.project.dependency.resolution = {
 			         'tomcat-servlet-api'
 		}
 
-		compile 'net.sf.ehcache:ehcache-core:2.6.9'
+		compile 'net.sf.ehcache:ehcache:2.9.0'
 	}
 
 	plugins {
