@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 import grails.plugin.springsecurity.SecurityConfigType
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken
-
 import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -87,6 +87,9 @@ security {
 		groupAuthorityNameField = null //must be set if using authority groups
 	}
 	useRoleGroups = false
+
+    logoutSuccessHandlerClass = org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
+    userDetailsServiceClass = grails.plugin.springsecurity.userdetails.GormUserDetailsService
 
 	/** authenticationProcessingFilter */
 	apf {
