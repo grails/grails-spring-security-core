@@ -12,6 +12,7 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	${groupClassName} ${groupClassProperty}
 	${roleClassName} ${roleClassProperty}
 
+	@Override
 	boolean equals(other) {
 		if (!(other instanceof ${groupClassName}${roleClassName})) {
 			return false
@@ -21,6 +22,7 @@ class ${groupClassName}${roleClassName} implements Serializable {
 		other.${groupClassProperty}?.id == ${groupClassProperty}?.id
 	}
 
+	@Override
 	int hashCode() {
 		def builder = new HashCodeBuilder()
 		if (${groupClassProperty}) builder.append(${groupClassProperty}.id)
@@ -29,17 +31,11 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	}
 
 	static ${groupClassName}${roleClassName} get(long ${groupClassProperty}Id, long ${roleClassProperty}Id) {
-		${groupClassName}${roleClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id) &&
-			${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
-		}.get()
+		${groupClassName}${roleClassName}.where { ${groupClassProperty}.id == ${groupClassProperty}Id && ${roleClassProperty}.id == ${roleClassProperty}Id }.get()
 	}
 
 	static boolean exists(long ${groupClassProperty}Id, long ${roleClassProperty}Id) {
-		${groupClassName}${roleClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id) &&
-			${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
-		}.count() > 0
+		${groupClassName}${roleClassName}.where { ${groupClassProperty}.id == ${groupClassProperty}Id && ${roleClassProperty}.id == ${roleClassProperty}Id }.count() > 0
 	}
 
 	static ${groupClassName}${roleClassName} create(${groupClassName} ${groupClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
@@ -51,10 +47,7 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	static boolean remove(${groupClassName} rg, ${roleClassName} r, boolean flush = false) {
 		if (rg == null || r == null) return false
 
-		int rowCount = ${groupClassName}${roleClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(rg.id) &&
-			${roleClassProperty} == ${roleClassName}.load(r.id)
-		}.deleteAll()
+		int rowCount = ${groupClassName}${roleClassName}.where { ${groupClassProperty} == u && ${roleClassProperty} == r }.deleteAll()
 
 		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
 
@@ -64,9 +57,7 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	static void removeAll(${roleClassName} r, boolean flush = false) {
 		if (r == null) return
 
-		${groupClassName}${roleClassName}.where {
-			${roleClassProperty} == ${roleClassName}.load(r.id)
-		}.deleteAll()
+		${groupClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
 
 		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
 	}
@@ -74,9 +65,7 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	static void removeAll(${groupClassName} rg, boolean flush = false) {
 		if (rg == null) return
 
-		${groupClassName}${roleClassName}.where {
-			${groupClassProperty} == ${groupClassName}.load(rg.id)
-		}.deleteAll()
+		${groupClassName}${roleClassName}.where { ${groupClassProperty} == rg }.deleteAll()
 
 		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
 	}
