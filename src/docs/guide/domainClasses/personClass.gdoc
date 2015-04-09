@@ -1,4 +1,4 @@
-Spring Security uses an [Authentication|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html] object to determine whether the current user has the right to perform a secured action, such as accessing a URL, manipulating a secured domain object, accessing a secured method, and so on. This object is created during login. Typically overlap occurs between the need for authentication data and the need to represent a user in the application in ways that are unrelated to security. The mechanism for populating the authentication is completely pluggable in Spring Security; you only need to provide an implementation of [UserDetailsService|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html] and implement its one method, @loadUserByUsername()@.
+Spring Security uses an [Authentication|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html] object to determine whether the current user has the right to perform a secured action, such as accessing a URL, manipulating a secured domain object, accessing a secured method, and so on. This object is created during login. Typically overlap occurs between the need for authentication data and the need to represent a user in the application in ways that are unrelated to security. The mechanism for populating the authentication is completely pluggable in Spring Security; you only need to provide an implementation of [UserDetailsService|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html] and implement its one method, @loadUserByUsername()@.
 
 By default the plugin uses a Grails 'person' domain class to manage this data. @username@, @enabled@, @password@ are the default names of the core required properties. You can easily [plug in your own implementation|guide:userDetailsService], and rename the class, package, and fields. In addition, you should define an @authorities@ property to retrieve roles; this can be a public field or a @getAuthorities()@ method, and it can be defined through a traditional GORM many-to-many or a custom mapping.
 
@@ -7,7 +7,9 @@ Assuming you choose @com.mycompany.myapp@ as your package, and @User@ as your cl
 {code}
 package com.mycompany.myapp
 
-class User {
+class User implements Serializable {
+
+   private static final long serialVersionUID = 1
 
    transient springSecurityService
 
@@ -17,6 +19,27 @@ class User {
    boolean accountExpired
    boolean accountLocked
    boolean passwordExpired
+
+   User(String username, String password) {
+      this()
+      this.username = username
+      this.password = password
+   }
+
+   @Override
+   int hashCode() {
+      username?.hashCode() ?: 0
+   }
+
+   @Override
+   boolean equals(other) {
+      is(other) || (other instanceof User && other.username == username)
+   }
+
+   @Override
+   String toString() {
+      username
+   }
 
    static transients = ['springSecurityService']
 
@@ -30,7 +53,7 @@ class User {
    }
 
    Set<Role> getAuthorities() {
-      UserRole.findAllByUser(this).collect { it.role }
+      UserRole.findAllByUser(this)*.role
    }
 
    def beforeInsert() {
@@ -54,7 +77,9 @@ Optionally, add other properties such as @email@, @firstName@, @lastName@, and c
 {code}
 package com.mycompany.myapp
 
-class User {
+class User implements Serializable {
+
+   private static final long serialVersionUID = 1
 
    transient springSecurityService
 
@@ -68,6 +93,27 @@ class User {
    boolean accountLocked
    boolean passwordExpired
 
+   User(String username, String password) {
+      this()
+      this.username = username
+      this.password = password
+   }
+
+   @Override
+   int hashCode() {
+      username?.hashCode() ?: 0
+   }
+
+   @Override
+   boolean equals(other) {
+      is(other) || (other instanceof User && other.username == username)
+   }
+
+   @Override
+   String toString() {
+      username
+   }
+
    static transients = ['springSecurityService']
 
    static constraints = {
@@ -80,7 +126,7 @@ class User {
    }
 
    Set<Role> getAuthorities() {
-      UserRole.findAllByUser(this).collect { it.role }
+      UserRole.findAllByUser(this)*.role
    }
 
    def someMethod {

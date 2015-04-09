@@ -8,9 +8,31 @@ Assuming you choose @com.mycompany.myapp@ as your package, and @Role@ as your cl
 {code}
 package com.mycompany.myapp
 
-class Role {
+class Role implements Serializable {
+
+   private static final long serialVersionUID = 1
 
    String authority
+
+   Role(String authority) {
+      this()
+      this.authority = authority
+   }
+
+   @Override
+   int hashCode() {
+      authority?.hashCode() ?: 0
+   }
+
+   @Override
+   boolean equals(other) {
+      is(other) || (other instanceof Role && other.authority == authority)
+   }
+
+   @Override
+   String toString() {
+      authority
+   }
 
    static mapping = {
       cache true

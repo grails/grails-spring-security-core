@@ -1,11 +1,17 @@
-The Spring Security plugin simplifies the integration of  [Spring Security|http://docs.spring.io/spring-security/site/index.html] into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.
+The Spring Security plugin simplifies the integration of  [Spring Security|http://projects.spring.io/spring-security/] into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.
 
 This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.
 
 h4. Release History and Acknowledgment
+* July 8, 2014
+** 2.0-RC4 release
+* May 19, 2014
+** 2.0-RC3 release
 * October 4, 2013
 ** 2.0-RC2 release
 ** [JIRA Issues|http://jira.grails.org/issues/?jql=project%20%3D%20GPSPRINGSECURITYCORE%20AND%20fixVersion%20%3D%20%22Grails-Spring-Security-Core%202.0%22%20ORDER%20BY%20updated%20DESC%2C%20priority%20DESC%2C%20created%20ASC]
+* October 3, 2013
+** 2.0-RC1 release
 * April 6, 2012
 ** 1.2.7.3 release
 ** [JIRA Issues|http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13100]
@@ -72,4 +78,4 @@ h4. Release History and Acknowledgment
 * April 27, 2010
 ** initial 0.1 release
 
-This plugin is based on work done for the [Acegi|http://grails.org/plugin/acegi/] plugin by Tsuyoshi Yamamoto.
+This plugin is based on work done for the [Acegi|https://grails.org/plugin/acegi/] plugin by Tsuyoshi Yamamoto.

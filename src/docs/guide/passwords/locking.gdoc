@@ -11,10 +11,10 @@ When an accessor returns @true@ for @accountExpired@, @accountLocked@, or @passw
 
 {table}
 *Accessor* | *Property* | *Exception*
-@isAccountNonExpired()@ | @accountExpired@ | [AccountExpiredException|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AccountExpiredException.html]
-@isAccountNonLocked()@ | @accountLocked@ | [LockedException|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/LockedException.html]
-@isCredentialsNonExpired()@ | @passwordExpired@ | [CredentialsExpiredException|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/CredentialsExpiredException.html]
-@isEnabled()@ | @enabled@ | [DisabledException|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/DisabledException.html]
+@isAccountNonExpired()@ | @accountExpired@ | [AccountExpiredException|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AccountExpiredException.html]
+@isAccountNonLocked()@ | @accountLocked@ | [LockedException|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/LockedException.html]
+@isCredentialsNonExpired()@ | @passwordExpired@ | [CredentialsExpiredException|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/CredentialsExpiredException.html]
+@isEnabled()@ | @enabled@ | [DisabledException|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/DisabledException.html]
 {table}
 
 You can configure an exception mapping in @Config.groovy@ to associate a URL to any or all of these exceptions to determine where to redirect after a failure, for example:
@@ -45,7 +45,7 @@ You can customize these messages by setting the corresponding property in @Confi
 grails.plugin.springsecurity.errors.login.locked = "None shall pass."
 {code}
 
-You can use this functionality to manually lock a user's account or expire the password, but you can automate the process. For example, use the [Quartz plugin|http://grails.org/plugin/quartz] to periodically expire everyone's password and force them to go to a page where they update it. Keep track of the date when users change their passwords and use a Quartz job to expire their passwords once the password is older than a fixed max age.
+You can use this functionality to manually lock a user's account or expire the password, but you can automate the process. For example, use the [Quartz plugin|https://grails.org/plugin/quartz] to periodically expire everyone's password and force them to go to a page where they update it. Keep track of the date when users change their passwords and use a Quartz job to expire their passwords once the password is older than a fixed max age.
 
 Here's an example for a password expired workflow. You'd need a simple action to display a password reset form (similar to the login form):
 

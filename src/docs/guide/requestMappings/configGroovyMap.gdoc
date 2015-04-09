@@ -8,18 +8,18 @@ Define a Map in @Config.groovy@:
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
-   '/':                  ['permitAll'],
-   '/index':             ['permitAll'],
-   '/index.gsp':         ['permitAll'],
-   '/assets/**':         ['permitAll'],
-   '/**/js/**':          ['permitAll'],
-   '/**/css/**':         ['permitAll'],
-   '/**/images/**':      ['permitAll'],
-   '/**/favicon.ico':    ['permitAll'],
-   '/login/**':          ['permitAll'],
-   '/logout/**':         ['permitAll'],
-   '/secure/**':         ['ROLE_ADMIN'],
-   '/finance/**':        ['ROLE_FINANCE', 'isFullyAuthenticated()'],
+   '/':                ['permitAll'],
+   '/index':           ['permitAll'],
+   '/index.gsp':       ['permitAll'],
+   '/assets/**':       ['permitAll'],
+   '/**/js/**':        ['permitAll'],
+   '/**/css/**':       ['permitAll'],
+   '/**/images/**':    ['permitAll'],
+   '/**/favicon.ico':  ['permitAll'],
+   '/login/**':        ['permitAll'],
+   '/logout/**':       ['permitAll'],
+   '/secure/**':       ['ROLE_ADMIN'],
+   '/finance/**':      ['ROLE_FINANCE', 'isFullyAuthenticated()'],
 ]
 {code}
 

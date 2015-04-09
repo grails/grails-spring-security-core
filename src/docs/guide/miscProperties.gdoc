@@ -5,7 +5,7 @@ printStatusMessages | @true@ | Whether to print status messages such as "Configu
 rejectIfNoRule | @true@ | 'strict' mode where a request mapping is required for all resources; if @true@ make sure to allow @IS_AUTHENTICATED_ ANONYMOUSLY@ for '/', '/js/\*\*', '/css/\*\*', '/images/\*\*', '/login/\*\*', '/logout/\*\*', and so on.
 anon. key | 'foo' | anonymousProcessingFilter key.
 atr. anonymousClass | [grails.plugin.springsecurity. authentication. GrailsAnonymous AuthenticationToken] | Anonymous token class.
-useHttpSession EventPublisher | @false@ | If @true@, an [HttpSession EventPublisher|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/session/HttpSessionEventPublisher.html] will be configured.
+useHttpSession EventPublisher | @false@ | If @true@, an [HttpSession EventPublisher|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/session/HttpSessionEventPublisher.html] will be configured.
 cacheUsers | @false@ | If @true@, logins are cached using an @EhCache@. See [Account Locking and Forcing Password Change, under User Cache|guide:locking].
 useSecurity EventListener | @false@ | If @true@, configure @SecurityEventListener@. See [Events|guide:events].
 dao. reflectionSalt SourceProperty | none | Which property to use for the reflection-based salt source. See [Salted Passwords|guide:salt]
@@ -18,12 +18,12 @@ securityConfigType | 'Annotation' | Type of request mapping to use, one of "Anno
 controllerAnnotations. lowercase | @true@ | Whether to do URL comparisons using lowercase.
 controllerAnnotations. staticRules | none | Extra rules that cannot be mapped using annotations.
 interceptUrlMap | none | Request mapping definition when using "InterceptUrlMap". See [Simple Map in Config.groovy|guide:configGroovyMap].
-registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events.
+registerLoggerListener | @false@ | If @true@, registers a [LoggerListener|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/event/LoggerListener.html] that logs interceptor-related application events.
 scr. allowSessionCreation | @true@ | Whether to allow creating a session in the @securityContextRepository@ bean
 scr. disableUrlRewriting | @true@ | Whether to disable URL rewriting (and the jsessionid attribute)
 scr. springSecurity ContextKey | @HttpSessionSecurity ContextRepository. SPRING_SECURITY_ CONTEXT_KEY@ | The HTTP session key to store the @SecurityContext@ under
 scpf. forceEager SessionCreation | @false@ | Whether to eagerly create a session in the @securityContextRepository@ bean
-sch. strategyName | @SecurityContextHolder. MODE_THREADLOCAL@ | The strategy to use for storing the @SecurityContext@ - can be one of @MODE_THREADLOCAL@, @MODE_INHERITABLETHREADLOCAL@, or @MODE_GLOBAL@, or the name of a class implementing [SecurityContextHolderStrategy|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolderStrategy.html]
+sch. strategyName | @SecurityContextHolder. MODE_THREADLOCAL@ | The strategy to use for storing the @SecurityContext@ - can be one of @MODE_THREADLOCAL@, @MODE_INHERITABLETHREADLOCAL@, or @MODE_GLOBAL@, or the name of a class implementing [SecurityContextHolderStrategy|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolderStrategy.html]
 debug. useFilter | @false@ | Whether to use the @DebugFilter@ to log request debug information to the console
 providerManager. eraseCredentials AfterAuthentication | @true@ | Whether to remove the password from the @Authentication@ and its child objects after successful authentication
 {table}

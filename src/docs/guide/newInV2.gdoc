@@ -6,7 +6,7 @@ h4. Package changes
 
 All classes are now in the @grails.plugin.springsecurity@ package or a subpackage. The names tend to correspond to the analagous Spring Security classes where appropriate, for example @MutableLogoutFilter@ is in the @grails.plugin.springsecurity.web.authentication.logout@ package to correspond with the @org.springframework.security.web.authentication.logout@ package.
 
-Some of the changes were more subtle though, for example all classes in the old @grails.plugins.springsecurity@ packages and subpackages are now in @grails.plugin.springsecurity@, only one character different. This will result in a non-trivial upgrade process for your applications, but that is a benefit as it will hopefully point you at other important changes you might have otherwise missed.
+Some of the changes were more subtle though; for example all classes in the old @grails.plugins.springsecurity@ packages and subpackages are now in @grails.plugin.springsecurity@, only one character different. This will result in a non-trivial upgrade process for your applications, but that is a benefit as it will hopefully point you at other important changes you might have otherwise missed.
 
 h4. Configuration prefix changes
 
@@ -14,7 +14,7 @@ The prefix used in @Config.groovy@ for the plugin's configuration settings has c
 
 h4. More aggressively secure by default
 
-In 1.x it was assumed that defaulting pages to not be secured, and configuring guarded URLs as needed, was a more pragmatic approach. Now however, all URLs are blocked unless there is a request mapping rule. The assumption behind this change is that if you forget to guard a new URL, it can take a long time to discover that users had access, whereas if you forget when using the "pessimistic" approach, nobody can access the URL and the error will be quickly discovered. This approach is more work, but much safer.
+In 1.x it was assumed that defaulting pages to not be secured, and configuring guarded URLs as needed, was a more pragmatic approach. Now however, all URLs are initially blocked unless there is a request mapping rule, even if that rule allows all access. The assumption behind this change is that if you forget to guard a new URL, it can take a long time to discover that users had access, whereas if you forget to open access for allowed users when using the "pessimistic" approach, nobody can access the URL and the error will be quickly discovered. This approach is more work, but much safer.
 
 This is described in more detail [here|guide:requestMappings].
 
@@ -28,7 +28,7 @@ grails.plugin.springsecurity.logout.postOnly = false
 
 h5. bcrypt by default
 
-The default password hashing algorithm is now bcrypt since it is a very robust hashing approach. [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2] is similar and is also supported. You  can still use any message digest algorithm that is supported in your JDK; see [this Java page|http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
+The default password hashing algorithm is now bcrypt since it is a very robust hashing approach. [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2] is similar and is also supported. You  can still use any message digest algorithm that is supported in your JDK; see [this Java page|https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
 
 New applications should use bcrypt or PBKDF2, but if you didn't change the default settings in previous versions of the plugin and want to continue using the same algorithm, use these settings:
 
@@ -127,13 +127,13 @@ In Spring Security 3.0 and earlier, the username was stored in the HTTP session 
 
 h4. \@Authorities annotation
 
-You can use the new \@Authorities annotation to make your annotations more DRY. See [this blog post|http://burtbeckwith.com/blog/?p=1398] for a description about the motivation and implementation details. Note that the package for the annotation in the plugin is @grails.plugin.springsecurity.annotation@, not @grails.plugins.springsecurity.annotation@ as described in the blog post.
+You can use the new \@Authorities annotation to make your annotations more DRY. See [this blog post|https://burtbeckwith.com/blog/?p=1398] for a description about the motivation and implementation details. Note that the package for the annotation in the plugin is @grails.plugin.springsecurity.annotation@, not @grails.plugins.springsecurity.annotation@ as described in the blog post.
 
 h4. Miscellaneous changes
 
 h5. AuthenticationDetailsSource
 
-Previously you could configure the details class that was constructed by the @authenticationDetailsSource@ bean by setting the @authenticationDetails.authClass@ property. In Spring Security 3.2 this isn't possible because @WebAuthenticationDetailsSource@ always returns a @WebAuthenticationDetails@. But you can still customize the details class by creating a class that implements the [AuthenticationDetailsSource|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationDetailsSource.html] interface, e.g.:
+Previously you could configure the details class that was constructed by the @authenticationDetailsSource@ bean by setting the @authenticationDetails.authClass@ property. In Spring Security 3.2 this isn't possible because @WebAuthenticationDetailsSource@ always returns a @WebAuthenticationDetails@. But you can still customize the details class by creating a class that implements the [AuthenticationDetailsSource|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationDetailsSource.html] interface, e.g.:
 
 {code}
 package com.mycompany;
