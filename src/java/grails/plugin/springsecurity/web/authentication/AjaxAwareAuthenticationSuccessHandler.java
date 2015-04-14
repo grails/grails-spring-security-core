@@ -36,18 +36,7 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 
 	@Override
 	protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response) {
-		if (SpringSecurityUtils.isAjax(request)) {
-			return ajaxSuccessUrl;
-		}
-		return super.determineTargetUrl(request, response);
-	}
-
-	/**
-	 * Dependency injection for the Ajax success url, e.g. '/login/ajaxSuccess'
-	 * @param url the url
-	 */
-	public void setAjaxSuccessUrl(final String url) {
-		ajaxSuccessUrl = url;
+		return SpringSecurityUtils.isAjax(request) ? ajaxSuccessUrl : super.determineTargetUrl(request, response);
 	}
 
 	@Override
@@ -60,6 +49,14 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 			// always remove the saved request
 			requestCache.removeRequest(request, response);
 		}
+	}
+
+	/**
+	 * Dependency injection for the Ajax success url, e.g. '/login/ajaxSuccess'.
+	 * @param url the url
+	 */
+	public void setAjaxSuccessUrl(final String url) {
+		ajaxSuccessUrl = url;
 	}
 
 	@Override

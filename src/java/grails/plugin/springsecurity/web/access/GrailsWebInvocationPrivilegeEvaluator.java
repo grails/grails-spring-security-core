@@ -97,8 +97,7 @@ public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationP
 		}
 		catch (AccessDeniedException unauthorized) {
 			if (log.isDebugEnabled()) {
-				GrailsUtil.deepSanitize(unauthorized);
-				log.debug(fi + " denied for " + authentication, unauthorized);
+				log.debug(fi + " denied for " + authentication, GrailsUtil.deepSanitize(unauthorized));
 			}
 			return false;
 		}

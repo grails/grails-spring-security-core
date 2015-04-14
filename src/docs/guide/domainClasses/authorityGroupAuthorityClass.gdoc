@@ -5,8 +5,11 @@ If you run the [s2-quickstart|Scripts] script with the group name specified, thi
 {code}
 package com.mycompany.myapp
 
+import groovy.transform.ToString
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 
+@ToString(cache=true, includeNames=true, includePackage=false)
 class RoleGroupRole implements Serializable {
 
    private static final long serialVersionUID = 1
@@ -50,7 +53,7 @@ class RoleGroupRole implements Serializable {
       instance
    }
 
-   static boolean remove(RoleGroup rg, Role r) {
+   static boolean remove(RoleGroup rg, Role r, boolean flush = false) {
       if (rg == null || r == null) return false
 
       int rowCount = RoleGroupRole.where {
@@ -58,28 +61,34 @@ class RoleGroupRole implements Serializable {
          role == Role.load(r.id)
       }.deleteAll()
 
+      if (flush) { RoleGroupRole.withSession { it.flush() } }
+
       rowCount > 0
    }
 
-   static void removeAll(Role r) {
+   static void removeAll(Role r, boolean flush = false) {
       if (r == null) return
 
       RoleGroupRole.where {
          role == Role.load(r.id)
       }.deleteAll()
+
+      if (flush) { RoleGroupRole.withSession { it.flush() } }
    }
 
-   static void removeAll(RoleGroup rg) {
+   static void removeAll(RoleGroup rg, boolean flush = false) {
       if (rg == null) return
 
       RoleGroupRole.where {
          roleGroup == RoleGroup.load(rg.id)
       }.deleteAll()
+
+      if (flush) { RoleGroupRole.withSession { it.flush() } }
    }
 
    static constraints = {
       role validator: { Role r, RoleGroupRole rg ->
-         if (rg.roleGroup == null) return
+         if (rg.roleGroup == null || rg.roleGroup.id == null) return
          boolean existing = false
          RoleGroupRole.withNewSession {
             existing = RoleGroupRole.exists(rg.roleGroup.id, r.id)

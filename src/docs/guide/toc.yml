@@ -4,7 +4,7 @@ introduction:
   gettingStarted: Getting Started
 newInV2: What's New in Version 2.0
 domainClasses:
-  title: Required and Optional Domain Classes
+  title: Domain Classes
   personClass: Person Class
   authorityClass: Authority Class
   personAuthorityClass: PersonAuthority Class
@@ -55,10 +55,5 @@ miscProperties: Miscellaneous Properties
 tutorials:
   title: Tutorials
   usingControllerAnnotations: Using Controller Annotations to Secure URLs
-  migrationFromAcegi: Migration From the Acegi Plugin
 controllerMetaClassMethods: Controller MetaClass Methods
 i18n: Internationalization
-acegi:
-  title: Migrating from the Acegi plugin
-  acegiDifferences: Differences Between the Spring Security and Acegi Plugins
-  acegiMigrating: Migrating from the Acegi Plugin

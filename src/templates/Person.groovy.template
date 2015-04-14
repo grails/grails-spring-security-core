@@ -8,10 +8,10 @@ class ${userClassName} implements Serializable {
 
 	String username
 	String password
-	Boolean enabled = true
-	Boolean accountExpired = false
-	Boolean accountLocked = false
-	Boolean passwordExpired = false
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
 	${userClassName}(String username, String password) {
 		this()

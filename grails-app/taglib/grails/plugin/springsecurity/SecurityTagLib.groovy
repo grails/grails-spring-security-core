@@ -187,18 +187,18 @@ class SecurityTagLib {
 		}
 	}
 
-    /**
-     * Provides a wrapper around the standard Grails link tag <code>g:link</code>.
-     * Renders the link if the user has access to the specified URL.
-     */
-    def link = { attrs, body ->
-        // retain original attributes for later, since hasAccess() removes ones necessary to create a link
-        def origAttrsMinusExpression = new HashMap(attrs)
-        origAttrsMinusExpression.remove('expression')
-        if (hasAccess(attrs, 'link')) {
-            out << g.link(origAttrsMinusExpression, body)
-        }
-    }
+	/**
+	 * Provides a wrapper around the standard Grails link tag <code>g:link</code>.
+	 * Renders the link if the user has access to the specified URL.
+	 */
+	def link = { attrs, body ->
+		// retain original attributes for later, since hasAccess() removes ones necessary to create a link
+		def origAttrsMinusExpression = [:] + attrs
+		origAttrsMinusExpression.remove 'expression'
+		if (hasAccess(attrs, 'link')) {
+			out << g.link(origAttrsMinusExpression, body)
+		}
+	}
 
 	/**
 	 * Renders the body if the specified expression (a String; the 'expression' attribute)

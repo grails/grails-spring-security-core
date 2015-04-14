@@ -12,14 +12,14 @@ grails.project.dependency.resolution = {
 	log 'warn'
 
 	repositories {
-		grailsCentral()
 		mavenLocal()
+		grailsCentral()
 		mavenCentral()
 	}
 
 	dependencies {
 
-		String springSecurityVersion = '3.2.6.RELEASE'
+		String springSecurityVersion = '3.2.7.RELEASE'
 
 		compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 			excludes 'aopalliance', 'aspectjrt', 'cglib-nodep', 'commons-collections', 'commons-logging',

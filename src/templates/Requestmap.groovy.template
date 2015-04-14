@@ -1,8 +1,11 @@
 package ${packageName}
 
+import groovy.transform.ToString
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 import org.springframework.http.HttpMethod
 
+@ToString(cache=true, includeNames=true, includePackage=false)
 class ${requestmapClassName} implements Serializable {
 
 	private static final long serialVersionUID = 1

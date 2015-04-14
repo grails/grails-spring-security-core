@@ -1,4 +1,4 @@
-To use [HTTP Basic Authentication|http://en.wikipedia.org/wiki/Basic_access_authentication] in your application, set the @useBasicAuth@ attribute to @true@. Also change the @basic.realmName@ default value to one that suits your application, for example:
+To use [HTTP Basic Authentication|https://en.wikipedia.org/wiki/Basic_access_authentication] in your application, set the @useBasicAuth@ attribute to @true@. Also change the @basic.realmName@ default value to one that suits your application, for example:
 
 {code}
 grails.plugin.springsecurity.useBasicAuth = true
@@ -27,7 +27,7 @@ In this example we're using the @JOINED_FILTERS@ keyword instead of explicitly l
 
 For the @/webservice/\*\*@ URLs, we want all filters except for the standard @ExceptionTranslationFilter@ since we want to use just the one configured for Basic Auth. And for the @/\*\*@ URLs (everything else) we want everything except for the Basic Auth filter and its configured @ExceptionTranslationFilter@.
 
-[Digest Authentication|http://en.wikipedia.org/wiki/Digest_access_authentication] is similar to Basic but is more secure because it does not send your password in obfuscated cleartext. Digest resembles Basic in practice - you get the same browser popup dialog when you authenticate. But because the credential transfer is genuinely hashed (instead of just Base64-encoded as with Basic authentication) you do not need SSL to guard your logins.
+[Digest Authentication|https://en.wikipedia.org/wiki/Digest_access_authentication] is similar to Basic but is more secure because it does not send your password in obfuscated cleartext. Digest resembles Basic in practice - you get the same browser popup dialog when you authenticate. But because the credential transfer is genuinely hashed (instead of just Base64-encoded as with Basic authentication) you do not need SSL to guard your logins.
 
 {table}
 *Property* | *Default Value* | *Meaning*

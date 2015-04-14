@@ -127,7 +127,7 @@ class ReflectionUtils {
 		List<InterceptedUrl> split = []
 		m.each { String key, value ->
 			List tokens
-			if (value instanceof List<?> || value.getClass().array) {
+			if (value instanceof Collection || value.getClass().array) {
 				tokens = value*.toString()
 			}
 			else { // String/GString
@@ -146,7 +146,7 @@ class ReflectionUtils {
 
 			List tokens
 			def value = row.access
-			if (value instanceof Collection<?> || value.getClass().array) {
+			if (value instanceof Collection || value.getClass().array) {
 				tokens = value*.toString()
 			}
 			else { // String/GString
