@@ -15,7 +15,6 @@
 package grails.plugin.springsecurity.web.authentication.rememberme
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.transaction.Transactional
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.plugins.support.aware.GrailsApplicationAware
@@ -36,14 +35,15 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 	/** Dependency injection for grailsApplication */
 	GrailsApplication grailsApplication
 
-	@Transactional
 	void createNewToken(PersistentRememberMeToken token) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
 		// join an existing transaction if one is active
-		clazz.newInstance(username: token.username, series: token.series,
-		                  token: token.tokenValue, lastUsed: token.date).save()
+		clazz.withTransaction { status ->
+			clazz.newInstance(username: token.username, series: token.series,
+					token: token.tokenValue, lastUsed: token.date).save()
+		}
 	}
 
 	PersistentRememberMeToken getTokenForSeries(String seriesId) {
@@ -63,25 +63,28 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 				persistentToken.token, persistentToken.lastUsed)
 	}
 
-	@Transactional
 	void removeUserTokens(String username) {
-		lookupDomainClass()?.where { username == username }?.deleteAll()
+		def clazz = lookupDomainClass()
+		if (!clazz) return
+
+		clazz.withTransaction { status ->
+			// was using HQL but it breaks with NoSQL, so using a less efficient impl:
+			for (instance in clazz.findAllByUsername(username)) {
+				instance.delete()
+			}
+		}
 	}
 
-	@Transactional
 	void updateToken(String series, String tokenValue, Date lastUsed) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
 		// join an existing transaction if one is active
-		def persistentLogin = clazz.get(series)
-		if (!persistentLogin) {
-			return
+		clazz.withTransaction { status ->
+			def persistentLogin = clazz.get(series)
+			persistentLogin?.token = tokenValue
+			persistentLogin?.lastUsed = lastUsed
 		}
-
-		persistentLogin.token = tokenValue
-		persistentLogin.lastUsed = lastUsed
-		persistentLogin.save()
 	}
 
 	protected Class lookupDomainClass() {
