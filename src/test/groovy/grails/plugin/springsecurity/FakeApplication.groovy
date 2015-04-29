@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 package grails.plugin.springsecurity
-
-import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
+import grails.config.Config
+import grails.core.DefaultGrailsApplication
 
 /**
  * For testing only.
@@ -33,5 +33,5 @@ class FakeApplication extends DefaultGrailsApplication {
 	}
 
 	@Override
-	ConfigObject getConfig() { config }
+	grails.config.Config getConfig() { config }
 }

@@ -16,8 +16,8 @@ package grails.plugin.springsecurity
 
 import grails.transaction.Transactional
 
-import org.codehaus.groovy.grails.commons.ClassPropertyFetcher
-import org.codehaus.groovy.grails.commons.DefaultGrailsApplication
+import org.grails.core.util.ClassPropertyFetcher;
+import grails.core.DefaultGrailsApplication
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl
 import org.springframework.security.authentication.TestingAuthenticationToken

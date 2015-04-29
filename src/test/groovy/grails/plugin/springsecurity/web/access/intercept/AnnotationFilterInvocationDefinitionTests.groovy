@@ -22,10 +22,10 @@ import grails.web.CamelCaseUrlConverter
 
 import javax.servlet.ServletContext
 
-import org.codehaus.groovy.grails.commons.DefaultGrailsControllerClass
+import org.grails.core.DefaultGrailsControllerClass
 import grails.core.GrailsClass
-import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingEvaluator
-import org.codehaus.groovy.grails.web.mapping.DefaultUrlMappingsHolder
+import org.grails.web.mapping.DefaultUrlMappingEvaluator
+import org.grails.web.mapping.DefaultUrlMappingsHolder
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
 import org.grails.web.servlet.mvc.GrailsWebRequest
