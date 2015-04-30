@@ -13,8 +13,10 @@
  * limitations under the License.
  */
 package grails.plugin.springsecurity
-import grails.config.Config
+
+import grails.config.Config;
 import grails.core.DefaultGrailsApplication
+import org.grails.config.PropertySourcesConfig
 
 /**
  * For testing only.
@@ -23,7 +25,7 @@ import grails.core.DefaultGrailsApplication
  */
 class FakeApplication extends DefaultGrailsApplication {
 
-	final ConfigObject config = new ConfigObject()
+	final Config config = new PropertySourcesConfig()
 
 	FakeApplication() {}
 
@@ -33,5 +35,5 @@ class FakeApplication extends DefaultGrailsApplication {
 	}
 
 	@Override
-	ConfigObject getConfig() { config }
+	Config getConfig() { config }
 }
