@@ -33,5 +33,5 @@ class FakeApplication extends DefaultGrailsApplication {
 	}
 
 	@Override
-	grails.config.Config getConfig() { config }
+	ConfigObject getConfig() { config }
 }
