@@ -16,3 +16,4 @@ cobertura.ser
 /build
 /.ng-gradle
 /.gradle
+/.nb-gradle/private/

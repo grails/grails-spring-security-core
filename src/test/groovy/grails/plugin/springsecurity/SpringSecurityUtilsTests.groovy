@@ -271,7 +271,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testGetSecurityConfigType() {
-		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Annotation
+		application.config.put("grails.plugin.springsecurity.securityConfigType",SecurityConfigType.Annotation)
 		assert 'Annotation' == SpringSecurityUtils.securityConfigType
 
 		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()

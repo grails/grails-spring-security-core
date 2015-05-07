@@ -33,6 +33,8 @@ import org.springframework.security.access.AccessDecisionVoter
 import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.expression.SecurityExpressionHandler
+import grails.config.Config;
+import org.grails.config.PropertySourcesConfig
 
 /**
  * Helper methods in Groovy.
