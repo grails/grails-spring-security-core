@@ -1,4 +1,4 @@
-package grails.spring.security.core
+package spring.security.core
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
