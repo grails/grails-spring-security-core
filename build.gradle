@@ -64,9 +64,9 @@ dependencies {
     testCompile "org.grails:grails-plugin-testing"
 
     console "org.grails:grails-console"
-	String springSecurityVersion = ' 4.0.0.RELEASE'
+    String springSecurityVersion = '3.2.7.RELEASE'
 
-    compile("org.springframework.security:spring-security-core:3.2.7.RELEASE") {
+    compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
         exclude module:'aopalliance'
         exclude module:'aspectjrt'
         exclude module:'cglib-nodep'
@@ -97,7 +97,7 @@ dependencies {
     }
 		
 		
-    compile("org.springframework.security:spring-security-web:3.2.7.RELEASE") {
+    compile("org.springframework.security:spring-security-web:$springSecurityVersion") {
         exclude module:'aopalliance'
         exclude module:'commons-collections' 
         exclude module:'commons-logging'
@@ -132,12 +132,13 @@ dependencies {
 		
 //	String hibernateVersion = '3.6.10.Final'
 //    compile("org.hibernate:hibernate:3.6.10.Final") {
-//			//export = false
-//		}
-compile('org.hibernate:hibernate:3.0.5') {
+    //			//export = false
+    //		}
+    compile('org.hibernate:hibernate:3.0.5') {
         transitive = false
     }
-compile("org.grails.plugins:webxml:1.4.2")	
+
+    compile("org.grails.plugins:webxml:1.4.2")
 //	noExport "org.hibernate:hibernate" 
 }
 
