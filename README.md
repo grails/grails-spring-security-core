@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/grails-plugins/grails-spring-security-core.svg)](https://travis-ci.org/grails-plugins/grails-spring-security-core)
+[![Build Status](https://travis-ci.org/grails-plugins/grails-spring-security-core.svg?branch=grails3)](https://travis-ci.org/grails-plugins/grails-spring-security-core)
 
 Grails Spring Security Core Plugin
 ==================================
