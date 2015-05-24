@@ -1,8 +1,6 @@
 language: groovy
 jdk:
 - oraclejdk7
-before_install:
- - chmod +x gradlew
 before_script:
 - rm -rf target
 script: ./travis-build.sh
