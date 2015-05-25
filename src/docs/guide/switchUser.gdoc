@@ -12,7 +12,7 @@ To switch to another user, typically you create a form that submits to @/j_sprin
 <sec:ifAllGranted roles='ROLE_SWITCH_USER'>
 
    <form action='/j_spring_security_switch_user' method='POST'>
-      Switch to user: <input type='text' name='j_username'/> <br/>
+      Switch to user: <input type='text' name='j_username'/> <br>
       <input type='submit' value='Switch'/>
    </form>
 
@@ -94,7 +94,7 @@ Logged in as <sec:username/>
    <sec:ifAllGranted roles='ROLE_SWITCH_USER'>
 
    <form action='${request.contextPath}/j_spring_security_switch_user' method='POST'>
-      Switch to user: <input type='text' name='j_username'/><br/>
+      Switch to user: <input type='text' name='j_username'/><br>
       <input type='submit' value='Switch'/>
    </form>
 

@@ -1,15 +1,44 @@
-.DS_Store
-cobertura.ser
+# .gitignore for Grails 1.2 and 1.3 and 3
+
+# web application files
+/web-app/WEB-INF/classes
+
+# default HSQL database files for production mode
+/prodDb.*
+
+# general HSQL database files
+*Db.properties
+*Db.script
+
+# logs
+/stacktrace.log
+/test/reports
+/logs
+/docs
+
+# project release file
+/*.war
+
+# plugin release files
+/*.zip
+/plugin.xml
+/*.zip.sha1
+
+# older plugin install locations
+/plugins
+/web-app/plugins
+
+# "temporary" build files
+/target
+/build
+/target-eclipse
+/web-app
+/.nb-gradle
+.nb-gradle*
+.gradle
 /*.iml
 /*.iws
 /*.log
 /*.sublime-workspace
 /.idea
 /.settings
-/docs
-/grails-spring-security-core-*.zip
-/grails-spring-security-core-*.zip.sha1
-/plugin.xml
-/target
-/target-eclipse
-/web-app
