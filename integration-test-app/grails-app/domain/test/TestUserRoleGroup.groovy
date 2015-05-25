@@ -1,10 +1,10 @@
 package test
 
+import groovy.transform.ToString
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 
-/**
- * @author <a href='mailto:th3morg@gmail.com'>Ryan Morgan</a>
- */
+@ToString(cache=true, includeNames=true, includePackage=false)
 class TestUserRoleGroup implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -12,6 +12,13 @@ class TestUserRoleGroup implements Serializable {
 	TestUser user
 	TestRoleGroup roleGroup
 
+	TestUserRoleGroup(TestUser u, TestRoleGroup rg) {
+		this()
+		user = u
+		roleGroup = rg
+	}
+
+	@Override
 	boolean equals(other) {
 		if (!(other instanceof TestUserRoleGroup)) {
 			return false
@@ -20,6 +27,7 @@ class TestUserRoleGroup implements Serializable {
 		other.user?.id == user?.id && other.roleGroup?.id == roleGroup?.id
 	}
 
+	@Override
 	int hashCode() {
 		def builder = new HashCodeBuilder()
 		if (user) builder.append(user.id)
@@ -28,30 +36,23 @@ class TestUserRoleGroup implements Serializable {
 	}
 
 	static TestUserRoleGroup get(long userId, long roleGroupId) {
-		TestUserRoleGroup.where {
-			user == TestUser.load(userId) &&
-			roleGroup == TestRoleGroup.load(roleGroupId)
-		}.get()
+		TestUserRoleGroup.where { user.id == userId && roleGroup.id == roleGroupId }.get()
 	}
 
 	static boolean exists(long userId, long roleGroupId) {
-		TestUserRoleGroup.where {
-			user == TestUser.load(userId) &&
-			roleGroup == TestRoleGroup.load(roleGroupId)
-		}.count() > 0
+		TestUserRoleGroup.where { user.id == userId && roleGroup.id == roleGroupId }.count() > 0
 	}
 
 	static TestUserRoleGroup create(TestUser user, TestRoleGroup roleGroup, boolean flush = false) {
-		def instance = new TestUserRoleGroup(user: user, roleGroup: roleGroup)
+		def instance = new TestUserRoleGroup(user, roleGroup)
 		instance.save(flush: flush, insert: true)
 		instance
 	}
 
 	static boolean remove(TestUser u, TestRoleGroup rg, boolean flush = false) {
-		int rowCount = TestUserRoleGroup.where {
-			user == TestUser.load(u.id) &&
-			roleGroup == TestRoleGroup.load(rg.id)
-		}.deleteAll()
+		if (u == null || rg == null) return false
+
+		int rowCount = TestUserRoleGroup.where { user == u && roleGroup == rg }.deleteAll()
 
 		if (flush) { TestUserRoleGroup.withSession { it.flush() } }
 
@@ -67,16 +68,16 @@ class TestUserRoleGroup implements Serializable {
 	}
 
 	static void removeAll(TestRoleGroup rg, boolean flush = false) {
-		TestUserRoleGroup.where {
-			roleGroup == TestRoleGroup.load(rg.id)
-		}.deleteAll()
+		if (rg == null) return
+
+		TestUserRoleGroup.where { roleGroup == rg }.deleteAll()
 
 		if (flush) { TestUserRoleGroup.withSession { it.flush() } }
 	}
 
 	static constraints = {
 		user validator: { TestUser u, TestUserRoleGroup ug ->
-			if (ug.roleGroup == null) return
+			if (ug.roleGroup == null || ug.roleGroup.id == null) return
 			boolean existing = false
 			TestUserRoleGroup.withNewSession {
 				existing = TestUserRoleGroup.exists(u.id, ug.roleGroup.id)

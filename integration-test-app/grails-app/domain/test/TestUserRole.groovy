@@ -14,11 +14,15 @@
  */
 package test
 
+import grails.gorm.DetachedCriteria
+import groovy.transform.ToString
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@ToString(cache=true, includeNames=true, includePackage=false)
 class TestUserRole implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -26,6 +30,13 @@ class TestUserRole implements Serializable {
 	TestUser user
 	TestRole role
 
+	TestUserRole(TestUser u, TestRole r) {
+		this()
+		user = u
+		role = r
+	}
+
+	@Override
 	boolean equals(other) {
 		if (!(other instanceof TestUserRole)) {
 			return false
@@ -34,6 +45,7 @@ class TestUserRole implements Serializable {
 		other.user?.id == user?.id && other.role?.id == role?.id
 	}
 
+	@Override
 	int hashCode() {
 		def builder = new HashCodeBuilder()
 		if (user) builder.append(user.id)
@@ -42,55 +54,55 @@ class TestUserRole implements Serializable {
 	}
 
 	static TestUserRole get(long userId, long roleId) {
-		TestUserRole.where {
-			user == TestUser.load(userId) &&
-			role == TestRole.load(roleId)
-		}.get()
+		criteriaFor(userId, roleId).get()
 	}
 
 	static boolean exists(long userId, long roleId) {
+		criteriaFor(userId, roleId).count()
+	}
+
+	private static DetachedCriteria criteriaFor(long userId, long roleId) {
 		TestUserRole.where {
 			user == TestUser.load(userId) &&
 			role == TestRole.load(roleId)
-		}.count() > 0
+		}
 	}
 
 	static TestUserRole create(TestUser user, TestRole role, boolean flush = false) {
-		def instance = new TestUserRole(user: user, role: role)
+		def instance = new TestUserRole(user, role)
 		instance.save(flush: flush, insert: true)
 		instance
 	}
 
 	static boolean remove(TestUser u, TestRole r, boolean flush = false) {
-		int rowCount = TestUserRole.where {
-			user == TestUser.load(u.id) &&
-			role == TestRole.load(r.id)
-		}.deleteAll()
+		if (u == null || r == null) return false
+
+		int rowCount = TestUserRole.where { user == u && role == r }.deleteAll()
 
 		if (flush) { TestUserRole.withSession { it.flush() } }
 
-		rowCount > 0
+		rowCount
 	}
 
 	static void removeAll(TestUser u, boolean flush = false) {
-		TestUserRole.where {
-			user == TestUser.load(u.id)
-		}.deleteAll()
+		if (u == null) return
+
+		TestUserRole.where { user == u }.deleteAll()
 
 		if (flush) { TestUserRole.withSession { it.flush() } }
 	}
 
 	static void removeAll(TestRole r, boolean flush = false) {
-		TestUserRole.where {
-			role == TestRole.load(r.id)
-		}.deleteAll()
+		if (r == null) return
+
+		TestUserRole.where { role == r }.deleteAll()
 
 		if (flush) { TestUserRole.withSession { it.flush() } }
 	}
 
 	static constraints = {
 		role validator: { TestRole r, TestUserRole ur ->
-			if (ur.role == null) return
+			if (ur.user == null || ur.user.id == null) return
 			boolean existing = false
 			TestUserRole.withNewSession {
 				existing = TestUserRole.exists(ur.user.id, r.id)
@@ -102,7 +114,7 @@ class TestUserRole implements Serializable {
 	}
 
 	static mapping = {
-		id composite: ['role', 'user']
+		id composite: ['user', 'role']
 		version false
 	}
 }

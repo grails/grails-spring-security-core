@@ -17,12 +17,38 @@ package test
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class TestRole {
+class TestRole implements Serializable {
+
+	private static final long serialVersionUID = 1
 
 	String auth
 	String description
 
+	TestRole(String auth) {
+		this()
+		this.auth = auth
+	}
+
+	@Override
+	int hashCode() {
+		auth?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof TestRole && other.auth == auth)
+	}
+
+	@Override
+	String toString() {
+		auth
+	}
+
 	static constraints = {
 		auth blank: false, unique: true
+	}
+
+	static mapping = {
+		cache true
 	}
 }

@@ -1,5 +1,5 @@
+<html>
 <head>
-	<meta name="layout" content="main" />
 	<g:set var="entityName" value="${message(code: 'testUser.label', default: 'TestUser')}" />
 	<title><g:message code="default.create.label" args="[entityName]" /></title>
 </head>
@@ -78,4 +78,4 @@
 	</g:form>
 </div>
 </body>
-
+</html>

@@ -60,7 +60,7 @@ class GormPersistentTokenRepositoryTests {
 	@After
 	void tearDown() {
 		sessionFactory.currentSession.clear()
-		sql.executeUpdate 'delete from persistent_logins'
+		sql.executeUpdate 'delete from persistent_login'
 		assert 0 == TestPersistentLogin.count()
 	}
 
@@ -72,7 +72,7 @@ class GormPersistentTokenRepositoryTests {
 
 		assert 1 == TestPersistentLogin.count()
 
-		def row = sql.firstRow('select * from persistent_logins')
+		def row = sql.firstRow('select * from persistent_login')
 
 		assert currentDate.time == row.last_used.time
 		assert 'joeuser' == row.username
@@ -98,7 +98,7 @@ class GormPersistentTokenRepositoryTests {
 
 		repo.removeUserTokens 'joeuser'
 
-		assert 0 == sql.firstRow("select count(*) from persistent_logins where username='joeuser'")[0]
+		assert 0 == sql.firstRow("select count(*) from persistent_login where username='joeuser'")[0]
 	}
 
 	void testUpdatingTokenModifiesTokenValueAndLastUsed() {
@@ -106,7 +106,7 @@ class GormPersistentTokenRepositoryTests {
 		insertToken 'joesseries', 'joeuser', 'atoken', date
 		repo.updateToken 'joesseries', 'newtoken', new Date()
 
-		def row = sql.firstRow("select * from persistent_logins where series='joesseries'")
+		def row = sql.firstRow("select * from persistent_login where series='joesseries'")
 
 		assert 'joeuser' == row.username
 		assert 'joesseries' == row.series
@@ -116,8 +116,8 @@ class GormPersistentTokenRepositoryTests {
 	}
 
 	private void insertToken(String series, String username, String token, Date lastUsed) {
-		String formattedDate = new SimpleDateFormat(DATE_FORMAT).format(lastUsed)
-		sql.execute "insert into persistent_logins (series, username, token, last_used) " +
+		String formattedDate = lastUsed.format(DATE_FORMAT)
+		sql.execute "insert into persistent_login (series, username, token, last_used) " +
 		            "values ('$series', '$username', '$token', '$formattedDate')"
 	}
 }
