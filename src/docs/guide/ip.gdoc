@@ -7,7 +7,7 @@ ipRestrictions | none | Map of URL patterns to IP address patterns.
 
 For example, make an admin-only part of your site accessible only from IP addresses of the local LAN or VPN, such as 192.168.1.xxx or 10.xxx.xxx.xxx. You can also set this up at your firewall and/or routers, but it is convenient to encapsulate it within your application.
 
-To use this feature, specify an @ipRestrictions@ configuration map, where the keys are URL patterns, and the values are IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use [CIDR|http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
+To use this feature, specify an @ipRestrictions@ configuration map, where the keys are URL patterns, and the values are IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use [CIDR|https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
 
 {code}
 grails.plugin.springsecurity.ipRestrictions = [

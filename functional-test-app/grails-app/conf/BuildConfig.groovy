@@ -42,7 +42,7 @@ grails.project.dependency.resolution = {
 		runtime ':hibernate:3.6.10.16'
 		runtime ':jquery:1.11.1'
 		runtime ':resources:1.2.8'
-		runtime ':spring-security-core:2.0-RC4'
+		runtime ':spring-security-core:2.0-SNAPSHOT'
 
 		test ":geb:$gebVersion"
 	}

@@ -1,4 +1,4 @@
-Optionally, use this class to store request mapping entries in the database instead of defining them with annotations or in @Config.groovy@. This option makes  the class configurable at runtime; you can add, remove and edit rules without restarting your application.
+Optionally, use this class to store request mapping entries in the database instead of defining them with annotations or in @Config.groovy@. This option makes the class configurable at runtime; you can add, remove and edit rules without restarting your application.
 
 {table}
 *Property* | *Default Value* | *Meaning*
@@ -11,27 +11,53 @@ requestMap.httpMethodField | 'httpMethod' | HTTP method field name (optional, do
 Assuming you choose @com.mycompany.myapp@ as your package, and @Requestmap@ as your class name, you'll generate this class:
 
 {code}
-package com.testapp
+package com.mycompany.myapp
 
+import groovy.transform.ToString
+
+import org.apache.commons.lang.builder.HashCodeBuilder
 import org.springframework.http.HttpMethod
 
-class Requestmap {
+@ToString(cache=true, includeNames=true, includePackage=false)
+class Requestmap implements Serializable {
 
-   String url
+   private static final long serialVersionUID = 1
+
    String configAttribute
    HttpMethod httpMethod
+   String url
+
+   Requestmap(String url, String configAttribute, HttpMethod httpMethod = null) {
+      this()
+      this.configAttribute = configAttribute
+      this.httpMethod = httpMethod
+      this.url = url
+   }
+
+   @Override
+   int hashCode() {
+      new HashCodeBuilder().append(configAttribute).append(httpMethod).append(url).toHashCode()
+   }
+
+   @Override
+   boolean equals(other) {
+      is(other) || (
+         other instanceof Requestmap &&
+         other.configAttribute == configAttribute &&
+         other.httpMethod == httpMethod &&
+         other.url == url)
+   }
 
    static mapping = {
       cache true
    }
 
    static constraints = {
-      url blank: false, unique: 'httpMethod'
       configAttribute blank: false
       httpMethod nullable: true
+      url blank: false, unique: 'httpMethod'
    }
 }
-
 {code}
 
 To use Requestmap entries to guard URLs, see [Requestmap Instances Stored in the Database|guide:requestmapInstances].

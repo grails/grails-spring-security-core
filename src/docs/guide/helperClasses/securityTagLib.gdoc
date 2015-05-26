@@ -49,7 +49,7 @@ Example:
 <sec:ifNotGranted roles="ROLE_USER">non-user stuff here</sec:ifNotGranted>
 {code}
 
-h4.  loggedInUserInfo
+h4. loggedInUserInfo
 Displays the value of the specified UserDetails field if logged in. For example, to show the username property:
 
 {code}
@@ -62,7 +62,7 @@ If you have customized the UserDetails (e.g. with a custom UserDetailsService) t
 Welcome Back <sec:loggedInUserInfo field="fullName"/>
 {code}
 
-h4.  username
+h4. username
 Displays the value of the UserDetails @username@ field if logged in.
 
 {code}

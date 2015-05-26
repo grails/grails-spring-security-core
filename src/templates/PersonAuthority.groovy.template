@@ -1,7 +1,10 @@
 package ${packageName}
 
+import groovy.transform.ToString
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 
+@ToString(cache=true, includeNames=true, includePackage=false)
 class ${userClassName}${roleClassName} implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -9,6 +12,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 	${userClassName} ${userClassProperty}
 	${roleClassName} ${roleClassProperty}
 
+	@Override
 	boolean equals(other) {
 		if (!(other instanceof ${userClassName}${roleClassName})) {
 			return false
@@ -18,25 +22,20 @@ class ${userClassName}${roleClassName} implements Serializable {
 		other.${roleClassProperty}?.id == ${roleClassProperty}?.id
 	}
 
+	@Override
 	int hashCode() {
 		def builder = new HashCodeBuilder()
-		if ($userClassProperty) builder.append(${userClassProperty}.id)
-		if ($roleClassProperty) builder.append(${roleClassProperty}.id)
+		if (${userClassProperty}) builder.append(${userClassProperty}.id)
+		if (${roleClassProperty}) builder.append(${roleClassProperty}.id)
 		builder.toHashCode()
 	}
 
 	static ${userClassName}${roleClassName} get(long ${userClassProperty}Id, long ${roleClassProperty}Id) {
-		${userClassName}${roleClassName}.where {
-			${userClassProperty} == ${userClassName}.load(${userClassProperty}Id) &&
-			${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
-		}.get()
+		${userClassName}${roleClassName}.where { ${userClassProperty}.id == ${userClassProperty}Id && ${roleClassProperty}.id == ${roleClassProperty}Id }.get()
 	}
 
 	static boolean exists(long ${userClassProperty}Id, long ${roleClassProperty}Id) {
-		${userClassName}${roleClassName}.where {
-			${userClassProperty} == ${userClassName}.load(${userClassProperty}Id) &&
-			${roleClassProperty} == ${roleClassName}.load(${roleClassProperty}Id)
-		}.count() > 0
+		${userClassName}${roleClassName}.where { ${userClassProperty}.id == ${userClassProperty}Id && ${roleClassProperty}.id == ${roleClassProperty}Id }.count() > 0
 	}
 
 	static ${userClassName}${roleClassName} create(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
@@ -48,10 +47,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 	static boolean remove(${userClassName} u, ${roleClassName} r, boolean flush = false) {
 		if (u == null || r == null) return false
 
-		int rowCount = ${userClassName}${roleClassName}.where {
-			${userClassProperty} == ${userClassName}.load(u.id) &&
-			${roleClassProperty} == ${roleClassName}.load(r.id)
-		}.deleteAll()
+		int rowCount = ${userClassName}${roleClassName}.where { ${userClassProperty} == u && ${roleClassProperty} == r }.deleteAll()
 
 		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
 
@@ -61,9 +57,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 	static void removeAll(${userClassName} u, boolean flush = false) {
 		if (u == null) return
 
-		${userClassName}${roleClassName}.where {
-			${userClassProperty} == ${userClassName}.load(u.id)
-		}.deleteAll()
+		${userClassName}${roleClassName}.where { ${userClassProperty} == u }.deleteAll()
 
 		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
 	}
@@ -71,9 +65,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 	static void removeAll(${roleClassName} r, boolean flush = false) {
 		if (r == null) return
 
-		${userClassName}${roleClassName}.where {
-			${roleClassProperty} == ${roleClassName}.load(r.id)
-		}.deleteAll()
+		${userClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
 
 		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
 	}

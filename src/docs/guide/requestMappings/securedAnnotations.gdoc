@@ -26,12 +26,12 @@ class SecureAnnotatedController {
    }
 
    def anybody() {
-      render 'anyone can see this'
+      render 'anyone can see this' // assuming you're not using "strict" mode
    }
 }
 {code}
 
-you must be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@.
+you must be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureAnnotated@ (or @/myapp/secureAnnotated/index@) and be authenticated and have @ROLE_ADMIN@ or @ROLE_SUPERUSER@ to see @/myapp/secureAnnotated/adminEither@. Any user can access @/myapp/secureAnnotated/anybody@ if you have disabled "strict" mode (using @rejectIfNoRule@), and nobody can access the action by default since it has no access rule configured.
 
 In addition, you can define a closure in the annotation which will be called during access checking. The closure must return @true@ or @false@ and has all of the methods and properties that are available when using SpEL expressions, since the closure's @delegate@ is set to a subclass of @WebSecurityExpressionRoot@, and also the Spring @ApplicationContext@ as the @ctx@ property:
 
@@ -71,7 +71,7 @@ class SecureClassAnnotatedController {
 }
 {code}
 
-Here you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureClassAnnotated@ (or @/myapp/secureClassAnnotated/index@) or @/myapp/secureClassAnnotated/otherAction@. However, you must have @ROLE_SUPERUSER@ to access @/myapp/secureClassAnnotated/super@. The action-scope annotation overrides the class-scope annotation.
+Here you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureClassAnnotated@ (or @/myapp/secureClassAnnotated/index@) or @/myapp/secureClassAnnotated/otherAction@. However, you must have @ROLE_SUPERUSER@ to access @/myapp/secureClassAnnotated/super@. The action-scope annotation overrides the class-scope annotation. Note that "strict" mode isn't applicable here since all actions have an access rule defined (either explicitly or inherited from the class-level annotation).
 
 h4. controllerAnnotations.staticRules
 
@@ -79,6 +79,7 @@ You can also define 'static' mappings that cannot be expressed in the controller
 
 {code}
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+   ...
    '/js/admin/**': ['ROLE_ADMIN'],
    '/someplugin/**': ['ROLE_ADMIN']
 ]

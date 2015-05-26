@@ -16,7 +16,7 @@ import grails.util.GrailsNameUtils
 
 includeTargets << new File(springSecurityCorePluginDir, 'scripts/_S2Common.groovy')
 
-USAGE = """
+USAGE = '''
 Usage: grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name] [--groupClassName=group-class-name]
        or grails s2-quickstart --uiOnly
 
@@ -28,7 +28,7 @@ Example: grails s2-quickstart com.yourapp User Role
 Example: grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup
 Example: grails s2-quickstart com.yourapp Person Authority Requestmap
 Example: grails s2-quickstart --uiOnly
-"""
+'''
 
 includeTargets << grailsScript('_GrailsBootstrap')
 
@@ -49,26 +49,27 @@ target(s2Quickstart: 'Creates artifacts for the Spring Security plugin') {
 	if (!uiOnly) {
 		createDomains()
 	}
+
 	updateConfig()
 
 	if (uiOnly) {
-		printMessage """
+		printMessage '''
 *******************************************************
 * Your grails-app/conf/Config.groovy has been updated *
 * with security settings; please verify that the      *
 * values are correct.                                 *
 *******************************************************
-"""
+'''
 	}
 	else {
-		printMessage """
+		printMessage '''
 *******************************************************
 * Created security-related domain classes. Your       *
 * grails-app/conf/Config.groovy has been updated with *
 * the class names of the configured domain classes;   *
 * please verify that the values are correct.          *
 *******************************************************
-"""
+'''
 	}
 }
 
@@ -105,16 +106,17 @@ private boolean configure() {
 private void createDomains() {
 
 	String dir = packageToDir(packageName)
-	generateFile "$templateDir/Person.groovy.template", "$appDir/domain/${dir}${userClassName}.groovy"
-	generateFile "$templateDir/Authority.groovy.template", "$appDir/domain/${dir}${roleClassName}.groovy"
-	generateFile "$templateDir/PersonAuthority.groovy.template", "$appDir/domain/${dir}${userClassName}${roleClassName}.groovy"
+	String domainDir = "$appDir/domain/$dir"
+	generateFile "$templateDir/Person.groovy.template", "$domainDir${userClassName}.groovy"
+	generateFile "$templateDir/Authority.groovy.template", "$domainDir${roleClassName}.groovy"
+	generateFile "$templateDir/PersonAuthority.groovy.template", "$domainDir$userClassName${roleClassName}.groovy"
 	if (requestmapClassName) {
-		generateFile "$templateDir/Requestmap.groovy.template", "$appDir/domain/${dir}${requestmapClassName}.groovy"
+		generateFile "$templateDir/Requestmap.groovy.template", "$domainDir${requestmapClassName}.groovy"
 	}
 	if (groupClassName) {
-		generateFile "$templateDir/AuthorityGroup.groovy.template", "$appDir/domain/${dir}${groupClassName}.groovy"
-		generateFile "$templateDir/PersonAuthorityGroup.groovy.template", "$appDir/domain/${dir}${userClassName}${groupClassName}.groovy"
-		generateFile "$templateDir/AuthorityGroupAuthority.groovy.template", "$appDir/domain/${dir}${groupClassName}${roleClassName}.groovy"
+		generateFile "$templateDir/AuthorityGroup.groovy.template", "$domainDir${groupClassName}.groovy"
+		generateFile "$templateDir/PersonAuthorityGroup.groovy.template", "$domainDir$userClassName${groupClassName}.groovy"
+		generateFile "$templateDir/AuthorityGroupAuthority.groovy.template", "$domainDir$groupClassName${roleClassName}.groovy"
 	}
 }
 
@@ -136,21 +138,21 @@ private void updateConfig() {
 		}
 		if (groupClassName) {
 			writer.writeLine "grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'"
-			writer.writeLine "grails.plugin.springsecurity.useRoleGroups = true"
+			writer.writeLine 'grails.plugin.springsecurity.useRoleGroups = true'
 		}
 		if (requestmapClassName) {
 			writer.writeLine "grails.plugin.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
 			writer.writeLine "grails.plugin.springsecurity.securityConfigType = 'Requestmap'"
 		}
 		writer.writeLine 'grails.plugin.springsecurity.controllerAnnotations.staticRules = ['
-		writer.writeLine "\t'/':                              ['permitAll'],"
-		writer.writeLine "\t'/index':                         ['permitAll'],"
-		writer.writeLine "\t'/index.gsp':                     ['permitAll'],"
-        writer.writeLine "\t'/assets/**':                     ['permitAll'],"
-		writer.writeLine "\t'/**/js/**':                      ['permitAll'],"
-		writer.writeLine "\t'/**/css/**':                     ['permitAll'],"
-		writer.writeLine "\t'/**/images/**':                  ['permitAll'],"
-		writer.writeLine "\t'/**/favicon.ico':                ['permitAll']"
+		writer.writeLine "\t'/':                ['permitAll'],"
+		writer.writeLine "\t'/index':           ['permitAll'],"
+		writer.writeLine "\t'/index.gsp':       ['permitAll'],"
+		writer.writeLine "\t'/assets/**':       ['permitAll'],"
+		writer.writeLine "\t'/**/js/**':        ['permitAll'],"
+		writer.writeLine "\t'/**/css/**':       ['permitAll'],"
+		writer.writeLine "\t'/**/images/**':    ['permitAll'],"
+		writer.writeLine "\t'/**/favicon.ico':  ['permitAll']"
 
 		writer.writeLine ']'
 		writer.newLine()

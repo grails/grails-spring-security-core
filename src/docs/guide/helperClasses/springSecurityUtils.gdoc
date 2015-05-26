@@ -1,13 +1,13 @@
 @grails.plugin.springsecurity.SpringSecurityUtils@ is a utility class with static methods that you can call directly without using dependency injection. It is primarily an internal class but can be called from application code.
 
 h4. authoritiesToRoles()
-Extracts role names from an array or @Collection@ of [GrantedAuthority|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html].
+Extracts role names from an array or @Collection@ of [GrantedAuthority|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html].
 
 h4. getPrincipalAuthorities()
 Retrieves the currently logged-in user's authorities. It is empty (but never @null@) if the user is not logged in.
 
 h4. parseAuthoritiesString()
-Splits a comma-delimited String containing role names into a @List@ of [GrantedAuthority|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html].
+Splits a comma-delimited String containing role names into a @List@ of [GrantedAuthority|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html].
 
 h4. ifAllGranted()
 Checks whether the current user has all specified roles (a comma-delimited String of role names). Primarily used by @SecurityTagLib.ifAllGranted@.
@@ -39,7 +39,7 @@ grails.plugin.springsecurity.ajaxCheckClosure = { request ->
 You can also force the request to be treated as Ajax by appending @&ajax=true@ to your request query string.
 
 h4. registerProvider()
-Used by dependent plugins to register an [AuthenticationProvider|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html] bean name.
+Used by dependent plugins to register an [AuthenticationProvider|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html] bean name.
 
 h4. registerFilter()
 Used by dependent plugins to register a filter bean name in a specified position in the filter chain.

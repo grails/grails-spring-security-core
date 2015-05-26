@@ -70,7 +70,8 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 	}
 
 	public Collection<ConfigAttribute> getAttributes(Object object) throws IllegalArgumentException {
-		Assert.isTrue(object != null && supports(object.getClass()), "Object must be a FilterInvocation");
+		Assert.notNull(object, "Object must be a FilterInvocation");
+		Assert.isTrue(supports(object.getClass()), "Object must be a FilterInvocation");
 
 		FilterInvocation filterInvocation = (FilterInvocation)object;
 

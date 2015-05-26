@@ -151,7 +151,7 @@ public final class SpringSecurityUtils {
 		// remove the fake role if it's there
 		Collection<GrantedAuthority> copy = new ArrayList<GrantedAuthority>(authorities);
 		for (Iterator<GrantedAuthority> iter = copy.iterator(); iter.hasNext();) {
-			if (iter.next().getAuthority().equals(NO_ROLE)) {
+			if (NO_ROLE.equals(iter.next().getAuthority())) {
 				iter.remove();
 			}
 		}
@@ -710,7 +710,6 @@ public final class SpringSecurityUtils {
 	 * @param secondary new default values
 	 * @return the merged configs
 	 */
-	@SuppressWarnings("unchecked")
 	private static ConfigObject mergeConfig(final ConfigObject currentConfig, final ConfigObject secondary) {
 		ConfigObject config = new ConfigObject();
 		if (secondary == null) {

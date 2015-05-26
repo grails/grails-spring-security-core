@@ -129,23 +129,20 @@ import org.springframework.web.filter.DelegatingFilterProxy
  */
 class SpringSecurityCoreGrailsPlugin {
 
-	String version = '2.0-SNAPSHOT'
+	String version = '2.0-SNAPSHOT' // DON'T FORGET TO UPDATE VERSIONS IN INTEGRATION-TEST-APP AND FUNCTIONAL-TEST-APP!
 	String grailsVersion = '2.3.0 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate', 'hibernate4']
-
 	List pluginExcludes = [
-		'grails-app/domain/**',
 		'docs/**',
+		'grails-app/domain/**',
 		'src/docs/**'
 	]
-
 	String author = 'Burt Beckwith'
 	String authorEmail = 'burt@burtbeckwith.com'
 	String title = 'Spring Security Core Plugin'
 	String description = 'Spring Security Core plugin'
 	String documentation = 'http://grails-plugins.github.io/grails-spring-security-core/'
-
 	String license = 'APACHE'
 	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
 	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE']
