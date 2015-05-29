@@ -38,13 +38,13 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 	public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
 			final Authentication authentication) throws ServletException, IOException {
 		try {
-            if (SpringSecurityUtils.isAjax(request)) {
-                this.clearAuthenticationAttributes(request);
-                this.logger.debug("Redirecting to Ajax Success Url: " + ajaxSuccessUrl);
-                this.getRedirectStrategy().sendRedirect(request, response, ajaxSuccessUrl);
-            } else {
-                super.onAuthenticationSuccess(request, response, authentication);
-            }
+			if (SpringSecurityUtils.isAjax(request)) {
+			    this.clearAuthenticationAttributes(request);
+			    this.logger.debug("Redirecting to Ajax Success Url: " + ajaxSuccessUrl);
+			    this.getRedirectStrategy().sendRedirect(request, response, ajaxSuccessUrl);
+			} else {
+			    super.onAuthenticationSuccess(request, response, authentication);
+			}
 		}
 		finally {
 			// always remove the saved request
