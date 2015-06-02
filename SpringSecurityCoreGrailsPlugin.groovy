@@ -144,8 +144,8 @@ class SpringSecurityCoreGrailsPlugin {
 	String description = 'Spring Security Core plugin'
 	String documentation = 'http://grails-plugins.github.io/grails-spring-security-core/'
 	String license = 'APACHE'
-	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
-	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE']
+	def organization = [name: 'Grails', url: 'http://www.grails.org/']
+	def issueManagement = [system: 'Github', url: 'https://github.com/grails-plugins/grails-spring-security-core/issues']
 	def scm = [url: 'https://github.com/grails-plugins/grails-spring-security-core']
 
 	// make sure the filter chain filter is after the Grails filter
