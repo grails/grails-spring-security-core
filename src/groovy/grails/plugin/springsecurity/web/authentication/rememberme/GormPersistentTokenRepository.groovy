@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.web.authentication.rememberme
 
+import grails.gorm.DetachedCriteria
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
@@ -68,10 +69,8 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 		if (!clazz) return
 
 		clazz.withTransaction { status ->
-			// was using HQL but it breaks with NoSQL, so using a less efficient impl:
-			for (instance in clazz.findAllByUsername(username)) {
-				instance.delete()
-			}
+			// can't use 'where' query with variable class, probably confuses the AST, so create the same DetachedCriteria
+			new DetachedCriteria(clazz).eq('username', username).deleteAll()
 		}
 	}
 
