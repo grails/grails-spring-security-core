@@ -15,7 +15,6 @@
 package grails.plugin.springsecurity.web.authentication.rememberme
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.transaction.Transactional
 
 import grails.core.GrailsApplication
 import grails.core.support.GrailsApplicationAware
@@ -29,21 +28,22 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
- class GormPersistentTokenRepository implements PersistentTokenRepository, GrailsApplicationAware {
+class GormPersistentTokenRepository implements PersistentTokenRepository, GrailsApplicationAware {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for grailsApplication */
 	GrailsApplication grailsApplication
 
-	@Transactional
 	void createNewToken(PersistentRememberMeToken token) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
 		// join an existing transaction if one is active
-		clazz.newInstance(username: token.username, series: token.series,
-		                  token: token.tokenValue, lastUsed: token.date).save()
+		clazz.withTransaction { status ->
+			clazz.newInstance(username: token.username, series: token.series,
+					token: token.tokenValue, lastUsed: token.date).save()
+		}
 	}
 
 	PersistentRememberMeToken getTokenForSeries(String seriesId) {
@@ -63,25 +63,28 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 				persistentToken.token, persistentToken.lastUsed)
 	}
 
-	@Transactional
 	void removeUserTokens(String username) {
-		lookupDomainClass()?.where { username == username }?.deleteAll()
+		def clazz = lookupDomainClass()
+		if (!clazz) return
+
+		clazz.withTransaction { status ->
+			// was using HQL but it breaks with NoSQL, so using a less efficient impl:
+			for (instance in clazz.findAllByUsername(username)) {
+				instance.delete()
+			}
+		}
 	}
 
-	@Transactional
 	void updateToken(String series, String tokenValue, Date lastUsed) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
 		// join an existing transaction if one is active
-		def persistentLogin = clazz.get(series)
-		if (!persistentLogin) {
-			return
+		clazz.withTransaction { status ->
+			def persistentLogin = clazz.get(series)
+			persistentLogin?.token = tokenValue
+			persistentLogin?.lastUsed = lastUsed
 		}
-
-		persistentLogin.token = tokenValue
-		persistentLogin.lastUsed = lastUsed
-		persistentLogin.save()
 	}
 
 	protected Class lookupDomainClass() {

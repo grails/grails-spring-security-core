@@ -18,7 +18,7 @@ class HackController {
 		session.nowdate = new Date() // to test it's working
 
 		def sb = new StringBuilder()
-		session.attributeNames.each { sb.append(it).append '<br>\n' }
+		session.attributeNames.each { sb.append(it).append '<br/>\n' }
 		render sb.toString()
 	}
 

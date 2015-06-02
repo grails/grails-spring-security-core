@@ -16,7 +16,7 @@ package grails.plugin.springsecurity;
 
 /**
  * Stores the default order numbers of all Spring Security filters for use in configuration.
- * 
+ * <p/>
  * Equivalent to <code>org.springframework.security.config.http.SecurityFilters</code> which
  * unfortunately is package-default.
  *

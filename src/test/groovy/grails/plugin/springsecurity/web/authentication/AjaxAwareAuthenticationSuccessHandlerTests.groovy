@@ -23,6 +23,7 @@ import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.RedirectStrategy
 import org.springframework.security.web.savedrequest.RequestCache
+import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.savedrequest.SavedRequest
 
 /**
@@ -48,18 +49,23 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 	}
 
 	void testDetermineTargetUrl_Ajax() {
-
+		handler.requestCache = new NullRequestCache()
 		handler.alwaysUseDefaultTargetUrl = true
 
-		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
-
-		assert AJAX_SUCCESS_URL == handler.determineTargetUrl(
-				request, new MockHttpServletResponse())
+		request.addHeader 'ajaxHeader', 'XMLHttpRequest'		
+		
+		handler.onAuthenticationSuccess(request, response, 
+				new TestingAuthenticationToken('username', 'password'))
+			
+		assert AJAX_SUCCESS_URL == response.redirectedUrl
 	}
 
 	void testDetermineTargetUrl_NotAjax() {
-		assert DEFAULT_TARGET_URL == handler.determineTargetUrl(
-				new MockHttpServletRequest(), new MockHttpServletResponse())
+		handler.requestCache = new NullRequestCache()	
+		handler.onAuthenticationSuccess(request, response, 
+				new TestingAuthenticationToken('username', 'password'))
+		
+		assert DEFAULT_TARGET_URL == response.redirectedUrl
 	}
 
 	void testOnAuthenticationSuccess() {

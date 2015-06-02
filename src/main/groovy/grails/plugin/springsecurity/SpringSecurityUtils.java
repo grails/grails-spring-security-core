@@ -284,8 +284,10 @@ public final class SpringSecurityUtils {
 
 		String ajaxHeaderName = (String)ReflectionUtils.getConfigProperty("ajaxHeader");
 
+		String xmlHttpRequest = "XMLHttpRequest";
+
 		// check the current request's headers
-		if ("XMLHttpRequest".equals(request.getHeader(ajaxHeaderName))) {
+		if (xmlHttpRequest.equals(request.getHeader(ajaxHeaderName))) {
 			return true;
 		}
 
@@ -313,7 +315,7 @@ public final class SpringSecurityUtils {
 		if (httpSession != null) {
 			SavedRequest savedRequest = (SavedRequest)httpSession.getAttribute(SAVED_REQUEST);
 			if (savedRequest != null) {
-				return !savedRequest.getHeaderValues(ajaxHeaderName).isEmpty();
+				return savedRequest.getHeaderValues(ajaxHeaderName).contains(xmlHttpRequest);
 			}
 		}
 
@@ -322,7 +324,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a provider bean name.
-	 * 
+	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the provider
@@ -341,7 +343,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a logout handler bean name.
-	 * 
+	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the handler
@@ -360,7 +362,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register an AfterInvocationProvider bean name.
-	 * 
+	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the provider
@@ -379,7 +381,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a voter bean name.
-	 * 
+	 * <p/>
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the voter
@@ -398,7 +400,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter bean name in a specified position in the chain.
-	 * 
+	 * <p/>
 	 * Note - only for use by plugins during bean building - to register at runtime
 	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
 	 *
@@ -411,7 +413,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter bean name in a specified position in the chain.
-	 * 
+	 * <p/>
 	 * Note - only for use by plugins during bean building - to register at runtime
 	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
 	 *
@@ -438,7 +440,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter in a specified position in the chain.
-	 * 
+	 * <p/>
 	 * Note - this is for use in application code after the plugin has initialized,
 	 * e.g. in BootStrap where you want to register a custom filter in the correct
 	 * order without dealing with the existing configured filters.
@@ -452,7 +454,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter in a specified position in the chain.
-	 * 
+	 * <p/>
 	 * Note - this is for use in application code after the plugin has initialized,
 	 * e.g. in BootStrap where you want to register a custom filter in the correct
 	 * order without dealing with the existing configured filters.
@@ -566,7 +568,7 @@ public final class SpringSecurityUtils {
 	/**
 	 * Rebuild an Authentication for the given username and register it in the security context.
 	 * Typically used after updating a user's authorities or other auth-cached info.
-	 * 
+	 * <p/>
 	 * Also removes the user from the user cache to force a refresh at next login.
 	 *
 	 * @param username the user's login name
@@ -618,7 +620,7 @@ public final class SpringSecurityUtils {
 	/**
 	 * Authenticate as the specified user and execute the closure with that authentication. Restores
 	 * the authentication to the one that was active if it exists, or clears the context otherwise.
-	 * 
+	 * <p/>
 	 * This is similar to run-as and switch-user but is only local to a Closure.
 	 *
 	 * @param username the username to authenticate as

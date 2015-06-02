@@ -8,14 +8,14 @@ class TagLibTestController {
 	def testMetaclassMethods() {
 
 		render """
-		getPrincipal: ${getPrincipal()}<br>
-		principal: $principal<br>
+		getPrincipal: ${getPrincipal()}<br/>
+		principal: $principal<br/>
 
-		isLoggedIn: ${isLoggedIn()}<br>
-		loggedIn: $loggedIn<br>
+		isLoggedIn: ${isLoggedIn()}<br/>
+		loggedIn: $loggedIn<br/>
 
-		getAuthenticatedUser: ${getAuthenticatedUser()}<br>
-		authenticatedUser: $authenticatedUser<br>
+		getAuthenticatedUser: ${getAuthenticatedUser()}<br/>
+		authenticatedUser: $authenticatedUser<br/>
 		"""
 	}
 }
