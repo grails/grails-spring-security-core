@@ -14,4 +14,3 @@ cobertura.ser
 /target-eclipse
 /web-app
 /build/
-/.gradle
