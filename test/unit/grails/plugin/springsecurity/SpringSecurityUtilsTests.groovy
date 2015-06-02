@@ -136,10 +136,16 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assert !SpringSecurityUtils.isAjax(request)
 	}
 
-	void testIsAjaxUsingHeaderTrue() {
+	void testIsAjaxUsingHeaderXmlHttpRequest() {
 		request.addHeader('X-Requested-With', 'XMLHttpRequest')
 
 		assert SpringSecurityUtils.isAjax(request)
+	}
+
+	void testIsAjaxUsingHeaderTrue() {
+		request.addHeader('X-Requested-With', 'true')
+
+		assert !SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingSavedRequestFalse() {
@@ -151,8 +157,15 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testIsAjaxUsingSavedRequestTrue() {
-
 		request.addHeader 'X-Requested-With', 'true'
+		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
+		request.session.setAttribute(SpringSecurityUtils.SAVED_REQUEST, savedRequest)
+
+		assert !SpringSecurityUtils.isAjax(request)
+	}
+
+	void testIsAjaxUsingSavedRequestXmlHttpRequest() {
+		request.addHeader 'X-Requested-With', 'XMLHttpRequest'
 		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
 		request.session.setAttribute(SpringSecurityUtils.SAVED_REQUEST, savedRequest)
 

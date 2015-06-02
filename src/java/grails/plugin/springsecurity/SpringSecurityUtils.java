@@ -284,8 +284,10 @@ public final class SpringSecurityUtils {
 
 		String ajaxHeaderName = (String)ReflectionUtils.getConfigProperty("ajaxHeader");
 
+		String xmlHttpRequest = "XMLHttpRequest";
+
 		// check the current request's headers
-		if ("XMLHttpRequest".equals(request.getHeader(ajaxHeaderName))) {
+		if (xmlHttpRequest.equals(request.getHeader(ajaxHeaderName))) {
 			return true;
 		}
 
@@ -313,7 +315,7 @@ public final class SpringSecurityUtils {
 		if (httpSession != null) {
 			SavedRequest savedRequest = (SavedRequest)httpSession.getAttribute(SAVED_REQUEST);
 			if (savedRequest != null) {
-				return !savedRequest.getHeaderValues(ajaxHeaderName).isEmpty();
+				return savedRequest.getHeaderValues(ajaxHeaderName).contains(xmlHttpRequest);
 			}
 		}
 
