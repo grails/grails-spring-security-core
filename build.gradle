@@ -1,0 +1,147 @@
+buildscript {
+    ext {
+        grailsVersion = project.grailsVersion
+    }
+    repositories {
+        mavenLocal()
+        maven { url "https://repo.grails.org/grails/core" }
+    }
+    dependencies {
+        classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+    }
+}
+
+plugins {
+    id "io.spring.dependency-management" version "0.4.0.RELEASE"
+    id "com.jfrog.bintray" version "1.1"
+}
+
+version "0.1-SNAPSHOT"
+group "org.grails.plugins"
+
+apply plugin: 'maven-publish'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: "spring-boot"
+apply plugin: "org.grails.grails-plugin"
+apply plugin: "org.grails.grails-gsp"
+// Used for publishing to central repository, remove if not needed
+apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
+apply from:'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
+
+ext {
+    grailsVersion = project.grailsVersion
+    gradleWrapperVersion = project.gradleWrapperVersion
+}
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repo.grails.org/grails/core" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom "org.grails:grails-bom:$grailsVersion"
+    }
+    applyMavenExclusions false
+}
+
+dependencies {
+    provided 'org.springframework.boot:spring-boot-starter-logging'
+    provided "org.springframework.boot:spring-boot-starter-actuator"
+    provided "org.springframework.boot:spring-boot-autoconfigure"
+    provided "org.springframework.boot:spring-boot-starter-tomcat"
+
+    provided "org.grails:grails-web-boot"
+    provided "org.grails:grails-dependencies"
+    provided 'javax.servlet:javax.servlet-api:3.1.0'
+
+    testCompile "org.grails:grails-plugin-testing"
+
+    console "org.grails:grails-console"
+    String springSecurityVersion = '3.2.7.RELEASE'
+
+    compile("org.springframework.security:spring-security-core:$springSecurityVersion") {
+        exclude module:'aopalliance'
+        exclude module:'aspectjrt'
+        exclude module:'cglib-nodep'
+        exclude module:'commons-collections' 
+        exclude module:'commons-logging'
+        exclude module:'ehcache'
+        exclude module:'fest-assert' 
+        exclude module:'hsqldb'
+        exclude module:'jcl-over-slf4j'
+        exclude module:'jsr250-api'
+        exclude module:'junit'
+        exclude module:'logback-classic'
+        exclude module: 'mockito-core'
+        exclude module:'powermock-api-mockito'
+        exclude module:'powermock-api-support'
+        exclude module:'powermock-core'
+        exclude module:'powermock-module-junit4'
+        exclude module:'powermock-module-junit4-common'
+        exclude module:'powermock-reflect'
+        exclude module:'spring-aop'
+        exclude module:'spring-beans'
+        exclude module:'spring-context' 
+        exclude module:'spring-core'
+        exclude module:'spring-expression'
+        exclude module:'spring-jdbc'
+        exclude module:'spring-test'
+        exclude module:'spring-tx'
+    }
+		
+		
+    compile("org.springframework.security:spring-security-web:$springSecurityVersion") {
+        exclude module:'aopalliance'
+        exclude module:'commons-collections' 
+        exclude module:'commons-logging'
+        exclude module:'fest-assert'
+        exclude module:'groovy'
+        exclude module:'hsqldb'
+        exclude module:'jcl-over-slf4j'
+        exclude module: 'junit'
+        exclude module:'logback-classic'
+        exclude module: 'mockito-core'
+        exclude module: 'powermock-api-mockito'
+        exclude module:'powermock-api-support'
+        exclude module: 'powermock-core'
+        exclude module: 'powermock-module-junit4'
+        exclude module:'powermock-module-junit4-common'
+        exclude module: 'powermock-reflect'
+        exclude module: 'spock-core'
+        exclude module: 'spring-beans'
+        exclude module:'spring-context'
+        exclude module: 'spring-core'
+        exclude module: 'spring-expression'
+        exclude module: 'spring-jdbc'
+        exclude module:'spring-security-core'
+        exclude module: 'spring-test'
+        exclude module: 'spring-tx'
+        exclude module: 'spring-web'
+        exclude module: 'spring-webmvc'
+        exclude module: 'tomcat-servlet-api'
+    }
+		
+    compile 'net.sf.ehcache:ehcache:2.9.0'
+		
+//	String hibernateVersion = '3.6.10.Final'
+//    compile("org.hibernate:hibernate:3.6.10.Final") {
+    //			//export = false
+    //		}
+    compile('org.hibernate:hibernate:3.0.5') {
+        transitive = false
+    }
+
+    compile("org.grails.plugins:webxml:1.4.2")
+//	noExport "org.hibernate:hibernate" 
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = gradleWrapperVersion
+}
