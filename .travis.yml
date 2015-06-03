@@ -3,6 +3,8 @@ jdk:
 - oraclejdk7
 before_script:
 - rm -rf target
+before_install:
+- chmod +x ./gradlew
 script: ./travis-build.sh
 env:
   global:
