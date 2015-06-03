@@ -38,6 +38,6 @@ fi
 
 source ~/.gvm/bin/gvm-init.sh
 
-install_grails 2.4.2
+install_grails 3.0.1
 
 exit 0
