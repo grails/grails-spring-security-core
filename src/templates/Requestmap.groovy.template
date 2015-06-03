@@ -35,13 +35,13 @@ class ${requestmapClassName} implements Serializable {
 			other.url == url)
 	}
 
-	static mapping = {
-		cache true
-	}
-
 	static constraints = {
 		configAttribute blank: false
 		httpMethod nullable: true
 		url blank: false, unique: 'httpMethod'
+	}
+
+	static mapping = {
+		cache true
 	}
 }

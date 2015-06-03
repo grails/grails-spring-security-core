@@ -1,5 +1,6 @@
 package ${packageName}
 
+import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
@@ -12,14 +13,19 @@ class ${userClassName}${groupClassName} implements Serializable {
 	${userClassName} ${userClassProperty}
 	${groupClassName} ${groupClassProperty}
 
+	${userClassName}${groupClassName}(${userClassName} u, ${groupClassName} rg) {
+		this()
+		${userClassProperty} = u
+		${groupClassProperty} = rg
+	}
+
 	@Override
 	boolean equals(other) {
 		if (!(other instanceof ${userClassName}${groupClassName})) {
 			return false
 		}
 
-		other.${userClassProperty}?.id == ${userClassProperty}?.id &&
-		other.${groupClassProperty}?.id == ${groupClassProperty}?.id
+		other.${userClassProperty}?.id == ${userClassProperty}?.id && other.${groupClassProperty}?.id == ${groupClassProperty}?.id
 	}
 
 	@Override
@@ -31,27 +37,34 @@ class ${userClassName}${groupClassName} implements Serializable {
 	}
 
 	static ${userClassName}${groupClassName} get(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
-		${userClassName}${groupClassName}.where { ${userClassProperty}.id == ${userClassProperty}Id && ${groupClassProperty}.id == ${groupClassProperty}Id }.get()
+		criteriaFor(${userClassProperty}Id, ${groupClassProperty}Id).get()
 	}
 
 	static boolean exists(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
-		${userClassName}${groupClassName}.where { ${userClassProperty}.id == ${userClassProperty}Id && ${groupClassProperty}.id == ${groupClassProperty}Id }.count() > 0
+		criteriaFor(${userClassProperty}Id, ${groupClassProperty}Id).count()
+	}
+
+	private static DetachedCriteria criteriaFor(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
+		${userClassName}${groupClassName}.where {
+			${userClassProperty} == ${userClassName}.load(${userClassProperty}Id) &&
+			${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id)
+		}
 	}
 
 	static ${userClassName}${groupClassName} create(${userClassName} ${userClassProperty}, ${groupClassName} ${groupClassProperty}, boolean flush = false) {
-		def instance = new ${userClassName}${groupClassName}(${userClassProperty}: ${userClassProperty}, ${groupClassProperty}: ${groupClassProperty})
+		def instance = new ${userClassName}${groupClassName}(${userClassProperty}, ${groupClassProperty})
 		instance.save(flush: flush, insert: true)
 		instance
 	}
 
-	static boolean remove(${userClassName} u, ${groupClassName} g, boolean flush = false) {
-		if (u == null || g == null) return false
+	static boolean remove(${userClassName} u, ${groupClassName} rg, boolean flush = false) {
+		if (u == null || rg == null) return false
 
-		int rowCount = ${userClassName}${groupClassName}.where { ${userClassProperty} == u && ${groupClassProperty} == r }.deleteAll()
+		int rowCount = ${userClassName}${groupClassName}.where { ${userClassProperty} == u && ${groupClassProperty} == rg }.deleteAll()
 
 		if (flush) { ${userClassName}${groupClassName}.withSession { it.flush() } }
 
-		rowCount > 0
+		rowCount
 	}
 
 	static void removeAll(${userClassName} u, boolean flush = false) {
@@ -62,10 +75,10 @@ class ${userClassName}${groupClassName} implements Serializable {
 		if (flush) { ${userClassName}${groupClassName}.withSession { it.flush() } }
 	}
 
-	static void removeAll(${groupClassName} g, boolean flush = false) {
-		if (g == null) return
+	static void removeAll(${groupClassName} rg, boolean flush = false) {
+		if (rg == null) return
 
-		${userClassName}${groupClassName}.where { ${groupClassProperty} == r }.deleteAll()
+		${userClassName}${groupClassName}.where { ${groupClassProperty} == rg }.deleteAll()
 
 		if (flush) { ${userClassName}${groupClassName}.withSession { it.flush() } }
 	}

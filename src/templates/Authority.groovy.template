@@ -26,11 +26,11 @@ class ${roleClassName} implements Serializable {
 		authority
 	}
 
-	static mapping = {
-		cache true
-	}
-
 	static constraints = {
 		authority blank: false, unique: true
+	}
+
+	static mapping = {
+		cache true
 	}
 }
