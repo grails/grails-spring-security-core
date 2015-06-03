@@ -89,7 +89,10 @@ class ReflectionUtils {
 	}
 
 	static List loadAllRequestmaps() {
-		getRequestMapClass().list()
+		def clazz = getRequestMapClass()
+		clazz.withTransaction {
+			clazz.list()
+		}
 	}
 
 	static boolean requestmapClassSupportsHttpMethod() {
