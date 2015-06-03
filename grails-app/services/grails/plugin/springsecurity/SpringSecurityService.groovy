@@ -149,6 +149,18 @@ class SpringSecurityService {
 	}
 
 	/**
+	 * Call for reloading the role hierarchy configuration from the database.
+	 * @author fpape
+	 */
+	void reloadDBRoleHierarchy() {
+		Class roleHierarchyEntryClass = Class.forName(securityConfig.roleHierarchyEntryClassName)
+		roleHierarchyEntryClass.withTransaction {
+			grailsApplication.mainContext.roleHierarchy.hierarchy = roleHierarchyEntryClass.list()*.entry.join('\n')
+		}
+	}
+
+
+	/**
 	 * Delete a role, and if Requestmap class is used to store roles, remove the role
 	 * from all Requestmap definitions. If a Requestmap's config attribute is this role,
 	 * it will be deleted.
