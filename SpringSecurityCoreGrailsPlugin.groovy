@@ -607,6 +607,26 @@ to default to 'Annotation'; setting value to 'Annotation'
 			return
 		}
 
+		/**
+		 * @author fpape
+		 * specify the field of the role hierarchy bean
+		 * if the role hierarchy is backed by a domain object use this instead of roleHierarchy config param
+		 */
+		String roleHierarchy
+		if (conf.roleHierarchyEntryClassName) {
+			Class roleHierarchyEntryClass = Class.forName(conf.roleHierarchyEntryClassName)
+			roleHierarchyEntryClass.withTransaction {
+				roleHierarchy = roleHierarchyEntryClass.list()*.entry.join('\n')
+			}
+		}
+		else {
+			roleHierarchy = conf.roleHierarchy
+		}
+
+		ctx.roleHierarchy.hierarchy = roleHierarchy
+
+
+
 		def strategyName = conf.sch.strategyName
 		if (strategyName instanceof CharSequence) {
 			SCH.setStrategyName strategyName.toString()
@@ -860,9 +880,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 	private configureVoters = { conf ->
 
-		roleHierarchy(RoleHierarchyImpl) {
-			hierarchy = conf.roleHierarchy
-		}
+		roleHierarchy(RoleHierarchyImpl)
 
 		roleVoter(RoleHierarchyVoter, ref('roleHierarchy'))
 
