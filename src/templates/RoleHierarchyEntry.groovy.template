@@ -1,0 +1,11 @@
+${packageDeclaration}
+
+class ${className} {
+
+    String entry
+
+    static constraints = {
+        entry unique: true
+    }
+}
+
