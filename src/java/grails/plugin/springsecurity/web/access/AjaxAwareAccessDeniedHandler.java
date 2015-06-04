@@ -73,28 +73,28 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 			return;
 		}
 
-        String redirectUrl;
-        String serverURL = ReflectionUtils.getGrailsServerURL();
-        if( serverURL == null ) {
-            boolean includePort = true;
-            String scheme = request.getScheme();
-            String serverName = request.getServerName();
-            int serverPort = portResolver.getServerPort(request);
-            String contextPath = request.getContextPath();
-            boolean inHttp = "http".equals(scheme.toLowerCase());
-            boolean inHttps = "https".equals(scheme.toLowerCase());
+		String redirectUrl;
+		String serverURL = ReflectionUtils.getGrailsServerURL();
+		if (serverURL == null) {
+			boolean includePort = true;
+			String scheme = request.getScheme();
+			String serverName = request.getServerName();
+			int serverPort = portResolver.getServerPort(request);
+			String contextPath = request.getContextPath();
+			boolean inHttp = "http".equals(scheme.toLowerCase());
+			boolean inHttps = "https".equals(scheme.toLowerCase());
 
-            if (inHttp && (serverPort == 80)) {
-                includePort = false;
-            }
-            else if (inHttps && (serverPort == 443)) {
-                includePort = false;
-            }
-            redirectUrl = scheme + "://" + serverName + ((includePort) ? (":" + serverPort) : "") + contextPath;
-        }
-        else {
-            redirectUrl = serverURL;
-        }
+			if (inHttp && (serverPort == 80)) {
+				includePort = false;
+			}
+			else if (inHttps && (serverPort == 443)) {
+				includePort = false;
+			}
+			redirectUrl = scheme + "://" + serverName + ((includePort) ? (":" + serverPort) : "") + contextPath;
+		}
+		else {
+			redirectUrl = serverURL;
+		}
 
 		if (ajaxError) {
 			redirectUrl += ajaxErrorPage;

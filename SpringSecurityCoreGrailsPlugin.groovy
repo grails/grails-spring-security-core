@@ -608,9 +608,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		/**
-		 * @author fpape
-		 * specify the field of the role hierarchy bean
+		 * Specify the field of the role hierarchy bean
 		 * if the role hierarchy is backed by a domain object use this instead of roleHierarchy config param
+		 * @author fpape
 		 */
 		String roleHierarchy
 		if (conf.roleHierarchyEntryClassName) {
@@ -624,8 +624,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		ctx.roleHierarchy.hierarchy = roleHierarchy
-
-
 
 		def strategyName = conf.sch.strategyName
 		if (strategyName instanceof CharSequence) {

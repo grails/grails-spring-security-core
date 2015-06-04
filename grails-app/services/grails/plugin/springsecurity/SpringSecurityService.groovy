@@ -159,7 +159,6 @@ class SpringSecurityService {
 		}
 	}
 
-
 	/**
 	 * Delete a role, and if Requestmap class is used to store roles, remove the role
 	 * from all Requestmap definitions. If a Requestmap's config attribute is this role,

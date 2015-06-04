@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.util.Holders
-
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
@@ -95,19 +93,21 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		assert ['d', 'e'] == split.c
 */	}
 
-    void testGetGrailsServerURLWhenSet() {
-        ReflectionUtils.application.config.grails.serverURL = 'http://somewhere.org'
+	void testGetGrailsServerURLWhenSet() {
+		setAndCheckGrailsServerURL 'http://somewhere.org'
+	}
 
-        assert ReflectionUtils.getGrailsServerURL() == 'http://somewhere.org'
-    }
+	void testGetGrailsServerURLWhenNotSet() {
+		setAndCheckGrailsServerURL null
+	}
 
-    void testGetGrailsServerURLWhenNotSet() {
-        ReflectionUtils.application.config.grails.serverURL = null
+	protected void setAndCheckGrailsServerURL(String url) {
+		ReflectionUtils.application.config.grails.serverURL = url
 
-        assert ReflectionUtils.getGrailsServerURL() == null
-    }
+		assert ReflectionUtils.getGrailsServerURL() == url
+	}
 
-    @Override
+	@Override
 	protected void tearDown() {
 		super.tearDown()
 		SpringSecurityUtils.resetSecurityConfig()

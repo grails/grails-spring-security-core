@@ -14,11 +14,11 @@
  */
 package grails.plugin.springsecurity.web.access
 
-import grails.test.mixin.support.GrailsUnitTestMixin
 import grails.plugin.springsecurity.FakeApplication
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.AccessDeniedException
@@ -31,7 +31,6 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(GrailsUnitTestMixin)
 class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 
 	private final AjaxAwareAccessDeniedHandler handler = new AjaxAwareAccessDeniedHandler()
@@ -120,14 +119,14 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 		assert !response.redirectedUrl
 	}
 
-    void testRespectingGrailsServerURL() {
-        ReflectionUtils.application.config.grails.serverURL = 'http://somewhere.org'
-        handler.useForward = false
+	void testRespectingGrailsServerURL() {
+		ReflectionUtils.application.config.grails.serverURL = 'http://somewhere.org'
+		handler.useForward = false
 
-        handler.handle request, response, new AccessDeniedException('fail')
-        assert 'http://somewhere.org/fail' == response.redirectedUrl
-        assert !response.forwardedUrl
-    }
+		handler.handle request, response, new AccessDeniedException('fail')
+		assert 'http://somewhere.org/fail' == response.redirectedUrl
+		assert !response.forwardedUrl
+	}
 
 	@Override
 	protected void tearDown() {
