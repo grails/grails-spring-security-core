@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.4 Group Class 2.0-RC4</title>
+    <title>3.4 Group Class 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,19 @@ function addJsClass() {
                 
 
 <h2 id="authorityGroupClass">3.4 Group Class</h2>
-This Spring Security plugin provides you the option of creating an access inheritance level between 'person' and 'authority': the 'group'. The next three classes you will read about (including this one) are only used in a 'person'/'group'/'authority' implementation. Rather than giving a 'person' authorities directly, you can create a 'group', map authorities to it, and then map a 'person' to that 'group'. For applications that have a one or more groups of users who need the same level of access, having one or more 'group' instances makes managing changes to access levels easier because the authorities that make up that access level are encapsulated in the 'group', and a single change will affect all of the users.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified and use <code>com.mycompany.myapp</code> as your package and <code>RoleGroup</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class RoleGroup &#123;<p class="paragraph"/>   <span class="java&#45;object">String</span> name<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+This Spring Security plugin provides you the option of creating an access inheritance level between 'person' and 'authority': the 'group'. The next three classes you will read about (including this one) are only used in a 'person'/'group'/'authority' implementation. Rather than giving a 'person' authorities directly, you can create a 'group', map authorities to it, and then map a 'person' to that 'group'. For applications that have a one or more groups of users who need the same level of access, having one or more 'group' instances makes managing changes to access levels easier because the authorities that make up that access level are encapsulated in the 'group', and a single change will affect all of the users.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified and use <code>com.mycompany.myapp</code> as your package and <code>RoleGroup</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class RoleGroup <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> name<p class="paragraph"/>   RoleGroup(<span class="java&#45;object">String</span> name) &#123;
+      <span class="java&#45;keyword">this</span>()
+      <span class="java&#45;keyword">this</span>.name = name
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">int</span> hashCode() &#123;
+      name?.hashCode() ?: 0
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">boolean</span> equals(other) &#123;
+      is(other) || (other <span class="java&#45;keyword">instanceof</span> RoleGroup &#38;&#38; other.name == name)
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">String</span> toString() &#123;
+      name
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
       cache <span class="java&#45;keyword">true</span>
    &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
       RoleGroupRole.findAllByRoleGroup(<span class="java&#45;keyword">this</span>).collect &#123; it.role &#125;

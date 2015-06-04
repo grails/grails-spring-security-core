@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2014 SpringSource.<a name="line.1"></a>
+<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2015 SpringSource.<a name="line.1"></a>
 <span class="sourceLineNo">002</span> *<a name="line.2"></a>
 <span class="sourceLineNo">003</span> * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.3"></a>
 <span class="sourceLineNo">004</span> * you may not use this file except in compliance with the License.<a name="line.4"></a>
@@ -41,63 +41,67 @@
 <span class="sourceLineNo">033</span>import org.springframework.util.Assert;<a name="line.33"></a>
 <span class="sourceLineNo">034</span><a name="line.34"></a>
 <span class="sourceLineNo">035</span>/**<a name="line.35"></a>
-<span class="sourceLineNo">036</span> * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the request<a name="line.36"></a>
-<span class="sourceLineNo">037</span> * and response in the {@link SecurityRequestHolder}.<a name="line.37"></a>
+<span class="sourceLineNo">036</span> * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the<a name="line.36"></a>
+<span class="sourceLineNo">037</span> * request and response in the {@link SecurityRequestHolder}.<a name="line.37"></a>
 <span class="sourceLineNo">038</span> *<a name="line.38"></a>
-<span class="sourceLineNo">039</span> * @author &lt;a href='mailto:burt@burtbeckwith.com'&gt;Burt Beckwith&lt;/a&gt;<a name="line.39"></a>
-<span class="sourceLineNo">040</span> */<a name="line.40"></a>
-<span class="sourceLineNo">041</span>public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthenticationFilter {<a name="line.41"></a>
-<span class="sourceLineNo">042</span><a name="line.42"></a>
-<span class="sourceLineNo">043</span>        protected Boolean storeLastUsername;<a name="line.43"></a>
-<span class="sourceLineNo">044</span><a name="line.44"></a>
-<span class="sourceLineNo">045</span>        @Override<a name="line.45"></a>
-<span class="sourceLineNo">046</span>        public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {<a name="line.46"></a>
-<span class="sourceLineNo">047</span>                SecurityRequestHolder.set((HttpServletRequest)request, (HttpServletResponse)response);<a name="line.47"></a>
-<span class="sourceLineNo">048</span>                try {<a name="line.48"></a>
-<span class="sourceLineNo">049</span>                        super.doFilter(request, response, chain);<a name="line.49"></a>
-<span class="sourceLineNo">050</span>                }<a name="line.50"></a>
-<span class="sourceLineNo">051</span>                finally {<a name="line.51"></a>
-<span class="sourceLineNo">052</span>                        SecurityRequestHolder.reset();<a name="line.52"></a>
-<span class="sourceLineNo">053</span>                }<a name="line.53"></a>
-<span class="sourceLineNo">054</span>        }<a name="line.54"></a>
-<span class="sourceLineNo">055</span><a name="line.55"></a>
-<span class="sourceLineNo">056</span>        @Override<a name="line.56"></a>
-<span class="sourceLineNo">057</span>        public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {<a name="line.57"></a>
-<span class="sourceLineNo">058</span><a name="line.58"></a>
-<span class="sourceLineNo">059</span>                if (storeLastUsername) {<a name="line.59"></a>
-<span class="sourceLineNo">060</span>                        // Place the last username attempted into HttpSession for views<a name="line.60"></a>
-<span class="sourceLineNo">061</span>                        HttpSession session = request.getSession(false);<a name="line.61"></a>
-<span class="sourceLineNo">062</span>                        if (session == null &amp;&amp; getAllowSessionCreation()) {<a name="line.62"></a>
-<span class="sourceLineNo">063</span>                                session = request.getSession();<a name="line.63"></a>
-<span class="sourceLineNo">064</span>                        }<a name="line.64"></a>
-<span class="sourceLineNo">065</span><a name="line.65"></a>
-<span class="sourceLineNo">066</span>                        if (session != null) {<a name="line.66"></a>
-<span class="sourceLineNo">067</span>                                String username = obtainUsername(request);<a name="line.67"></a>
-<span class="sourceLineNo">068</span>                                if (username == null) {<a name="line.68"></a>
-<span class="sourceLineNo">069</span>                                        username = "";<a name="line.69"></a>
-<span class="sourceLineNo">070</span>                                }<a name="line.70"></a>
-<span class="sourceLineNo">071</span>                                username = username.trim();<a name="line.71"></a>
-<span class="sourceLineNo">072</span>                                session.setAttribute(SpringSecurityUtils.SPRING_SECURITY_LAST_USERNAME_KEY, username);<a name="line.72"></a>
-<span class="sourceLineNo">073</span>                        }<a name="line.73"></a>
-<span class="sourceLineNo">074</span>                }<a name="line.74"></a>
-<span class="sourceLineNo">075</span><a name="line.75"></a>
-<span class="sourceLineNo">076</span>                return super.attemptAuthentication(request, response);<a name="line.76"></a>
-<span class="sourceLineNo">077</span>        }<a name="line.77"></a>
-<span class="sourceLineNo">078</span><a name="line.78"></a>
-<span class="sourceLineNo">079</span>        /**<a name="line.79"></a>
-<span class="sourceLineNo">080</span>         * Whether to store the last attempted username in the session.<a name="line.80"></a>
-<span class="sourceLineNo">081</span>         * @param storeLastUsername store if true<a name="line.81"></a>
-<span class="sourceLineNo">082</span>         */<a name="line.82"></a>
-<span class="sourceLineNo">083</span>        public void setStoreLastUsername(Boolean storeLastUsername) {<a name="line.83"></a>
-<span class="sourceLineNo">084</span>                this.storeLastUsername = storeLastUsername;<a name="line.84"></a>
-<span class="sourceLineNo">085</span>        }<a name="line.85"></a>
-<span class="sourceLineNo">086</span><a name="line.86"></a>
-<span class="sourceLineNo">087</span>        @Override<a name="line.87"></a>
-<span class="sourceLineNo">088</span>        public void afterPropertiesSet() {<a name="line.88"></a>
-<span class="sourceLineNo">089</span>                super.afterPropertiesSet();<a name="line.89"></a>
-<span class="sourceLineNo">090</span>                Assert.notNull(storeLastUsername, "storeLastUsername must be set");<a name="line.90"></a>
-<span class="sourceLineNo">091</span>        }<a name="line.91"></a>
-<span class="sourceLineNo">092</span>}<a name="line.92"></a>
+<span class="sourceLineNo">039</span> * @deprecated will be removed and replaced with<a name="line.39"></a>
+<span class="sourceLineNo">040</span> *             grails.plugin.springsecurity.web.SecurityRequestHolderFilter at<a name="line.40"></a>
+<span class="sourceLineNo">041</span> *             the beginning of the filter chain<a name="line.41"></a>
+<span class="sourceLineNo">042</span> * @author &lt;a href='mailto:burt@burtbeckwith.com'&gt;Burt Beckwith&lt;/a&gt;<a name="line.42"></a>
+<span class="sourceLineNo">043</span> */<a name="line.43"></a>
+<span class="sourceLineNo">044</span>@Deprecated<a name="line.44"></a>
+<span class="sourceLineNo">045</span>public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthenticationFilter {<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>        protected Boolean storeLastUsername;<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>        @Override<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>                SecurityRequestHolder.set((HttpServletRequest)request, (HttpServletResponse)response);<a name="line.51"></a>
+<span class="sourceLineNo">052</span>                try {<a name="line.52"></a>
+<span class="sourceLineNo">053</span>                        super.doFilter(request, response, chain);<a name="line.53"></a>
+<span class="sourceLineNo">054</span>                }<a name="line.54"></a>
+<span class="sourceLineNo">055</span>                finally {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                        SecurityRequestHolder.reset();<a name="line.56"></a>
+<span class="sourceLineNo">057</span>                }<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        }<a name="line.58"></a>
+<span class="sourceLineNo">059</span><a name="line.59"></a>
+<span class="sourceLineNo">060</span>        @Override<a name="line.60"></a>
+<span class="sourceLineNo">061</span>        public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {<a name="line.61"></a>
+<span class="sourceLineNo">062</span><a name="line.62"></a>
+<span class="sourceLineNo">063</span>                if (storeLastUsername) {<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                        // Place the last username attempted into HttpSession for views<a name="line.64"></a>
+<span class="sourceLineNo">065</span>                        HttpSession session = request.getSession(false);<a name="line.65"></a>
+<span class="sourceLineNo">066</span>                        if (session == null &amp;&amp; getAllowSessionCreation()) {<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                                session = request.getSession();<a name="line.67"></a>
+<span class="sourceLineNo">068</span>                        }<a name="line.68"></a>
+<span class="sourceLineNo">069</span><a name="line.69"></a>
+<span class="sourceLineNo">070</span>                        if (session != null) {<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                                String username = obtainUsername(request);<a name="line.71"></a>
+<span class="sourceLineNo">072</span>                                if (username == null) {<a name="line.72"></a>
+<span class="sourceLineNo">073</span>                                        username = "";<a name="line.73"></a>
+<span class="sourceLineNo">074</span>                                }<a name="line.74"></a>
+<span class="sourceLineNo">075</span>                                username = username.trim();<a name="line.75"></a>
+<span class="sourceLineNo">076</span>                                session.setAttribute(SpringSecurityUtils.SPRING_SECURITY_LAST_USERNAME_KEY, username);<a name="line.76"></a>
+<span class="sourceLineNo">077</span>                        }<a name="line.77"></a>
+<span class="sourceLineNo">078</span>                }<a name="line.78"></a>
+<span class="sourceLineNo">079</span><a name="line.79"></a>
+<span class="sourceLineNo">080</span>                return super.attemptAuthentication(request, response);<a name="line.80"></a>
+<span class="sourceLineNo">081</span>        }<a name="line.81"></a>
+<span class="sourceLineNo">082</span><a name="line.82"></a>
+<span class="sourceLineNo">083</span>        /**<a name="line.83"></a>
+<span class="sourceLineNo">084</span>         * Whether to store the last attempted username in the session.<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * @param storeLastUsername store if true<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         */<a name="line.86"></a>
+<span class="sourceLineNo">087</span>        public void setStoreLastUsername(Boolean storeLastUsername) {<a name="line.87"></a>
+<span class="sourceLineNo">088</span>                this.storeLastUsername = storeLastUsername;<a name="line.88"></a>
+<span class="sourceLineNo">089</span>        }<a name="line.89"></a>
+<span class="sourceLineNo">090</span><a name="line.90"></a>
+<span class="sourceLineNo">091</span>        @Override<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        public void afterPropertiesSet() {<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                super.afterPropertiesSet();<a name="line.93"></a>
+<span class="sourceLineNo">094</span>                Assert.notNull(storeLastUsername, "storeLastUsername must be set");<a name="line.94"></a>
+<span class="sourceLineNo">095</span>        }<a name="line.95"></a>
+<span class="sourceLineNo">096</span>}<a name="line.96"></a>
 
 
 

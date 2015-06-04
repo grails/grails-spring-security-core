@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5.1 SecurityTagLib 2.0-RC4</title>
+    <title>5.1 SecurityTagLib 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -156,8 +153,8 @@ Displays the inner body content if the user is not authenticated.<p class="parag
 &#60;/sec:ifNotLoggedIn&#62;</pre></div><p class="paragraph"/><h4>ifAllGranted</h4>
 Displays the inner body content only if all of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifAllGranted roles=<span class="java&#45;quote">"ROLE_ADMIN,ROLE_SUPERVISOR"</span>&#62;secure stuff here&#60;/sec:ifAllGranted&#62;</pre></div><p class="paragraph"/><h4>ifAnyGranted</h4>
 Displays the inner body content if at least one of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifAnyGranted roles=<span class="java&#45;quote">"ROLE_ADMIN,ROLE_SUPERVISOR"</span>&#62;secure stuff here&#60;/sec:ifAnyGranted&#62;</pre></div><p class="paragraph"/><h4>ifNotGranted</h4>
-Displays the inner body content if none of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifNotGranted roles=<span class="java&#45;quote">"ROLE_USER"</span>&#62;non&#45;user stuff here&#60;/sec:ifNotGranted&#62;</pre></div><p class="paragraph"/><h4> loggedInUserInfo</h4>
-Displays the value of the specified UserDetails field if logged in. For example, to show the username property:<p class="paragraph"/><div class="code"><pre>&#60;sec:loggedInUserInfo field=<span class="java&#45;quote">"username"</span>/&#62;</pre></div><p class="paragraph"/>If you have customized the UserDetails (e.g. with a custom UserDetailsService) to add a <code>fullName</code> property, you access it as follows:<p class="paragraph"/><div class="code"><pre>Welcome Back &#60;sec:loggedInUserInfo field=<span class="java&#45;quote">"fullName"</span>/&#62;</pre></div><p class="paragraph"/><h4> username</h4>
+Displays the inner body content if none of the listed roles are granted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>&#60;sec:ifNotGranted roles=<span class="java&#45;quote">"ROLE_USER"</span>&#62;non&#45;user stuff here&#60;/sec:ifNotGranted&#62;</pre></div><p class="paragraph"/><h4>loggedInUserInfo</h4>
+Displays the value of the specified UserDetails field if logged in. For example, to show the username property:<p class="paragraph"/><div class="code"><pre>&#60;sec:loggedInUserInfo field=<span class="java&#45;quote">"username"</span>/&#62;</pre></div><p class="paragraph"/>If you have customized the UserDetails (e.g. with a custom UserDetailsService) to add a <code>fullName</code> property, you access it as follows:<p class="paragraph"/><div class="code"><pre>Welcome Back &#60;sec:loggedInUserInfo field=<span class="java&#45;quote">"fullName"</span>/&#62;</pre></div><p class="paragraph"/><h4>username</h4>
 Displays the value of the UserDetails <code>username</code> field if logged in.<p class="paragraph"/><div class="code"><pre>&#60;sec:ifLoggedIn&#62;
 Welcome Back &#60;sec:username/&#62;!
 &#60;/sec:ifLoggedIn&#62;

@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2014 SpringSource.<a name="line.1"></a>
+<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2015 SpringSource.<a name="line.1"></a>
 <span class="sourceLineNo">002</span> *<a name="line.2"></a>
 <span class="sourceLineNo">003</span> * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.3"></a>
 <span class="sourceLineNo">004</span> * you may not use this file except in compliance with the License.<a name="line.4"></a>
@@ -59,55 +59,46 @@
 <span class="sourceLineNo">051</span>                logoutSuccessHandler = successHandler;<a name="line.51"></a>
 <span class="sourceLineNo">052</span>        }<a name="line.52"></a>
 <span class="sourceLineNo">053</span><a name="line.53"></a>
-<span class="sourceLineNo">054</span>        /**<a name="line.54"></a>
-<span class="sourceLineNo">055</span>         * {@inheritDoc}<a name="line.55"></a>
-<span class="sourceLineNo">056</span>         * @see org.springframework.security.web.authentication.logout.LogoutFilter#doFilter(<a name="line.56"></a>
-<span class="sourceLineNo">057</span>         *      javax.servlet.ServletRequest, javax.servlet.ServletResponse, javax.servlet.FilterChain)<a name="line.57"></a>
-<span class="sourceLineNo">058</span>         */<a name="line.58"></a>
-<span class="sourceLineNo">059</span>        @Override<a name="line.59"></a>
-<span class="sourceLineNo">060</span>        public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)<a name="line.60"></a>
-<span class="sourceLineNo">061</span>                        throws IOException, ServletException {<a name="line.61"></a>
-<span class="sourceLineNo">062</span><a name="line.62"></a>
-<span class="sourceLineNo">063</span>                HttpServletRequest request = (HttpServletRequest) req;<a name="line.63"></a>
-<span class="sourceLineNo">064</span>                HttpServletResponse response = (HttpServletResponse) res;<a name="line.64"></a>
+<span class="sourceLineNo">054</span>        @Override<a name="line.54"></a>
+<span class="sourceLineNo">055</span>        public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain chain)<a name="line.55"></a>
+<span class="sourceLineNo">056</span>                        throws IOException, ServletException {<a name="line.56"></a>
+<span class="sourceLineNo">057</span><a name="line.57"></a>
+<span class="sourceLineNo">058</span>                HttpServletRequest request = (HttpServletRequest) req;<a name="line.58"></a>
+<span class="sourceLineNo">059</span>                HttpServletResponse response = (HttpServletResponse) res;<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>                if (!requiresLogout(request, response)) {<a name="line.61"></a>
+<span class="sourceLineNo">062</span>                        chain.doFilter(request, response);<a name="line.62"></a>
+<span class="sourceLineNo">063</span>                        return;<a name="line.63"></a>
+<span class="sourceLineNo">064</span>                }<a name="line.64"></a>
 <span class="sourceLineNo">065</span><a name="line.65"></a>
-<span class="sourceLineNo">066</span>                if (requiresLogout(request, response)) {<a name="line.66"></a>
-<span class="sourceLineNo">067</span>                        Authentication auth = SecurityContextHolder.getContext().getAuthentication();<a name="line.67"></a>
+<span class="sourceLineNo">066</span>                Authentication auth = SecurityContextHolder.getContext().getAuthentication();<a name="line.66"></a>
+<span class="sourceLineNo">067</span>                log.debug("Logging out user '{}' and transferring to logout destination", auth);<a name="line.67"></a>
 <span class="sourceLineNo">068</span><a name="line.68"></a>
-<span class="sourceLineNo">069</span>                        if (log.isDebugEnabled()) {<a name="line.69"></a>
-<span class="sourceLineNo">070</span>                                log.debug("Logging out user '{}' and transferring to logout destination", auth);<a name="line.70"></a>
-<span class="sourceLineNo">071</span>                        }<a name="line.71"></a>
+<span class="sourceLineNo">069</span>                for (LogoutHandler handler : handlers) {<a name="line.69"></a>
+<span class="sourceLineNo">070</span>                        handler.logout(request, response, auth);<a name="line.70"></a>
+<span class="sourceLineNo">071</span>                }<a name="line.71"></a>
 <span class="sourceLineNo">072</span><a name="line.72"></a>
-<span class="sourceLineNo">073</span>                        for (LogoutHandler handler : handlers) {<a name="line.73"></a>
-<span class="sourceLineNo">074</span>                                handler.logout(request, response, auth);<a name="line.74"></a>
-<span class="sourceLineNo">075</span>                        }<a name="line.75"></a>
-<span class="sourceLineNo">076</span><a name="line.76"></a>
-<span class="sourceLineNo">077</span>                        logoutSuccessHandler.onLogoutSuccess(request, response, auth);<a name="line.77"></a>
-<span class="sourceLineNo">078</span><a name="line.78"></a>
-<span class="sourceLineNo">079</span>                        return;<a name="line.79"></a>
-<span class="sourceLineNo">080</span>                }<a name="line.80"></a>
-<span class="sourceLineNo">081</span><a name="line.81"></a>
-<span class="sourceLineNo">082</span>                chain.doFilter(request, response);<a name="line.82"></a>
-<span class="sourceLineNo">083</span>        }<a name="line.83"></a>
-<span class="sourceLineNo">084</span><a name="line.84"></a>
-<span class="sourceLineNo">085</span>        /**<a name="line.85"></a>
-<span class="sourceLineNo">086</span>         * Dependency injection for the logout handlers.<a name="line.86"></a>
-<span class="sourceLineNo">087</span>         * @param l the handlers<a name="line.87"></a>
-<span class="sourceLineNo">088</span>         */<a name="line.88"></a>
-<span class="sourceLineNo">089</span>        public void setHandlers(final List&lt;LogoutHandler&gt; l) {<a name="line.89"></a>
-<span class="sourceLineNo">090</span>                handlers = l;<a name="line.90"></a>
-<span class="sourceLineNo">091</span>        }<a name="line.91"></a>
-<span class="sourceLineNo">092</span><a name="line.92"></a>
-<span class="sourceLineNo">093</span>        /**<a name="line.93"></a>
-<span class="sourceLineNo">094</span>         * Null logout handler that's used to provide a non-empty list of handlers to the base class.<a name="line.94"></a>
-<span class="sourceLineNo">095</span>         * The real handlers will be after construction.<a name="line.95"></a>
-<span class="sourceLineNo">096</span>         */<a name="line.96"></a>
-<span class="sourceLineNo">097</span>        protected static class DummyLogoutHandler implements LogoutHandler {<a name="line.97"></a>
-<span class="sourceLineNo">098</span>                public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {<a name="line.98"></a>
-<span class="sourceLineNo">099</span>                        // do nothing<a name="line.99"></a>
-<span class="sourceLineNo">100</span>                }<a name="line.100"></a>
-<span class="sourceLineNo">101</span>        }<a name="line.101"></a>
-<span class="sourceLineNo">102</span>}<a name="line.102"></a>
+<span class="sourceLineNo">073</span>                logoutSuccessHandler.onLogoutSuccess(request, response, auth);<a name="line.73"></a>
+<span class="sourceLineNo">074</span>        }<a name="line.74"></a>
+<span class="sourceLineNo">075</span><a name="line.75"></a>
+<span class="sourceLineNo">076</span>        /**<a name="line.76"></a>
+<span class="sourceLineNo">077</span>         * Dependency injection for the logout handlers.<a name="line.77"></a>
+<span class="sourceLineNo">078</span>         * @param l the handlers<a name="line.78"></a>
+<span class="sourceLineNo">079</span>         */<a name="line.79"></a>
+<span class="sourceLineNo">080</span>        public void setHandlers(final List&lt;LogoutHandler&gt; l) {<a name="line.80"></a>
+<span class="sourceLineNo">081</span>                handlers = l;<a name="line.81"></a>
+<span class="sourceLineNo">082</span>        }<a name="line.82"></a>
+<span class="sourceLineNo">083</span><a name="line.83"></a>
+<span class="sourceLineNo">084</span>        /**<a name="line.84"></a>
+<span class="sourceLineNo">085</span>         * Null logout handler that's used to provide a non-empty list of handlers to the base class.<a name="line.85"></a>
+<span class="sourceLineNo">086</span>         * The real handlers will be after construction.<a name="line.86"></a>
+<span class="sourceLineNo">087</span>         */<a name="line.87"></a>
+<span class="sourceLineNo">088</span>        protected static class DummyLogoutHandler implements LogoutHandler {<a name="line.88"></a>
+<span class="sourceLineNo">089</span>                public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {<a name="line.89"></a>
+<span class="sourceLineNo">090</span>                        // do nothing<a name="line.90"></a>
+<span class="sourceLineNo">091</span>                }<a name="line.91"></a>
+<span class="sourceLineNo">092</span>        }<a name="line.92"></a>
+<span class="sourceLineNo">093</span>}<a name="line.93"></a>
 
 
 

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.3 PersonAuthority Class 2.0-RC4</title>
+    <title>3.3 PersonAuthority Class 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,8 @@ function addJsClass() {
                 
 
 <h2 id="personAuthorityClass">3.3 PersonAuthority Class</h2>
-The typical approach to mapping the relationship between 'person' and 'authority' is a many-to-many. Users have multiple roles, and roles are shared by multiple users. This approach can be problematic in Grails, because a popular role, for example, <code>ROLE_USER</code>, will be granted to many users in your application. GORM uses collections to manage adding and removing related instances and maps many-to-many relationships bidirectionally. Granting a role to a user requires loading all  existing users who have that role because the collection is a <code>Set</code>. So even though no uniqueness concerns may exist, Hibernate loads them all to enforce uniqueness. The recommended approach in the plugin is to map a domain class to the join table that manages the many-to-many, and using that to grant and revoke roles to users.<p class="paragraph"/>Like the other domain classes, this class is generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>class UserRole <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   User user
+The typical approach to mapping the relationship between 'person' and 'authority' is a many-to-many. Users have multiple roles, and roles are shared by multiple users. This approach can be problematic in Grails, because a popular role, for example, <code>ROLE_USER</code>, will be granted to many users in your application. GORM uses collections to manage adding and removing related instances and maps many-to-many relationships bidirectionally. Granting a role to a user requires loading all existing users who have that role because the collection is a <code>Set</code>. So even though no uniqueness concerns may exist, Hibernate loads them all to enforce uniqueness. The recommended approach in the plugin is to map a domain class to the join table that manages the many-to-many, and using that to grant and revoke roles to users.<p class="paragraph"/>Like the other domain classes, this class is generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>@ToString(cache=<span class="java&#45;keyword">true</span>, includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class UserRole <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   User user
    Role role<p class="paragraph"/>   <span class="java&#45;object">boolean</span> equals(other) &#123;
       <span class="java&#45;keyword">if</span> (!(other <span class="java&#45;keyword">instanceof</span> UserRole)) &#123;
          <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
@@ -159,35 +157,22 @@ The typical approach to mapping the relationship between 'person' and 'authority
       <span class="java&#45;keyword">if</span> (role) builder.append(role.id)
       builder.toHashCode()
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole get(<span class="java&#45;object">long</span> userId, <span class="java&#45;object">long</span> roleId) &#123;
-      UserRole.where &#123;
-         user == User.load(userId) &#38;&#38;
-         role == Role.load(roleId)
-      &#125;.get()
+      UserRole.where &#123; user.id == userId &#38;&#38; role.id == roleId &#125;.get()
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> exists(<span class="java&#45;object">long</span> userId, <span class="java&#45;object">long</span> roleId) &#123;
-      UserRole.where &#123;
-         user == User.load(userId) &#38;&#38;
-         role == Role.load(roleId)
-      &#125;.count() &#62; 0
+      UserRole.where &#123; user.id == userId &#38;&#38; role.id == roleId &#125;.count() &#62; 0
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole create(User user, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
       def instance = <span class="java&#45;keyword">new</span> UserRole(user: user, role: role)
       instance.save(flush: flush, insert: <span class="java&#45;keyword">true</span>)
       instance
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User u, Role r) &#123;
-      <span class="java&#45;keyword">if</span> (u == <span class="java&#45;keyword">null</span> || r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span><p class="paragraph"/>      <span class="java&#45;object">int</span> rowCount = UserRole.where &#123;
-         user == User.load(u.id) &#38;&#38;
-         role == Role.load(r.id)
-      &#125;.deleteAll()<p class="paragraph"/>      rowCount &#62; 0
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(User u) &#123;
-      <span class="java&#45;keyword">if</span> (u == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      UserRole.where &#123;
-         user == User.load(u.id)
-      &#125;.deleteAll()
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(Role r) &#123;
-      <span class="java&#45;keyword">if</span> (r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      UserRole.where &#123;
-         role == Role.load(r.id)
-      &#125;.deleteAll()
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User u, Role r, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      <span class="java&#45;keyword">if</span> (u == <span class="java&#45;keyword">null</span> || r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span><p class="paragraph"/>      <span class="java&#45;object">int</span> rowCount = UserRole.where &#123; user == u &#38;&#38; role == r &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; UserRole.withSession &#123; it.flush() &#125; &#125;<p class="paragraph"/>      rowCount &#62; 0
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(User u, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      <span class="java&#45;keyword">if</span> (u == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      UserRole.where &#123; user == u &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; UserRole.withSession &#123; it.flush() &#125; &#125;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(Role r, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      <span class="java&#45;keyword">if</span> (r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      UserRole.where &#123; role == r &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; UserRole.withSession &#123; it.flush() &#125; &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       role validator: &#123; Role r, UserRole ur &#45;&#62;
-         <span class="java&#45;keyword">if</span> (ur.user == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span>
+         <span class="java&#45;keyword">if</span> (ur.user == <span class="java&#45;keyword">null</span> || ur.user.id == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span>
          <span class="java&#45;object">boolean</span> existing = <span class="java&#45;keyword">false</span>
          UserRole.withNewSession &#123;
             existing = UserRole.exists(ur.user.id, r.id)
@@ -197,7 +182,7 @@ The typical approach to mapping the relationship between 'person' and 'authority
          &#125;
       &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
-      id composite: &#91;'role', 'user'&#93;
+      id composite: &#91;'user', 'role'&#93;
       version <span class="java&#45;keyword">false</span>
    &#125;
 &#125;</pre></div><p class="paragraph"/>The helper methods make it easy to grant or revoke roles. Assuming you have already loaded a user and a role, you grant the role to the user as follows:<p class="paragraph"/><div class="code"><pre>User user = &#8230;

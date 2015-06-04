@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>8 Authentication 2.0-RC4</title>
+    <title>8 Authentication 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -164,16 +161,16 @@ function addJsClass() {
                 
 
 <h1 id="authentication">8 Authentication</h1>
-The Spring Security plugin supports several approaches to authentication.<p class="paragraph"/>The default approach stores users and roles in your database, and uses an HTML login form which prompts the user for a username and password. The plugin also supports other approaches as described in the sections below, as well as add-on plugins that provide external authentication providers such as <a href="http://grails.org/plugin/spring-security-openid" target="blank">OpenID</a>, <a href="http://grails.org/plugin/spring-security-ldap" target="blank">LDAP</a>, and single sign-on using <a href="http://grails.org/plugin/spring-security-cas" target="blank">CAS</a>
+The Spring Security plugin supports several approaches to authentication.<p class="paragraph"/>The default approach stores users and roles in your database, and uses an HTML login form which prompts the user for a username and password. The plugin also supports other approaches as described in the sections below, as well as add-on plugins that provide external authentication providers such as <a href="https://grails.org/plugin/spring-security-openid" target="blank">OpenID</a>, <a href="https://grails.org/plugin/spring-security-ldap" target="blank">LDAP</a>, and single sign-on using <a href="https://grails.org/plugin/spring-security-cas" target="blank">CAS</a>
 
 
 
 <h2 id="basicAndDigestAuth">8.1 Basic and Digest Authentication</h2>
-To use <a href="http://en.wikipedia.org/wiki/Basic_access_authentication" target="blank">HTTP Basic Authentication</a> in your application, set the <code>useBasicAuth</code> attribute to <code>true</code>. Also change the <code>basic.realmName</code> default value to one that suits your application, for example:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.useBasicAuth = <span class="java&#45;keyword">true</span>
+To use <a href="https://en.wikipedia.org/wiki/Basic_access_authentication" target="blank">HTTP Basic Authentication</a> in your application, set the <code>useBasicAuth</code> attribute to <code>true</code>. Also change the <code>basic.realmName</code> default value to one that suits your application, for example:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.useBasicAuth = <span class="java&#45;keyword">true</span>
 grails.plugin.springsecurity.basic.realmName = <span class="java&#45;quote">"Ralph's Bait and Tackle"</span></pre></div><p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>useBasicAuth</td><td><code>false</code></td><td>Whether to use basic authentication.</td></tr><tr class="table-even"><td>basic.realmName</td><td>'Grails Realm'</td><td>Realm name displayed in the browser authentication popup.</td></tr><tr class="table-odd"><td>basic. credentialsCharset</td><td>'UTF-8'</td><td>The character set used to decode Base64-encoded data</td></tr></table><p class="paragraph"/>With this authentication in place, users are prompted with the standard browser login dialog instead of being redirected to a login page.<p class="paragraph"/>If you don't want all of your URLs guarded by Basic Auth, you can partition the URL patterns and apply Basic Auth to some, but regular form login to others. For example, if you have a web service that uses Basic Auth for <code>/webservice/&#42;&#42;</code> URLs, you would configure that using the <code>chainMap</code> config attribute:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.filterChain.chainMap = &#91;
    '/webservice/&#42;&#42;': 'JOINED_FILTERS,&#45;exceptionTranslationFilter',
    '/&#42;&#42;': 'JOINED_FILTERS,&#45;basicAuthenticationFilter,&#45;basicExceptionTranslationFilter'
-&#93;</pre></div><p class="paragraph"/>In this example we're using the <code>JOINED_FILTERS</code> keyword instead of explicitly listing the filter names. Specifying <code>JOINED_FILTERS</code> means to use all of the filters that were configured using the various config options. In each case we also specify that we want to exclude one or more filters by prefixing their names with <code>-</code>.<p class="paragraph"/>For the <code>/webservice/&#42;&#42;</code> URLs, we want all filters except for the standard <code>ExceptionTranslationFilter</code> since we want to use just the one configured for Basic Auth. And for the <code>/&#42;&#42;</code> URLs (everything else) we want everything except for the Basic Auth filter and its configured <code>ExceptionTranslationFilter</code>.<p class="paragraph"/><a href="http://en.wikipedia.org/wiki/Digest_access_authentication" target="blank">Digest Authentication</a> is similar to Basic but is more secure because it does not send your password in obfuscated cleartext. Digest resembles Basic in practice - you get the same browser popup dialog when you authenticate. But because the credential transfer is genuinely hashed (instead of just Base64-encoded as with Basic authentication) you do not need SSL to guard your logins.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>useDigestAuth</td><td><code>false</code></td><td>Whether to use Digest authentication.</td></tr><tr class="table-even"><td>digest.realmName</td><td>'Grails Realm'</td><td>Realm name displayed in the browser popup</td></tr><tr class="table-odd"><td>digest.key</td><td>'changeme'</td><td>Key used to build the nonce for authentication; it should be changed but that's not required.</td></tr><tr class="table-even"><td>digest. nonceValiditySeconds</td><td>300</td><td>How long a nonce stays valid.</td></tr><tr class="table-odd"><td>digest. passwordAlreadyEncoded</td><td><code>false</code></td><td>Whether you are managing the password hashing yourself.</td></tr><tr class="table-even"><td>digest. createAuthenticatedToken</td><td><code>false</code></td><td>If <code>true</code>, creates an authenticated <code>UsernamePasswordAuthenticationToken</code> to avoid loading the user from the database twice. However, this process skips the isAccountNonExpired(), isAccountNonLocked(), isCredentialsNonExpired(), isEnabled() checks, so it is not advised.</td></tr><tr class="table-odd"><td>digest. useCleartextPasswords</td><td><code>false</code></td><td>If <code>true</code>, a cleartext password encoder is used (not recommended). If <code>false</code>, passwords hashed by <code>DigestAuthPasswordEncoder</code> are stored in the database.</td></tr></table><p class="paragraph"/>Digest authentication has a problem in that by default you store cleartext passwords in your database. This is because the browser hashes your password along with the username and Realm name, and this is compared to the password hashed using the same algorithm during authentication. The browser does not know about your <code>MessageDigest</code> algorithm or salt source, so to hash them the same way you need to load a cleartext password from the database.<p class="paragraph"/>The plugin does provide an alternative, although it has no configuration options (in particular the digest algorithm cannot be changed). If <code>digest.useCleartextPasswords</code> is <code>false</code> (the default), then the <code>passwordEncoder</code> bean is replaced with an instance of <code>grails.plugin.springsecurity.authentication.encoding. DigestAuthPasswordEncoder</code>. This encoder uses the same approach as the browser, that is, it combines your password along with your username and Realm name essentially as a salt, and hashes with MD5. MD5 is not recommended in general, but given the typical size of the salt it is reasonably safe to use.<p class="paragraph"/>The only required attribute is <code>useDigestAuth</code>, which you must set to <code>true</code>, but you probably also want to change the realm name:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.useDigestAuth = <span class="java&#45;keyword">true</span>
+&#93;</pre></div><p class="paragraph"/>In this example we're using the <code>JOINED_FILTERS</code> keyword instead of explicitly listing the filter names. Specifying <code>JOINED_FILTERS</code> means to use all of the filters that were configured using the various config options. In each case we also specify that we want to exclude one or more filters by prefixing their names with <code>-</code>.<p class="paragraph"/>For the <code>/webservice/&#42;&#42;</code> URLs, we want all filters except for the standard <code>ExceptionTranslationFilter</code> since we want to use just the one configured for Basic Auth. And for the <code>/&#42;&#42;</code> URLs (everything else) we want everything except for the Basic Auth filter and its configured <code>ExceptionTranslationFilter</code>.<p class="paragraph"/><a href="https://en.wikipedia.org/wiki/Digest_access_authentication" target="blank">Digest Authentication</a> is similar to Basic but is more secure because it does not send your password in obfuscated cleartext. Digest resembles Basic in practice - you get the same browser popup dialog when you authenticate. But because the credential transfer is genuinely hashed (instead of just Base64-encoded as with Basic authentication) you do not need SSL to guard your logins.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>useDigestAuth</td><td><code>false</code></td><td>Whether to use Digest authentication.</td></tr><tr class="table-even"><td>digest.realmName</td><td>'Grails Realm'</td><td>Realm name displayed in the browser popup</td></tr><tr class="table-odd"><td>digest.key</td><td>'changeme'</td><td>Key used to build the nonce for authentication; it should be changed but that's not required.</td></tr><tr class="table-even"><td>digest. nonceValiditySeconds</td><td>300</td><td>How long a nonce stays valid.</td></tr><tr class="table-odd"><td>digest. passwordAlreadyEncoded</td><td><code>false</code></td><td>Whether you are managing the password hashing yourself.</td></tr><tr class="table-even"><td>digest. createAuthenticatedToken</td><td><code>false</code></td><td>If <code>true</code>, creates an authenticated <code>UsernamePasswordAuthenticationToken</code> to avoid loading the user from the database twice. However, this process skips the isAccountNonExpired(), isAccountNonLocked(), isCredentialsNonExpired(), isEnabled() checks, so it is not advised.</td></tr><tr class="table-odd"><td>digest. useCleartextPasswords</td><td><code>false</code></td><td>If <code>true</code>, a cleartext password encoder is used (not recommended). If <code>false</code>, passwords hashed by <code>DigestAuthPasswordEncoder</code> are stored in the database.</td></tr></table><p class="paragraph"/>Digest authentication has a problem in that by default you store cleartext passwords in your database. This is because the browser hashes your password along with the username and Realm name, and this is compared to the password hashed using the same algorithm during authentication. The browser does not know about your <code>MessageDigest</code> algorithm or salt source, so to hash them the same way you need to load a cleartext password from the database.<p class="paragraph"/>The plugin does provide an alternative, although it has no configuration options (in particular the digest algorithm cannot be changed). If <code>digest.useCleartextPasswords</code> is <code>false</code> (the default), then the <code>passwordEncoder</code> bean is replaced with an instance of <code>grails.plugin.springsecurity.authentication.encoding. DigestAuthPasswordEncoder</code>. This encoder uses the same approach as the browser, that is, it combines your password along with your username and Realm name essentially as a salt, and hashes with MD5. MD5 is not recommended in general, but given the typical size of the salt it is reasonably safe to use.<p class="paragraph"/>The only required attribute is <code>useDigestAuth</code>, which you must set to <code>true</code>, but you probably also want to change the realm name:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.useDigestAuth = <span class="java&#45;keyword">true</span>
 grails.plugin.springsecurity.digest.realmName = <span class="java&#45;quote">"Ralph's Bait and Tackle"</span></pre></div><p class="paragraph"/>Digest authentication cannot be applied to a subset of URLs like Basic authentication can. This is due to the password encoding issues. So you cannot use the <code>chainMap</code> attribute here - all URLs will be guarded.<p class="paragraph"/><blockquote class="note">
 Note that since the Digest auth password encoder is different from the typical encoders you must to pass the username as the "salt" value. The generated User class uses <code>springSecurityService</code> which assumes you're not using a salt value. If you
 use the generated code in the User class to encode your password, change the dependency injection for springSecurityService with one for the passwordEncoder bean instead:
@@ -183,18 +180,18 @@ use the generated code in the User class to encode your password, change the dep
 
 
 <h2 id="x509">8.2 Certificate (X509) Login Authentication</h2>
-Another authentication mechanism supported by Spring Security is certificate-based, or "mutual authentication". It requires HTTPS, and you must configure the server to require a client certificate (ordinarily only the server provides a certificate). Your username is extracted from the client certificate if it is valid, and you are "pre-authenticated". As long as a corresponding username exists in the database, your authentication succeeds and you are not asked for a password. Your <code>Authentication</code> contains the authorities associated with your username.<p class="paragraph"/>The table describes available configuration options.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>useX509</td><td><code>false</code></td><td>Whether to support certificate-based logins</td></tr><tr class="table-even"><td>x509.continueFilterChainOn UnsuccessfulAuthentication</td><td><code>true</code></td><td>Whether to proceed when an authentication attempt fails to allow other authentication mechanisms to process the request.</td></tr><tr class="table-odd"><td>x509.subjectDnRegex</td><td>'CN=(.*?)(?:,&#124;$)'</td><td>Regular expression (regex) for extracting the username from the certificate's subject name.</td></tr><tr class="table-even"><td>x509.checkForPrincipalChanges</td><td><code>false</code></td><td>Whether to re-extract the username from the certificate and check that it's still the current user when a valid <code>Authentication</code> already exists.</td></tr><tr class="table-odd"><td>x509.invalidateSessionOn PrincipalChange</td><td><code>true</code></td><td>Whether to invalidate the session if the principal changed (based on a <code>checkForPrincipalChanges</code> check).</td></tr><tr class="table-even"><td>x509.subjectDnClosure</td><td>none</td><td>If set, the plugin's <code>ClosureX509PrincipalExtractor</code> class is used to extract information from the X.509 certificate using the specified closure</td></tr><tr class="table-odd"><td>x509. throwException WhenTokenRejected</td><td><code>false</code></td><td>If <code>true</code> thrown a <code>BadCredentialsException</code></td></tr></table><p class="paragraph"/>The details of configuring your server for SSL and configuring browser certificates are beyond the scope of this document. If you use Tomcat, see its <a href="https://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html" target="blank">SSL documentation</a>. To get a test environment working, see the instructions in <a href="http://stackoverflow.com/questions/1180397/tomcat-server-client-self-signed-ssl-certificate" target="blank">this discussion at Stack Overflow</a>.
+Another authentication mechanism supported by Spring Security is certificate-based, or "mutual authentication". It requires HTTPS, and you must configure the server to require a client certificate (ordinarily only the server provides a certificate). Your username is extracted from the client certificate if it is valid, and you are "pre-authenticated". As long as a corresponding username exists in the database, your authentication succeeds and you are not asked for a password. Your <code>Authentication</code> contains the authorities associated with your username.<p class="paragraph"/>The table describes available configuration options.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>useX509</td><td><code>false</code></td><td>Whether to support certificate-based logins</td></tr><tr class="table-even"><td>x509.continueFilterChainOn UnsuccessfulAuthentication</td><td><code>true</code></td><td>Whether to proceed when an authentication attempt fails to allow other authentication mechanisms to process the request.</td></tr><tr class="table-odd"><td>x509.subjectDnRegex</td><td>'CN=(.*?)(?:,&#124;$)'</td><td>Regular expression (regex) for extracting the username from the certificate's subject name.</td></tr><tr class="table-even"><td>x509.checkForPrincipalChanges</td><td><code>false</code></td><td>Whether to re-extract the username from the certificate and check that it's still the current user when a valid <code>Authentication</code> already exists.</td></tr><tr class="table-odd"><td>x509.invalidateSessionOn PrincipalChange</td><td><code>true</code></td><td>Whether to invalidate the session if the principal changed (based on a <code>checkForPrincipalChanges</code> check).</td></tr><tr class="table-even"><td>x509.subjectDnClosure</td><td>none</td><td>If set, the plugin's <code>ClosureX509PrincipalExtractor</code> class is used to extract information from the X.509 certificate using the specified closure</td></tr><tr class="table-odd"><td>x509. throwException WhenTokenRejected</td><td><code>false</code></td><td>If <code>true</code> thrown a <code>BadCredentialsException</code></td></tr></table><p class="paragraph"/>The details of configuring your server for SSL and configuring browser certificates are beyond the scope of this document. If you use Tomcat, see its <a href="https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html" target="blank">SSL documentation</a>. To get a test environment working, see the instructions in <a href="https://stackoverflow.com/questions/1180397/tomcat-server-client-self-signed-ssl-certificate" target="blank">this discussion at Stack Overflow</a>.
 
 
 
 <h2 id="rememberMeCookie">8.3 Remember-Me Cookie</h2>
-Spring Security supports creating a remember-me cookie so that users are not required to log in with a username and password for each session. This is optional and is usually implemented as a checkbox on the login form; the default <code>auth.gsp</code> supplied by the plugin has this feature.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>rememberMe.cookieName</td><td>'grails_remember_me'</td><td>remember-me cookie name; should be unique per application.</td></tr><tr class="table-even"><td>rememberMe. alwaysRemember</td><td><code>false</code></td><td>If <code>true</code>, create a remember-me cookie even if no checkbox is on the form.</td></tr><tr class="table-odd"><td>rememberMe. tokenValiditySeconds</td><td>1209600 (14 days)</td><td>Max age of the cookie in seconds.</td></tr><tr class="table-even"><td>rememberMe.parameter</td><td>'_spring_security_remember_me'</td><td>Login form remember-me checkbox name.</td></tr><tr class="table-odd"><td>rememberMe.key</td><td>'grailsRocks'</td><td>Value used to encode cookies; should be unique per application.</td></tr><tr class="table-even"><td>rememberMe.useSecureCookie</td><td>none</td><td>Whether to use a secure cookie or not; if <code>true</code> a secure cookie is created, if <code>false</code> a non-secure cookie is created, and if not set, a secure cookie is created if the request used HTTPS</td></tr><tr class="table-odd"><td>rememberMe. createSessionOnSuccess</td><td><code>true</code></td><td>Whether to create a session of one doesn't exist to ensure that the <code>Authentication</code> is stored for future requests</td></tr><tr class="table-even"><td>rememberMe.persistent</td><td><code>false</code></td><td>If <code>true</code>, stores persistent login information in the database.</td></tr><tr class="table-odd"><td>rememberMe.persistentToken. domainClassName</td><td>none</td><td>Domain class used to manage persistent logins.</td></tr><tr class="table-even"><td>rememberMe.persistentToken. seriesLength</td><td>16</td><td>Number of characters in the cookie's <code>series</code> attribute.</td></tr><tr class="table-odd"><td>rememberMe.persistentToken. tokenLength</td><td>16</td><td>Number of characters in the cookie's <code>token</code> attribute.</td></tr><tr class="table-even"><td>atr.rememberMeClass</td><td><a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html" target="blank">RememberMeAuthenticationToken</a></td><td>remember-me authentication class.</td></tr></table><p class="paragraph"/>You are most likely to change these attributes:
+Spring Security supports creating a remember-me cookie so that users are not required to log in with a username and password for each session. This is optional and is usually implemented as a checkbox on the login form; the default <code>auth.gsp</code> supplied by the plugin has this feature.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>rememberMe.cookieName</td><td>'grails_remember_me'</td><td>remember-me cookie name; should be unique per application.</td></tr><tr class="table-even"><td>rememberMe. alwaysRemember</td><td><code>false</code></td><td>If <code>true</code>, create a remember-me cookie even if no checkbox is on the form.</td></tr><tr class="table-odd"><td>rememberMe. tokenValiditySeconds</td><td>1209600 (14 days)</td><td>Max age of the cookie in seconds.</td></tr><tr class="table-even"><td>rememberMe.parameter</td><td>'_spring_security_remember_me'</td><td>Login form remember-me checkbox name.</td></tr><tr class="table-odd"><td>rememberMe.key</td><td>'grailsRocks'</td><td>Value used to encode cookies; should be unique per application.</td></tr><tr class="table-even"><td>rememberMe.useSecureCookie</td><td>none</td><td>Whether to use a secure cookie or not; if <code>true</code> a secure cookie is created, if <code>false</code> a non-secure cookie is created, and if not set, a secure cookie is created if the request used HTTPS</td></tr><tr class="table-odd"><td>rememberMe. createSessionOnSuccess</td><td><code>true</code></td><td>Whether to create a session of one doesn't exist to ensure that the <code>Authentication</code> is stored for future requests</td></tr><tr class="table-even"><td>rememberMe.persistent</td><td><code>false</code></td><td>If <code>true</code>, stores persistent login information in the database.</td></tr><tr class="table-odd"><td>rememberMe.persistentToken. domainClassName</td><td>none</td><td>Domain class used to manage persistent logins.</td></tr><tr class="table-even"><td>rememberMe.persistentToken. seriesLength</td><td>16</td><td>Number of characters in the cookie's <code>series</code> attribute.</td></tr><tr class="table-odd"><td>rememberMe.persistentToken. tokenLength</td><td>16</td><td>Number of characters in the cookie's <code>token</code> attribute.</td></tr><tr class="table-even"><td>atr.rememberMeClass</td><td><a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/RememberMeAuthenticationToken.html" target="blank">RememberMeAuthenticationToken</a></td><td>remember-me authentication class.</td></tr></table><p class="paragraph"/>You are most likely to change these attributes:
 <ul class="star">
 <li><code>rememberMe.cookieName</code>. Purely aesthetic as most users will not look at their cookies, but you probably want the display name to be application-specific rather than "grails_remember_me".</li>
 <li><code>rememberMe.key</code>. Part of a salt when the cookie is encrypted. Changing the default makes it harder to execute brute-force attacks.</li>
 <li><code>rememberMe.tokenValiditySeconds</code>. Default is two weeks; set it to what makes sense for your application.</li>
 </ul><p class="paragraph"/><h4>Persistent Logins</h4>
-The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/remember-me.html" target="blank">Spring Security docs</a> for a description of the implementation.<p class="paragraph"/>Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.<p class="paragraph"/>To use this feature, run the <a href="../ref/Scripts/s2-create-persistent-token.html" class="Scripts">s2-create-persistent-token</a> script. This will create the domain class, and register its name in <code>grails-app/conf/Config.groovy</code>. It will also enable persistent logins by setting <code>rememberMe.persistent</code> to <code>true</code>.
+The remember-me cookie is very secure, but for an even stronger solution you can use persistent logins that store the username in the database. See the <a href="https://docs.spring.io/spring-security/site/docs/3.2.7.RELEASE/reference/htmlsingle/#remember-me" target="blank">Spring Security docs</a> for a description of the implementation.<p class="paragraph"/>Persistent login is also useful for authentication schemes like OpenID and Facebook, where you do not manage passwords in your database, but most of the other user information is stored locally. Without a password you cannot use the standard cookie format, so persistent logins enable remember-me cookies in these scenarios.<p class="paragraph"/>To use this feature, run the <a href="../ref/Scripts/s2-create-persistent-token.html" class="Scripts">s2-create-persistent-token</a> script. This will create the domain class, and register its name in <code>grails-app/conf/Config.groovy</code>. It will also enable persistent logins by setting <code>rememberMe.persistent</code> to <code>true</code>.
 
 
 
@@ -203,7 +200,7 @@ The typical pattern of using web site authentication to access restricted pages 
    &#60;title&#62;&#60;g:layoutTitle <span class="java&#45;keyword">default</span>=<span class="java&#45;quote">"Grails"</span> /&#62;&#60;/title&#62;
    &#60;link rel=<span class="java&#45;quote">"stylesheet"</span> href=<span class="java&#45;quote">"$&#123;resource(dir:'css',file:'main.css')&#125;"</span> /&#62;
    &#60;link rel=<span class="java&#45;quote">"shortcut icon"</span> type=<span class="java&#45;quote">"image/x&#45;icon"</span>
-      href=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'favicon.ico')&#125;"</span> /&#62;
+         href=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'favicon.ico')&#125;"</span> /&#62;
    &#60;g:layoutHead /&#62;
    &#60;r:layoutResources /&#62;
 &#60;/head&#62;<p class="paragraph"/>&#60;body&#62;<p class="paragraph"/>   &#60;div id=<span class="java&#45;quote">"spinner"</span> class=<span class="java&#45;quote">"spinner"</span> style=<span class="java&#45;quote">"display:none;"</span>&#62;
@@ -268,88 +265,89 @@ The typical pattern of using web site authentication to access restricted pages 
 &#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .chk &#123;height:12px;&#125;
 .errorMessage &#123; color: red; &#125;
 &#60;/style&#62;<p class="paragraph"/>&#60;div id='ajaxLogin' class=<span class="java&#45;quote">"jqmWindow"</span> style=<span class="java&#45;quote">"z&#45;index: 3000;"</span>&#62;
-      &#60;div class='<span class="java&#45;keyword">inner</span>'&#62;
-		&#60;div class='fheader'&#62;Please Login..&#60;/div&#62;
-		&#60;form action='$&#123;request.contextPath&#125;/j_spring_security_check' method='POST'
-			 id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'&#62;
-			&#60;p&#62;
-				&#60;label <span class="java&#45;keyword">for</span>='username'&#62;Login ID&#60;/label&#62;
-				&#60;input type='text' class='text_' name='j_username' id='username' /&#62;
-			&#60;/p&#62;
-			&#60;p&#62;
-				&#60;label <span class="java&#45;keyword">for</span>='password'&#62;Password&#60;/label&#62;
-				&#60;input type='password' class='text_' name='j_password' id='password' /&#62;
-			&#60;/p&#62;
-			&#60;p&#62;
-				&#60;label <span class="java&#45;keyword">for</span>='remember_me'&#62;Remember me&#60;/label&#62;
-				&#60;input type='checkbox' class='chk' id='remember_me'
-						 name='_spring_security_remember_me'/&#62;
-			&#60;/p&#62;
-			&#60;p&#62;
-				&#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"authAjax"</span>&#62;Login&#60;/span&#62;
-				&#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"cancelLogin"</span>&#62;Cancel&#60;/span&#62;
-			&#60;/p&#62;
-		&#60;/form&#62;
-		&#60;div style='display: none; text&#45;align: left;' id='loginMessage'&#62;&#60;/div&#62;
-	&#60;/div&#62;
+   &#60;div class='<span class="java&#45;keyword">inner</span>'&#62;
+      &#60;div class='fheader'&#62;Please Login..&#60;/div&#62;
+      &#60;form action='$&#123;request.contextPath&#125;/j_spring_security_check' method='POST'
+            id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='username'&#62;Login ID&#60;/label&#62;
+            &#60;input type='text' class='text_' name='j_username' id='username' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='password'&#62;Password&#60;/label&#62;
+            &#60;input type='password' class='text_' name='j_password' id='password' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='remember_me'&#62;Remember me&#60;/label&#62;
+            &#60;input type='checkbox' class='chk' id='remember_me'
+                   name='_spring_security_remember_me'/&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"authAjax"</span>&#62;Login&#60;/span&#62;
+            &#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"cancelLogin"</span>&#62;Cancel&#60;/span&#62;
+         &#60;/p&#62;
+      &#60;/form&#62;
+      &#60;div style='display: none; text&#45;align: left;' id='loginMessage'&#62;&#60;/div&#62;
+   &#60;/div&#62;
 &#60;/div&#62;<p class="paragraph"/>&#60;script type='text/javascript'&#62;
 <span class="java&#45;keyword">var</span> onLogin;
 $.ajaxSetup(&#123;
-      beforeSend : function(xhr, event) &#123;
-		// save the 'success' function <span class="java&#45;keyword">for</span> later use
-		onLogin = event.success;
-	&#125;,
-	statusCode: &#123;
-		// Set up a global AJAX error handler to handle the 401
-		// unauthorized responses. If a 401 status code comes back,
-		// the user is no longer logged&#45;into the system and can not
-		// use it properly.
-		401: function() &#123;
-			showLogin();
-		&#125;
-	&#125;
-&#125;);<p class="paragraph"/>function showLogin() &#123; 
-	<span class="java&#45;keyword">var</span> ajaxLogin = $('&#35;ajaxLogin'); 
-	ajaxLogin.css('text&#45;align','center');
-      // use jqModal to show and align login panel
-	ajaxLogin.jqmShow();
-&#125;<p class="paragraph"/>function cancelLogin() &#123; 
-	$('&#35;ajaxLogin').jqmHide();	
-&#125;<p class="paragraph"/>function authAjax() &#123; 
-	$('&#35;loginMessage').html('Sending request ...').show();<p class="paragraph"/>	<span class="java&#45;keyword">var</span> form = $('&#35;ajaxLoginForm');
-	<span class="java&#45;keyword">var</span> config = &#123;
-		type : 'post'
-		,url : form.attr('action')
-		,data : form.serialize()
-		,async : <span class="java&#45;keyword">false</span>
-		,dataType : 'JSON'
-		,success: function(response) &#123;
-			form&#91;0&#93;.reset();
-			$('&#35;loginMessage').empty();
-			$('&#35;ajaxLogin').jqmHide();
-			<span class="java&#45;keyword">if</span> (onLogin) &#123;
-				// execute the saved event.success function
-				onLogin(response);
-			&#125;
-		&#125;
-		,error : function (response) &#123;
-			<span class="java&#45;keyword">var</span> responseText = response.responseText || '&#91;&#93;'; 
-			<span class="java&#45;keyword">var</span> json = responseText.evalJSON(); 
-			<span class="java&#45;keyword">if</span> (json.error) &#123; 
-				$('&#35;loginMessage').html(<span class="java&#45;quote">"&#60;span class='errorMessage'&#62;"</span> + json.error + '&#60;/error&#62;'); 
-			&#125; <span class="java&#45;keyword">else</span> &#123; 
-				$('&#35;loginMessage').html(responseText); 
-			&#125; 
-		&#125;
-		,beforeSend : function(xhr, event) &#123;
-			//console.log(<span class="java&#45;quote">"overriding <span class="java&#45;keyword">default</span> behaviour"</span>);
-		&#125;
-	&#125;
-	$.ajax(config);
+   beforeSend: function(xhr, event) &#123;
+      // save the 'success' function <span class="java&#45;keyword">for</span> later use
+      onLogin = event.success;
+   &#125;,
+   statusCode: &#123;
+      // Set up a global AJAX error handler to handle the 401
+      // unauthorized responses. If a 401 status code comes back,
+      // the user is no longer logged&#45;into the system and can not
+      // use it properly.
+      401: function() &#123;
+         showLogin();
+      &#125;
+   &#125;
+&#125;);<p class="paragraph"/>function showLogin() &#123;
+   <span class="java&#45;keyword">var</span> ajaxLogin = $('&#35;ajaxLogin');
+   ajaxLogin.css('text&#45;align','center');
+   // use jqModal to show and align login panel
+   ajaxLogin.jqmShow();
+&#125;<p class="paragraph"/>function cancelLogin() &#123;
+   $('&#35;ajaxLogin').jqmHide();
+&#125;<p class="paragraph"/>function authAjax() &#123;
+   $('&#35;loginMessage').html('Sending request ...').show();<p class="paragraph"/>   <span class="java&#45;keyword">var</span> form = $('&#35;ajaxLoginForm');
+   <span class="java&#45;keyword">var</span> config = &#123;
+      type: 'post',
+      url: form.attr('action'),
+      data: form.serialize(),
+      async: <span class="java&#45;keyword">false</span>,
+      dataType: 'JSON',
+      success: function(response) &#123;
+         form&#91;0&#93;.reset();
+         $('&#35;loginMessage').empty();
+         $('&#35;ajaxLogin').jqmHide();
+         <span class="java&#45;keyword">if</span> (onLogin) &#123;
+            // execute the saved event.success function
+            onLogin(response);
+         &#125;
+      &#125;,
+      error: function (response) &#123;
+         <span class="java&#45;keyword">var</span> responseText = response.responseText || '&#91;&#93;';
+         <span class="java&#45;keyword">var</span> json = responseText.evalJSON();
+         <span class="java&#45;keyword">if</span> (json.error) &#123;
+            $('&#35;loginMessage').html(<span class="java&#45;quote">"&#60;span class='errorMessage'&#62;"</span> + json.error + '&#60;/error&#62;');
+         &#125;
+         <span class="java&#45;keyword">else</span> &#123;
+            $('&#35;loginMessage').html(responseText);
+         &#125;
+      &#125;,
+      beforeSend: function(xhr, event) &#123;
+         //console.log(<span class="java&#45;quote">"overriding <span class="java&#45;keyword">default</span> behaviour"</span>);
+      &#125;
+   &#125;
+   $.ajax(config);
 &#125;<p class="paragraph"/>$(function() &#123;
-	$('&#35;ajaxLogin').jqm(&#123;modal: <span class="java&#45;keyword">true</span>, trigger: 'span.jqmTrigger'&#125;);
-	$('&#35;authAjax').click(authAjax);
-	$('&#35;cancelLogin').click(cancelLogin);
+   $('&#35;ajaxLogin').jqm(&#123;modal: <span class="java&#45;keyword">true</span>, trigger: 'span.jqmTrigger'&#125;);
+   $('&#35;authAjax').click(authAjax);
+   $('&#35;cancelLogin').click(cancelLogin);
 &#125;);
 &#60;/script&#62;</pre></div><p class="paragraph"/>The important aspects of this code are:
 <ul class="star">
@@ -391,17 +389,16 @@ $.ajaxSetup(&#123;
            src=<span class="java&#45;quote">"&#60;g:createLinkTo dir='/images' file='spinner.gif'/&#62;"</span>
    /&#62;
 &#60;/g:form&#62;</pre></div><p class="paragraph"/>or<p class="paragraph"/><div class="code"><pre>&#60;script&#62;
-      <span class="java&#45;keyword">var</span> detailConfig = &#123;
-		type      : 'post'
-		,async    : <span class="java&#45;keyword">false</span>
-		,returnType : 'html'
-		,url      : '/post/addPostAjax'
-		,success  : function(data) &#123;
-                  $('&#35;firstPost').html(data);
-			clearPost(e);
-		&#125;
-	&#125;
-	$.ajax(detailConfig
+<span class="java&#45;keyword">var</span> detailConfig = &#123;
+   type: 'post',
+   async: <span class="java&#45;keyword">false</span>,
+   returnType: 'html',
+   url: '/post/addPostAjax',
+   success: function(data) &#123;
+      $('&#35;firstPost').html(data);
+      clearPost(e);
+   &#125;
+&#125;;<p class="paragraph"/>$.ajax(detailConfig);
 &#60;/script&#62;</pre></div><p class="paragraph"/>Most of the attributes are typical, but the <code>on401</code> attribute is the key to making Ajax logins work. As long as the <code>LoginController</code> sends a 401 error code the need to authenticate can be easily handled.<p class="paragraph"/>Note that depending on the version of the plugin that you're using, you may need to add the <code>authAjax</code> method to your <code>LoginController</code>:<p class="paragraph"/><div class="code"><pre>def authAjax() &#123;
    response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
    response.sendError HttpServletResponse.SC_UNAUTHORIZED

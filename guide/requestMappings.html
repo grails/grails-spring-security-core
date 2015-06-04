@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4 Configuring Request Mappings to Secure URLs 2.0-RC4</title>
+    <title>4 Configuring Request Mappings to Secure URLs 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -122,7 +119,7 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Required and Optional Domain Classes</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Domain Classes</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -169,7 +166,7 @@ You can choose among the following approaches to configuring request mappings fo
 <li><a href="../guide/single.html#securedAnnotations" class="guide"><code>@Secured</code> annotations (default approach)</a></li>
 <li><a href="../guide/single.html#configGroovyMap" class="guide">A simple Map in <code>Config.groovy</code></a></li>
 <li><a href="../guide/single.html#requestmapInstances" class="guide"><code>Requestmap</code> domain class instances stored in the database</a></li>
-</ul><p class="paragraph"/>You can only use one method at a time. You configure it with the <code>securityConfigType</code> attribute; the value has to be an <code>SecurityConfigType</code> enum value or the name of the enum as a String.<p class="paragraph"/><h4>Pessimistic Lockdown</h4><p class="paragraph"/>Many applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it might make sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role request mapping. But the pessimistic approach is safer; if you forget to restrict access to a URL using the optimistic approach, it might take a while to discover that unauthorized users can access the URL, but if you forget when using the pessimistic approach, no user can access it and the error should be quickly discovered.<p class="paragraph"/>The pessimistic approach is the default, and there are two configuration options that apply. If <code>rejectIfNoRule</code> is <code>true</code> (the default) then any URL that has no request mappings (an annotation, entry in <code>controllerAnnotations.staticRules</code> or <code>interceptUrlMap</code>, or a <code>Requestmap</code> instance) will be denied to all users. The other option is <code>fii.rejectPublicInvocations</code> and if it is <code>true</code> (the default) then un-mapped URLs will trigger an <code>IllegalArgumentException</code> and will show the error page. This is uglier, but more useful because it's very clear that there is a misconfiguration. When <code>fii.rejectPublicInvocations</code> is <code>false</code> but <code>rejectIfNoRule</code> is <code>true</code> you just see the "Sorry, you're not authorized to view this page." error 403 message.<p class="paragraph"/>Note that the two settings are mutually exclusive. If <code>rejectIfNoRule</code> is <code>true</code> then <code>fii.rejectPublicInvocations</code> is ignored because the request will transition to the login page or the error 403 page. If you want the more obvious error page, set <code>fii.rejectPublicInvocations</code> to <code>true</code> and <code>rejectIfNoRule</code> to <code>false</code> to allow that check to occur.<p class="paragraph"/>To reject un-mapped URLs with a 403 error code, use these settings (or none since <code>rejectIfNoRule</code> defaults to <code>true</code> )<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.rejectIfNoRule = <span class="java&#45;keyword">true</span>
+</ul><p class="paragraph"/>You can only use one method at a time. You configure it with the <code>securityConfigType</code> attribute; the value has to be an <code>SecurityConfigType</code> enum value or the name of the enum as a String.<p class="paragraph"/><h4>Pessimistic Lockdown</h4><p class="paragraph"/>Many applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it might make sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role request mapping. But the pessimistic approach is safer; if you forget to restrict access to a URL using the optimistic approach, it might take a while to discover that unauthorized users can access the URL, but if you forget to allow access when using the pessimistic approach, no user can access it and the error should be quickly discovered.<p class="paragraph"/>The pessimistic approach is the default, and there are two configuration options that apply. If <code>rejectIfNoRule</code> is <code>true</code> (the default) then any URL that has no request mappings (an annotation, entry in <code>controllerAnnotations.staticRules</code> or <code>interceptUrlMap</code>, or a <code>Requestmap</code> instance) will be denied to all users. The other option is <code>fii.rejectPublicInvocations</code> and if it is <code>true</code> (the default) then un-mapped URLs will trigger an <code>IllegalArgumentException</code> and will show the error page. This is uglier, but more useful because it's very clear that there is a misconfiguration. When <code>fii.rejectPublicInvocations</code> is <code>false</code> but <code>rejectIfNoRule</code> is <code>true</code> you just see the "Sorry, you're not authorized to view this page." error 403 message.<p class="paragraph"/>Note that the two settings are mutually exclusive. If <code>rejectIfNoRule</code> is <code>true</code> then <code>fii.rejectPublicInvocations</code> is ignored because the request will transition to the login page or the error 403 page. If you want the more obvious error page, set <code>fii.rejectPublicInvocations</code> to <code>true</code> and <code>rejectIfNoRule</code> to <code>false</code> to allow that check to occur.<p class="paragraph"/>To reject un-mapped URLs with a 403 error code, use these settings (or none since <code>rejectIfNoRule</code> defaults to <code>true</code> )<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.rejectIfNoRule = <span class="java&#45;keyword">true</span>
 grails.plugin.springsecurity.fii.rejectPublicInvocations = <span class="java&#45;keyword">false</span></pre></div><p class="paragraph"/>and to reject with the error 500 page, use these (optionally omit <code>rejectPublicInvocations</code> since it defaults to <code>true</code> ):<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.rejectIfNoRule = <span class="java&#45;keyword">false</span>
 grails.plugin.springsecurity.fii.rejectPublicInvocations = <span class="java&#45;keyword">true</span></pre></div><p class="paragraph"/>Note that if you set <code>rejectIfNoRule</code> or <code>rejectPublicInvocations</code> to <code>true</code> you'll need to configure the <code>staticRules</code> map to include URLs that can't otherwise be guarded:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.controllerAnnotations.staticRules = &#91;
    '/':               &#91;'permitAll'&#93;,
@@ -187,15 +184,16 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = <span class="java&#45
       '/logout', '/logout.&#42;', '/logout/&#42;'&#93;) &#123;
    <span class="java&#45;keyword">new</span> Requestmap(url: url, configAttribute: 'permitAll').save()
 &#125;</pre></div><p class="paragraph"/>The analogous interceptUrlMap settings would be:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
-   '/':                  &#91;'permitAll'&#93;,
-   '/index':             &#91;'permitAll'&#93;,
-   '/index.gsp':         &#91;'permitAll'&#93;,
-   '/&#42;&#42;/js/&#42;&#42;':          &#91;'permitAll'&#93;,
-   '/&#42;&#42;/css/&#42;&#42;':         &#91;'permitAll'&#93;,
-   '/&#42;&#42;/images/&#42;&#42;':      &#91;'permitAll'&#93;,
-   '/&#42;&#42;/favicon.ico':    &#91;'permitAll'&#93;,
-   '/login/&#42;&#42;':          &#91;'permitAll'&#93;,
-   '/logout/&#42;&#42;':         &#91;'permitAll'&#93;
+   '/':                &#91;'permitAll'&#93;,
+   '/index':           &#91;'permitAll'&#93;,
+   '/index.gsp':       &#91;'permitAll'&#93;,
+   '/assets/&#42;&#42;':       &#91;'permitAll'&#93;,
+   '/&#42;&#42;/js/&#42;&#42;':        &#91;'permitAll'&#93;,
+   '/&#42;&#42;/css/&#42;&#42;':       &#91;'permitAll'&#93;,
+   '/&#42;&#42;/images/&#42;&#42;':    &#91;'permitAll'&#93;,
+   '/&#42;&#42;/favicon.ico':  &#91;'permitAll'&#93;,
+   '/login/&#42;&#42;':        &#91;'permitAll'&#93;,
+   '/logout/&#42;&#42;':       &#91;'permitAll'&#93;
 &#93;</pre></div><p class="paragraph"/>In addition, when you enable the switch-user feature, you'll have to specify access rules for the associated URLs, e.g.<p class="paragraph"/><div class="code"><pre>'/j_spring_security_switch_user': &#91;'ROLE_ADMIN'&#93;,
 '/j_spring_security_exit_user':   &#91;'permitAll'&#93;</pre></div><p class="paragraph"/><h4>URLs and Authorities</h4><p class="paragraph"/>In each approach you configure a mapping for a URL pattern to the role(s) that are required to access those URLs, for example, <code>/admin/user/&#42;&#42;</code> requires <code>ROLE_ADMIN</code>. In addition, you can combine the role(s) with tokens such as IS_AUTHENTICATED_ANONYMOUSLY, IS_AUTHENTICATED_REMEMBERED, and IS_AUTHENTICATED_FULLY. One or more <a href="../guide/single.html#voters" class="guide">Voter</a>s will process any tokens and enforce a rule based on them:
 <ul class="star">
@@ -210,7 +208,7 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = <span class="java&#45
 <li><code>IS_AUTHENTICATED_FULLY</code></li>
 <ul class="star">
 <li>requires the user to be fully authenticated with an explicit login.</li>
-</ul></ul><p class="paragraph"/>With <code>IS_AUTHENTICATED_FULLY</code> you can implement a security scheme whereby users can check a remember-me checkbox during login and be auto-authenticated each time they return to your site, but must still log in with a password for some parts of the site. For example, allow regular browsing and adding items to a shopping cart with only a cookie, but require an explicit login to check out or view purchase history.<p class="paragraph"/>For more information on <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code>, see the Javadoc for <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/vote/AuthenticatedVoter.html" target="blank">AuthenticatedVoter</a><p class="paragraph"/><blockquote class="warning">
+</ul></ul><p class="paragraph"/>With <code>IS_AUTHENTICATED_FULLY</code> you can implement a security scheme whereby users can check a remember-me checkbox during login and be auto-authenticated each time they return to your site, but must still log in with a password for some parts of the site. For example, allow regular browsing and adding items to a shopping cart with only a cookie, but require an explicit login to check out or view purchase history.<p class="paragraph"/>For more information on <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code>, see the Javadoc for <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/vote/AuthenticatedVoter.html" target="blank">AuthenticatedVoter</a><p class="paragraph"/><blockquote class="warning">
 The plugin isn't compatible with Grails <code>&#60;g:actionSubmit&#62;</code> tags. These are used in the autogenerated GSPs that are created for you, and they enable having multiple submit buttons, each with its own action, inside a single form. The problem from the security perspective is that the form posts to the default action of the controller, and Grails figures out the handler action to use based on the <code>action</code> attribute of the <code>actionSubmit</code> tag. So for example you can guard the <code>/person/delete</code> with a restrictive role, but given this typical edit form:<p class="paragraph"/><div class="code"><pre>&#60;g:form&#62;
    &#8230;
    &#60;g:actionSubmit class=<span class="java&#45;quote">"save"</span> action=<span class="java&#45;quote">"update"</span>
@@ -229,9 +227,16 @@ You can use an <code>&#64;Secured</code> annotation (either the standard <code>o
    def adminEither() &#123;
       render 'you have ROLE_ADMIN or SUPERUSER'
    &#125;<p class="paragraph"/>   def anybody() &#123;
-      render 'anyone can see <span class="java&#45;keyword">this</span>'
+      render 'anyone can see <span class="java&#45;keyword">this</span>' // assuming you're not using <span class="java&#45;quote">"strict"</span> mode
    &#125;
-&#125;</pre></div><p class="paragraph"/>you must be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureAnnotated</code> (or <code>/myapp/secureAnnotated/index</code>) and be authenticated and have <code>ROLE_ADMIN</code> or <code>ROLE_SUPERUSER</code> to see <code>/myapp/secureAnnotated/adminEither</code>. Any user can access <code>/myapp/secureAnnotated/anybody</code>.<p class="paragraph"/>Often most actions in a controller require similar access rules, so you can also define annotations at the class level:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>@Secured(&#91;'ROLE_ADMIN'&#93;)
+&#125;</pre></div><p class="paragraph"/>you must be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureAnnotated</code> (or <code>/myapp/secureAnnotated/index</code>) and be authenticated and have <code>ROLE_ADMIN</code> or <code>ROLE_SUPERUSER</code> to see <code>/myapp/secureAnnotated/adminEither</code>. Any user can access <code>/myapp/secureAnnotated/anybody</code> if you have disabled "strict" mode (using <code>rejectIfNoRule</code>), and nobody can access the action by default since it has no access rule configured.<p class="paragraph"/>In addition, you can define a closure in the annotation which will be called during access checking. The closure must return <code>true</code> or <code>false</code> and has all of the methods and properties that are available when using SpEL expressions, since the closure's <code>delegate</code> is set to a subclass of <code>WebSecurityExpressionRoot</code>, and also the Spring <code>ApplicationContext</code> as the <code>ctx</code> property:<p class="paragraph"/><div class="code"><pre>@Secured(closure = &#123;
+   assert request
+   assert ctx
+   authentication.name == 'admin1'
+&#125;)
+def someMethod() &#123;
+   &#8230;
+&#125;</pre></div><p class="paragraph"/>Often most actions in a controller require similar access rules, so you can also define annotations at the class level:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>@Secured(&#91;'ROLE_ADMIN'&#93;)
 class SecureClassAnnotatedController &#123;<p class="paragraph"/>   def index() &#123;
       render 'index: you have ROLE_ADMIN'
    &#125;<p class="paragraph"/>   def otherAction() &#123;
@@ -240,7 +245,8 @@ class SecureClassAnnotatedController &#123;<p class="paragraph"/>   def index() 
    def <span class="java&#45;keyword">super</span>() &#123;
       render '<span class="java&#45;keyword">super</span>: you have ROLE_SUPERUSER'
    &#125;
-&#125;</pre></div><p class="paragraph"/>Here you need to be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureClassAnnotated</code> (or <code>/myapp/secureClassAnnotated/index</code>) or <code>/myapp/secureClassAnnotated/otherAction</code>. However, you must have <code>ROLE_SUPERUSER</code> to access <code>/myapp/secureClassAnnotated/super</code>. The action-scope annotation overrides the class-scope annotation.<p class="paragraph"/><h4>controllerAnnotations.staticRules</h4><p class="paragraph"/>You can also define 'static' mappings that cannot be expressed in the controllers, such as '/&#42;&#42;' or for JavaScript, CSS, or image URLs. Use the <code>controllerAnnotations.staticRules</code> property, for example:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.controllerAnnotations.staticRules = &#91;
+&#125;</pre></div><p class="paragraph"/>Here you need to be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureClassAnnotated</code> (or <code>/myapp/secureClassAnnotated/index</code>) or <code>/myapp/secureClassAnnotated/otherAction</code>. However, you must have <code>ROLE_SUPERUSER</code> to access <code>/myapp/secureClassAnnotated/super</code>. The action-scope annotation overrides the class-scope annotation. Note that "strict" mode isn't applicable here since all actions have an access rule defined (either explicitly or inherited from the class-level annotation).<p class="paragraph"/><h4>controllerAnnotations.staticRules</h4><p class="paragraph"/>You can also define 'static' mappings that cannot be expressed in the controllers, such as '/&#42;&#42;' or for JavaScript, CSS, or image URLs. Use the <code>controllerAnnotations.staticRules</code> property, for example:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.controllerAnnotations.staticRules = &#91;
+   &#8230;
    '/js/admin/&#42;&#42;': &#91;'ROLE_ADMIN'&#93;,
    '/someplugin/&#42;&#42;': &#91;'ROLE_ADMIN'&#93;
 &#93;</pre></div><p class="paragraph"/>This example maps all URLs associated with <code>SomePluginController</code>, which has URLs of the form <code>/somePlugin/...</code>, to <code>ROLE_ADMIN</code>; annotations are not an option here because you would not edit plugin code for a change like this.<p class="paragraph"/><blockquote class="note">
@@ -251,18 +257,18 @@ When mapping URLs for controllers that are mapped in <code>UrlMappings.groovy</c
 
 <h2 id="configGroovyMap">4.2 Simple Map in Config.groovy</h2>
 To use the <code>Config.groovy</code> Map to secure URLs, first specify <code>securityConfigType="InterceptUrlMap"</code>:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.securityConfigType = <span class="java&#45;quote">"InterceptUrlMap"</span></pre></div><p class="paragraph"/>Define a Map in <code>Config.groovy</code>:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
-   '/':                  &#91;'permitAll'&#93;,
-   '/index':             &#91;'permitAll'&#93;,
-   '/index.gsp':         &#91;'permitAll'&#93;,
-   '/assets/&#42;&#42;':         &#91;'permitAll'&#93;,
-   '/&#42;&#42;/js/&#42;&#42;':          &#91;'permitAll'&#93;,
-   '/&#42;&#42;/css/&#42;&#42;':         &#91;'permitAll'&#93;,
-   '/&#42;&#42;/images/&#42;&#42;':      &#91;'permitAll'&#93;,
-   '/&#42;&#42;/favicon.ico':    &#91;'permitAll'&#93;,
-   '/login/&#42;&#42;':          &#91;'permitAll'&#93;,
-   '/logout/&#42;&#42;':         &#91;'permitAll'&#93;,
-   '/secure/&#42;&#42;':         &#91;'ROLE_ADMIN'&#93;,
-   '/finance/&#42;&#42;':        &#91;'ROLE_FINANCE', 'isFullyAuthenticated()'&#93;,
+   '/':                &#91;'permitAll'&#93;,
+   '/index':           &#91;'permitAll'&#93;,
+   '/index.gsp':       &#91;'permitAll'&#93;,
+   '/assets/&#42;&#42;':       &#91;'permitAll'&#93;,
+   '/&#42;&#42;/js/&#42;&#42;':        &#91;'permitAll'&#93;,
+   '/&#42;&#42;/css/&#42;&#42;':       &#91;'permitAll'&#93;,
+   '/&#42;&#42;/images/&#42;&#42;':    &#91;'permitAll'&#93;,
+   '/&#42;&#42;/favicon.ico':  &#91;'permitAll'&#93;,
+   '/login/&#42;&#42;':        &#91;'permitAll'&#93;,
+   '/logout/&#42;&#42;':       &#91;'permitAll'&#93;,
+   '/secure/&#42;&#42;':       &#91;'ROLE_ADMIN'&#93;,
+   '/finance/&#42;&#42;':      &#91;'ROLE_FINANCE', 'isFullyAuthenticated()'&#93;,
 &#93;</pre></div><p class="paragraph"/>When using this approach, make sure that you order the rules correctly. The first applicable rule is used, so for example if you have a controller that has one set of rules but an action that has stricter access rules, e.g.<p class="paragraph"/><div class="code"><pre>'/secure/&#42;&#42;':              &#91;'ROLE_ADMIN', 'ROLE_SUPERUSER'&#93;,
 '/secure/reallysecure/&#42;&#42;': &#91;'ROLE_SUPERUSER'&#93;</pre></div><p class="paragraph"/>then this would fail - it wouldn't restrict access to <code>/secure/reallysecure/list</code> to a user with <code>ROLE_SUPERUSER</code> since the first URL pattern matches, so the second would be ignored. The correct mapping would be<p class="paragraph"/><div class="code"><pre>'/secure/reallysecure/&#42;&#42;': &#91;'ROLE_SUPERUSER'&#93;
 '/secure/&#42;&#42;':              &#91;'ROLE_ADMIN', 'ROLE_SUPERUSER'&#93;,</pre></div>
@@ -294,7 +300,7 @@ With this approach you use the <code>Requestmap</code> domain class to store map
 
 
 <h2 id="expressions">4.4 Using Expressions to Create Descriptive, Fine-Grained Rules</h2>
-Spring Security uses the <a href="http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/expressions.html" target="blank">Spring Expression Language (SpEL)</a>, which allows you to declare the rules for guarding URLs more descriptively than does the traditional approach, and also allows much more fine-grained rules. Where you traditionally would specify a list of role names and/or special tokens (for example, <code>IS_AUTHENTICATED_FULLY</code>), with <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/el-access.html" target="blank">Spring Security&#39;s expression support</a>, you can instead use the embedded scripting language to define simple or complex access rules.<p class="paragraph"/>You can use expressions with any of the previously described approaches to securing application URLs. For example, consider this annotated controller:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.yourcompany.yourapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>class SecureController &#123;<p class="paragraph"/>   @Secured(&#91;<span class="java&#45;quote">"hasRole('ROLE_ADMIN')"</span>&#93;)
+Spring Security uses the <a href="https://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/expressions.html" target="blank">Spring Expression Language (SpEL)</a>, which allows you to declare the rules for guarding URLs more descriptively than does the traditional approach, and also allows much more fine-grained rules. Where you traditionally would specify a list of role names and/or special tokens (for example, <code>IS_AUTHENTICATED_FULLY</code>), with <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#el-access" target="blank">Spring Security&#39;s expression support</a>, you can instead use the embedded scripting language to define simple or complex access rules.<p class="paragraph"/>You can use expressions with any of the previously described approaches to securing application URLs. For example, consider this annotated controller:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.yourcompany.yourapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>class SecureController &#123;<p class="paragraph"/>   @Secured(&#91;<span class="java&#45;quote">"hasRole('ROLE_ADMIN')"</span>&#93;)
    def someAction() &#123;
       &#8230;
    &#125;<p class="paragraph"/>   @Secured(&#91;<span class="java&#45;quote">"authentication.name == 'ralph'"</span>&#93;)
@@ -306,13 +312,13 @@ Spring Security uses the <a href="http://docs.spring.io/spring/docs/3.2.x/spring
                configAttribute: <span class="java&#45;quote">"authentication.name == 'ralph'"</span>).save()</pre></div><p class="paragraph"/>and the corresponding static mappings would be<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
    '/secure/someAction':      &#91;<span class="java&#45;quote">"hasRole('ROLE_ADMIN')"</span>&#93;,
    '/secure/someOtherAction': &#91;<span class="java&#45;quote">"authentication.name == 'ralph'"</span>&#93;
-&#93;</pre></div><p class="paragraph"/>The Spring Security docs have a <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/el-access.html#el-common-built-in" target="blank">table listing the standard expressions</a>, which is copied here for reference:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Expression</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><code>hasRole(role)</code></td><td>Returns true if the current principal has the specified role.</td></tr><tr class="table-even"><td><code>hasAnyRole(&#91;role1,role2&#93;)</code></td><td>Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)</td></tr><tr class="table-odd"><td><code>principal</code></td><td>Allows direct access to the principal object representing the current user</td></tr><tr class="table-even"><td><code>authentication</code></td><td>Allows direct access to the current Authentication object obtained from the SecurityContext</td></tr><tr class="table-odd"><td><code>permitAll</code></td><td>Always evaluates to true</td></tr><tr class="table-even"><td><code>denyAll</code></td><td>Always evaluates to false</td></tr><tr class="table-odd"><td><code>isAnonymous()</code></td><td>Returns true if the current principal is an anonymous user</td></tr><tr class="table-even"><td><code>isRememberMe()</code></td><td>Returns true if the current principal is a remember-me user</td></tr><tr class="table-odd"><td><code>isAuthenticated()</code></td><td>Returns true if the user is not anonymous</td></tr><tr class="table-even"><td><code>isFullyAuthenticated()</code></td><td>Returns true if the user is not an anonymous or a remember-me user</td></tr><tr class="table-odd"><td><code>request</code></td><td>the HTTP request, allowing expressions such as "isFullyAuthenticated() or request.getMethod().equals('OPTIONS')"</td></tr></table><p class="paragraph"/>In addition, you can use a web-specific expression <code>hasIpAddress</code>. However, you may find it more convenient to separate IP restrictions from role restrictions by using the <a href="../guide/single.html#ip" class="guide">IP address filter</a>.<p class="paragraph"/>To help you migrate traditional configurations to expressions, this table compares various configurations and their corresponding expressions:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Traditional Config</strong></th><th><strong class="bold">Expression</strong></th></tr><tr class="table-odd"><td><code>ROLE_ADMIN</code></td><td><code>hasRole('ROLE_ADMIN')</code></td></tr><tr class="table-even"><td><code>ROLE_USER,ROLE_ADMIN</code></td><td><code>hasAnyRole('ROLE_USER','ROLE_ADMIN')</code></td></tr><tr class="table-odd"><td><code>ROLE_ADMIN,IS_AUTHENTICATED_FULLY</code></td><td><code>hasRole('ROLE_ADMIN') and isFullyAuthenticated()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_ANONYMOUSLY</code></td><td><code>permitAll</code></td></tr><tr class="table-odd"><td><code>IS_AUTHENTICATED_REMEMBERED</code></td><td><code>isAuthenticated() or isRememberMe()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_FULLY</code></td><td><code>isFullyAuthenticated()</code></td></tr></table>
+&#93;</pre></div><p class="paragraph"/>The Spring Security docs have a <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#el-common-built-in" target="blank">table listing the standard expressions</a>, which is copied here for reference:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Expression</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><code>hasRole(role)</code></td><td>Returns true if the current principal has the specified role.</td></tr><tr class="table-even"><td><code>hasAnyRole(&#91;role1,role2&#93;)</code></td><td>Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)</td></tr><tr class="table-odd"><td><code>principal</code></td><td>Allows direct access to the principal object representing the current user</td></tr><tr class="table-even"><td><code>authentication</code></td><td>Allows direct access to the current Authentication object obtained from the SecurityContext</td></tr><tr class="table-odd"><td><code>permitAll</code></td><td>Always evaluates to true</td></tr><tr class="table-even"><td><code>denyAll</code></td><td>Always evaluates to false</td></tr><tr class="table-odd"><td><code>isAnonymous()</code></td><td>Returns true if the current principal is an anonymous user</td></tr><tr class="table-even"><td><code>isRememberMe()</code></td><td>Returns true if the current principal is a remember-me user</td></tr><tr class="table-odd"><td><code>isAuthenticated()</code></td><td>Returns true if the user is not anonymous</td></tr><tr class="table-even"><td><code>isFullyAuthenticated()</code></td><td>Returns true if the user is not an anonymous or a remember-me user</td></tr><tr class="table-odd"><td><code>request</code></td><td>the HTTP request, allowing expressions such as "isFullyAuthenticated() or request.getMethod().equals('OPTIONS')"</td></tr></table><p class="paragraph"/>In addition, you can use a web-specific expression <code>hasIpAddress</code>. However, you may find it more convenient to separate IP restrictions from role restrictions by using the <a href="../guide/single.html#ip" class="guide">IP address filter</a>.<p class="paragraph"/>To help you migrate traditional configurations to expressions, this table compares various configurations and their corresponding expressions:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Traditional Config</strong></th><th><strong class="bold">Expression</strong></th></tr><tr class="table-odd"><td><code>ROLE_ADMIN</code></td><td><code>hasRole('ROLE_ADMIN')</code></td></tr><tr class="table-even"><td><code>ROLE_USER,ROLE_ADMIN</code></td><td><code>hasAnyRole('ROLE_USER','ROLE_ADMIN')</code></td></tr><tr class="table-odd"><td><code>ROLE_ADMIN,IS_AUTHENTICATED_FULLY</code></td><td><code>hasRole('ROLE_ADMIN') and isFullyAuthenticated()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_ANONYMOUSLY</code></td><td><code>permitAll</code></td></tr><tr class="table-odd"><td><code>IS_AUTHENTICATED_REMEMBERED</code></td><td><code>isAuthenticated() or isRememberMe()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_FULLY</code></td><td><code>isFullyAuthenticated()</code></td></tr></table>
 
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Required and Optional Domain Classes</span></a></div>
+                    <div class="toc-item prev-left"><a href="../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Domain Classes</span></a></div>
                 
                     <div class="toc-item next-right"><a href="../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span> >></a></div>
                 

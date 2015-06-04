@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>/* Copyright 2013-2014 SpringSource.<a name="line.1"></a>
+<pre><span class="sourceLineNo">001</span>/* Copyright 2013-2015 SpringSource.<a name="line.1"></a>
 <span class="sourceLineNo">002</span> *<a name="line.2"></a>
 <span class="sourceLineNo">003</span> * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.3"></a>
 <span class="sourceLineNo">004</span> * you may not use this file except in compliance with the License.<a name="line.4"></a>
@@ -31,25 +31,14 @@
 <span class="sourceLineNo">023</span> */<a name="line.23"></a>
 <span class="sourceLineNo">024</span>public class NullAuthenticationEventPublisher implements AuthenticationEventPublisher {<a name="line.24"></a>
 <span class="sourceLineNo">025</span><a name="line.25"></a>
-<span class="sourceLineNo">026</span>        /**<a name="line.26"></a>
-<span class="sourceLineNo">027</span>         * {@inheritDoc}<a name="line.27"></a>
-<span class="sourceLineNo">028</span>         * @see org.springframework.security.authentication.AuthenticationEventPublisher#publishAuthenticationFailure(<a name="line.28"></a>
-<span class="sourceLineNo">029</span>         *      org.springframework.security.core.AuthenticationException,<a name="line.29"></a>
-<span class="sourceLineNo">030</span>         *      org.springframework.security.core.Authentication)<a name="line.30"></a>
-<span class="sourceLineNo">031</span>         */<a name="line.31"></a>
-<span class="sourceLineNo">032</span>        public void publishAuthenticationFailure(AuthenticationException e, Authentication a) {<a name="line.32"></a>
-<span class="sourceLineNo">033</span>                // do nothing<a name="line.33"></a>
-<span class="sourceLineNo">034</span>        }<a name="line.34"></a>
-<span class="sourceLineNo">035</span><a name="line.35"></a>
-<span class="sourceLineNo">036</span>        /**<a name="line.36"></a>
-<span class="sourceLineNo">037</span>         * {@inheritDoc}<a name="line.37"></a>
-<span class="sourceLineNo">038</span>         * @see org.springframework.security.authentication.AuthenticationEventPublisher#publishAuthenticationSuccess(<a name="line.38"></a>
-<span class="sourceLineNo">039</span>         *      org.springframework.security.core.Authentication)<a name="line.39"></a>
-<span class="sourceLineNo">040</span>         */<a name="line.40"></a>
-<span class="sourceLineNo">041</span>        public void publishAuthenticationSuccess(Authentication a) {<a name="line.41"></a>
-<span class="sourceLineNo">042</span>                // do nothing<a name="line.42"></a>
-<span class="sourceLineNo">043</span>        }<a name="line.43"></a>
-<span class="sourceLineNo">044</span>}<a name="line.44"></a>
+<span class="sourceLineNo">026</span>        public void publishAuthenticationFailure(AuthenticationException e, Authentication a) {<a name="line.26"></a>
+<span class="sourceLineNo">027</span>                // do nothing<a name="line.27"></a>
+<span class="sourceLineNo">028</span>        }<a name="line.28"></a>
+<span class="sourceLineNo">029</span><a name="line.29"></a>
+<span class="sourceLineNo">030</span>        public void publishAuthenticationSuccess(Authentication a) {<a name="line.30"></a>
+<span class="sourceLineNo">031</span>                // do nothing<a name="line.31"></a>
+<span class="sourceLineNo">032</span>        }<a name="line.32"></a>
+<span class="sourceLineNo">033</span>}<a name="line.33"></a>
 
 
 

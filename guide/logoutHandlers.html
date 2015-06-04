@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>19 Logout Handlers 2.0-RC4</title>
+    <title>19 Logout Handlers 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,7 @@ function addJsClass() {
                 
 
 <h1 id="logoutHandlers">19 Logout Handlers</h1>
-You register a list of logout handlers by implementing the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/logout/LogoutHandler.html" target="blank">LogoutHandler</a> interface. The list is called when a user explicitly logs out.<p class="paragraph"/>By default, a <code>securityContextLogoutHandler</code> bean is registered to clear the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolder.html" target="blank">SecurityContextHolder</a>. Also, unless you are using Facebook or OpenID, <code>rememberMeServices</code> bean is registered to reset your cookie. (Facebook and OpenID authenticate externally so we don't have access to the password to create a remember-me cookie.) If you are using Facebook, a <code>facebookLogoutHandler</code> is registered to reset its session cookies.<p class="paragraph"/>To customize this list, you define a <code>logout.handlerNames</code> attribute with a list of bean names.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>logout.handlerNames</td><td>&#91;'rememberMeServices', 'securityContextLogoutHandler'&#93;</td><td>Logout handler bean names.</td></tr></table><p class="paragraph"/>The beans must be declared either by the plugin or by you in <code>resources.groovy</code> or <code>resources.xml</code>. For example, suppose you have a custom <code>MyLogoutHandler</code> in <code>resources.groovy</code>:<p class="paragraph"/><div class="code"><pre>beans = &#123;
+You register a list of logout handlers by implementing the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/logout/LogoutHandler.html" target="blank">LogoutHandler</a> interface. The list is called when a user explicitly logs out.<p class="paragraph"/>By default, a <code>securityContextLogoutHandler</code> bean is registered to clear the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolder.html" target="blank">SecurityContextHolder</a>. Also, unless you are using Facebook or OpenID, <code>rememberMeServices</code> bean is registered to reset your cookie. (Facebook and OpenID authenticate externally so we don't have access to the password to create a remember-me cookie.) If you are using Facebook, a <code>facebookLogoutHandler</code> is registered to reset its session cookies.<p class="paragraph"/>To customize this list, you define a <code>logout.handlerNames</code> attribute with a list of bean names.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>logout.handlerNames</td><td>&#91;'rememberMeServices', 'securityContextLogoutHandler'&#93;</td><td>Logout handler bean names.</td></tr></table><p class="paragraph"/>The beans must be declared either by the plugin or by you in <code>resources.groovy</code> or <code>resources.xml</code>. For example, suppose you have a custom <code>MyLogoutHandler</code> in <code>resources.groovy</code>:<p class="paragraph"/><div class="code"><pre>beans = &#123;
    myLogoutHandler(com.foo.MyLogoutHandler) &#123;
       // attributes
    &#125;

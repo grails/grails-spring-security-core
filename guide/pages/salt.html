@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.2 Salted Passwords 2.0-RC4</title>
+    <title>11.2 Salted Passwords 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,8 +144,10 @@ function addJsClass() {
                 
 
 <h2 id="salt">11.2 Salted Passwords</h2>
-The Spring Security plugin uses hashed passwords and a digest algorithm that you specify. For enhanced protection against dictionary attacks, you should use a salt in addition to digest hashing.<p class="paragraph"/>There are two approaches to using salted passwords in the plugin - defining a field in the <code>UserDetails</code> class to access by reflection, or by directly implementing <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/dao/SaltSource.html" target="blank">SaltSource</a> yourself.<p class="paragraph"/><h4>dao.reflectionSaltSourceProperty</h4>
-Set the <code>dao.reflectionSaltSourceProperty</code> configuration property:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'</pre></div><p class="paragraph"/>This property belongs to the <code>UserDetails</code> class. By default it is an instance of <code>grails.plugin.springsecurity.userdetails.GrailsUser</code>, which extends the standard Spring Security <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html" target="blank">User class</a> and not your 'person' domain class. This limits the available fields unless you use a <a href="../guide/single.html#userDetailsService" class="guide">custom <code>UserDetailsService</code></a>.<p class="paragraph"/>As long as the username does not change, this approach works well for the salt. If you choose a property that the user can change, the user cannot log in again after changing it unless you re-hash the password with the new value. So it's best to use a property that doesn't change.<p class="paragraph"/>Another option is to generate a random salt when creating users and store this in the database by adding a new field to the 'person' class. This approach requires a custom <code>UserDetailsService</code> because you need a custom <code>UserDetails</code> implementation that also has a 'salt' property, but this is more flexible and works in cases where users can change their username.<p class="paragraph"/><h4>SystemWideSaltSource and Custom SaltSource</h4><p class="paragraph"/>Spring Security supplies a simple <code>SaltSource</code> implementation, <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/dao/SystemWideSaltSource.html" target="blank">SystemWideSaltSource</a>, which uses the same salt for each user. It's less robust than using a different value for each user but still better than no salt at all.<p class="paragraph"/>An example override of the salt source bean using SystemWideSaltSource would look like this:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.springframework.security.authentication.dao.SystemWideSaltSource
+The Spring Security plugin uses hashed passwords and a digest algorithm that you specify. For enhanced protection against dictionary attacks, you should use a salt in addition to digest hashing.<p class="paragraph"/><blockquote class="note">
+Note that if you use bcrypt (the default setting) or pbkdf2, do not configure a salt (e.g. the <code>dao.reflectionSaltSourceProperty</code> property or a custom <code>saltSource</code> bean) because these algorithms use their own internally.
+</blockquote><p class="paragraph"/>There are two approaches to using salted passwords in the plugin - defining a field in the <code>UserDetails</code> class to access by reflection, or by directly implementing <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/dao/SaltSource.html" target="blank">SaltSource</a> yourself.<p class="paragraph"/><h4>dao.reflectionSaltSourceProperty</h4>
+Set the <code>dao.reflectionSaltSourceProperty</code> configuration property:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'</pre></div><p class="paragraph"/>This property belongs to the <code>UserDetails</code> class. By default it is an instance of <code>grails.plugin.springsecurity.userdetails.GrailsUser</code>, which extends the standard Spring Security <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/User.html" target="blank">User class</a> and not your 'person' domain class. This limits the available fields unless you use a <a href="../guide/single.html#userDetailsService" class="guide">custom <code>UserDetailsService</code></a>.<p class="paragraph"/>As long as the username does not change, this approach works well for the salt. If you choose a property that the user can change, the user cannot log in again after changing it unless you re-hash the password with the new value. So it's best to use a property that doesn't change.<p class="paragraph"/>Another option is to generate a random salt when creating users and store this in the database by adding a new field to the 'person' class. This approach requires a custom <code>UserDetailsService</code> because you need a custom <code>UserDetails</code> implementation that also has a 'salt' property, but this is more flexible and works in cases where users can change their username.<p class="paragraph"/><h4>SystemWideSaltSource and Custom SaltSource</h4><p class="paragraph"/>Spring Security supplies a simple <code>SaltSource</code> implementation, <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/dao/SystemWideSaltSource.html" target="blank">SystemWideSaltSource</a>, which uses the same salt for each user. It's less robust than using a different value for each user but still better than no salt at all.<p class="paragraph"/>An example override of the salt source bean using SystemWideSaltSource would look like this:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">import</span> org.springframework.security.authentication.dao.SystemWideSaltSource
 beans = &#123;
    saltSource(SystemWideSaltSource) &#123;
       systemWideSalt = 'the_salt_value'

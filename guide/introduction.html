@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>1 Introduction to the Spring Security Plugin 2.0-RC4</title>
+    <title>1 Introduction to the Spring Security Plugin 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -135,7 +132,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -156,12 +153,28 @@ function addJsClass() {
                 
 
 <h1 id="introduction">1 Introduction to the Spring Security Plugin</h1>
-The Spring Security plugin simplifies the integration of  <a href="http://docs.spring.io/spring-security/site/index.html" target="blank">Spring Security</a> (formerly Acegi Security) into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.<p class="paragraph"/>This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.<p class="paragraph"/><h4>Release History and Acknowledgment</h4>
+The Spring Security plugin simplifies the integration of  <a href="http://projects.spring.io/spring-security/" target="blank">Spring Security</a> into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.<p class="paragraph"/>This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.<p class="paragraph"/><h4>Release History and Acknowledgment</h4>
 <ul class="star">
+<li>June 4, 2015</li>
+<ul class="star">
+<li>2.0-RC5 release</li>
+</ul>
+<li>July 8, 2014</li>
+<ul class="star">
+<li>2.0-RC4 release</li>
+</ul>
+<li>May 19, 2014</li>
+<ul class="star">
+<li>2.0-RC3 release</li>
+</ul>
 <li>October 4, 2013</li>
 <ul class="star">
 <li>2.0-RC2 release</li>
 <li><a href="http://jira.grails.org/issues/?jql=project%20%3D%20GPSPRINGSECURITYCORE%20AND%20fixVersion%20%3D%20%22Grails-Spring-Security-Core%202.0%22%20ORDER%20BY%20updated%20DESC%2C%20priority%20DESC%2C%20created%20ASC" target="blank">JIRA Issues</a></li>
+</ul>
+<li>October 3, 2013</li>
+<ul class="star">
+<li>2.0-RC1 release</li>
 </ul>
 <li>April 6, 2012</li>
 <ul class="star">
@@ -275,7 +288,7 @@ The Spring Security plugin simplifies the integration of  <a href="http://docs.s
 <li>April 27, 2010</li>
 <ul class="star">
 <li>initial 0.1 release</li>
-</ul></ul><p class="paragraph"/>This plugin is based on work done for the <a href="http://grails.org/plugin/acegi/" target="blank">Acegi</a> plugin by Tsuyoshi Yamamoto.
+</ul></ul><p class="paragraph"/>This plugin is based on work done for the <a href="https://grails.org/plugin/acegi/" target="blank">Acegi</a> plugin by Tsuyoshi Yamamoto.
 
 
 
@@ -287,7 +300,8 @@ The plugin's configuration values all start with <code>grails.plugin.springsecur
 
 
 <h2 id="gettingStarted">1.2 Getting Started</h2>
-If you will be migrating from the Acegi to the Spring Security plugin, see <a href="../guide/single.html#acegiMigrating" class="guide">Migrating from the Acegi Plugin</a>.<p class="paragraph"/>Once you install the plugin, you simply run the initialization script, <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a>, and make any required configuration changes in <code>Config.groovy</code>. The plugin registers filters in <code>web.xml</code>, and also configures the Spring beans in the application context that implement various pieces of functionality.  Ivy determines which jar files to use.<p class="paragraph"/>To get started using the Spring Security plugin with your Grails application, see  <a href="../guide/single.html#tutorials" class="guide">Tutorials</a>.<p class="paragraph"/>You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See <a href="http://docs.spring.io/spring-security/site/reference.html" target="blank">the Spring Security documentation</a>.
+Once you install the plugin, you simply run the initialization script, <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a>, and make any required configuration changes in <code>Config.groovy</code>. The plugin registers filters in <code>web.xml</code>, and also configures the Spring beans in the application context that implement various pieces of functionality. Grails dependency management determines which jar files to use.<p class="paragraph"/>To get started using the Spring Security plugin with your Grails application, see <a href="../guide/single.html#tutorials" class="guide">Tutorials</a>.<p class="paragraph"/>You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/" target="blank">the Spring Security documentation</a>.
+
 
 
                 <div style="clear:both;margin-top:15px;"></div>

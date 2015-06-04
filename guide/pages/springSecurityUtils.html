@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5.3 SpringSecurityUtils 2.0-RC4</title>
+    <title>5.3 SpringSecurityUtils 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -148,9 +145,9 @@ function addJsClass() {
 
 <h2 id="springSecurityUtils">5.3 SpringSecurityUtils</h2>
 <code>grails.plugin.springsecurity.SpringSecurityUtils</code> is a utility class with static methods that you can call directly without using dependency injection. It is primarily an internal class but can be called from application code.<p class="paragraph"/><h4>authoritiesToRoles()</h4>
-Extracts role names from an array or <code>Collection</code> of <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html" target="blank">GrantedAuthority</a>.<p class="paragraph"/><h4>getPrincipalAuthorities()</h4>
+Extracts role names from an array or <code>Collection</code> of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html" target="blank">GrantedAuthority</a>.<p class="paragraph"/><h4>getPrincipalAuthorities()</h4>
 Retrieves the currently logged-in user's authorities. It is empty (but never <code>null</code>) if the user is not logged in.<p class="paragraph"/><h4>parseAuthoritiesString()</h4>
-Splits a comma-delimited String containing role names into a <code>List</code> of <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html" target="blank">GrantedAuthority</a>.<p class="paragraph"/><h4>ifAllGranted()</h4>
+Splits a comma-delimited String containing role names into a <code>List</code> of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/GrantedAuthority.html" target="blank">GrantedAuthority</a>.<p class="paragraph"/><h4>ifAllGranted()</h4>
 Checks whether the current user has all specified roles (a comma-delimited String of role names). Primarily used by <code>SecurityTagLib.ifAllGranted</code>.<p class="paragraph"/><h4>ifNotGranted()</h4>
 Checks whether the current user has none of the specified roles (a comma-delimited String of role names). Primarily used by <code>SecurityTagLib.ifNotGranted</code>.<p class="paragraph"/><h4>ifAnyGranted()</h4>
 Checks whether the current user has any of the specified roles (a comma-delimited String of role names). Primarily used by <code>SecurityTagLib.ifAnyGranted</code>.<p class="paragraph"/><h4>getSecurityConfig()</h4>
@@ -160,7 +157,7 @@ Forces a reload of the security configuration.<p class="paragraph"/><h4>isAjax()
 Checks whether the request was triggered by an Ajax call. The standard way is to determine whether <code>X-Requested-With</code> request header is set and has the value <code>XMLHttpRequest</code>. In addition, you can configure the name of the header with the <code>grails.plugin.springsecurity.ajaxHeader</code> configuration attribute, but this is not recommended because all major JavaScript toolkits use the standard name. Further, you can register a closure in <code>Config.groovy</code> with the name <code>ajaxCheckClosure</code> that will be used to check if a request is an Ajax request. It is passed the request as its single argument, e.g.<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.ajaxCheckClosure = &#123; request &#45;&#62;
    // <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">true</span> or <span class="java&#45;keyword">false</span>
 &#125;</pre></div><p class="paragraph"/>You can also force the request to be treated as Ajax by appending <code>&#38;ajax=true</code> to your request query string.<p class="paragraph"/><h4>registerProvider()</h4>
-Used by dependent plugins to register an <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html" target="blank">AuthenticationProvider</a> bean name.<p class="paragraph"/><h4>registerFilter()</h4>
+Used by dependent plugins to register an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html" target="blank">AuthenticationProvider</a> bean name.<p class="paragraph"/><h4>registerFilter()</h4>
 Used by dependent plugins to register a filter bean name in a specified position in the filter chain.<p class="paragraph"/><h4>isSwitched()</h4>
 Checks whether the current user switched from another user.<p class="paragraph"/><h4>getSwitchedUserOriginalUsername()</h4>
 Gets the original user's username if the current user switched from another user.<p class="paragraph"/><h4>doWithAuth()</h4><p class="paragraph"/>Executes a Closure with the current authentication. The one-parameter version which takes just a Closure assumes that there's an authentication in the HTTP Session and that the Closure is running in a separate thread from the web request, so the <code>SecurityContext</code> and <code>Authentication</code> aren't available to the standard <code>ThreadLocal</code>. This is primarily of use when you explicitly launch a new thread from a controller action or service called in request scope, not from a Quartz job which isn't associated with an authentication in any thread.<p class="paragraph"/>The two-parameter version takes a username and a Closure to authenticate as. This is will authenticate as the specified user and execute the closure with that authentication. It restores the authentication to the one that was active if it exists, or clears the context otherwise. This is similar to run-as and switch-user but is only local to the Closure.

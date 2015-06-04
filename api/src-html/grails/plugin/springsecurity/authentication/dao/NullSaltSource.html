@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="sourceContainer">
-<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2014 SpringSource.<a name="line.1"></a>
+<pre><span class="sourceLineNo">001</span>/* Copyright 2006-2015 SpringSource.<a name="line.1"></a>
 <span class="sourceLineNo">002</span> *<a name="line.2"></a>
 <span class="sourceLineNo">003</span> * Licensed under the Apache License, Version 2.0 (the "License");<a name="line.3"></a>
 <span class="sourceLineNo">004</span> * you may not use this file except in compliance with the License.<a name="line.4"></a>
@@ -33,15 +33,10 @@
 <span class="sourceLineNo">025</span> */<a name="line.25"></a>
 <span class="sourceLineNo">026</span>public class NullSaltSource implements SaltSource {<a name="line.26"></a>
 <span class="sourceLineNo">027</span><a name="line.27"></a>
-<span class="sourceLineNo">028</span>        /**<a name="line.28"></a>
-<span class="sourceLineNo">029</span>         * {@inheritDoc}<a name="line.29"></a>
-<span class="sourceLineNo">030</span>         * @see org.springframework.security.authentication.dao.SaltSource#getSalt(<a name="line.30"></a>
-<span class="sourceLineNo">031</span>         *      org.springframework.security.core.userdetails.UserDetails)<a name="line.31"></a>
-<span class="sourceLineNo">032</span>         */<a name="line.32"></a>
-<span class="sourceLineNo">033</span>        public Object getSalt(final UserDetails user) {<a name="line.33"></a>
-<span class="sourceLineNo">034</span>                return null;<a name="line.34"></a>
-<span class="sourceLineNo">035</span>        }<a name="line.35"></a>
-<span class="sourceLineNo">036</span>}<a name="line.36"></a>
+<span class="sourceLineNo">028</span>        public Object getSalt(final UserDetails user) {<a name="line.28"></a>
+<span class="sourceLineNo">029</span>                return null;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>        }<a name="line.30"></a>
+<span class="sourceLineNo">031</span>}<a name="line.31"></a>
 
 
 

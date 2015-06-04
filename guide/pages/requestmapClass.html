@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.7 Requestmap Class 2.0-RC4</title>
+    <title>3.7 Requestmap Class 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,14 +144,31 @@ function addJsClass() {
                 
 
 <h2 id="requestmapClass">3.7 Requestmap Class</h2>
-Optionally, use this class to store request mapping entries in the database instead of defining them with annotations or in <code>Config.groovy</code>. This option makes  the class configurable at runtime; you can add, remove and edit rules without restarting your application.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>requestMap.className</td><td>none</td><td>requestmap class name</td></tr><tr class="table-even"><td>requestMap.urlField</td><td>'url'</td><td>URL pattern field name</td></tr><tr class="table-odd"><td>requestMap.configAttributeField</td><td>'configAttribute'</td><td>authority pattern field name</td></tr><tr class="table-even"><td>requestMap.httpMethodField</td><td>'httpMethod'</td><td>HTTP method field name (optional, does not have to exist in the class if you don't require URL/method security)</td></tr></table><p class="paragraph"/>Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>Requestmap</code> as your class name, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> org.springframework.http.HttpMethod<p class="paragraph"/>class Requestmap &#123;<p class="paragraph"/>   <span class="java&#45;object">String</span> url
-   <span class="java&#45;object">String</span> configAttribute
-   HttpMethod httpMethod<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+Optionally, use this class to store request mapping entries in the database instead of defining them with annotations or in <code>Config.groovy</code>. This option makes the class configurable at runtime; you can add, remove and edit rules without restarting your application.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>requestMap.className</td><td>none</td><td>requestmap class name</td></tr><tr class="table-even"><td>requestMap.urlField</td><td>'url'</td><td>URL pattern field name</td></tr><tr class="table-odd"><td>requestMap.configAttributeField</td><td>'configAttribute'</td><td>authority pattern field name</td></tr><tr class="table-even"><td>requestMap.httpMethodField</td><td>'httpMethod'</td><td>HTTP method field name (optional, does not have to exist in the class if you don't require URL/method security)</td></tr></table><p class="paragraph"/>Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>Requestmap</code> as your class name, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder
+<span class="java&#45;keyword">import</span> org.springframework.http.HttpMethod<p class="paragraph"/>@ToString(cache=<span class="java&#45;keyword">true</span>, includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class Requestmap <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> configAttribute
+   HttpMethod httpMethod
+   <span class="java&#45;object">String</span> url<p class="paragraph"/>   Requestmap(<span class="java&#45;object">String</span> url, <span class="java&#45;object">String</span> configAttribute, HttpMethod httpMethod = <span class="java&#45;keyword">null</span>) &#123;
+      <span class="java&#45;keyword">this</span>()
+      <span class="java&#45;keyword">this</span>.configAttribute = configAttribute
+      <span class="java&#45;keyword">this</span>.httpMethod = httpMethod
+      <span class="java&#45;keyword">this</span>.url = url
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">int</span> hashCode() &#123;
+      <span class="java&#45;keyword">new</span> HashCodeBuilder().append(configAttribute).append(httpMethod).append(url).toHashCode()
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">boolean</span> equals(other) &#123;
+      is(other) || (
+         other <span class="java&#45;keyword">instanceof</span> Requestmap &#38;&#38;
+         other.configAttribute == configAttribute &#38;&#38;
+         other.httpMethod == httpMethod &#38;&#38;
+         other.url == url)
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
       cache <span class="java&#45;keyword">true</span>
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
-      url blank: <span class="java&#45;keyword">false</span>, unique: 'httpMethod'
       configAttribute blank: <span class="java&#45;keyword">false</span>
       httpMethod nullable: <span class="java&#45;keyword">true</span>
+      url blank: <span class="java&#45;keyword">false</span>, unique: 'httpMethod'
    &#125;
 &#125;</pre></div><p class="paragraph"/>To use Requestmap entries to guard URLs, see <a href="../guide/single.html#requestmapInstances" class="guide">Requestmap Instances Stored in the Database</a>.
 

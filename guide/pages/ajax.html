@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>8.4 Ajax Authentication 2.0-RC4</title>
+    <title>8.4 Ajax Authentication 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -151,7 +148,7 @@ The typical pattern of using web site authentication to access restricted pages 
    &#60;title&#62;&#60;g:layoutTitle <span class="java&#45;keyword">default</span>=<span class="java&#45;quote">"Grails"</span> /&#62;&#60;/title&#62;
    &#60;link rel=<span class="java&#45;quote">"stylesheet"</span> href=<span class="java&#45;quote">"$&#123;resource(dir:'css',file:'main.css')&#125;"</span> /&#62;
    &#60;link rel=<span class="java&#45;quote">"shortcut icon"</span> type=<span class="java&#45;quote">"image/x&#45;icon"</span>
-      href=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'favicon.ico')&#125;"</span> /&#62;
+         href=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'favicon.ico')&#125;"</span> /&#62;
    &#60;g:layoutHead /&#62;
    &#60;r:layoutResources /&#62;
 &#60;/head&#62;<p class="paragraph"/>&#60;body&#62;<p class="paragraph"/>   &#60;div id=<span class="java&#45;quote">"spinner"</span> class=<span class="java&#45;quote">"spinner"</span> style=<span class="java&#45;quote">"display:none;"</span>&#62;
@@ -216,88 +213,89 @@ The typical pattern of using web site authentication to access restricted pages 
 &#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .chk &#123;height:12px;&#125;
 .errorMessage &#123; color: red; &#125;
 &#60;/style&#62;<p class="paragraph"/>&#60;div id='ajaxLogin' class=<span class="java&#45;quote">"jqmWindow"</span> style=<span class="java&#45;quote">"z&#45;index: 3000;"</span>&#62;
-      &#60;div class='<span class="java&#45;keyword">inner</span>'&#62;
-		&#60;div class='fheader'&#62;Please Login..&#60;/div&#62;
-		&#60;form action='$&#123;request.contextPath&#125;/j_spring_security_check' method='POST'
-			 id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'&#62;
-			&#60;p&#62;
-				&#60;label <span class="java&#45;keyword">for</span>='username'&#62;Login ID&#60;/label&#62;
-				&#60;input type='text' class='text_' name='j_username' id='username' /&#62;
-			&#60;/p&#62;
-			&#60;p&#62;
-				&#60;label <span class="java&#45;keyword">for</span>='password'&#62;Password&#60;/label&#62;
-				&#60;input type='password' class='text_' name='j_password' id='password' /&#62;
-			&#60;/p&#62;
-			&#60;p&#62;
-				&#60;label <span class="java&#45;keyword">for</span>='remember_me'&#62;Remember me&#60;/label&#62;
-				&#60;input type='checkbox' class='chk' id='remember_me'
-						 name='_spring_security_remember_me'/&#62;
-			&#60;/p&#62;
-			&#60;p&#62;
-				&#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"authAjax"</span>&#62;Login&#60;/span&#62;
-				&#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"cancelLogin"</span>&#62;Cancel&#60;/span&#62;
-			&#60;/p&#62;
-		&#60;/form&#62;
-		&#60;div style='display: none; text&#45;align: left;' id='loginMessage'&#62;&#60;/div&#62;
-	&#60;/div&#62;
+   &#60;div class='<span class="java&#45;keyword">inner</span>'&#62;
+      &#60;div class='fheader'&#62;Please Login..&#60;/div&#62;
+      &#60;form action='$&#123;request.contextPath&#125;/j_spring_security_check' method='POST'
+            id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='username'&#62;Login ID&#60;/label&#62;
+            &#60;input type='text' class='text_' name='j_username' id='username' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='password'&#62;Password&#60;/label&#62;
+            &#60;input type='password' class='text_' name='j_password' id='password' /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>='remember_me'&#62;Remember me&#60;/label&#62;
+            &#60;input type='checkbox' class='chk' id='remember_me'
+                   name='_spring_security_remember_me'/&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"authAjax"</span>&#62;Login&#60;/span&#62;
+            &#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"cancelLogin"</span>&#62;Cancel&#60;/span&#62;
+         &#60;/p&#62;
+      &#60;/form&#62;
+      &#60;div style='display: none; text&#45;align: left;' id='loginMessage'&#62;&#60;/div&#62;
+   &#60;/div&#62;
 &#60;/div&#62;<p class="paragraph"/>&#60;script type='text/javascript'&#62;
 <span class="java&#45;keyword">var</span> onLogin;
 $.ajaxSetup(&#123;
-      beforeSend : function(xhr, event) &#123;
-		// save the 'success' function <span class="java&#45;keyword">for</span> later use
-		onLogin = event.success;
-	&#125;,
-	statusCode: &#123;
-		// Set up a global AJAX error handler to handle the 401
-		// unauthorized responses. If a 401 status code comes back,
-		// the user is no longer logged&#45;into the system and can not
-		// use it properly.
-		401: function() &#123;
-			showLogin();
-		&#125;
-	&#125;
-&#125;);<p class="paragraph"/>function showLogin() &#123; 
-	<span class="java&#45;keyword">var</span> ajaxLogin = $('&#35;ajaxLogin'); 
-	ajaxLogin.css('text&#45;align','center');
-      // use jqModal to show and align login panel
-	ajaxLogin.jqmShow();
-&#125;<p class="paragraph"/>function cancelLogin() &#123; 
-	$('&#35;ajaxLogin').jqmHide();	
-&#125;<p class="paragraph"/>function authAjax() &#123; 
-	$('&#35;loginMessage').html('Sending request ...').show();<p class="paragraph"/>	<span class="java&#45;keyword">var</span> form = $('&#35;ajaxLoginForm');
-	<span class="java&#45;keyword">var</span> config = &#123;
-		type : 'post'
-		,url : form.attr('action')
-		,data : form.serialize()
-		,async : <span class="java&#45;keyword">false</span>
-		,dataType : 'JSON'
-		,success: function(response) &#123;
-			form&#91;0&#93;.reset();
-			$('&#35;loginMessage').empty();
-			$('&#35;ajaxLogin').jqmHide();
-			<span class="java&#45;keyword">if</span> (onLogin) &#123;
-				// execute the saved event.success function
-				onLogin(response);
-			&#125;
-		&#125;
-		,error : function (response) &#123;
-			<span class="java&#45;keyword">var</span> responseText = response.responseText || '&#91;&#93;'; 
-			<span class="java&#45;keyword">var</span> json = responseText.evalJSON(); 
-			<span class="java&#45;keyword">if</span> (json.error) &#123; 
-				$('&#35;loginMessage').html(<span class="java&#45;quote">"&#60;span class='errorMessage'&#62;"</span> + json.error + '&#60;/error&#62;'); 
-			&#125; <span class="java&#45;keyword">else</span> &#123; 
-				$('&#35;loginMessage').html(responseText); 
-			&#125; 
-		&#125;
-		,beforeSend : function(xhr, event) &#123;
-			//console.log(<span class="java&#45;quote">"overriding <span class="java&#45;keyword">default</span> behaviour"</span>);
-		&#125;
-	&#125;
-	$.ajax(config);
+   beforeSend: function(xhr, event) &#123;
+      // save the 'success' function <span class="java&#45;keyword">for</span> later use
+      onLogin = event.success;
+   &#125;,
+   statusCode: &#123;
+      // Set up a global AJAX error handler to handle the 401
+      // unauthorized responses. If a 401 status code comes back,
+      // the user is no longer logged&#45;into the system and can not
+      // use it properly.
+      401: function() &#123;
+         showLogin();
+      &#125;
+   &#125;
+&#125;);<p class="paragraph"/>function showLogin() &#123;
+   <span class="java&#45;keyword">var</span> ajaxLogin = $('&#35;ajaxLogin');
+   ajaxLogin.css('text&#45;align','center');
+   // use jqModal to show and align login panel
+   ajaxLogin.jqmShow();
+&#125;<p class="paragraph"/>function cancelLogin() &#123;
+   $('&#35;ajaxLogin').jqmHide();
+&#125;<p class="paragraph"/>function authAjax() &#123;
+   $('&#35;loginMessage').html('Sending request ...').show();<p class="paragraph"/>   <span class="java&#45;keyword">var</span> form = $('&#35;ajaxLoginForm');
+   <span class="java&#45;keyword">var</span> config = &#123;
+      type: 'post',
+      url: form.attr('action'),
+      data: form.serialize(),
+      async: <span class="java&#45;keyword">false</span>,
+      dataType: 'JSON',
+      success: function(response) &#123;
+         form&#91;0&#93;.reset();
+         $('&#35;loginMessage').empty();
+         $('&#35;ajaxLogin').jqmHide();
+         <span class="java&#45;keyword">if</span> (onLogin) &#123;
+            // execute the saved event.success function
+            onLogin(response);
+         &#125;
+      &#125;,
+      error: function (response) &#123;
+         <span class="java&#45;keyword">var</span> responseText = response.responseText || '&#91;&#93;';
+         <span class="java&#45;keyword">var</span> json = responseText.evalJSON();
+         <span class="java&#45;keyword">if</span> (json.error) &#123;
+            $('&#35;loginMessage').html(<span class="java&#45;quote">"&#60;span class='errorMessage'&#62;"</span> + json.error + '&#60;/error&#62;');
+         &#125;
+         <span class="java&#45;keyword">else</span> &#123;
+            $('&#35;loginMessage').html(responseText);
+         &#125;
+      &#125;,
+      beforeSend: function(xhr, event) &#123;
+         //console.log(<span class="java&#45;quote">"overriding <span class="java&#45;keyword">default</span> behaviour"</span>);
+      &#125;
+   &#125;
+   $.ajax(config);
 &#125;<p class="paragraph"/>$(function() &#123;
-	$('&#35;ajaxLogin').jqm(&#123;modal: <span class="java&#45;keyword">true</span>, trigger: 'span.jqmTrigger'&#125;);
-	$('&#35;authAjax').click(authAjax);
-	$('&#35;cancelLogin').click(cancelLogin);
+   $('&#35;ajaxLogin').jqm(&#123;modal: <span class="java&#45;keyword">true</span>, trigger: 'span.jqmTrigger'&#125;);
+   $('&#35;authAjax').click(authAjax);
+   $('&#35;cancelLogin').click(cancelLogin);
 &#125;);
 &#60;/script&#62;</pre></div><p class="paragraph"/>The important aspects of this code are:
 <ul class="star">
@@ -339,17 +337,16 @@ $.ajaxSetup(&#123;
            src=<span class="java&#45;quote">"&#60;g:createLinkTo dir='/images' file='spinner.gif'/&#62;"</span>
    /&#62;
 &#60;/g:form&#62;</pre></div><p class="paragraph"/>or<p class="paragraph"/><div class="code"><pre>&#60;script&#62;
-      <span class="java&#45;keyword">var</span> detailConfig = &#123;
-		type      : 'post'
-		,async    : <span class="java&#45;keyword">false</span>
-		,returnType : 'html'
-		,url      : '/post/addPostAjax'
-		,success  : function(data) &#123;
-                  $('&#35;firstPost').html(data);
-			clearPost(e);
-		&#125;
-	&#125;
-	$.ajax(detailConfig
+<span class="java&#45;keyword">var</span> detailConfig = &#123;
+   type: 'post',
+   async: <span class="java&#45;keyword">false</span>,
+   returnType: 'html',
+   url: '/post/addPostAjax',
+   success: function(data) &#123;
+      $('&#35;firstPost').html(data);
+      clearPost(e);
+   &#125;
+&#125;;<p class="paragraph"/>$.ajax(detailConfig);
 &#60;/script&#62;</pre></div><p class="paragraph"/>Most of the attributes are typical, but the <code>on401</code> attribute is the key to making Ajax logins work. As long as the <code>LoginController</code> sends a 401 error code the need to authenticate can be easily handled.<p class="paragraph"/>Note that depending on the version of the plugin that you're using, you may need to add the <code>authAjax</code> method to your <code>LoginController</code>:<p class="paragraph"/><div class="code"><pre>def authAjax() &#123;
    response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
    response.sendError HttpServletResponse.SC_UNAUTHORIZED

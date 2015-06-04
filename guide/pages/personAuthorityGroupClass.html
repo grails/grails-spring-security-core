@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.5 PersonGroup Class 2.0-RC4</title>
+    <title>3.5 PersonGroup Class 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,8 @@ function addJsClass() {
                 
 
 <h2 id="personAuthorityGroupClass">3.5 PersonGroup Class</h2>
-The typical approach to mapping the relationship between 'person' and 'group' is a many-to-many. In a standard implementation, users have multiple roles, and roles are shared by multiple users. In a group implementation, users have multiple groups, and groups are shared by multiple users. For the same reason we would use a join class between 'person' and 'authority', we should use one between 'person' and 'group'. Please note that when using groups, there should not be a join class between 'person' and 'authority', since 'group' resides between the two.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified, this class will be generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> and <code>RoleGroup</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>class UserRoleGroup <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   User user
+The typical approach to mapping the relationship between 'person' and 'group' is a many-to-many. In a standard implementation, users have multiple roles, and roles are shared by multiple users. In a group implementation, users have multiple groups, and groups are shared by multiple users. For the same reason we would use a join class between 'person' and 'authority', we should use one between 'person' and 'group'. Please note that when using groups, there should not be a join class between 'person' and 'authority', since 'group' resides between the two.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified, this class will be generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> and <code>RoleGroup</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>@ToString(cache=<span class="java&#45;keyword">true</span>, includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class UserRoleGroup <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   User user
    RoleGroup roleGroup<p class="paragraph"/>   <span class="java&#45;object">boolean</span> equals(other) &#123;
       <span class="java&#45;keyword">if</span> (!(other <span class="java&#45;keyword">instanceof</span> UserRoleGroup)) &#123;
          <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
@@ -172,22 +170,22 @@ The typical approach to mapping the relationship between 'person' and 'group' is
       def instance = <span class="java&#45;keyword">new</span> UserRoleGroup(user: user, roleGroup: roleGroup)
       instance.save(flush: flush, insert: <span class="java&#45;keyword">true</span>)
       instance
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User u, RoleGroup g) &#123;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User u, RoleGroup g, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
       <span class="java&#45;keyword">if</span> (u == <span class="java&#45;keyword">null</span> || g == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span><p class="paragraph"/>      <span class="java&#45;object">int</span> rowCount = UserRoleGroup.where &#123;
          user == User.load(u.id) &#38;&#38;
          roleGroup == RoleGroup.load(g.id)
-      &#125;.deleteAll()<p class="paragraph"/>      rowCount &#62; 0
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(User u) &#123;
+      &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; UserRoleGroup.withSession &#123; it.flush() &#125; &#125;<p class="paragraph"/>      rowCount &#62; 0
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(User u, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
       <span class="java&#45;keyword">if</span> (u == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      UserRoleGroup.where &#123;
          user == User.load(u.id)
-      &#125;.deleteAll()
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(RoleGroup g) &#123;
+      &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; UserRoleGroup.withSession &#123; it.flush() &#125; &#125;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(RoleGroup g, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
       <span class="java&#45;keyword">if</span> (g == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      UserRoleGroup.where &#123;
          roleGroup == RoleGroup.load(g.id)
-      &#125;.deleteAll()
+      &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; UserRoleGroup.withSession &#123; it.flush() &#125; &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       user validator: &#123; User u, UserRoleGroup ug &#45;&#62;
-         <span class="java&#45;keyword">if</span> (ug.roleGroup == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span>
+         <span class="java&#45;keyword">if</span> (ug.roleGroup == <span class="java&#45;keyword">null</span> || ug.roleGroup.id == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span>
          <span class="java&#45;object">boolean</span> existing = <span class="java&#45;keyword">false</span>
          UserRoleGroup.withNewSession &#123;
             existing = UserRoleGroup.exists(u.id, ug.roleGroup.id)

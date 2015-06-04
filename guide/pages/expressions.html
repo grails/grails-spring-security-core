@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4.4 Using Expressions to Create Descriptive, Fine-Grained Rules 2.0-RC4</title>
+    <title>4.4 Using Expressions to Create Descriptive, Fine-Grained Rules 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -122,7 +119,7 @@ function addJsClass() {
             <div id="main" class="corner-all">
 
                 
-                    <div class="toc-item prev-left"><a href="../../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Required and Optional Domain Classes</span></a></div>
+                    <div class="toc-item prev-left"><a href="../../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Domain Classes</span></a></div>
                 
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,7 @@ function addJsClass() {
                 
 
 <h2 id="expressions">4.4 Using Expressions to Create Descriptive, Fine-Grained Rules</h2>
-Spring Security uses the <a href="http://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/expressions.html" target="blank">Spring Expression Language (SpEL)</a>, which allows you to declare the rules for guarding URLs more descriptively than does the traditional approach, and also allows much more fine-grained rules. Where you traditionally would specify a list of role names and/or special tokens (for example, <code>IS_AUTHENTICATED_FULLY</code>), with <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/el-access.html" target="blank">Spring Security&#39;s expression support</a>, you can instead use the embedded scripting language to define simple or complex access rules.<p class="paragraph"/>You can use expressions with any of the previously described approaches to securing application URLs. For example, consider this annotated controller:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.yourcompany.yourapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>class SecureController &#123;<p class="paragraph"/>   @Secured(&#91;<span class="java&#45;quote">"hasRole('ROLE_ADMIN')"</span>&#93;)
+Spring Security uses the <a href="https://docs.spring.io/spring/docs/3.2.x/spring-framework-reference/html/expressions.html" target="blank">Spring Expression Language (SpEL)</a>, which allows you to declare the rules for guarding URLs more descriptively than does the traditional approach, and also allows much more fine-grained rules. Where you traditionally would specify a list of role names and/or special tokens (for example, <code>IS_AUTHENTICATED_FULLY</code>), with <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#el-access" target="blank">Spring Security&#39;s expression support</a>, you can instead use the embedded scripting language to define simple or complex access rules.<p class="paragraph"/>You can use expressions with any of the previously described approaches to securing application URLs. For example, consider this annotated controller:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.yourcompany.yourapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>class SecureController &#123;<p class="paragraph"/>   @Secured(&#91;<span class="java&#45;quote">"hasRole('ROLE_ADMIN')"</span>&#93;)
    def someAction() &#123;
       &#8230;
    &#125;<p class="paragraph"/>   @Secured(&#91;<span class="java&#45;quote">"authentication.name == 'ralph'"</span>&#93;)
@@ -159,13 +156,13 @@ Spring Security uses the <a href="http://docs.spring.io/spring/docs/3.2.x/spring
                configAttribute: <span class="java&#45;quote">"authentication.name == 'ralph'"</span>).save()</pre></div><p class="paragraph"/>and the corresponding static mappings would be<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
    '/secure/someAction':      &#91;<span class="java&#45;quote">"hasRole('ROLE_ADMIN')"</span>&#93;,
    '/secure/someOtherAction': &#91;<span class="java&#45;quote">"authentication.name == 'ralph'"</span>&#93;
-&#93;</pre></div><p class="paragraph"/>The Spring Security docs have a <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/reference/html/el-access.html#el-common-built-in" target="blank">table listing the standard expressions</a>, which is copied here for reference:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Expression</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><code>hasRole(role)</code></td><td>Returns true if the current principal has the specified role.</td></tr><tr class="table-even"><td><code>hasAnyRole(&#91;role1,role2&#93;)</code></td><td>Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)</td></tr><tr class="table-odd"><td><code>principal</code></td><td>Allows direct access to the principal object representing the current user</td></tr><tr class="table-even"><td><code>authentication</code></td><td>Allows direct access to the current Authentication object obtained from the SecurityContext</td></tr><tr class="table-odd"><td><code>permitAll</code></td><td>Always evaluates to true</td></tr><tr class="table-even"><td><code>denyAll</code></td><td>Always evaluates to false</td></tr><tr class="table-odd"><td><code>isAnonymous()</code></td><td>Returns true if the current principal is an anonymous user</td></tr><tr class="table-even"><td><code>isRememberMe()</code></td><td>Returns true if the current principal is a remember-me user</td></tr><tr class="table-odd"><td><code>isAuthenticated()</code></td><td>Returns true if the user is not anonymous</td></tr><tr class="table-even"><td><code>isFullyAuthenticated()</code></td><td>Returns true if the user is not an anonymous or a remember-me user</td></tr><tr class="table-odd"><td><code>request</code></td><td>the HTTP request, allowing expressions such as "isFullyAuthenticated() or request.getMethod().equals('OPTIONS')"</td></tr></table><p class="paragraph"/>In addition, you can use a web-specific expression <code>hasIpAddress</code>. However, you may find it more convenient to separate IP restrictions from role restrictions by using the <a href="../guide/single.html#ip" class="guide">IP address filter</a>.<p class="paragraph"/>To help you migrate traditional configurations to expressions, this table compares various configurations and their corresponding expressions:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Traditional Config</strong></th><th><strong class="bold">Expression</strong></th></tr><tr class="table-odd"><td><code>ROLE_ADMIN</code></td><td><code>hasRole('ROLE_ADMIN')</code></td></tr><tr class="table-even"><td><code>ROLE_USER,ROLE_ADMIN</code></td><td><code>hasAnyRole('ROLE_USER','ROLE_ADMIN')</code></td></tr><tr class="table-odd"><td><code>ROLE_ADMIN,IS_AUTHENTICATED_FULLY</code></td><td><code>hasRole('ROLE_ADMIN') and isFullyAuthenticated()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_ANONYMOUSLY</code></td><td><code>permitAll</code></td></tr><tr class="table-odd"><td><code>IS_AUTHENTICATED_REMEMBERED</code></td><td><code>isAuthenticated() or isRememberMe()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_FULLY</code></td><td><code>isFullyAuthenticated()</code></td></tr></table>
+&#93;</pre></div><p class="paragraph"/>The Spring Security docs have a <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/#el-common-built-in" target="blank">table listing the standard expressions</a>, which is copied here for reference:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Expression</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td><code>hasRole(role)</code></td><td>Returns true if the current principal has the specified role.</td></tr><tr class="table-even"><td><code>hasAnyRole(&#91;role1,role2&#93;)</code></td><td>Returns true if the current principal has any of the supplied roles (given as a comma-separated list of strings)</td></tr><tr class="table-odd"><td><code>principal</code></td><td>Allows direct access to the principal object representing the current user</td></tr><tr class="table-even"><td><code>authentication</code></td><td>Allows direct access to the current Authentication object obtained from the SecurityContext</td></tr><tr class="table-odd"><td><code>permitAll</code></td><td>Always evaluates to true</td></tr><tr class="table-even"><td><code>denyAll</code></td><td>Always evaluates to false</td></tr><tr class="table-odd"><td><code>isAnonymous()</code></td><td>Returns true if the current principal is an anonymous user</td></tr><tr class="table-even"><td><code>isRememberMe()</code></td><td>Returns true if the current principal is a remember-me user</td></tr><tr class="table-odd"><td><code>isAuthenticated()</code></td><td>Returns true if the user is not anonymous</td></tr><tr class="table-even"><td><code>isFullyAuthenticated()</code></td><td>Returns true if the user is not an anonymous or a remember-me user</td></tr><tr class="table-odd"><td><code>request</code></td><td>the HTTP request, allowing expressions such as "isFullyAuthenticated() or request.getMethod().equals('OPTIONS')"</td></tr></table><p class="paragraph"/>In addition, you can use a web-specific expression <code>hasIpAddress</code>. However, you may find it more convenient to separate IP restrictions from role restrictions by using the <a href="../guide/single.html#ip" class="guide">IP address filter</a>.<p class="paragraph"/>To help you migrate traditional configurations to expressions, this table compares various configurations and their corresponding expressions:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Traditional Config</strong></th><th><strong class="bold">Expression</strong></th></tr><tr class="table-odd"><td><code>ROLE_ADMIN</code></td><td><code>hasRole('ROLE_ADMIN')</code></td></tr><tr class="table-even"><td><code>ROLE_USER,ROLE_ADMIN</code></td><td><code>hasAnyRole('ROLE_USER','ROLE_ADMIN')</code></td></tr><tr class="table-odd"><td><code>ROLE_ADMIN,IS_AUTHENTICATED_FULLY</code></td><td><code>hasRole('ROLE_ADMIN') and isFullyAuthenticated()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_ANONYMOUSLY</code></td><td><code>permitAll</code></td></tr><tr class="table-odd"><td><code>IS_AUTHENTICATED_REMEMBERED</code></td><td><code>isAuthenticated() or isRememberMe()</code></td></tr><tr class="table-even"><td><code>IS_AUTHENTICATED_FULLY</code></td><td><code>isFullyAuthenticated()</code></td></tr></table>
 
 
 
                 <div style="clear:both;margin-top:15px;"></div>
                 
-                    <div class="toc-item prev-left"><a href="../../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Required and Optional Domain Classes</span></a></div>
+                    <div class="toc-item prev-left"><a href="../../guide/domainClasses.html">&lt;&lt; <strong>3</strong><span>Domain Classes</span></a></div>
                 
                     <div class="toc-item next-right"><a href="../../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span> >></a></div>
                 

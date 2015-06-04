@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>20 Voters 2.0-RC4</title>
+    <title>20 Voters 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,7 @@ function addJsClass() {
                 
 
 <h1 id="voters">20 Voters</h1>
-You can register a list of voters by implementing the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/AccessDecisionVoter.html" target="blank">AccessDecisionVoter</a> interface. The list confirms whether a successful authentication is applicable for the current request.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>voterNames</td><td>&#91;'authenticatedVoter', 'roleVoter', 'webExpressionVoter'&#93;</td><td>Bean names of voters.</td></tr></table><p class="paragraph"/>By default a <code>roleVoter</code> bean is registered to ensure users have the required roles for the request, and an <code>authenticatedVoter</code> bean is registered to support <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code> tokens.<p class="paragraph"/>To customize this list, you define a <code>voterNames</code> attribute with a list of bean names. The beans must be declared either by the plugin, or yourself in resources.groovy or resources.xml. Suppose you have a custom MyAccessDecisionVoter in resources.groovy:<p class="paragraph"/><div class="code"><pre>beans = &#123;
+You can register a list of voters by implementing the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/AccessDecisionVoter.html" target="blank">AccessDecisionVoter</a> interface. The list confirms whether a successful authentication is applicable for the current request.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>voterNames</td><td>&#91;'authenticatedVoter', 'roleVoter', 'webExpressionVoter'&#93;</td><td>Bean names of voters.</td></tr></table><p class="paragraph"/>By default a <code>roleVoter</code> bean is registered to ensure users have the required roles for the request, and an <code>authenticatedVoter</code> bean is registered to support <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, and <code>IS_AUTHENTICATED_ANONYMOUSLY</code> tokens.<p class="paragraph"/>To customize this list, you define a <code>voterNames</code> attribute with a list of bean names. The beans must be declared either by the plugin, or yourself in resources.groovy or resources.xml. Suppose you have a custom MyAccessDecisionVoter in resources.groovy:<p class="paragraph"/><div class="code"><pre>beans = &#123;
    myAccessDecisionVoter(com.foo.MyAccessDecisionVoter) &#123;
       // attributes
    &#125;

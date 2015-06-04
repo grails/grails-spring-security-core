@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>22 Tutorials 2.0-RC4</title>
+    <title>22 Tutorials 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,9 +144,6 @@ function addJsClass() {
                     <h2>Table of Contents</h2>
                     
                     <div class="toc-item" style="margin-left:0px"><a href="#usingControllerAnnotations"><strong>22.1</strong><span>Using Controller Annotations to Secure URLs</span></a>
-                    </div>
-                    
-                    <div class="toc-item" style="margin-left:0px"><a href="#migrationFromAcegi"><strong>22.2</strong><span>Migration From the Acegi Plugin</span></a>
                     </div>
                     
                 </div>
@@ -285,50 +279,6 @@ class SecureController &#123;
    &#125;
 &#125;</pre></div><p class="paragraph"/>You can annotate the entire controller or individual actions. In this case you have only one action, so you can do either.<p class="paragraph"/><h4>9. Run grails run-app again and navigate to <a href="http://localhost:8080/bookstore/secure" target="blank">http://localhost:8080/bookstore/secure</a>.</h4><p class="paragraph"/>This time, you should be presented with the login page. Log in with the username and password you used for the test user, and you should again be able to see the secure page.<p class="paragraph"/><h4>10. Test the Remember Me functionality.</h4>
 Check the checkbox, and once you've tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a is cookie stored, you should not need to log in again. Logout at any time by navigating to <a href="http://localhost:8080/bookstore/logout" target="blank">http://localhost:8080/bookstore/logout</a>.<p class="paragraph"/><h4>11. Optionally, create a CRUD UI to work with users and roles.</h4><p class="paragraph"/><h5>Run grails generate-all for the domain classes:</h5><p class="paragraph"/><div class="code"><pre>$ grails generate&#45;all com.testapp.User</pre></div><p class="paragraph"/><div class="code"><pre>$ grails generate&#45;all com.testapp.Role</pre></div><p class="paragraph"/>Since the User domain class handles password hashing, there are no changes required in the generated controllers.
-
-
-
-<h2 id="migrationFromAcegi">22.2 Migration From the Acegi Plugin</h2>
-In this tutorial we'll discuss the general steps required to migrate from the Acegi plugin to the Spring Security Core plugin. A lot of the material here comes from <a href="http://grails.1312388.n4.nabble.com/Migrating-Acegi-plugin-to-new-Security-plugin-td2290399.html" target="blank">an email</a> that Lubos Pochman sent to the <a href="http://www.grails.org/Mailing+lists" target="blank">User mailing list</a> documenting the steps he took to upgrade from the Acegi plugin.<p class="paragraph"/>This isn't a standard step-by-step tutorial since every application is different and the steps required will vary from project to project. Instead these are guidelines and things to keep in mind. You should also read <a href="../guide/single.html#acegiDifferences" class="guide">Section 2</a> and <a href="../guide/single.html#acegiMigrating" class="guide">Section 3</a>.<p class="paragraph"/>The first thing to do is uninstall the Acegi plugin
-<div class="code"><pre>$ grails uninstall&#45;plugin acegi</pre></div>
-and install Spring Security Core
-<div class="code"><pre>$ grails install&#45;plugin spring&#45;security&#45;core</pre></div><p class="paragraph"/>If this were a new project the next step would be to run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script but you wouldn't do this for an existing project where you already have a User and Role class, so it's a good idea to work through the <a href="../guide/single.html#usingControllerAnnotations" class="guide">bookstore tutorial</a> and use the files generated in that project. The files that the script generates are
-<ul class="star">
-<li><code>grails-app/domain/com/testapp/User.groovy</code></li>
-<li><code>grails-app/domain/com/testapp/Role.groovy</code></li>
-<li><code>grails-app/domain/com/testapp/UserRole.groovy</code></li>
-<li><code>grails-app/controllers/LoginController.groovy</code></li>
-<li><code>grails-app/controllers/LogoutController.groovy</code></li>
-<li><code>grails-app/views/login/auth.gsp</code></li>
-<li><code>grails-app/views/login/denied.gsp</code></li>
-</ul><p class="paragraph"/>Migrate any changes you made in <code>LoginController.groovy</code>, <code>LogoutController.groovy</code>, <code>auth.gsp</code> and <code>denied.gsp</code>, and overwrite your files with those. Do the same for <code>User.groovy</code> and <code>Role.groovy</code>, and move <code>UserRole.groovy</code> into your project.<p class="paragraph"/><h4>User and Role UI</h4><p class="paragraph"/>You can use the standard Grails <code>generate-all</code> script to create a UI to manage Users and Roles as described in the previous tutorial, or for a more complete solution use the <a href="http://grails.org/plugin/spring-security-ui" target="blank">Spring Security UI</a> plugin.<p class="paragraph"/><h4>authenticateService</h4><p class="paragraph"/>The utility service in Spring Security Core is <code>SpringSecurityService</code>, so you need to replace <code>def authenticateService</code> with <code>def springSecurityService</code>. Many of the methods have the same names and signatures but there are some differences:
-<ul class="star">
-<li><code>principal()</code> was renamed to <code>getPrincipal()</code></li>
-<li><code>ifAllGranted()</code>, <code>ifNotGranted()</code>, and <code>ifAnyGranted()</code> were removed; use <code>grails.plugin.springsecurity. SpringSecurityUtils.ifAllGranted()</code>, <code>ifNotGranted()</code>, and <code>ifAnyGranted()</code> instead</li>
-<li><code>getSecurityConfig()</code> was removed, use <code>SpringSecurityUtils.getSecurityConfig()</code> instead</li>
-</ul><p class="paragraph"/>One significant change between the plugins is that the <code>UserDetails</code> implementation (<code>GrailsUser</code>) no longer has a reference to the domain class instance. This was intended to make it easy to access User class data that's not available in the <code>Principal</code> but it has frustrating side effects due to being a disconnected Hibernate object. Instead <code>GrailsUser</code> stores the user's id so you can conveniently retrieve the instance when needed. So instead of<p class="paragraph"/><div class="code"><pre>def user = authenticateService.userDomain()
-user = User.get(user.id)</pre></div><p class="paragraph"/>use this instead:<p class="paragraph"/><div class="code"><pre>def user = User.get(springSecurityService.principal.id)</pre></div><p class="paragraph"/><h4>Role granting</h4><p class="paragraph"/>The Acegi plugin uses a standard Grails many-to-many relationship (i.e. using <code>hasMany</code> and <code>belongsTo</code>) between User and Role but this will have performance problems if you have many users. Spring Security Core also uses a many-to-many relationship but maps the join table as a domain class instead of using collections. In the Acegi plugin you would grant a role to a user using
-<div class="code"><pre>Role role = &#8230;
-User user = &#8230;
-role.addToPeople(user)</pre></div><p class="paragraph"/>and remove the grant with
-<div class="code"><pre>Role role = &#8230;
-User user = &#8230;
-role.removeFromPeople(user)</pre></div><p class="paragraph"/>In Spring Security Core you use the helper methods in <code>UserRole</code>
-<div class="code"><pre>Role role = &#8230;
-User user = &#8230;
-UserRole.create user, role</pre></div><p class="paragraph"/>and<p class="paragraph"/><div class="code"><pre>Role role = &#8230;
-User user = &#8230;
-UserRole.remove user, role</pre></div><p class="paragraph"/>which directly insert or delete rows in the User/Role join table.<p class="paragraph"/><h4>SecurityConfig.groovy</h4><p class="paragraph"/>Configuration settings are now stored in <code>grails-app/conf/Config.groovy</code> along with the rest of the application configuration. The primary motiviation for this change is to easily support environment-specific security settings. Migrate settings from <code>SecurityConfig.groovy</code> to <code>Config.groovy</code> (see <a href="../guide/single.html#acegiMigrating" class="guide">this summary</a> for the new names.<p class="paragraph"/>In particular it's important that the following properties be configured (replace class and package names to match your domain classes):
-<div class="code"><pre>grails. plugin. springsecurity. userLookup. userDomainClassName =
-         'com.yourcompany.yourapp.User'
-grails. plugin. springsecurity. userLookup. authorityJoinClassName =
-         'com.yourcompany.yourapp.UserRole'
-grails. plugin. springsecurity. authority. className =
-         'com.yourcompany.yourapp.Role'</pre></div><p class="paragraph"/>Delete <code>SecurityConfig.groovy</code> when you're finished.<p class="paragraph"/><h4>Controller annotations</h4><p class="paragraph"/>The <code>Secured</code> annotation changed from <code>org.codehaus.groovy.grails.plugins. springsecurity.Secured</code> to <code>grails.plugin.springsecurity.annotation.Secured</code>. Consider using <a href="../guide/single.html#expressions" class="guide">SpEL expressions</a> since they're a lot more powerful and expressive than simple role names.<p class="paragraph"/><h4>Security tags</h4>
-<ul class="star">
-<li>tag names now start with 'if' instead of 'is', and the <code>role</code> attribute changed to <code>roles</code>, so for example change <code>&#60;g:ifAnyGranted role='...'&#62;</code> to <code>&#60;sec:ifAnyGranted roles='...'&#62;</code></li>
-<li>use <code>&#60;sec:username/&#62;</code> instead of <code>&#60;g:loggedInUserInfo(field:'username')}/&#62;</code> - use <code>&#60;sec:loggedInUserInfo&#62;</code> to render other <code>GrailsUser</code> attributes</li>
-</ul><p class="paragraph"/>See more details about the taglibs in <a href="../guide/single.html#helperClasses" class="guide">Section 6</a>.
 
 
 

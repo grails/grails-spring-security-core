@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>11.1 Password Hashing 2.0-RC4</title>
+    <title>11.1 Password Hashing 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -147,7 +144,7 @@ function addJsClass() {
                 
 
 <h2 id="hashing">11.1 Password Hashing</h2>
-By default the plugin uses the bcrypt algorithm to hash passwords. You can customize this with the <code>grails.plugin.springsecurity.password.algorithm</code> attribute as described below. In addition you can increase the security of your passwords by adding a salt, which can be a field of the <code>UserDetails</code> instance, a global static value, or any custom value you want.<p class="paragraph"/><a href="https://en.wikipedia.org/wiki/Bcrypt" target="blank">bcrypt</a> is a much more secure alternative to the message digest approaches since it supports a customizable work level which when increased takes more computation time to hash the users' passwords, but also dramatically increases the cost of brute force attacks. Given how easy it is to <a href="http://www.google.com/search?q=gpu+password+cracking" target="blank">use GPUs to crack passwords</a>, you should definitely consider using bcrypt for new projects and switching to it for existing projects. Note that due to the approach used by bcrypt, you cannot add an additional salt like you can with the message digest algorithms.<p class="paragraph"/>Enable bcrypt by using the <code>'bcrypt'</code> value for the <code>algorithm</code> config attribute:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.password.algorithm = 'bcrypt'</pre></div><p class="paragraph"/>and optionally changing the number of rekeying rounds (which will affect the time it takes to hash passwords), e.g.<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.password.bcrypt.logrounds = 15</pre></div><p class="paragraph"/>Note that the number of rounds must be between 4 and 31.<p class="paragraph"/><a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a> is also supported.<p class="paragraph"/>The table shows configurable password hashing attributes.<p class="paragraph"/>If you want to use a message digest hashing algorithm, see <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html" target="blank">this Java page</a> for the available algorithms.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>password.algorithm</td><td>'bcrypt'</td><td>passwordEncoder algorithm; 'bcrypt' to use bcrypt, 'pbkdf2' to use <a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a>, or any message digest algorithm that is supported in your JDK</td></tr><tr class="table-even"><td>password.encodeHashAsBase64</td><td><code>false</code></td><td>If <code>true</code>, Base64-encode the hashed password.</td></tr><tr class="table-odd"><td>password.bcrypt.logrounds</td><td>10</td><td>the number of rekeying rounds to use when using bcrypt</td></tr><tr class="table-even"><td>password.hash.iterations</td><td>10000</td><td>the number of iterations which will be executed on the hashed password/salt.</td></tr></table>
+By default the plugin uses the bcrypt algorithm to hash passwords. You can customize this with the <code>grails.plugin.springsecurity.password.algorithm</code> attribute as described below. In addition you can increase the security of your passwords by adding a salt, which can be a field of the <code>UserDetails</code> instance, a global static value, or any custom value you want.<p class="paragraph"/><a href="https://en.wikipedia.org/wiki/Bcrypt" target="blank">bcrypt</a> is a much more secure alternative to the message digest approaches since it supports a customizable work level which when increased takes more computation time to hash the users' passwords, but also dramatically increases the cost of brute force attacks. Given how easy it is to <a href="https://www.google.com/search?q=gpu+password+cracking" target="blank">use GPUs to crack passwords</a>, you should definitely consider using bcrypt for new projects and switching to it for existing projects. Note that due to the approach used by bcrypt, you cannot add an additional salt like you can with the message digest algorithms.<p class="paragraph"/>Enable bcrypt by using the <code>'bcrypt'</code> value for the <code>algorithm</code> config attribute:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.password.algorithm = 'bcrypt'</pre></div><p class="paragraph"/>and optionally changing the number of rekeying rounds (which will affect the time it takes to hash passwords), e.g.<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.password.bcrypt.logrounds = 15</pre></div><p class="paragraph"/>Note that the number of rounds must be between 4 and 31.<p class="paragraph"/><a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a> is also supported.<p class="paragraph"/>The table shows configurable password hashing attributes.<p class="paragraph"/>If you want to use a message digest hashing algorithm, see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html" target="blank">this Java page</a> for the available algorithms.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default</strong></th><th><strong class="bold">Description</strong></th></tr><tr class="table-odd"><td>password.algorithm</td><td>'bcrypt'</td><td>passwordEncoder algorithm; 'bcrypt' to use bcrypt, 'pbkdf2' to use <a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a>, or any message digest algorithm that is supported in your JDK</td></tr><tr class="table-even"><td>password.encodeHashAsBase64</td><td><code>false</code></td><td>If <code>true</code>, Base64-encode the hashed password.</td></tr><tr class="table-odd"><td>password.bcrypt.logrounds</td><td>10</td><td>the number of rekeying rounds to use when using bcrypt</td></tr><tr class="table-even"><td>password.hash.iterations</td><td>10000</td><td>the number of iterations which will be executed on the hashed password/salt.</td></tr></table>
 
 
 

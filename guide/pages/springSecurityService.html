@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5.2 SpringSecurityService 2.0-RC4</title>
+    <title>5.2 SpringSecurityService 2.0-RC5</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -30,7 +30,7 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Required and Optional Domain Classes</span></a>
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
                     </div>
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
@@ -96,9 +96,6 @@ function addJsClass() {
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
                     </div>
                     
-                    <div class="toc-item" style="margin-left:0"><a href="../../guide/acegi.html"><strong>25</strong><span>Migrating from the Acegi plugin</span></a>
-                    </div>
-                    
                 </div>
             </div>
         </li>
@@ -137,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC4</p>
+                    <p><strong>Version:</strong> 2.0-RC5</p>
 
                     
                 </div>
@@ -170,14 +167,14 @@ Checks whether there is a currently logged-in user.<p class="paragraph"/>Example
          &#8230;
       &#125;
    &#125;
-&#125;</pre></div><p class="paragraph"/><h4>getAuthentication()</h4><p class="paragraph"/>Retrieves the current user's <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a>. If authenticated, this will typically be a <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html" target="blank">UsernamePasswordAuthenticationToken</a>.<p class="paragraph"/>If not authenticated and the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of <code>grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken</code> with a standard <code>org.springframework.security.core.userdetails.User</code> instance as its Principal. The authentication will have a single granted role, <code>ROLE_ANONYMOUS</code>.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+&#125;</pre></div><p class="paragraph"/><h4>getAuthentication()</h4><p class="paragraph"/>Retrieves the current user's <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a>. If authenticated, this will typically be a <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html" target="blank">UsernamePasswordAuthenticationToken</a>.<p class="paragraph"/>If not authenticated and the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of <code>grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken</code> with a standard <code>org.springframework.security.core.userdetails.User</code> instance as its Principal. The authentication will have a single granted role, <code>ROLE_ANONYMOUS</code>.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
       def auth = springSecurityService.authentication
       <span class="java&#45;object">String</span> username = auth.username
       def authorities = auth.authorities // a Collection of GrantedAuthority
       <span class="java&#45;object">boolean</span> authenticated = auth.authenticated
       &#8230;
    &#125;
-&#125;</pre></div><p class="paragraph"/><h4>getPrincipal()</h4><p class="paragraph"/>Retrieves the currently logged in user's <code>Principal</code>. If authenticated, the principal will be a <code>grails.plugin.springsecurity.userdetails.GrailsUser</code>, unless you  have created a custom <code>UserDetailsService</code>, in which case it will be whatever implementation of <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html" target="blank">UserDetails</a> you use there.<p class="paragraph"/>If not authenticated and the <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then a standard <code>org.springframework.security.core.userdetails.User</code> is used.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+&#125;</pre></div><p class="paragraph"/><h4>getPrincipal()</h4><p class="paragraph"/>Retrieves the currently logged in user's <code>Principal</code>. If authenticated, the principal will be a <code>grails.plugin.springsecurity.userdetails.GrailsUser</code>, unless you have created a custom <code>UserDetailsService</code>, in which case it will be whatever implementation of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html" target="blank">UserDetails</a> you use there.<p class="paragraph"/>If not authenticated and the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then a standard <code>org.springframework.security.core.userdetails.User</code> is used.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
       def principal = springSecurityService.principal
       <span class="java&#45;object">String</span> username = principal.username
       def authorities = principal.authorities // a Collection of GrantedAuthority
@@ -185,7 +182,7 @@ Checks whether there is a currently logged-in user.<p class="paragraph"/>Example
       &#8230;
    &#125;
 &#125;</pre></div><p class="paragraph"/><h4>encodePassword()</h4>
-Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the <code>grails.plugin.springsecurity.password.algorithm</code> attribute in <code>Config.groovy</code>. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use <a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a>, or any message digest algorithm that is supported in your JDK; see <a href="http://docs.oracle.com/javase/7/docs/technotes/guides/security/StandardNames.html" target="blank">this Java page</a> for the available algorithms.
+Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the <code>grails.plugin.springsecurity.password.algorithm</code> attribute in <code>Config.groovy</code>. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use <a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a>, or any message digest algorithm that is supported in your JDK; see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html" target="blank">this Java page</a> for the available algorithms.
 <blockquote class="warning">
 You are <strong class="bold">strongly</strong> discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See <a href="../guide/single.html#salt" class="guide">Salted Passwords</a>.
 </blockquote><p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class PersonController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def updateAction() &#123;
@@ -237,7 +234,7 @@ Flushes the Requestmaps cache and triggers a complete reload. If you use <code>R
       redirect action: show, id: requestmapInstance.id
    &#125;
 &#125;</pre></div><p class="paragraph"/><h4>reauthenticate()</h4>
-Rebuilds an <a href="http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a> for the given username and registers it in the security context. You typically use this method after updating a user's authorities or other data that is cached in the <code>Authentication</code> or <code>Principal</code>. It also removes the user from the user cache to force a refresh at next login.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class UserController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def update() &#123;
+Rebuilds an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a> for the given username and registers it in the security context. You typically use this method after updating a user's authorities or other data that is cached in the <code>Authentication</code> or <code>Principal</code>. It also removes the user from the user cache to force a refresh at next login.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class UserController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def update() &#123;
       def userInstance = User.get(params.id)<p class="paragraph"/>      params.salt = person.salt
       <span class="java&#45;keyword">if</span> (params.password) &#123;
          params.password = springSecurityService.encodePassword(params.password, salt)
