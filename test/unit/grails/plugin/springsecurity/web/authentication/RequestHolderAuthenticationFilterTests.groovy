@@ -26,6 +26,7 @@ import org.springframework.mock.web.MockHttpServletResponse
  */
 class RequestHolderAuthenticationFilterTests extends GroovyTestCase {
 
+	@SuppressWarnings('deprecation')
 	private RequestHolderAuthenticationFilter filter = new RequestHolderAuthenticationFilter()
 
 	void testDoFilter() {

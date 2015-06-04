@@ -33,11 +33,15 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.util.Assert;
 
 /**
- * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the request
- * and response in the {@link SecurityRequestHolder}.
+ * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the
+ * request and response in the {@link SecurityRequestHolder}.
  *
+ * @deprecated will be removed and replaced with
+ *             grails.plugin.springsecurity.web.SecurityRequestHolderFilter at
+ *             the beginning of the filter chain
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Deprecated
 public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	protected Boolean storeLastUsername;
