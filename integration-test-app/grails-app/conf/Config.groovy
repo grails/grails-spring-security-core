@@ -102,6 +102,10 @@ grails {
 			interceptUrlMap = [
 				'/testController/**': ['roleInMap']
 			]
-		}
+
+			logout {
+				additionalHandlerNames = ['additionalLogoutHandler']
+			}
+ 		}
 	}
 }

@@ -698,7 +698,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 		ctx.authenticationManager.providers = createBeanList(providerNames, ctx)
 
 		// build handlers list here to give dependent plugins a chance to register some
-		def logoutHandlerNames = conf.logout.handlerNames ?: SpringSecurityUtils.logoutHandlerNames
+		def logoutHandlerNames = (conf.logout.handlerNames ?: SpringSecurityUtils.logoutHandlerNames) +
+			(conf.logout.additionalHandlerNames ?: [])
 		ctx.logoutHandlers.clear()
 		ctx.logoutHandlers.addAll createBeanList(logoutHandlerNames, ctx)
 
