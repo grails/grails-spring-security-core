@@ -1,20 +1,15 @@
-#!/usr/bin/env bash
-
-if [ -z "$GVM_DIR" ]; then
-	GVM_DIR='~/.gvm'
-fi
-
+#!/bin/bash
 use_grails_versions="$@"
 if [ -z "$use_grails_versions" ]; then
 	use_grails_versions="2.4.5"
 fi
 
-source "$GVM_DIR/bin/gvm-init.sh"
+source ~/.gvm/bin/gvm-init.sh
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
 
-function runTest {
+function run_test {
 	GRAILS_VERSION="$1"
 	set +xe
 	gvm use grails $GRAILS_VERSION
@@ -35,5 +30,5 @@ function runTest {
 }
 
 for use_grails_version in $use_grails_versions; do
-	runTest "$use_grails_version"
+	run_test "$use_grails_version"
 done
