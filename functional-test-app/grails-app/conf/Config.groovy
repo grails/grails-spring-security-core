@@ -56,8 +56,8 @@ log4j = {
 	      'org.springframework',
 	      'org.hibernate',
 	      'net.sf.ehcache.hibernate'
-	debug 'org.hibernate.SQL'
-	// trace 'org.hibernate.type.descriptor.sql.BasicBinder'
+//	debug 'org.hibernate.SQL'
+//	trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }
 
 grails.plugin.springsecurity.authority.className = 'com.testapp.TestRole'
