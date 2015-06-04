@@ -558,7 +558,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 				cacheManager = ref('cacheManager')
 				cacheName = 'userCache'
 			}
-			cacheManager(EhCacheManagerFactoryBean)
+			cacheManager(EhCacheManagerFactoryBean) {
+				cacheManagerName = 'spring-security-core-user-cache-' + UUID.randomUUID()
+			}
 		}
 		else {
 			userCache(NullUserCache)
