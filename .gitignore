@@ -16,3 +16,4 @@ cobertura.ser
 /bin/
 /build/
 /.gradle
+/.nb-gradle/profiles/private/
