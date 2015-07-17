@@ -29,7 +29,7 @@ public class ClosureConfigAttribute implements ConfigAttribute {
 
 	/**
 	 * Constructor.
-	 * @param authorizeExpression the expression
+	 * @param closure: authorizeExpression the expression
 	 */
 	public ClosureConfigAttribute(final Closure<?> closure) {
 		this.closure = closure;

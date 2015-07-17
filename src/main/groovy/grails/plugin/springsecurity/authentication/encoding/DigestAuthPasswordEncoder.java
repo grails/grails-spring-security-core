@@ -27,7 +27,7 @@ import org.springframework.util.Assert;
  * browser sends will agree. This password encoder uses the same algorithm as the browser
  * and does a good job with encryption (it effectively uses the username and the Realm
  * name as a salt) but is completely unconfigurable.
- * <p/>
+ * 
  * Uses code from package org.springframework.security.web.authentication.www.DigestAuthUtils
  * which is unfortunately package-default.
  *
