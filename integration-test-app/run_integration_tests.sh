@@ -1,6 +1,6 @@
 #!/bin/bash
 source ~/.gvm/bin/gvm-init.sh
-gvm use grails 2.4.5
+gvm use grails 2.5.1
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"

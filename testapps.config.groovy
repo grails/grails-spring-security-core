@@ -1,4 +1,4 @@
-String version = '2.0-RC2'
+String version = '2.0-RC5'
 String grailsHomeRoot = "${System.getProperty('user.home')}/.gvm/grails"
 String dotGrailsCommon = "${System.getProperty('user.home')}/.grails"
 String projectDirCommon = 'target/testapps/spring-security-test'
@@ -29,6 +29,22 @@ v22 {
 
 v23 {
 	grailsVersion = '2.3.8'
+	pluginVersion = version
+	dotGrails = dotGrailsCommon
+	projectDir = projectDirCommon
+	grailsHome = grailsHomeRoot + '/' + grailsVersion
+}
+
+v24 {
+	grailsVersion = '2.4.5'
+	pluginVersion = version
+	dotGrails = dotGrailsCommon
+	projectDir = projectDirCommon
+	grailsHome = grailsHomeRoot + '/' + grailsVersion
+}
+
+v25 {
+	grailsVersion = '2.5.1'
 	pluginVersion = version
 	dotGrails = dotGrailsCommon
 	projectDir = projectDirCommon
