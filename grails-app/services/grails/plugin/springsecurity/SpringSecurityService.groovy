@@ -38,17 +38,17 @@ class SpringSecurityService {
 	/** dependency injection for grailsApplication */
 	def grailsApplication
 
-	/** dependency injection for the password encoder */
-	def passwordEncoder
-
 	/** dependency injection for {@link FilterInvocationSecurityMetadataSource} */
 	def objectDefinitionSource
 
-	/** dependency injection for userDetailsService */
-	def userDetailsService
+	/** dependency injection for the password encoder */
+	def passwordEncoder
 
 	/** dependency injection for userCache */
 	def userCache
+
+	/** dependency injection for userDetailsService */
+	def userDetailsService
 
 	/**
 	 * Get the currently logged in user's principal. If not authenticated and the
@@ -81,10 +81,13 @@ class SpringSecurityService {
 		def User = getClassForName(securityConfig.userLookup.userDomainClassName)
 
 		if (principal instanceof GrailsUser) {
-			User.get currentUserId
+			User.get principal.id
 		}
 		else {
-			User.findWhere((securityConfig.userLookup.usernamePropertyName): principal.username)
+			User.createCriteria().get {
+				eq securityConfig.userLookup.usernamePropertyName, principal.username
+				cache true
+			}
 		}
 	}
 
@@ -143,6 +146,17 @@ class SpringSecurityService {
 	 */
 	void clearCachedRequestmaps() {
 		objectDefinitionSource?.reset()
+	}
+
+	/**
+	 * Call for reloading the role hierarchy configuration from the database.
+	 * @author fpape
+	 */
+	void reloadDBRoleHierarchy() {
+		Class roleHierarchyEntryClass = Class.forName(securityConfig.roleHierarchyEntryClassName)
+		roleHierarchyEntryClass.withTransaction {
+			grailsApplication.mainContext.roleHierarchy.hierarchy = roleHierarchyEntryClass.list()*.entry.join('\n')
+		}
 	}
 
 	/**

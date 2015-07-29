@@ -1,5 +1,5 @@
 grails.controllers.defaultScope = 'singleton'
-grails.converters.encoding = "UTF-8"
+grails.converters.encoding = 'UTF-8'
 grails.enable.native2ascii = true
 grails.exceptionresolver.params.exclude = ['password']
 grails.hibernate.cache.queries = false
@@ -28,7 +28,7 @@ grails.resources.adhoc.includes = ['/images/**', '/css/**', '/js/**', '/plugins/
 grails.resources.adhoc.patterns = ['/images/*', '/css/*', '/js/*', '/plugins/*']
 grails.scaffolding.templates.domainSuffix = 'Instance'
 grails.spring.bean.packages = []
-grails.views.default.codec = "html"
+grails.views.default.codec = 'html'
 grails {
 	views {
 		gsp {
@@ -56,6 +56,8 @@ log4j = {
 	      'org.springframework',
 	      'org.hibernate',
 	      'net.sf.ehcache.hibernate'
+//	debug 'org.hibernate.SQL'
+//	trace 'org.hibernate.type.descriptor.sql.BasicBinder'
 }
 
 grails.plugin.springsecurity.authority.className = 'com.testapp.TestRole'

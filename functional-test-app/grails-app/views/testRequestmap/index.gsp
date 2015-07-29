@@ -1,9 +1,5 @@
-
-<%@ page import="com.testapp.TestRequestmap" %>
-<!DOCTYPE html>
 <html>
 	<head>
-		<meta name="layout" content="main">
 		<g:set var="entityName" value="${message(code: 'testRequestmap.label', default: 'TestRequestmap')}" />
 		<title><g:message code="default.list.label" args="[entityName]" /></title>
 	</head>

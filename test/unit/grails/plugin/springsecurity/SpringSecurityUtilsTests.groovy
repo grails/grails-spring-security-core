@@ -20,7 +20,6 @@ import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.GrantedAuthorityImpl
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
@@ -32,7 +31,7 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest
  */
 class SpringSecurityUtilsTests extends GroovyTestCase {
 
-	private final application = new FakeApplication()
+	private application = new FakeApplication()
 	private request = new MockHttpServletRequest()
 
 	@Override
@@ -50,7 +49,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		def roleNames = []
 		def authorities = []
 		(1..10).each { i ->
-			String name = "role${i}"
+			String name = "role$i"
 			roleNames << name
 			authorities << new SimpleGrantedAuthority(name)
 		}
@@ -137,10 +136,16 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assert !SpringSecurityUtils.isAjax(request)
 	}
 
-	void testIsAjaxUsingHeaderTrue() {
+	void testIsAjaxUsingHeaderXmlHttpRequest() {
 		request.addHeader('X-Requested-With', 'XMLHttpRequest')
 
 		assert SpringSecurityUtils.isAjax(request)
+	}
+
+	void testIsAjaxUsingHeaderTrue() {
+		request.addHeader('X-Requested-With', 'true')
+
+		assert !SpringSecurityUtils.isAjax(request)
 	}
 
 	void testIsAjaxUsingSavedRequestFalse() {
@@ -152,8 +157,15 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testIsAjaxUsingSavedRequestTrue() {
-
 		request.addHeader 'X-Requested-With', 'true'
+		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
+		request.session.setAttribute(SpringSecurityUtils.SAVED_REQUEST, savedRequest)
+
+		assert !SpringSecurityUtils.isAjax(request)
+	}
+
+	void testIsAjaxUsingSavedRequestXmlHttpRequest() {
+		request.addHeader 'X-Requested-With', 'XMLHttpRequest'
 		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
 		request.session.setAttribute(SpringSecurityUtils.SAVED_REQUEST, savedRequest)
 
@@ -176,11 +188,11 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assert !SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2'), new SimpleGrantedAuthority('ROLE_3')])
 		assert !SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_3')])
 
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1')])
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_2')])
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2')])
-		assert !SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2'), new GrantedAuthorityImpl('ROLE_3')])
-		assert !SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_3')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_2')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2')])
+		assert !SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2'), newGrantedAuthorityImpl('ROLE_3')])
+		assert !SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_3')])
 	}
 
 	void testIfAllGranted_UsingHierarchy() {
@@ -201,12 +213,12 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assert SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_3')])
 		assert !SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_4')])
 
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1')])
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_2')])
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2')])
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2'), new GrantedAuthorityImpl('ROLE_3')])
-		assert SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_3')])
-		assert !SpringSecurityUtils.ifAllGranted([new GrantedAuthorityImpl('ROLE_4')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_2')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2'), newGrantedAuthorityImpl('ROLE_3')])
+		assert SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_3')])
+		assert !SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_4')])
 	}
 
 	void testIfNotGranted() {
@@ -225,11 +237,11 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		assert !SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2'), new SimpleGrantedAuthority('ROLE_3')])
 		assert SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_3')])
 
-		assert !SpringSecurityUtils.ifNotGranted([new GrantedAuthorityImpl('ROLE_1')])
-		assert !SpringSecurityUtils.ifNotGranted([new GrantedAuthorityImpl('ROLE_2')])
-		assert !SpringSecurityUtils.ifNotGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2')])
-		assert !SpringSecurityUtils.ifNotGranted([new GrantedAuthorityImpl('ROLE_1'), new GrantedAuthorityImpl('ROLE_2'), new GrantedAuthorityImpl('ROLE_3')])
-		assert SpringSecurityUtils.ifNotGranted([new GrantedAuthorityImpl('ROLE_3')])
+		assert !SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_1')])
+		assert !SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_2')])
+		assert !SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2')])
+		assert !SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2'), newGrantedAuthorityImpl('ROLE_3')])
+		assert SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_3')])
 	}
 
 	void testIfNotGranted_UsingHierarchy() {
@@ -314,6 +326,10 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 		SpringSecurityUtils.application = new FakeApplication() {
 			ApplicationContext getMainContext() { ctx }
 		}
+	}
+
+	private GrantedAuthority newGrantedAuthorityImpl(String name) {
+		new org.springframework.security.core.authority.GrantedAuthorityImpl(name)
 	}
 
 	@Override

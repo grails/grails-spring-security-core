@@ -1,7 +1,7 @@
 grails.servlet.version = '3.0'
 grails.project.work.dir = 'target'
-grails.project.target.level = 1.6
-grails.project.source.level = 1.6
+grails.project.target.level = 1.7
+grails.project.source.level = 1.7
 
 grails.project.dependency.resolver = 'maven'
 grails.project.dependency.resolution = {
@@ -13,8 +13,6 @@ grails.project.dependency.resolution = {
 	repositories {
 		inherits true
 
-		grailsPlugins()
-		grailsHome()
 		mavenLocal()
 		grailsCentral()
 		mavenCentral()
@@ -29,20 +27,14 @@ grails.project.dependency.resolution = {
 		test 'com.github.detro:phantomjsdriver:1.2.0', {
 			transitive = false
 		}
-		test 'org.gebish:geb-spock:0.9.3'
+		test "org.gebish:geb-spock:$gebVersion"
 	}
 
 	plugins {
 		build ':tomcat:7.0.54'
 
-		compile ':scaffolding:2.0.3'
-		compile ':cache:1.1.7'
-
-		runtime ':database-migration:1.4.0'
 		runtime ':hibernate:3.6.10.16'
-		runtime ':jquery:1.11.1'
-		runtime ':resources:1.2.8'
-		runtime ':spring-security-core:2.0-RC4'
+		runtime ':spring-security-core:2.0-SNAPSHOT'
 
 		test ":geb:$gebVersion"
 	}

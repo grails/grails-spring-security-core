@@ -93,6 +93,20 @@ class ReflectionUtilsTests extends GroovyTestCase {
 		assert ['d', 'e'] == split.c
 */	}
 
+	void testGetGrailsServerURLWhenSet() {
+		setAndCheckGrailsServerURL 'http://somewhere.org'
+	}
+
+	void testGetGrailsServerURLWhenNotSet() {
+		setAndCheckGrailsServerURL null
+	}
+
+	protected void setAndCheckGrailsServerURL(String url) {
+		ReflectionUtils.application.config.grails.serverURL = url
+
+		assert ReflectionUtils.getGrailsServerURL() == url
+	}
+
 	@Override
 	protected void tearDown() {
 		super.tearDown()

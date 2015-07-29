@@ -361,8 +361,8 @@ class MiscSpec extends AbstractSecuritySpec {
    		assertContentContains 'Username: user1'
    		assertContentContains 'isLoggedIn: true'
    		assertContentContains 'loggedIn: true'
-   		assertContentContains 'getAuthenticatedUser: com.testapp.TestUser : '
-   		assertContentContains 'authenticatedUser: com.testapp.TestUser : '
+   		assertContentContains 'getAuthenticatedUser: user1'
+   		assertContentContains 'authenticatedUser: user1'
 	}
 
 	def 'test hyphenated'() {

@@ -8,10 +8,10 @@ class ${userClassName} implements Serializable {
 
 	String username
 	String password
-	Boolean enabled = true
-	Boolean accountExpired = false
-	Boolean accountLocked = false
-	Boolean passwordExpired = false
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
 	${userClassName}(String username, String password) {
 		this()
@@ -34,17 +34,6 @@ class ${userClassName} implements Serializable {
 		username
 	}
 
-	static transients = ['springSecurityService']
-
-	static constraints = {
-		username blank: false, unique: true
-		password blank: false
-	}
-
-	static mapping = {
-		password column: '`password`'
-	}
-
 	Set<${groupClassName ?: roleClassName}> getAuthorities() {
 		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this)*.${groupClassProperty ?: roleClassProperty}
 	}
@@ -61,5 +50,16 @@ class ${userClassName} implements Serializable {
 
 	protected void encodePassword() {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+	}
+
+	static transients = ['springSecurityService']
+
+	static constraints = {
+		username blank: false, unique: true
+		password blank: false
+	}
+
+	static mapping = {
+		password column: '`password`'
 	}
 }

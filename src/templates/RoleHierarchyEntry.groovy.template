@@ -1,0 +1,36 @@
+${packageDeclaration}
+
+class ${className} implements Serializable {
+
+	private static final long serialVersionUID = 1
+
+	String entry
+
+	${className}(String entry) {
+		this()
+		this.entry = entry
+	}
+
+	@Override
+	int hashCode() {
+		entry?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof ${className} && other.entry == entry)
+	}
+
+	@Override
+	String toString() {
+		entry
+	}
+
+	static constraints = {
+		entry blank: false, unique: true
+	}
+
+	static mapping = {
+		cache true
+	}
+}

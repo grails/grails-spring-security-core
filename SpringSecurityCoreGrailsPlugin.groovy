@@ -133,22 +133,19 @@ class SpringSecurityCoreGrailsPlugin {
 	String grailsVersion = '2.3.0 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'services', 'hibernate', 'hibernate4']
-
 	List pluginExcludes = [
-		'grails-app/domain/**',
 		'docs/**',
+		'grails-app/domain/**',
 		'src/docs/**'
 	]
-
 	String author = 'Burt Beckwith'
 	String authorEmail = 'burt@burtbeckwith.com'
 	String title = 'Spring Security Core Plugin'
 	String description = 'Spring Security Core plugin'
 	String documentation = 'http://grails-plugins.github.io/grails-spring-security-core/'
-
 	String license = 'APACHE'
-	def organization = [name: 'SpringSource', url: 'http://www.springsource.org/']
-	def issueManagement = [system: 'JIRA', url: 'http://jira.grails.org/browse/GPSPRINGSECURITYCORE']
+	def organization = [name: 'Grails', url: 'http://www.grails.org/']
+	def issueManagement = [system: 'Github', url: 'https://github.com/grails-plugins/grails-spring-security-core/issues']
 	def scm = [url: 'https://github.com/grails-plugins/grails-spring-security-core']
 
 	// make sure the filter chain filter is after the Grails filter
@@ -561,7 +558,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 				cacheManager = ref('cacheManager')
 				cacheName = 'userCache'
 			}
-			cacheManager(EhCacheManagerFactoryBean)
+			cacheManager(EhCacheManagerFactoryBean) {
+				cacheManagerName = 'spring-security-core-user-cache-' + UUID.randomUUID()
+			}
 		}
 		else {
 			userCache(NullUserCache)
@@ -609,6 +608,24 @@ to default to 'Annotation'; setting value to 'Annotation'
 		if (!conf || !conf.active) {
 			return
 		}
+
+		/**
+		 * Specify the field of the role hierarchy bean
+		 * if the role hierarchy is backed by a domain object use this instead of roleHierarchy config param
+		 * @author fpape
+		 */
+		String roleHierarchy
+		if (conf.roleHierarchyEntryClassName) {
+			Class roleHierarchyEntryClass = Class.forName(conf.roleHierarchyEntryClassName)
+			roleHierarchyEntryClass.withTransaction {
+				roleHierarchy = roleHierarchyEntryClass.list()*.entry.join('\n')
+			}
+		}
+		else {
+			roleHierarchy = conf.roleHierarchy
+		}
+
+		ctx.roleHierarchy.hierarchy = roleHierarchy
 
 		def strategyName = conf.sch.strategyName
 		if (strategyName instanceof CharSequence) {
@@ -683,7 +700,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 		ctx.authenticationManager.providers = createBeanList(providerNames, ctx)
 
 		// build handlers list here to give dependent plugins a chance to register some
-		def logoutHandlerNames = conf.logout.handlerNames ?: SpringSecurityUtils.logoutHandlerNames
+		def logoutHandlerNames = (conf.logout.handlerNames ?: SpringSecurityUtils.logoutHandlerNames) +
+			(conf.logout.additionalHandlerNames ?: [])
 		ctx.logoutHandlers.clear()
 		ctx.logoutHandlers.addAll createBeanList(logoutHandlerNames, ctx)
 
@@ -863,9 +881,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 	private configureVoters = { conf ->
 
-		roleHierarchy(RoleHierarchyImpl) {
-			hierarchy = conf.roleHierarchy
-		}
+		roleHierarchy(RoleHierarchyImpl)
 
 		roleVoter(RoleHierarchyVoter, ref('roleHierarchy'))
 

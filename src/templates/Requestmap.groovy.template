@@ -1,8 +1,11 @@
 package ${packageName}
 
+import groovy.transform.ToString
+
 import org.apache.commons.lang.builder.HashCodeBuilder
 import org.springframework.http.HttpMethod
 
+@ToString(cache=true, includeNames=true, includePackage=false)
 class ${requestmapClassName} implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -32,13 +35,13 @@ class ${requestmapClassName} implements Serializable {
 			other.url == url)
 	}
 
-	static mapping = {
-		cache true
-	}
-
 	static constraints = {
 		configAttribute blank: false
 		httpMethod nullable: true
 		url blank: false, unique: 'httpMethod'
+	}
+
+	static mapping = {
+		cache true
 	}
 }

@@ -1,3 +1,4 @@
+<html>
 <body>
 
 	<sec:ifAllGranted roles='ROLE_USER,ROLE_ADMIN'>user and admin</sec:ifAllGranted><br/>
@@ -30,3 +31,4 @@
 	<sec:noAccess url="/secureAnnotated">Cannot access /secureAnnotated</sec:noAccess><br/>
 
 </body>
+</html>

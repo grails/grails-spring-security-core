@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.web.authentication.rememberme
 
+import grails.gorm.DetachedCriteria
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 import org.codehaus.groovy.grails.commons.GrailsApplication
@@ -35,11 +36,6 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 	/** Dependency injection for grailsApplication */
 	GrailsApplication grailsApplication
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#createNewToken(
-	 * 	org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken)
-	 */
 	void createNewToken(PersistentRememberMeToken token) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
@@ -47,15 +43,10 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 		// join an existing transaction if one is active
 		clazz.withTransaction { status ->
 			clazz.newInstance(username: token.username, series: token.series,
-			                  token: token.tokenValue, lastUsed: token.date).save()
+					token: token.tokenValue, lastUsed: token.date).save()
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#getTokenForSeries(
-	 * 	java.lang.String)
-	 */
 	PersistentRememberMeToken getTokenForSeries(String seriesId) {
 		def persistentToken
 		def clazz = lookupDomainClass()
@@ -73,29 +64,16 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 				persistentToken.token, persistentToken.lastUsed)
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#removeUserTokens(
-	 * 	java.lang.String)
-	 */
 	void removeUserTokens(String username) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
 
-		// join an existing transaction if one is active
 		clazz.withTransaction { status ->
-			// was using HQL but it breaks with NoSQL, so using a less efficient impl:
-			for (instance in clazz.findAllByUsername(username)) {
-				instance.delete()
-			}
+			// can't use 'where' query with variable class, probably confuses the AST, so create the same DetachedCriteria
+			new DetachedCriteria(clazz).eq('username', username).deleteAll()
 		}
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * @see org.springframework.security.web.authentication.rememberme.PersistentTokenRepository#updateToken(
-	 * 	java.lang.String, java.lang.String, java.util.Date)
-	 */
 	void updateToken(String series, String tokenValue, Date lastUsed) {
 		def clazz = lookupDomainClass()
 		if (!clazz) return
@@ -114,7 +92,7 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 		def clazz = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
                 Class.forName(domainClassName) : grailsApplication.getClassForName(domainClassName)
 		if (!clazz) {
-			log.error "Persistent token class not found: '${domainClassName}'"
+			log.error "Persistent token class not found: '$domainClassName'"
 		}
 		clazz
 	}

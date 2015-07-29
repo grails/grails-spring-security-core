@@ -14,27 +14,42 @@
  */
 package test
 
-class TestPersistentLogin {
+import groovy.transform.ToString
 
-	String id
+import org.apache.commons.lang.builder.HashCodeBuilder
+
+@ToString(cache=true, includeNames=true, includePackage=false)
+class TestPersistentLogin implements Serializable {
+
+	private static final long serialVersionUID = 1
+
+	String series
 	String username
 	String token
 	Date lastUsed
 
-	static constraints = {
-		username maxSize: 64
-		token maxSize: 64
-		id maxSize: 64
+	@Override
+	int hashCode() {
+		new HashCodeBuilder().append(series).append(username).toHashCode()
 	}
 
-	static transients = ['series']
+	@Override
+	boolean equals(other) {
+		is(other) || (
+			other instanceof TestPersistentLogin &&
+			other.series == series &&
+			other.username == username)
+	}
 
-	void setSeries(String series) { id = series }
-	String getSeries() { id }
+	static constraints = {
+		series maxSize: 64
+		token maxSize: 64
+		username maxSize: 64
+	}
 
 	static mapping = {
-		table 'persistent_logins'
-		id column: 'series', generator: 'assigned'
+		table 'persistent_login'
+		id name: 'series', generator: 'assigned'
 		version false
 	}
 }

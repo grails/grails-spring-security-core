@@ -119,6 +119,15 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 		assert !response.redirectedUrl
 	}
 
+	void testRespectingGrailsServerURL() {
+		ReflectionUtils.application.config.grails.serverURL = 'http://somewhere.org'
+		handler.useForward = false
+
+		handler.handle request, response, new AccessDeniedException('fail')
+		assert 'http://somewhere.org/fail' == response.redirectedUrl
+		assert !response.forwardedUrl
+	}
+
 	@Override
 	protected void tearDown() {
 		super.tearDown()

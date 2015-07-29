@@ -26,15 +26,15 @@ class ${groupClassName} implements Serializable {
 		name
 	}
 
-	static mapping = {
-		cache true
-	}
-
 	Set<${roleClassName}> getAuthorities() {
-		${groupClassName}${roleClassName}.findAllBy${groupClassName}(this).collect { it.${roleClassProperty} }
+		${groupClassName}${roleClassName}.findAllBy${groupClassName}(this)*.${roleClassProperty}
 	}
 
 	static constraints = {
 		name blank: false, unique: true
+	}
+
+	static mapping = {
+		cache true
 	}
 }

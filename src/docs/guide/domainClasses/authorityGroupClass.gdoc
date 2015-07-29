@@ -5,9 +5,31 @@ If you run the [s2-quickstart|Scripts] script with the group name specified and 
 {code}
 package com.mycompany.myapp
 
-class RoleGroup {
+class RoleGroup implements Serializable {
+
+   private static final long serialVersionUID = 1
 
    String name
+
+   RoleGroup(String name) {
+      this()
+      this.name = name
+   }
+
+   @Override
+   int hashCode() {
+      name?.hashCode() ?: 0
+   }
+
+   @Override
+   boolean equals(other) {
+      is(other) || (other instanceof RoleGroup && other.name == name)
+   }
+
+   @Override
+   String toString() {
+      name
+   }
 
    static mapping = {
       cache true
@@ -21,7 +43,6 @@ class RoleGroup {
       name blank: false, unique: true
    }
 }
-
 {code}
 
 When running the [s2-quickstart|Scripts] script with the group name specified, the 'person' class will be generated differently to accommodate the use of groups. Assuming you use @com.mycompany.myapp@ as your package and @User@ and @RoleGroup@ as your class names, the @getAuthorities()@ method will be generated like so:

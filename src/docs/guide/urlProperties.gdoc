@@ -11,7 +11,7 @@ apf.continueChainBefore SuccessfulAuthentication | @false@ | whether to continue
 apf.storeLastUsername | @false@ | Whether to store the login username in the HTTP session
 failureHandler. defaultFailureUrl | '/login/authfail?login_error=1' | Redirect URL for failed logins.
 failureHandler. ajaxAuthFailUrl | '/login/authfail?ajax=true' | Redirect URL for failed Ajax logins.
-failureHandler. exceptionMappings | none | Map of exception class name (subclass of [AuthenticationException|http://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/AuthenticationException.html]) to which the URL will redirect for that exception type after authentication failure.
+failureHandler. exceptionMappings | none | Map of exception class name (subclass of [AuthenticationException|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/AuthenticationException.html]) to which the URL will redirect for that exception type after authentication failure.
 failureHandler. useForward | @false@ | Whether to render the error page (@true@) or redirect (@false@).
 failureHandler. allowSessionCreation | @true@ | Whether to enable session creation to store the authentication failure exception
 successHandler. defaultTargetUrl | '/' | Default post-login URL if there is no saved request that triggered the login.

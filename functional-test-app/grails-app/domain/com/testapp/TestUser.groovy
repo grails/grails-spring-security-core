@@ -1,6 +1,8 @@
 package com.testapp
 
-class TestUser {
+class TestUser implements Serializable {
+
+	private static final long serialVersionUID = 1
 
 	transient springSecurityService
 
@@ -11,6 +13,27 @@ class TestUser {
 	boolean accountLocked
 	boolean passwordExpired
 
+	TestUser(String username, String password) {
+		this()
+		this.username = username
+		this.password = password
+	}
+
+	@Override
+	int hashCode() {
+		username?.hashCode() ?: 0
+	}
+
+	@Override
+	boolean equals(other) {
+		is(other) || (other instanceof TestUser && other.username == username)
+	}
+
+	@Override
+	String toString() {
+		username
+	}
+
 	static transients = ['springSecurityService']
 
 	static constraints = {
@@ -18,12 +41,8 @@ class TestUser {
 		password blank: false
 	}
 
-	static mapping = {
-		password column: '`password`'
-	}
-
 	Set<TestRole> getAuthorities() {
-		TestUserTestRole.findAllByTestUser(this).collect { it.testRole } as Set
+		TestUserTestRole.findAllByTestUser(this)*.testRole
 	}
 
 	def beforeInsert() {
@@ -40,4 +59,3 @@ class TestUser {
 		password = springSecurityService.encodePassword(password, springSecurityService.grailsApplication.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty ? username : null)
 	}
 }
-

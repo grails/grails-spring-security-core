@@ -1,3 +1,5 @@
-// Place your Spring DSL code here
+import com.test.AdditionalLogoutHandler
+
 beans = {
+	additionalLogoutHandler(AdditionalLogoutHandler)
 }

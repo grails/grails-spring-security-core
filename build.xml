@@ -58,9 +58,11 @@
 	<target name='post-package-cleanup'>
 		<delete dir='grails-app/conf/hibernate'/>
 		<delete dir='grails-app/conf/spring'/>
+		<delete dir='grails-app/domain'/>
 		<delete dir='grails-app/utils'/>
 		<delete dir='grails-app/views/layouts'/>
 		<delete dir='lib'/>
+		<delete dir='test/integration'/>
 		<delete dir='web-app'/>
 	</target>
 

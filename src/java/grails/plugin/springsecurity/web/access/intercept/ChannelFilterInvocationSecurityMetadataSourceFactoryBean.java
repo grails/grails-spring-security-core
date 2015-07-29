@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.web.access.intercept;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,6 +38,8 @@ import org.springframework.util.Assert;
 public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
        implements FactoryBean<FilterInvocationSecurityMetadataSource>, InitializingBean {
 
+	protected static final Collection<String> SUPPORTED = Arrays.asList(
+			"ANY_CHANNEL", "REQUIRES_SECURE_CHANNEL", "REQUIRES_INSECURE_CHANNEL");
 	protected AntPathMatcher urlMatcher = new AntPathMatcher();
 	protected Map<String, String> definition;
 	protected DefaultFilterInvocationSecurityMetadataSource source;
@@ -69,9 +72,7 @@ public class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 			}
 			value = value.trim();
 
-			if (!"ANY_CHANNEL".equals(value) &&
-					!"REQUIRES_SECURE_CHANNEL".equals(value) &&
-					!"REQUIRES_INSECURE_CHANNEL".equals(value)) {
+			if (!SUPPORTED.contains(value) ) {
 				throw new IllegalArgumentException("The rule for URL '" + value +
 						"' must be one of REQUIRES_SECURE_CHANNEL, REQUIRES_INSECURE_CHANNEL, or ANY_CHANNEL");
 			}

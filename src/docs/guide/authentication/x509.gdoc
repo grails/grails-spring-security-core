@@ -13,4 +13,4 @@ x509.subjectDnClosure | none | If set, the plugin's @ClosureX509PrincipalExtract
 x509. throwException WhenTokenRejected | @false@ | If @true@ thrown a @BadCredentialsException@
 {table}
 
-The details of configuring your server for SSL and configuring browser certificates are beyond the scope of this document. If you use Tomcat, see its [SSL documentation|https://tomcat.apache.org/tomcat-7.0-doc/ssl-howto.html]. To get a test environment working, see the instructions in [this discussion at Stack Overflow|http://stackoverflow.com/questions/1180397/tomcat-server-client-self-signed-ssl-certificate].
+The details of configuring your server for SSL and configuring browser certificates are beyond the scope of this document. If you use Tomcat, see its [SSL documentation|https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html]. To get a test environment working, see the instructions in [this discussion at Stack Overflow|https://stackoverflow.com/questions/1180397/tomcat-server-client-self-signed-ssl-certificate].
