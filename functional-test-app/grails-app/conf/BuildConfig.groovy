@@ -3,6 +3,8 @@ grails.project.work.dir = 'target'
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
 
+grails.plugin.location.'spring-security-core' = '..'
+
 grails.project.dependency.resolver = 'maven'
 grails.project.dependency.resolution = {
 	inherits 'global'
@@ -34,7 +36,6 @@ grails.project.dependency.resolution = {
 		build ':tomcat:7.0.54'
 
 		runtime ':hibernate:3.6.10.16'
-		runtime ':spring-security-core:2.0-SNAPSHOT'
 
 		test ":geb:$gebVersion"
 	}

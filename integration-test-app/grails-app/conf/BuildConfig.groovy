@@ -3,6 +3,8 @@ grails.project.work.dir = 'target'
 grails.project.target.level = 1.7
 grails.project.source.level = 1.7
 
+grails.plugin.location.'spring-security-core' = '..'
+
 grails.project.dependency.resolver = 'maven'
 grails.project.dependency.resolution = {
 	inherits 'global'
@@ -23,7 +25,6 @@ grails.project.dependency.resolution = {
 	}
 
 	plugins {
-		runtime ':spring-security-core:2.0-SNAPSHOT'
 		runtime ':hibernate4:4.3.5.4'
 	}
 }
