@@ -1,4 +1,4 @@
-/* Copyright 2006-2015 SpringSource.
+/* Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@ package grails.plugin.springsecurity;
 
 /**
  * Stores the default order numbers of all Spring Security filters for use in configuration.
- * 
+ *
  * Equivalent to <code>org.springframework.security.config.http.SecurityFilters</code> which
  * unfortunately is package-default.
  *
