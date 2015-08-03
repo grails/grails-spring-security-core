@@ -13,3 +13,7 @@ cobertura.ser
 /target
 /target-eclipse
 /web-app
+/bin/
+/build/
+/.gradle
+/.nb-gradle/profiles/private/
