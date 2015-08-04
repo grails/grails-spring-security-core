@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.authentication;
 
-import grails.plugin.springsecurity.SpringSecurityUtils;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -26,6 +24,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.util.Assert;
+
+import grails.plugin.springsecurity.SpringSecurityUtils;
 
 /**
  * Ajax-aware failure handler that detects failed Ajax logins and redirects to the appropriate URL.

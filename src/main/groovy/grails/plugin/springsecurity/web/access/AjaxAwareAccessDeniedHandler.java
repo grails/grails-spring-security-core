@@ -14,9 +14,6 @@
  */
 package grails.plugin.springsecurity.web.access;
 
-import grails.plugin.springsecurity.ReflectionUtils;
-import grails.plugin.springsecurity.SpringSecurityUtils;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -33,6 +30,9 @@ import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.savedrequest.RequestCache;
 import org.springframework.util.Assert;
+
+import grails.plugin.springsecurity.ReflectionUtils;
+import grails.plugin.springsecurity.SpringSecurityUtils;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

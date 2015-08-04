@@ -117,7 +117,7 @@ class GormPersistentTokenRepositoryTests {
 
 	private void insertToken(String series, String username, String token, Date lastUsed) {
 		String formattedDate = lastUsed.format(DATE_FORMAT)
-		sql.execute "insert into persistent_login (series, username, token, last_used) " +
+		sql.execute 'insert into persistent_login (series, username, token, last_used) ' +
 		            "values ('$series', '$username', '$token', '$formattedDate')"
 	}
 }

@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.plugin.springsecurity.web.SecurityRequestHolder
-
 import org.springframework.context.ApplicationContext
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
@@ -23,6 +21,8 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
+
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 
 /**
  * Unit tests for SpringSecurityUtils.
@@ -284,7 +284,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 	}
 
 	void testGetSecurityConfigType() {
-		application.config.put("grails.plugin.springsecurity.securityConfigType",SecurityConfigType.Annotation)
+		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Annotation
 		assert 'Annotation' == SpringSecurityUtils.securityConfigType
 
 		application.config.grails.plugin.springsecurity.securityConfigType = SecurityConfigType.Annotation.name()

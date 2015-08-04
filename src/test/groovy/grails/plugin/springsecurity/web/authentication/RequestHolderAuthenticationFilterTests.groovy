@@ -14,12 +14,12 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import grails.plugin.springsecurity.web.SecurityRequestHolder
-
 import javax.servlet.FilterChain
 
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
+
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

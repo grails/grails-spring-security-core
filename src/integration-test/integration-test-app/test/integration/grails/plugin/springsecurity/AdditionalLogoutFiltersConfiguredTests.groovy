@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
-
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
@@ -23,6 +21,8 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
 
 import com.test.AdditionalLogoutHandler
+
+import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 
 /**
  * @author <a href='mailto:george@georgemcintosh.com'>George McIntosh</a>

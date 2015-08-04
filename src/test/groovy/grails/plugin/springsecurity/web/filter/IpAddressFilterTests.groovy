@@ -14,18 +14,18 @@
  */
 package grails.plugin.springsecurity.web.filter
 
-import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.web.access.intercept.TestApplication
-
 import javax.servlet.FilterChain
 
-import grails.core.GrailsApplication
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.web.context.WebApplicationContext
+
+import grails.core.GrailsApplication
+import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.web.access.intercept.TestApplication
 
 /**
  * Unit tests for <code>IpAddressFilter</code>.

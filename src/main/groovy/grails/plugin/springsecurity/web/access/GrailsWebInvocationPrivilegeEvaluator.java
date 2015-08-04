@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.access;
 
-import grails.util.GrailsUtil;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -41,6 +39,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.DefaultWebInvocationPrivilegeEvaluator;
 import org.springframework.util.Assert;
+
+import grails.util.GrailsUtil;
 
 /**
  * <code>createFilterInvocation()</code> is private in the base class so this is required to create

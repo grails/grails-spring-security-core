@@ -14,9 +14,6 @@
  */
 package grails.plugin.springsecurity.web.authentication;
 
-import grails.plugin.springsecurity.SpringSecurityUtils;
-import grails.plugin.springsecurity.web.SecurityRequestHolder;
-
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -31,6 +28,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.Assert;
+
+import grails.plugin.springsecurity.SpringSecurityUtils;
+import grails.plugin.springsecurity.web.SecurityRequestHolder;
 
 /**
  * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the

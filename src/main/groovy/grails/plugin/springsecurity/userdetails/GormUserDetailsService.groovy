@@ -14,16 +14,16 @@
  */
 package grails.plugin.springsecurity.userdetails
 
-import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.transaction.Transactional
-
-import grails.core.GrailsApplication
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
+
+import grails.core.GrailsApplication
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.transaction.Transactional
 
 /**
  * Default implementation of <code>GrailsUserDetailsService</code> that uses
@@ -59,7 +59,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
 		if (!user) {
-			log.warn "User not found: $username"
+			log.warn 'User not found: {}', username
 			throw new NoStackUsernameNotFoundException()
 		}
 
@@ -92,7 +92,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 				authorities = userAuthorities.collect { it."$authorityGroupPropertyName" }.flatten().unique().collect { new SimpleGrantedAuthority(it."$authorityPropertyName") }
 			}
 			else {
-				log.warn "Attempted to use group authorities, but the authority name field for the group class has not been defined."
+				log.warn 'Attempted to use group authorities, but the authority name field for the group class has not been defined.'
 			}
 		}
 		else {

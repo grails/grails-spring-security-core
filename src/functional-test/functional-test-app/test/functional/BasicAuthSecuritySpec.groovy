@@ -62,53 +62,53 @@ class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 		when:
 			to ListUserPage
 
-   	then:
-   		userRows.size() == 0
+		then:
+			userRows.size() == 0
 
-   	when:
-   		newUserButton.click()
+		when:
+			newUserButton.click()
 
-   	then:
-   		at CreateUserPage
+		then:
+			at CreateUserPage
 
-   	when:
-   		username = 'admin1'
-   		password = 'password1'
-   		$('#enabled').click()
+		when:
+			username = 'admin1'
+			password = 'password1'
+			$('#enabled').click()
 			$('#ROLE_ADMIN').click()
 			createButton.click()
 
-   	then:
-   		at ShowUserPage
+		then:
+			at ShowUserPage
 
-   	when:
-   		to ListUserPage
+		when:
+			to ListUserPage
 
-   	then:
-   		userRows.size() == 1
+		then:
+			userRows.size() == 1
 
-   	when:
-   		newUserButton.click()
+		when:
+			newUserButton.click()
 
-   	then:
-   		at CreateUserPage
+		then:
+			at CreateUserPage
 
-   	when:
-   		username = 'admin2'
-   		password = 'password2'
-   		$('#enabled').click()
+		when:
+			username = 'admin2'
+			password = 'password2'
+			$('#enabled').click()
 			$('#ROLE_ADMIN').click()
 			$('#ROLE_ADMIN2').click()
-   		createButton.click()
+			createButton.click()
 
-   	then:
-   		at ShowUserPage
+		then:
+			at ShowUserPage
 
-   	when:
-   		to ListUserPage
+		when:
+			to ListUserPage
 
-   	then:
-   		userRows.size() == 2
+		then:
+			userRows.size() == 2
 	}
 
 	def 'secured urls not visible without login'() {

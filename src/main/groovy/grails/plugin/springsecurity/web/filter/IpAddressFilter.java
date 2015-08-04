@@ -14,9 +14,6 @@
  */
 package grails.plugin.springsecurity.web.filter;
 
-import grails.plugin.springsecurity.InterceptedUrl;
-import grails.plugin.springsecurity.ReflectionUtils;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +35,9 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
+
+import grails.plugin.springsecurity.InterceptedUrl;
+import grails.plugin.springsecurity.ReflectionUtils;
 
 /**
  * Blocks access to protected resources based on IP address. Sends 404 rather than

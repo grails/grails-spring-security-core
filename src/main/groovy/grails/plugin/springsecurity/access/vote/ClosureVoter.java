@@ -14,9 +14,6 @@
  */
 package grails.plugin.springsecurity.access.vote;
 
-import grails.plugin.springsecurity.annotation.SecuredClosureDelegate;
-import groovy.lang.Closure;
-
 import java.util.Collection;
 
 import org.slf4j.Logger;
@@ -28,6 +25,9 @@ import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.util.Assert;
+
+import grails.plugin.springsecurity.annotation.SecuredClosureDelegate;
+import groovy.lang.Closure;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

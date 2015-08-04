@@ -51,8 +51,8 @@ class TestDataService {
 	}
 
 	void enterInitialData() {
-		Book.findOrSaveByTitle("TestBook")
-		Movie.findOrSaveByTitle("TestMovie")
+		Book.findOrSaveByTitle('TestBook')
+		Movie.findOrSaveByTitle('TestMovie')
 
 		if (System.getProperty('add_test_users')) {
 			addTestUsers()

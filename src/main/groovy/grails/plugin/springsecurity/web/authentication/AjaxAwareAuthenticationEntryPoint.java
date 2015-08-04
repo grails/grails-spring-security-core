@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.authentication;
 
-import grails.plugin.springsecurity.SpringSecurityUtils;
-
 import java.io.IOException;
 
 import javax.servlet.ServletException;
@@ -25,6 +23,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.util.Assert;
+
+import grails.plugin.springsecurity.SpringSecurityUtils;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

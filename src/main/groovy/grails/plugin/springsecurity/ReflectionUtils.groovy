@@ -14,15 +14,9 @@
  */
 package grails.plugin.springsecurity
 
-import grails.plugin.springsecurity.web.access.expression.WebExpressionConfigAttribute
-import grails.util.Holders
+import static grails.web.http.HttpHeaders.ACCEPT_VERSION
 
-import grails.core.GrailsApplication
 import org.grails.web.mime.HttpServletResponseExtension
-import grails.web.mapping.UrlMapping
-import grails.web.mapping.UrlMappingInfo
-import grails.web.mapping.UrlMappingsHolder
-import grails.web.http.HttpHeaders
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -33,198 +27,191 @@ import org.springframework.security.access.AccessDecisionVoter
 import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.expression.SecurityExpressionHandler
-import grails.config.Config;
-import org.grails.config.PropertySourcesConfig
+
+import grails.core.GrailsApplication
+import grails.plugin.springsecurity.web.access.expression.WebExpressionConfigAttribute
+import grails.util.Holders
+import grails.web.mapping.UrlMapping
+import grails.web.mapping.UrlMappingInfo
+import grails.web.mapping.UrlMappingsHolder
 
 /**
- * Helper methods in Groovy.
+ * Helper methods that use dynamic Groovy.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 class ReflectionUtils {
 
-    private static final Logger log = LoggerFactory.getLogger(this)
+	private static final Logger log = LoggerFactory.getLogger(this)
 
-    // set at startup
-    static GrailsApplication application
+	// set at startup
+	static GrailsApplication application
 
-    private ReflectionUtils() {
-        // static only
-    }
+	private ReflectionUtils() {
+		// static only
+	}
 
-    static getConfigProperty(String name) {
-        def value = SpringSecurityUtils.securityConfig
-        for (String part in name.split('\\.')) {
-            value = value."$part"
-        }
-        value
-    }
+	static Object getConfigProperty(String name) {
+		def value = SpringSecurityUtils.securityConfig
+		name.split('\\.').each { String part -> value = value."$part" }
+		value
+	}
 
-    static void setConfigProperty(String name, value) {
-        def config = SpringSecurityUtils.securityConfig
-        def parts = name.split('\\.') as List
-        name = parts.remove(parts.size() - 1)
+	static void setConfigProperty(String name, value) {
+		def config = SpringSecurityUtils.securityConfig
 
-        for (String part in parts) {
-            config = config."$part"
-        }
+		List parts = name.split('\\.')
+		name = parts.remove(parts.size() - 1)
 
-        config."$name" = value
-    }
+		parts.each { String part -> config = config."$part" }
 
-    static String getRoleAuthority(role) {
-        lookupPropertyValue role, 'authority.nameField'
-    }
+		config."$name" = value
+	}
 
-    static String getRequestmapUrl(requestmap) {
-        lookupPropertyValue requestmap, 'requestMap.urlField'
-    }
+	static String getRoleAuthority(role) {
+		lookupPropertyValue role, 'authority.nameField'
+	}
 
-    static String getRequestmapConfigAttribute(requestmap) {
-        lookupPropertyValue requestmap, 'requestMap.configAttributeField'
-    }
+	static String getRequestmapUrl(requestmap) {
+		lookupPropertyValue requestmap, 'requestMap.urlField'
+	}
 
-    static HttpMethod getRequestmapHttpMethod(requestmap) {
-        lookupPropertyValue requestmap, 'requestMap.httpMethodField'
-    }
+	static String getRequestmapConfigAttribute(requestmap) {
+		lookupPropertyValue requestmap, 'requestMap.configAttributeField'
+	}
 
-    static List loadAllRequestmaps() {
-        def clazz = getRequestMapClass()
-        clazz.withTransaction {
-            clazz.list()
-        }
-    }
+	static HttpMethod getRequestmapHttpMethod(requestmap) {
+		lookupPropertyValue requestmap, 'requestMap.httpMethodField'
+	}
 
-    static boolean requestmapClassSupportsHttpMethod() {
-        String httpMethodField = SpringSecurityUtils.securityConfig.requestMap.httpMethodField
-        if (!httpMethodField) return false
+	static List loadAllRequestmaps() {
+		Class Requestmap = requestMapClass
+		Requestmap.withTransaction {
+			Requestmap.list()
+		}
+	}
 
-        getRequestMapClass().metaClass.getProperties().find { MetaProperty p -> p.name == httpMethodField }
-    }
+	static boolean requestmapClassSupportsHttpMethod() {
+		String httpMethodField = SpringSecurityUtils.securityConfig.requestMap.httpMethodField
+		if (!httpMethodField) return false
 
-    static Class getRequestMapClass() {
-        String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
-        if (!requestMapClassName) {
-            throw new IllegalStateException(
-					"Cannot load Requestmaps; 'requestMap.className' property is not specified")
-        }
-        def Requestmap = getApplication().getClassForName(requestMapClassName)
-        if (!Requestmap) {
-            throw new IllegalStateException(
-					"Cannot load Requestmaps; 'requestMap.className' property '$requestMapClassName' is invalid")
-        }
-        Requestmap
-    }
+		requestMapClass.metaClass.properties.find { MetaProperty p -> p.name == httpMethodField }
+	}
 
-    static List asList(o) { o ? o as List : [] }
+	static Class getRequestMapClass() {
+		String className = SpringSecurityUtils.securityConfig.requestMap.className ?: ''
+		assert className, "Cannot load Requestmaps; 'requestMap.className' property is not specified"
 
-    static ConfigObject getSecurityConfig() {
-        def grailsConfig = getApplication().config
-        if (grailsConfig.grails.plugins.springsecurity) {
-            log.error "Your security configuration settings use the old prefix 'grails.plugins.springsecurity' but must now use 'grails.plugin.springsecurity'"
-        }
-        grailsConfig.grails.plugin.springsecurity
-    }
+		Class Requestmap = getApplication().getClassForName(className)
+		assert Requestmap, "Cannot load Requestmaps; 'requestMap.className' property '$className' is invalid"
 
-    static void setSecurityConfig(ConfigObject c) { getApplication().config.grails.plugin.springsecurity = c }
+		Requestmap
+	}
 
-    static List<InterceptedUrl> splitMap(Map<String, Object> m, boolean expressions = true) {
-        List<InterceptedUrl> split = []
-        m.each { String key, value ->
-            List tokens
-            if (value instanceof Collection || value.getClass().array) {
-                tokens = value*.toString()
-            }
-            else { // String/GString
-                tokens = [value.toString()]
-            }
-            split << new InterceptedUrl(key, null, ReflectionUtils.buildConfigAttributes(tokens, expressions))
-        }
-        split
-    }
+	static List asList(o) { o ? o as List : [] }
 
-    // TODO doc List<Map> keys are pattern, access, httpMethod
-    static List<InterceptedUrl> splitMap(List<Map<String, Object>> map) {
-        List<InterceptedUrl> split = []
+	static ConfigObject getSecurityConfig() {
+		def grailsConfig = getApplication().config
+		if (grailsConfig.grails.plugins.springsecurity) {
+			log.error "Your security configuration settings use the old prefix 'grails.plugins.springsecurity' but must now use 'grails.plugin.springsecurity'"
+		}
+		grailsConfig.grails.plugin.springsecurity
+	}
 
-        for (Map<String, Object> row : map) {
+	static void setSecurityConfig(ConfigObject c) { getApplication().config.grails.plugin.springsecurity = c }
 
-            List tokens
-            def value = row.access
-            if (value instanceof Collection || value.getClass().array) {
-                tokens = value*.toString()
-            }
-            else { // String/GString
-                tokens = [value.toString()]
-            }
+	static List<InterceptedUrl> splitMap(Map<String, Object> m, boolean expressions = true) {
+		m.collect { String key, value ->
+			List tokens
+			if (value instanceof Collection || value.getClass().array) {
+				tokens = value*.toString()
+			}
+			else { // String/GString
+				tokens = [value.toString()]
+			}
+			new InterceptedUrl(key, null, buildConfigAttributes(tokens, expressions))
+		}
+	}
 
-            def httpMethod = row.httpMethod
-            if (httpMethod instanceof CharSequence) {
-                httpMethod = HttpMethod.valueOf(httpMethod)
-            }
+	// TODO doc List<Map> keys are pattern, access, httpMethod
+	static List<InterceptedUrl> splitMap(List<Map<String, Object>> map) {
+		map.collect { Map<String, Object> row ->
 
-            split << new InterceptedUrl(row.pattern, tokens, httpMethod)
-        }
+			List tokens
+			def value = row.access
+			if (value instanceof Collection || value.getClass().array) {
+				tokens = value*.toString()
+			}
+			else { // String/GString
+				tokens = [value.toString()]
+			}
 
-        split
-    }
+			def httpMethod = row.httpMethod
+			if (httpMethod instanceof CharSequence) {
+				httpMethod = HttpMethod.valueOf(httpMethod)
+			}
 
-    static Collection<ConfigAttribute> buildConfigAttributes(Collection<String> tokens, boolean expressions = true) {
-        Collection<ConfigAttribute> configAttributes = new LinkedHashSet<ConfigAttribute>()
+			new InterceptedUrl(row.pattern, tokens, httpMethod)
+		}
+	}
 
-        def ctx = getApplication().mainContext
-        SecurityExpressionHandler expressionHandler = ctx.getBean('webExpressionHandler')
-        AccessDecisionVoter roleVoter = ctx.getBean('roleVoter')
-        AccessDecisionVoter authenticatedVoter = ctx.getBean('authenticatedVoter')
+	static Collection<ConfigAttribute> buildConfigAttributes(Collection<String> tokens, boolean expressions = true) {
+		Collection<ConfigAttribute> configAttributes = [] as Set
 
-        for (String token : tokens) {
-            ConfigAttribute config = new SecurityConfig(token)
-            boolean supports = !expressions || token.startsWith('RUN_AS') || token.startsWith('SCOPE') || supports(config, roleVoter) || supports(config, authenticatedVoter)
-            if (supports) {
-                configAttributes << config
-            }
-            else {
-                try {
-                    Expression expression = expressionHandler.expressionParser.parseExpression(token)
-                    configAttributes << new WebExpressionConfigAttribute(expression)
-                }
-                catch (ParseException e) {
-                    log.error "\nError parsing expression '$token': $e.message\n", e
-                    throw e
-                }
-            }
-        }
+		def ctx = getApplication().mainContext
+		SecurityExpressionHandler expressionHandler = ctx.getBean('webExpressionHandler')
+		AccessDecisionVoter roleVoter = ctx.getBean('roleVoter')
+		AccessDecisionVoter authenticatedVoter = ctx.getBean('authenticatedVoter')
 
-        configAttributes
-    }
-    static String getGrailsServerURL() {
-        getApplication().config.grails.serverURL ? application.config?.grails?.serverURL?.toString() : null
-    }
-    private static boolean supports(ConfigAttribute config, AccessDecisionVoter<?> voter) {
-        voter.supports(config)
-    }
+		for (String token in tokens) {
+			ConfigAttribute config = new SecurityConfig(token)
+			boolean supports = !expressions || token.startsWith('RUN_AS') || token.startsWith('SCOPE') ||
+			                   supports(config, roleVoter) || supports(config, authenticatedVoter)
+			if (supports) {
+				configAttributes << config
+			}
+			else {
+				try {
+					Expression expression = expressionHandler.expressionParser.parseExpression(token)
+					configAttributes << new WebExpressionConfigAttribute(expression)
+				}
+				catch (ParseException e) {
+					log.error "\nError parsing expression '$token': $e.message\n", e
+					throw e
+				}
+			}
+		}
 
-    private static lookupPropertyValue(o, String name) {
-        o."${getConfigProperty(name)}"
-    }
+		configAttributes
+	}
 
-    private static GrailsApplication getApplication() {
-        if (!application) {
-            application = Holders.grailsApplication
-        }
-        application
-    }
+	static String getGrailsServerURL() {
+		getApplication().config.grails.serverURL ?: null
+	}
 
-    // Grails 2.3+ only
-    static UrlMappingInfo[] matchAllUrlMappings(UrlMappingsHolder urlMappingsHolder, String requestUrl, GrailsWebRequest grailsRequest,
-        HttpServletResponseExtension responseMimeTypesApi) {
-        String method = grailsRequest.currentRequest.method
-        String version = grailsRequest.getHeader(HttpHeaders.ACCEPT_VERSION) ?: responseMimeTypesApi.getMimeTypeForRequest(grailsRequest).version
-        urlMappingsHolder.matchAll requestUrl, method, version == null ? UrlMapping.ANY_VERSION : version
-    }
+	private static boolean supports(ConfigAttribute config, AccessDecisionVoter<?> voter) {
+		voter.supports config
+	}
 
-    // Grails 2.3+ only
-    static boolean isRedirect(UrlMappingInfo mapping) {
-        mapping.redirectInfo
-    }
+	private static lookupPropertyValue(o, String name) {
+		o."${getConfigProperty(name)}"
+	}
+
+	private static GrailsApplication getApplication() {
+		if (!application) {
+			application = Holders.grailsApplication
+		}
+		application
+	}
+
+	static UrlMappingInfo[] matchAllUrlMappings(UrlMappingsHolder urlMappingsHolder, String requestUrl,
+	                                            GrailsWebRequest grailsRequest, HttpServletResponseExtension extension) {
+		String method = grailsRequest.currentRequest.method
+		String version = grailsRequest.getHeader(ACCEPT_VERSION) ?: extension.getMimeTypeForRequest(grailsRequest).version
+		urlMappingsHolder.matchAll requestUrl, method, version == null ? UrlMapping.ANY_VERSION : version
+	}
+
+	static boolean isRedirect(UrlMappingInfo mapping) {
+		mapping.redirectInfo
+	}
 }

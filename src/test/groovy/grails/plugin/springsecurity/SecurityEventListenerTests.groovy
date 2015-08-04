@@ -54,7 +54,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		closures.onInteractiveAuthenticationSuccessEvent = { e, appCtx -> called = true }
 
 		listener.onApplicationEvent(new InteractiveAuthenticationSuccessEvent(
-				new TestingAuthenticationToken("", ""), getClass()))
+				new TestingAuthenticationToken('', ''), getClass()))
 
 		assert called
 	}
@@ -68,7 +68,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		closures.onAbstractAuthenticationFailureEvent = { e, appCtx -> called = true }
 
 		listener.onApplicationEvent new AuthenticationFailureBadCredentialsEvent(
-				new TestingAuthenticationToken("", ""), new BadCredentialsException('bad credentials'))
+				new TestingAuthenticationToken('', ''), new BadCredentialsException('bad credentials'))
 
 		assert called
 	}
@@ -82,7 +82,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 		closures.onAuthenticationSuccessEvent = { e, appCtx -> called = true }
 
 		listener.onApplicationEvent(new AuthenticationSuccessEvent(
-				new TestingAuthenticationToken("", "")))
+				new TestingAuthenticationToken('', '')))
 
 		assert called
 	}

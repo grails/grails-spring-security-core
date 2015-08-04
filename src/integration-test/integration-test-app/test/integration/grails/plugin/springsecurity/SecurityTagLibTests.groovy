@@ -53,10 +53,10 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		String body = 'the_content'
 
 		authenticate 'role1'
-		assertOutputEquals '', "<sec:ifAllGranted roles='role1,role2'>${body}</sec:ifAllGranted>"
+		assertOutputEquals '', "<sec:ifAllGranted roles='role1,role2'>$body</sec:ifAllGranted>"
 
 		authenticate 'role2,role1'
-		assertOutputEquals body, "<sec:ifAllGranted roles='role1,role2'>${body}</sec:ifAllGranted>"
+		assertOutputEquals body, "<sec:ifAllGranted roles='role1,role2'>$body</sec:ifAllGranted>"
 	}
 
 	/**
@@ -66,10 +66,10 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		String body = 'the_content'
 
 		authenticate 'role1'
-		assertOutputEquals '', "<sec:ifNotGranted roles='role1,role2'>${body}</sec:ifNotGranted>"
+		assertOutputEquals '', "<sec:ifNotGranted roles='role1,role2'>$body</sec:ifNotGranted>"
 
 		authenticate 'role3'
-		assertOutputEquals body, "<sec:ifNotGranted roles='role1,role2'>${body}</sec:ifNotGranted>"
+		assertOutputEquals body, "<sec:ifNotGranted roles='role1,role2'>$body</sec:ifNotGranted>"
 	}
 
 	/**
@@ -79,10 +79,10 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		String body = 'the_content'
 
 		authenticate 'role3'
-		assertOutputEquals '', "<sec:ifAnyGranted roles='role1,role2'>${body}</sec:ifAnyGranted>"
+		assertOutputEquals '', "<sec:ifAnyGranted roles='role1,role2'>$body</sec:ifAnyGranted>"
 
 		authenticate 'role2'
-		assertOutputEquals body, "<sec:ifAnyGranted roles='role1,role2'>${body}</sec:ifAnyGranted>"
+		assertOutputEquals body, "<sec:ifAnyGranted roles='role1,role2'>$body</sec:ifAnyGranted>"
 	}
 
 	/**
@@ -91,10 +91,10 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	void testIfLoggedInTrue() {
 		String body = 'the_content'
 
-		assertOutputEquals '', "<sec:ifLoggedIn roles='role1,role2'>${body}</sec:ifLoggedIn>"
+		assertOutputEquals '', "<sec:ifLoggedIn roles='role1,role2'>$body</sec:ifLoggedIn>"
 
 		authenticate 'role1'
-		assertOutputEquals body, "<sec:ifLoggedIn roles='role1,role2'>${body}</sec:ifLoggedIn>"
+		assertOutputEquals body, "<sec:ifLoggedIn roles='role1,role2'>$body</sec:ifLoggedIn>"
 	}
 
 	/**
@@ -103,10 +103,10 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	void testIfNotLoggedIn() {
 		String body = 'the_content'
 
-		assertOutputEquals body, "<sec:ifNotLoggedIn roles='role1,role2'>${body}</sec:ifNotLoggedIn>"
+		assertOutputEquals body, "<sec:ifNotLoggedIn roles='role1,role2'>$body</sec:ifNotLoggedIn>"
 
 		authenticate 'role1'
-		assertOutputEquals '', "<sec:ifNotLoggedIn roles='role1,role2'>${body}</sec:ifNotLoggedIn>"
+		assertOutputEquals '', "<sec:ifNotLoggedIn roles='role1,role2'>$body</sec:ifNotLoggedIn>"
 	}
 
 	/**
@@ -166,60 +166,62 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 	void testSwitched() {
 		String body = 'the_content'
 
-		assertOutputEquals body, "<sec:ifNotSwitched>${body}</sec:ifNotSwitched>"
-		assertOutputEquals '', "<sec:ifSwitched>${body}</sec:ifSwitched>"
+		assertOutputEquals body, "<sec:ifNotSwitched>$body</sec:ifNotSwitched>"
+		assertOutputEquals '', "<sec:ifSwitched>$body</sec:ifSwitched>"
 
 		authenticate 'role1'
-		assertOutputEquals body, "<sec:ifNotSwitched>${body}</sec:ifNotSwitched>"
-		assertOutputEquals '', "<sec:ifSwitched>${body}</sec:ifSwitched>"
+		assertOutputEquals body, "<sec:ifNotSwitched>$body</sec:ifNotSwitched>"
+		assertOutputEquals '', "<sec:ifSwitched>$body</sec:ifSwitched>"
 
 		switchUser()
 
-		assertOutputEquals body, "<sec:ifSwitched>${body}</sec:ifSwitched>"
-		assertOutputEquals '', "<sec:ifNotSwitched>${body}</sec:ifNotSwitched>"
+		assertOutputEquals body, "<sec:ifSwitched>$body</sec:ifSwitched>"
+		assertOutputEquals '', "<sec:ifNotSwitched>$body</sec:ifNotSwitched>"
 	}
 
 	void testSwitchedUserOriginalUsername() {
-		assertOutputEquals '', "<sec:switchedUserOriginalUsername/>"
+		assertOutputEquals '', '<sec:switchedUserOriginalUsername/>'
 		authenticate 'role1'
-		assertOutputEquals '', "<sec:switchedUserOriginalUsername/>"
+		assertOutputEquals '', '<sec:switchedUserOriginalUsername/>'
 
 		switchUser()
 
-		assertOutputEquals 'username1', "<sec:switchedUserOriginalUsername/>"
+		assertOutputEquals 'username1', '<sec:switchedUserOriginalUsername/>'
 	}
 
 	void testAccess() {
 		String body = 'the_content'
 
 		authenticate ''
-		assertOutputEquals '', """<sec:access expression="hasRole('role1')">${body}</sec:access>"""
-		assertOutputEquals body, """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
+		assertOutputEquals '', """<sec:access expression="hasRole('role1')">$body</sec:access>"""
+		assertOutputEquals body, """<sec:noAccess expression="hasRole('role1')">$body</sec:noAccess>"""
 
 		authenticate 'role1'
-		assertOutputEquals body, """<sec:access expression="hasRole('role1')">${body}</sec:access>"""
-		assertOutputEquals '', """<sec:noAccess expression="hasRole('role1')">${body}</sec:noAccess>"""
+		assertOutputEquals body, """<sec:access expression="hasRole('role1')">$body</sec:access>"""
+		assertOutputEquals '', """<sec:noAccess expression="hasRole('role1')">$body</sec:noAccess>"""
 	}
 
 	void testLinkViaExpression() {
-		String body = "Test link"
+		String body = 'Test link'
 
-		assertOutputEquals '', """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
+		assertOutputEquals '', """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">$body</sec:link>"""
 
 		authenticate 'role1'
-		assertOutputEquals "test", """<sec:access expression="hasRole('role1')">test</sec:access>"""
-		assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">${body}</sec:link>"""
+		assertOutputEquals 'test', """<sec:access expression="hasRole('role1')">test</sec:access>"""
+		assertOutputEquals """<a href="/testController/testAction">$body</a>""",
+		                   """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">$body</sec:link>"""
 	}
 
 	@groovy.transform.NotYetImplemented
 	void testLinkViaUrl() {
-		String body = "Test link"
+		String body = 'Test link'
 
 		assertOutputEquals '', """<sec:link controller="testController" action="testAction"></sec:link>"""
 
 		// role 'roleInMap' mapped to controller via interceptUrlMap in Config.groovy
 		authenticate 'roleInMap'
-		assertOutputEquals """<a href="/testController/testAction">${body}</a>""", """<sec:link controller="testController" action="testAction">${body}</sec:link>"""
+		assertOutputEquals """<a href="/testController/testAction">$body</a>""",
+		                   """<sec:link controller="testController" action="testAction">$body</sec:link>"""
 	}
 
 	private void switchUser() {

@@ -171,7 +171,7 @@ class SpringSecurityUtilsIntegrationTests {
 					assert username == springSecurityService.principal.username
 				}
 
-				assert !springSecurityService.loggedIn, "should have reset auth"
+				assert !springSecurityService.loggedIn, 'should have reset auth'
 			}
 			catch (Throwable e) {
 				otherException = e
@@ -180,7 +180,7 @@ class SpringSecurityUtilsIntegrationTests {
 		if (otherException) {
 			throw otherException
 		}
-		assert springSecurityService.loggedIn, "should still be authenticated in main thread"
+		assert springSecurityService.loggedIn, 'should still be authenticated in main thread'
 	}
 
 	void testDoWithAuth_NewAuth() {
@@ -197,7 +197,7 @@ class SpringSecurityUtilsIntegrationTests {
 					assert username == springSecurityService.principal.username
 				}
 
-				assert !springSecurityService.loggedIn, "should have reset auth"
+				assert !springSecurityService.loggedIn, 'should have reset auth'
 			}
 			catch (Throwable e) {
 				otherException=e
@@ -207,7 +207,7 @@ class SpringSecurityUtilsIntegrationTests {
 			throw otherException
 		}
 
-		assert !springSecurityService.loggedIn, "should still be unauthenticated in main thread"
+		assert !springSecurityService.loggedIn, 'should still be unauthenticated in main thread'
 	}
 
 	void testDoWithAuth_NewAuth_WithExisting() {
@@ -226,7 +226,7 @@ class SpringSecurityUtilsIntegrationTests {
 					assert 'other' == springSecurityService.principal.username
 				}
 
-				assert !springSecurityService.loggedIn, "should have reset auth"
+				assert !springSecurityService.loggedIn, 'should have reset auth'
 			}
 			catch (Throwable e) {
 				otherException = e

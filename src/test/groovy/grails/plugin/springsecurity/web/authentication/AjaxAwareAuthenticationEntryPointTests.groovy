@@ -14,13 +14,13 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
+import org.springframework.mock.web.MockHttpServletRequest
+import org.springframework.mock.web.MockHttpServletResponse
+
 import grails.plugin.springsecurity.FakeApplication
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
 
 /**
  * Unit tests for WithAjaxAuthenticationProcessingFilterEntryPoint.

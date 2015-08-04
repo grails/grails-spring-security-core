@@ -14,9 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
-
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
@@ -26,6 +23,8 @@ import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
 import org.springframework.web.filter.GenericFilterBean
 
+import grails.test.mixin.TestMixin
+import grails.test.mixin.support.GrailsUnitTestMixin
 import spock.lang.Specification
 
 @TestMixin(GrailsUnitTestMixin)

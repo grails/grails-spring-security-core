@@ -214,7 +214,7 @@ class StaticSecuritySpec extends AbstractSecuritySpec {
 			go 'secureClassAnnotated/admin2'
 
 		then:
-			assertContentContains "admin2: you have ROLE_ADMIN2"
+			assertContentContains 'admin2: you have ROLE_ADMIN2'
 
 		when:
 			go 'secureAnnotated/expression'
@@ -271,7 +271,7 @@ class StaticSecuritySpec extends AbstractSecuritySpec {
 			go 'secureClassAnnotated/admin2'
 
 		then:
-			assertContentContains "admin2: you have ROLE_ADMIN2"
+			assertContentContains 'admin2: you have ROLE_ADMIN2'
 
 		when:
 			go 'secureAnnotated/expression'

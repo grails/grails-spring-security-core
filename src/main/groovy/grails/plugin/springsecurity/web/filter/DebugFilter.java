@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.filter;
 
-import grails.util.GrailsUtil;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -37,6 +35,8 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.UrlUtils;
 import org.springframework.web.filter.GenericFilterBean;
+
+import grails.util.GrailsUtil;
 
 /**
  * Based on the package-scope org.springframework.security.config.debug.DebugFilter.

@@ -14,14 +14,13 @@
  */
 package grails.plugin.springsecurity
 
-import grails.plugin.springsecurity.userdetails.GrailsUser
-import grails.transaction.Transactional
-
 import javax.servlet.http.HttpServletRequest
 
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder as SCH
-import org.springframework.util.Assert
+
+import grails.plugin.springsecurity.userdetails.GrailsUser
+import grails.transaction.Transactional
 
 /**
  * Utility methods.
@@ -38,7 +37,7 @@ class SpringSecurityService {
 	/** dependency injection for grailsApplication */
 	def grailsApplication
 
-	/** dependency injection for {@link FilterInvocationSecurityMetadataSource} */
+	/** dependency injection for {@link org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource} */
 	def objectDefinitionSource
 
 	/** dependency injection for the password encoder */
@@ -116,7 +115,7 @@ class SpringSecurityService {
 		}
 
 		// load() requires an id, so this only works if there's an id property in the principal
-		Assert.isInstanceOf GrailsUser, principal
+		assert principal instanceof GrailsUser
 
 		getClassForName(securityConfig.userLookup.userDomainClassName).load(currentUserId)
 	}
@@ -177,8 +176,8 @@ class SpringSecurityService {
 			def requestmaps = findRequestmapsByRole(roleName, conf)
 			for (rm in requestmaps) {
 				String configAttribute = rm."$configAttributePropertyName"
-				if (configAttribute.equals(roleName)) {
-					rm.delete(flush: true)
+				if (configAttribute == roleName) {
+					rm.delete()
 				}
 				else {
 					List parts = configAttribute.split(',')*.trim()
@@ -192,7 +191,7 @@ class SpringSecurityService {
 		// remove the role grant from all users
 		getClassForName(conf.userLookup.authorityJoinClassName).removeAll role
 
-		role.delete(flush: true)
+		role.delete()
 	}
 
 	/**
@@ -212,8 +211,7 @@ class SpringSecurityService {
 		String oldRoleName = role."$authorityFieldName"
 		role.properties = newProperties
 
-		role.save()
-		if (role.hasErrors()) {
+		if (!role.save()) {
 			return false
 		}
 

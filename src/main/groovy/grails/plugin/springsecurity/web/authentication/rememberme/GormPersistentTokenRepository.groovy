@@ -14,15 +14,15 @@
  */
 package grails.plugin.springsecurity.web.authentication.rememberme
 
-import grails.gorm.DetachedCriteria
-import grails.plugin.springsecurity.SpringSecurityUtils
-
-import grails.core.GrailsApplication
-import grails.core.support.GrailsApplicationAware
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
+
+import grails.core.GrailsApplication
+import grails.core.support.GrailsApplicationAware
+import grails.gorm.DetachedCriteria
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * GORM-based PersistentTokenRepository implementation, based on {@link JdbcTokenRepositoryImpl}.
@@ -33,7 +33,7 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 
 	protected final Logger log = LoggerFactory.getLogger(getClass())
 
-	/** Dependency injection for grailsApplication */
+	/** Dependency injection for grailsApplication. */
 	GrailsApplication grailsApplication
 
 	void createNewToken(PersistentRememberMeToken token) {
@@ -60,8 +60,7 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 			return null
 		}
 
-		return new PersistentRememberMeToken(persistentToken.username, persistentToken.series,
-				persistentToken.token, persistentToken.lastUsed)
+		new PersistentRememberMeToken(persistentToken.username, persistentToken.series, persistentToken.token, persistentToken.lastUsed)
 	}
 
 	void removeUserTokens(String username) {
@@ -90,9 +89,9 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 		def conf = SpringSecurityUtils.securityConfig
 		String domainClassName = conf.rememberMe.persistentToken.domainClassName ?: ''
 		def clazz = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
-                Class.forName(domainClassName) : grailsApplication.getClassForName(domainClassName)
+			Class.forName(domainClassName) : grailsApplication.getClassForName(domainClassName)
 		if (!clazz) {
-			log.error "Persistent token class not found: '$domainClassName'"
+			log.error "Persistent token class not found: '{}'", domainClassName
 		}
 		clazz
 	}

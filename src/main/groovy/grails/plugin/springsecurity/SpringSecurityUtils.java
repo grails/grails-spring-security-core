@@ -14,14 +14,6 @@
  */
 package grails.plugin.springsecurity;
 
-import grails.plugin.springsecurity.web.SecurityRequestHolder;
-import grails.plugin.springsecurity.web.filter.DebugFilter;
-import grails.util.Environment;
-import groovy.lang.Closure;
-import groovy.lang.GroovyClassLoader;
-import groovy.util.ConfigObject;
-import groovy.util.ConfigSlurper;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -41,7 +33,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringEscapeUtils;
-import grails.core.GrailsApplication;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -61,6 +52,15 @@ import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import grails.core.GrailsApplication;
+import grails.plugin.springsecurity.web.SecurityRequestHolder;
+import grails.plugin.springsecurity.web.filter.DebugFilter;
+import grails.util.Environment;
+import groovy.lang.Closure;
+import groovy.lang.GroovyClassLoader;
+import groovy.util.ConfigObject;
+import groovy.util.ConfigSlurper;
 
 /**
  * Helper methods.
@@ -83,14 +83,12 @@ public final class SpringSecurityUtils {
 	public static final String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST"; // TODO use requestCache
 
 	// UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY is deprecated
-   public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
+	public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
 
-   // AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
-   public static final String DEFAULT_TARGET_PARAMETER = "spring-security-redirect";
+	// AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
+	public static final String DEFAULT_TARGET_PARAMETER = "spring-security-redirect";
 
-	/**
-	 * Default value for the name of the Ajax header.
-	 */
+	/** Default value for the name of the Ajax header. */
 	public static final String AJAX_HEADER = "X-Requested-With";
 
 	/**
@@ -124,8 +122,8 @@ public final class SpringSecurityUtils {
 			String authorityName = ((GrantedAuthority)authority).getAuthority();
 			if (null == authorityName) {
 				throw new IllegalArgumentException(
-						"Cannot process GrantedAuthority objects which return null " +
-						"from getAuthority() - attempting to process " + authority);
+					"Cannot process GrantedAuthority objects which return null " +
+					"from getAuthority() - attempting to process " + authority);
 			}
 			roles.add(authorityName);
 		}
@@ -196,7 +194,7 @@ public final class SpringSecurityUtils {
 	 */
 	public static boolean ifAllGranted(final String roles) {
 		return ifAllGranted(parseAuthoritiesString(roles));
- 	}
+	}
 
 	public static boolean ifAllGranted(final Collection<? extends GrantedAuthority> roles) {
 		Set<String> inferredNames = authoritiesToRoles(findInferredAuthorities(getPrincipalAuthorities()));
@@ -324,7 +322,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a provider bean name.
-	 * 
+	 *
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the provider
@@ -343,7 +341,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a logout handler bean name.
-	 * 
+	 *
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the handler
@@ -362,7 +360,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register an AfterInvocationProvider bean name.
-	 * 
+	 *
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the provider
@@ -381,7 +379,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a voter bean name.
-	 * 
+	 *
 	 * Note - only for use by plugins during bean building.
 	 *
 	 * @param beanName the Spring bean name of the voter
@@ -400,7 +398,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter bean name in a specified position in the chain.
-	 * 
+	 *
 	 * Note - only for use by plugins during bean building - to register at runtime
 	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
 	 *
@@ -413,7 +411,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter bean name in a specified position in the chain.
-	 * 
+	 *
 	 * Note - only for use by plugins during bean building - to register at runtime
 	 * (preferably in BootStrap) use <code>clientRegisterFilter</code>.
 	 *
@@ -424,8 +422,8 @@ public final class SpringSecurityUtils {
 		String oldName = getOrderedFilters().get(order);
 		if (oldName != null) {
 			throw new IllegalArgumentException("Cannot register filter '" + beanName +
-					"' at position " + order + "; '" + oldName +
-					"' is already registered in that position");
+				"' at position " + order + "; '" + oldName +
+				"' is already registered in that position");
 		}
 		getOrderedFilters().put(order, beanName);
 	}
@@ -440,7 +438,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter in a specified position in the chain.
-	 * 
+	 *
 	 * Note - this is for use in application code after the plugin has initialized,
 	 * e.g. in BootStrap where you want to register a custom filter in the correct
 	 * order without dealing with the existing configured filters.
@@ -454,7 +452,7 @@ public final class SpringSecurityUtils {
 
 	/**
 	 * Register a filter in a specified position in the chain.
-	 * 
+	 *
 	 * Note - this is for use in application code after the plugin has initialized,
 	 * e.g. in BootStrap where you want to register a custom filter in the correct
 	 * order without dealing with the existing configured filters.
@@ -468,8 +466,8 @@ public final class SpringSecurityUtils {
 
 		Filter oldFilter = orderedFilters.get(order);
 		if (oldFilter != null) {
-			throw new IllegalArgumentException("Cannot register filter '" + beanName + "' at position " + order + "; '"
-					+ oldFilter + "' is already registered in that position");
+			throw new IllegalArgumentException("Cannot register filter '" + beanName + "' at position " + order + "; '" +
+				oldFilter + "' is already registered in that position");
 		}
 
 		Filter filter = getBean(beanName);
@@ -479,7 +477,7 @@ public final class SpringSecurityUtils {
 
 		Map<RequestMatcher, List<Filter>> filterChainMap = filterChain.getFilterChainMap();
 		Map<RequestMatcher, List<Filter>> fixedFilterChainMap = mergeFilterChainMap(orderedFilters, filter, order,
-				filterChainMap);
+			filterChainMap);
 
 		filterChain.setFilterChainMap(fixedFilterChainMap);
 	}
@@ -506,8 +504,8 @@ public final class SpringSecurityUtils {
 		for (Entry<RequestMatcher, List<Filter>> entry : filterChainMap.entrySet()) {
 			List<Filter> filters = new ArrayList<Filter>(entry.getValue());
 			int indexOfFilterBeforeTargetFilter = 0;
-			while (indexOfFilterBeforeTargetFilter < filters.size()
-					&& filterToPosition.get(filters.get(indexOfFilterBeforeTargetFilter)) < order) {
+			while (indexOfFilterBeforeTargetFilter < filters.size() &&
+			       filterToPosition.get(filters.get(indexOfFilterBeforeTargetFilter)) < order) {
 				indexOfFilterBeforeTargetFilter++;
 			}
 			filters.add(indexOfFilterBeforeTargetFilter, filter);
@@ -568,7 +566,7 @@ public final class SpringSecurityUtils {
 	/**
 	 * Rebuild an Authentication for the given username and register it in the security context.
 	 * Typically used after updating a user's authorities or other auth-cached info.
-	 * 
+	 *
 	 * Also removes the user from the user cache to force a refresh at next login.
 	 *
 	 * @param username the user's login name
@@ -580,7 +578,7 @@ public final class SpringSecurityUtils {
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 		SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(
-				userDetails, password == null ? userDetails.getPassword() : password, userDetails.getAuthorities()));
+			userDetails, password == null ? userDetails.getPassword() : password, userDetails.getAuthorities()));
 		userCache.removeUserFromCache(username);
 	}
 
@@ -599,7 +597,7 @@ public final class SpringSecurityUtils {
 			SecurityContext securityContext = null;
 			if (httpSession != null) {
 				securityContext = (SecurityContext)httpSession.getAttribute(
-						HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
+					HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY);
 				if (securityContext != null) {
 					SecurityContextHolder.setContext(securityContext);
 					set = true;
@@ -620,7 +618,7 @@ public final class SpringSecurityUtils {
 	/**
 	 * Authenticate as the specified user and execute the closure with that authentication. Restores
 	 * the authentication to the one that was active if it exists, or clears the context otherwise.
-	 * 
+	 *
 	 * This is similar to run-as and switch-user but is only local to a Closure.
 	 *
 	 * @param username the username to authenticate as

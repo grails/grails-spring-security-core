@@ -35,8 +35,8 @@ public final class SecurityRequestHolder {
 	 * Clear the saved request.
 	 */
 	public static void reset() {
-		REQUEST_HOLDER.set(null);
-		RESPONSE_HOLDER.set(null);
+		REQUEST_HOLDER.remove();
+		RESPONSE_HOLDER.remove();
 	}
 
 	/**

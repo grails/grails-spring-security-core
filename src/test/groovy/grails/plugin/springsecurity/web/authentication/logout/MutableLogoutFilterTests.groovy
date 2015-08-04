@@ -14,14 +14,14 @@
  */
 package grails.plugin.springsecurity.web.authentication.logout
 
-import grails.plugin.springsecurity.SecurityTestUtils
-
 import javax.servlet.FilterChain
 
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
+
+import grails.plugin.springsecurity.SecurityTestUtils
 
 /**
  * Unit tests for MutableLogoutFilter.

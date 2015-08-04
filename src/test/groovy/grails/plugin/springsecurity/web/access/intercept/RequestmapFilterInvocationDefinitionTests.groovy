@@ -14,13 +14,13 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import grails.plugin.springsecurity.InterceptedUrl
-import grails.plugin.springsecurity.SpringSecurityUtils
-
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.FilterInvocation
+
+import grails.plugin.springsecurity.InterceptedUrl
+import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
  * Unit tests for RequestmapFilterInvocationDefinition.

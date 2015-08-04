@@ -14,13 +14,13 @@
  */
 package grails.plugin.springsecurity
 
-import grails.plugin.springsecurity.web.access.intercept.TestApplication
-
-import grails.core.GrailsApplication
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
 import org.springframework.web.context.WebApplicationContext
+
+import grails.core.GrailsApplication
+import grails.plugin.springsecurity.web.access.intercept.TestApplication
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

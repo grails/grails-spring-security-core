@@ -64,52 +64,52 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		when:
 			to ListUserPage
 
-   	then:
-   		userRows.size() == 0
+		then:
+			userRows.size() == 0
 
-   	when:
-   		newUserButton.click()
+		when:
+			newUserButton.click()
 
-   	then:
-   		at CreateUserPage
+		then:
+			at CreateUserPage
 
-   	when:
-   		username = 'admin1'
-   		password = 'password1'
-   		$('#enabled').click()
+		when:
+			username = 'admin1'
+			password = 'password1'
+			$('#enabled').click()
 			$('#ROLE_ADMIN').click()
 			createButton.click()
 
-   	then:
-   		at ShowUserPage
+		then:
+			at ShowUserPage
 
-   	when:
-   		to ListUserPage
+		when:
+			to ListUserPage
 
-   	then:
-   		userRows.size() == 1
+		then:
+			userRows.size() == 1
 
-   	when:
-   		newUserButton.click()
+		when:
+			newUserButton.click()
 
-   	then:
-   		at CreateUserPage
+		then:
+			at CreateUserPage
 
-   	when:
+		when:
 			username = 'user1'
 			password = 'p4ssw0rd'
-   		$('#enabled').click()
+			$('#enabled').click()
 			$('#ROLE_USER').click()
-   		createButton.click()
+			createButton.click()
 
-   	then:
-   		at ShowUserPage
+		then:
+			at ShowUserPage
 
-   	when:
-   		to ListUserPage
+		when:
+			to ListUserPage
 
-   	then:
-   		userRows.size() == 2
+		then:
+			userRows.size() == 2
 	}
 
 	def 'secure page not visible without requestmap'() {
@@ -131,9 +131,9 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		when:
 			go 'testRequestmap/list?max=100'
 
-   	then:
-   		at ListRequestmapPage
-   		def initialSize = requestmapRows.size()
+		then:
+			at ListRequestmapPage
+			def initialSize = requestmapRows.size()
 		initialSize in [26,27]
 
 		when:
@@ -142,20 +142,20 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		then:
 			at CreateRequestmapPage
 
-   	when:
+		when:
 			$('form').url = '/secure'
 			configAttribute = 'ROLE_ADMIN'
 			createButton.click()
 
-   	then:
-   		at ShowRequestmapPage
+		then:
+			at ShowRequestmapPage
 
 		when:
 			go 'testRequestmap/list?max=100'
 
-   	then:
-   		at ListRequestmapPage
-   		requestmapRows.size() == initialSize + 1
+		then:
+			at ListRequestmapPage
+			requestmapRows.size() == initialSize + 1
 
 		when:
 			newRequestmapButton.click()

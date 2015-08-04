@@ -14,20 +14,11 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import grails.plugin.springsecurity.FakeApplication
-import grails.plugin.springsecurity.InterceptedUrl
-import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
-import grails.plugin.springsecurity.annotation.Secured
-import grails.web.CamelCaseUrlConverter
-
 import javax.servlet.ServletContext
 
 import org.grails.core.DefaultGrailsControllerClass
-import org.codehaus.groovy.grails.commons.GrailsClass
 import org.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.grails.web.mapping.DefaultUrlMappingsHolder
-import grails.web.mapping.UrlMappingInfo
-import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.HttpMethod
@@ -39,6 +30,15 @@ import org.springframework.security.access.SecurityConfig
 import org.springframework.security.web.FilterInvocation
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
+
+import grails.core.GrailsClass
+import grails.plugin.springsecurity.FakeApplication
+import grails.plugin.springsecurity.InterceptedUrl
+import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
+import grails.plugin.springsecurity.annotation.Secured
+import grails.web.CamelCaseUrlConverter
+import grails.web.mapping.UrlMappingInfo
+import grails.web.mapping.UrlMappingsHolder
 
 /**
  * Unit tests for AnnotationFilterInvocationDefinition.
@@ -155,17 +155,17 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 
 		def mappings = {
 
-			"/admin/user/$action?/$id?"(controller: "adminUser")
+			"/admin/user/$action?/$id?"(controller: 'adminUser')
 
-			"/$controller/$action?/$id?" { constraints {} }
+			"/$controller/$action?/$id?" {}
 
-			"/"(view:"/index")
+			"/"(view: '/index')
 
 			/**** Error Mappings ****/
 
-			"403"(controller: "errors", action: "accessDenied")
-			"404"(controller: "errors", action: "notFound")
-			"405"(controller: "errors", action: "notAllowed")
+			"403"(controller: 'errors', action: 'accessDenied')
+			"404"(controller: 'errors', action: 'notFound')
+			"405"(controller: 'errors', action: 'notAllowed')
 			"500"(view: '/error')
 		}
 
@@ -274,9 +274,9 @@ class MethodAnnotatedController {
 	def list() { [results: []] }
 
 	@Secured(closure = {
-	   assert request
-	   assert ctx
-	   authentication.name == 'admin1'
+		assert request
+		assert ctx
+		authentication.name == 'admin1'
 	})
 	def foo() { [results: []] }
 

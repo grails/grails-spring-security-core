@@ -30,7 +30,7 @@ import org.springframework.security.web.authentication.switchuser.Authentication
 /**
  * Registers as an event listener and delegates handling of security-related events
  * to optional closures defined in Config.groovy.
- * 
+ *
  * The following callbacks are supported:<br>
  * <ul>
  * <li>onInteractiveAuthenticationSuccessEvent</li>
@@ -45,7 +45,7 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  *    plugin {
  *       springsecurity {
  *          ...
- *          onAuthenticationSuccessEvent = { e, appCtx 
+ *          onAuthenticationSuccessEvent = { e, appCtx -&gt;
  *             ...
  *          }
  *       }
@@ -73,8 +73,6 @@ public class SecurityEventListener implements ApplicationListener<ApplicationEve
 				call(e, "onAuthenticationSuccessEvent");
 			}
 			else if (e instanceof AuthenticationSwitchUserEvent) {
-//				GrailsUser userInfo = (GrailsUser)event.getAuthentication().getPrincipal()
-//				UserDetails userDetails = event.getTargetUser()
 				call(e, "onAuthenticationSwitchUserEvent");
 			}
 		}

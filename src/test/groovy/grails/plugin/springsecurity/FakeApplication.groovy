@@ -14,9 +14,10 @@
  */
 package grails.plugin.springsecurity
 
-import grails.config.Config;
-import grails.core.DefaultGrailsApplication
 import org.grails.config.PropertySourcesConfig
+
+import grails.config.Config
+import grails.core.DefaultGrailsApplication
 
 /**
  * For testing only.
@@ -29,7 +30,7 @@ class FakeApplication extends DefaultGrailsApplication {
 
 	FakeApplication() {}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings('rawtypes')
 	FakeApplication(Class[] classes, ClassLoader classLoader) {
 		super(classes, classLoader)
 	}

@@ -25,12 +25,11 @@ class PBKDF2PasswordEncoderTests extends GroovyTestCase {
 	private PBKDF2PasswordEncoder encoder = new PBKDF2PasswordEncoder()
 
 	void testEncodePassword() {
-		boolean failure = false
 		100.times { int i ->
 			String password = i
 			String hash = encoder.encodePassword(password, null)
 			String secondHash = encoder.encodePassword(password, null)
-			if (hash.equals(secondHash)) {
+			if (hash == secondHash) {
 				fail 'TWO HASHES ARE EQUAL'
 			}
 

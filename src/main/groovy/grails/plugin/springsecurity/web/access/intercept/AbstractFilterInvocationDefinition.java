@@ -14,10 +14,6 @@
  */
 package grails.plugin.springsecurity.web.access.intercept;
 
-import grails.plugin.springsecurity.InterceptedUrl;
-import grails.util.GrailsUtil;
-import grails.util.Metadata;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -42,6 +38,10 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import grails.plugin.springsecurity.InterceptedUrl;
+import grails.util.GrailsUtil;
+import grails.util.Metadata;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

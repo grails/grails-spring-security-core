@@ -73,11 +73,11 @@ class AuthenticatedVetoableDecisionManagerTests extends GroovyTestCase {
 	}
 
 	private Authentication createAuthentication(roleNames) {
-		return new TestingAuthenticationToken(null, null, namesToAuthorities(roleNames))
+		new TestingAuthenticationToken(null, null, namesToAuthorities(roleNames))
 	}
 
 	private List<GrantedAuthority> namesToAuthorities(roleNames) {
-		return roleNames.collect { new SimpleGrantedAuthority(it) }
+		roleNames.collect { new SimpleGrantedAuthority(it) }
 	}
 
 	private createDefinition(roleNames) {

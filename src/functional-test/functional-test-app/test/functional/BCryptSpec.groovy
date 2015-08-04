@@ -40,9 +40,9 @@ class BCryptSpec extends AbstractSecuritySpec {
 			encryptedPassword.startsWith '$2a$'
 
 		when:
-   		def shaPasswordEncoder = createSha256Encoder()
-   		String notSalted = shaPasswordEncoder.encodePassword('p4ssw0rd', null)
-   		String salted = shaPasswordEncoder.encodePassword('p4ssw0rd', 'user1')
+			def shaPasswordEncoder = createSha256Encoder()
+			String notSalted = shaPasswordEncoder.encodePassword('p4ssw0rd', null)
+			String salted = shaPasswordEncoder.encodePassword('p4ssw0rd', 'user1')
 
 		then:
 			salted != encryptedPassword

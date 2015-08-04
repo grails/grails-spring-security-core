@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.filter;
 
-import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken;
-
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -31,6 +29,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.GenericFilterBean;
+
+import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken;
 
 /**
  * Replaces org.springframework.security.web.authentication.AnonymousAuthenticationFilter.

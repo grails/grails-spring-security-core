@@ -65,8 +65,8 @@ class TestUserController {
 
 		long version = params.version.toLong()
 		if (person.version > version) {
-			person.errors.rejectValue 'version', "person.optimistic.locking.failure",
-				"Another user has updated this TestUser while you were editing."
+			person.errors.rejectValue 'version', 'person.optimistic.locking.failure',
+				'Another user has updated this TestUser while you were editing.'
 				render view: 'edit', model: buildPersonModel(person)
 			return
 		}
@@ -91,7 +91,7 @@ class TestUserController {
 			def authPrincipal = springSecurityService.principal
 			// avoid self-delete if the logged-in user is an admin
 			if (!(authPrincipal instanceof String) && authPrincipal.username == person.username) {
-				flash.message = "You can not delete yourself, please login as another admin and try again"
+				flash.message = 'You can not delete yourself, please login as another admin and try again'
 			}
 			else {
 				try {

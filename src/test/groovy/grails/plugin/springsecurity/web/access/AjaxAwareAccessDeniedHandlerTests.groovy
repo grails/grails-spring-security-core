@@ -14,11 +14,6 @@
  */
 package grails.plugin.springsecurity.web.access
 
-import grails.plugin.springsecurity.FakeApplication
-import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.plugin.springsecurity.web.SecurityRequestHolder
-
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.AccessDeniedException
@@ -27,6 +22,11 @@ import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
+
+import grails.plugin.springsecurity.FakeApplication
+import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

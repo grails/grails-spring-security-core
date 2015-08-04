@@ -14,13 +14,13 @@
  */
 package grails.plugin.springsecurity.web.access.intercept;
 
-import grails.plugin.springsecurity.InterceptedUrl;
-import grails.plugin.springsecurity.ReflectionUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpMethod;
+
+import grails.plugin.springsecurity.InterceptedUrl;
+import grails.plugin.springsecurity.ReflectionUtils;
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
