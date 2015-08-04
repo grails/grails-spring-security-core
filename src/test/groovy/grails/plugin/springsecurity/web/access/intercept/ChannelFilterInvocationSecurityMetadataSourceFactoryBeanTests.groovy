@@ -33,16 +33,16 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanTests extends Groo
 	}
 
 	void testAfterPropertiesSet() {
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			factory.afterPropertiesSet()
 		}
 
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			factory.afterPropertiesSet()
 		}
 
 		factory.definition = ['/foo1/**': 'secure_only']
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			factory.afterPropertiesSet()
 		}
 

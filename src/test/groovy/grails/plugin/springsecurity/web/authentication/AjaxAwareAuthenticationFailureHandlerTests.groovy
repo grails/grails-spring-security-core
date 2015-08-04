@@ -71,7 +71,7 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 	}
 
 	void testAfterPropertiesSet() {
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			handler.afterPropertiesSet()
 		}
 

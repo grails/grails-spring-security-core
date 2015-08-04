@@ -75,7 +75,7 @@ class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
 	 * Test setAjaxLoginFormUrl().
 	 */
 	void testSetAjaxLoginFormUrl() {
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			entryPoint.ajaxLoginFormUrl = 'foo'
 		}
 

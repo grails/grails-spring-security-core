@@ -57,7 +57,7 @@ class IpAddressFilterTests extends GroovyTestCase {
 
 	void testAfterPropertiesSet() {
 
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			filter.afterPropertiesSet()
 		}
 

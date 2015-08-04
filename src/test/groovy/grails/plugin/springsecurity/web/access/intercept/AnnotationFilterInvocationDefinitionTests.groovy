@@ -64,13 +64,13 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 	}
 
 	void testGetAttributesNull() {
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			fid.getAttributes null
 		}
 	}
 
 	void testGetAttributesNotSupports() {
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			fid.getAttributes 'foo'
 		}
 	}

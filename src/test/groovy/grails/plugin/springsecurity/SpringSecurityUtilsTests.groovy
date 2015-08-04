@@ -65,7 +65,7 @@ class SpringSecurityUtilsTests extends GroovyTestCase {
 
 		def authorities = [new SimpleGrantedAuthority('role1'), new FakeAuthority()]
 
-		shouldFail(IllegalArgumentException) {
+		shouldFail(AssertionError) {
 			SpringSecurityUtils.authoritiesToRoles(authorities)
 		}
 	}
