@@ -1,4 +1,4 @@
-${packageDeclaration}
+package ${packageName}
 
 class ${className} implements Serializable {
 

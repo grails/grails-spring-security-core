@@ -1,4 +1,4 @@
-${packageDeclaration}
+package ${packageName}
 
 import groovy.transform.ToString
 
