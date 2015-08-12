@@ -1,18 +1,19 @@
+import com.testapp.TestRequestmap
+import com.testapp.TestRole
+import com.testapp.TestUser
+import com.testapp.TestUserTestRole
+
 import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.sql.Sql
 import rest.Book
 import rest.Movie
-
-import com.testapp.TestRole
-import com.testapp.TestUser
-import com.testapp.TestUserTestRole
 
 class TestDataService {
 	def grailsApplication
 	def dataSource
 
 	void returnToInitialState() {
-		truncateTablesAndRetry(3, false)
+		truncateTablesAndRetry 3, false
 		enterInitialData()
 	}
 
@@ -24,7 +25,7 @@ class TestDataService {
 				break
 			}
 		}
-		truncateTables(ignoreExceptions) // make sure everything is deleted
+		truncateTables ignoreExceptions // make sure everything is deleted
 	}
 
 	boolean truncateTables(boolean ignoreExceptions = false) {
@@ -51,50 +52,45 @@ class TestDataService {
 	}
 
 	void enterInitialData() {
-		Book.findOrSaveByTitle('TestBook')
-		Movie.findOrSaveByTitle('TestMovie')
+		Book.findOrSaveByTitle 'TestBook'
+		Movie.findOrSaveByTitle 'TestMovie'
 
 		if (System.getProperty('add_test_users')) {
 			addTestUsers()
 		}
 
-		switch (SpringSecurityUtils.securityConfigType) {
-			case 'Requestmap':
-				String requestMapClassName = SpringSecurityUtils.securityConfig.requestMap.className
-				def Requestmap = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
-					Class.forName(requestMapClassName) :
-					grailsApplication.getClassForName(requestMapClassName)
-				if (Requestmap.count()) {
-					return
-				}
+		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
+			if (TestRequestmap.count()) {
+				return
+			}
 
-				for (url in ['/', '/index', '/index.gsp', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
-				             '/login', '/login/**', '/logout', '/logout/**',
-				             '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
-				             '/testRequestmap', '/testRequestmap/**',
-				             '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']) {
-					Requestmap.newInstance(url: url, configAttribute: 'permitAll').save(flush: true, failOnError: true)
-				}
+			for (url in ['/', '/index', '/index.gsp', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
+			             '/login', '/login/**', '/logout', '/logout/**',
+			             '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
+			             '/testRequestmap', '/testRequestmap/**',
+			             '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']) {
+				save new TestRequestmap(url, 'permitAll')
+			}
 
-				assert 26 == Requestmap.count()
-				break
+			assert 26 == TestRequestmap.count()
 		}
 	}
 
 	def addTestUsers() {
 		println 'Adding test users'
-		addTestUser 'testuser', ['ROLE_USER', 'ROLE_BASE', 'ROLE_EXTENDED']
-		addTestUser 'testuser_books', ['ROLE_BOOKS']
-		addTestUser 'testuser_movies', ['ROLE_MOVIES']
-		addTestUser 'testuser_books_and_movies', ['ROLE_BOOKS', 'ROLE_MOVIES']
+		addTestUser 'testuser',                  'ROLE_USER', 'ROLE_BASE', 'ROLE_EXTENDED'
+		addTestUser 'testuser_books',            'ROLE_BOOKS'
+		addTestUser 'testuser_movies',           'ROLE_MOVIES'
+		addTestUser 'testuser_books_and_movies', 'ROLE_BOOKS', 'ROLE_MOVIES'
 	}
 
-	TestUser addTestUser(String username, List<String> roles) {
-		def testUser = new TestUser(username:username, password:'password').save(flush:true, failOnError:true)
-		roles.each { role ->
-			def testRole = TestRole.findOrSaveByAuthority(role)
-			new TestUserTestRole(testUser: testUser, testRole: testRole).save(flush:true, failOnError:true)
-		}
+	TestUser addTestUser(String username, String... roles) {
+		def testUser = save(new TestUser(username, 'password'))
+		roles.each { save new TestUserTestRole(testUser: testUser, testRole: TestRole.findOrSaveByAuthority(it)) }
 		testUser
+	}
+
+	private save(o) {
+		o.save(failOnError: true)
 	}
 }

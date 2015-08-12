@@ -1,0 +1,179 @@
+buildscript {
+	ext {
+		grailsVersion = project.grailsVersion
+	}
+	repositories {
+		mavenLocal()
+		maven { url 'https://repo.grails.org/grails/core' }
+	}
+	dependencies {
+		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+		classpath 'com.bertramlabs.plugins:asset-pipeline-gradle:2.1.1'
+	}
+}
+
+plugins {
+	id 'io.spring.dependency-management' version '0.5.2.RELEASE'
+}
+
+version '0.1'
+group 'functional.test.app'
+
+apply plugin: 'spring-boot'
+apply plugin: 'asset-pipeline'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.grails.grails-web'
+
+ext {
+	grailsVersion = project.grailsVersion
+	gradleWrapperVersion = project.gradleWrapperVersion
+}
+
+repositories {
+	mavenLocal()
+	maven { url 'https://repo.grails.org/grails/core' }
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.grails:grails-bom:$grailsVersion"
+	}
+	applyMavenExclusions false
+}
+
+dependencies {
+
+	compile 'org.grails.plugins:cache'
+	compile 'org.grails.plugins:hibernate'
+// compile 'org.grails.plugins:scaffolding'
+	compile 'org.grails:grails-dependencies'
+	compile 'org.grails:grails-web-boot'
+	compile 'org.hibernate:hibernate-ehcache'
+	compile 'org.springframework.boot:spring-boot-autoconfigure'
+	compile 'org.springframework.boot:spring-boot-starter-logging'
+	compile 'org.springframework.boot:spring-boot-starter-tomcat'
+
+	compile 'org.grails.plugins:grails-spring-security-core:3.0-SNAPSHOT' // TODO FIXME
+//	compile 'org.grails.plugins:spring-security-core:3.0-SNAPSHOT'
+	compile 'org.grails.plugins:grails-spring-security-appinfo:3.0-SNAPSHOT' // TODO FIXME
+//	compile 'org.grails.plugins:spring-security-appinfo:3.0-SNAPSHOT'
+
+	runtime 'org.grails.plugins:asset-pipeline'
+
+	String seleniumVersion = '2.47.1'
+	testCompile 'org.grails:grails-plugin-testing'
+	testCompile 'org.grails.plugins:geb'
+//	testCompile 'com.github.detro:phantomjsdriver:1.2.0'
+	testCompile 'com.codeborne:phantomjsdriver:1.2.1' // TODO switch back to com.github.detro:phantomjsdriver when this
+	                                                  // issue is resolved: https://github.com/detro/ghostdriver/issues/397
+
+	['chrome', 'firefox', 'htmlunit'].each { String name ->
+		testCompile "org.seleniumhq.selenium:selenium-${name}-driver:$seleniumVersion"
+	}
+
+   testCompile 'org.gebish:geb-core:0.12.1'
+
+	console 'org.grails:grails-console'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = gradleWrapperVersion
+}
+
+// integrationTest {
+// 	testClassesDir = sourceSets.integrationTest.output.classesDir
+// 	classpath = sourceSets.integrationTest.runtimeClasspath
+// }
+
+// task AnnotationSuite2(type: SuiteTask2) {
+// 	suiteName = 'Annotation'
+// }
+
+// task AnnotationSuite(type: SuiteTask) {
+// 	suiteName = 'annotation'
+// 	classNames = ['Role', 'User', 'AnnotationSecurity', 'NamespaceSecurity', 'InheritanceSecurity']
+// }
+
+// task StaticSuite(type: SuiteTask) {
+// 	suiteName = 'static'
+// 	classNames = ['Role', 'User', 'StaticSecurity']
+// }
+
+// task RequestmapSuite(type: SuiteTask) {
+// 	suiteName = 'requestmap'
+// 	classNames = ['Requestmap', 'Role', 'User', 'RequestmapSecurity']
+// }
+
+// task BasicSuite(type: SuiteTask) {
+// 	suiteName = 'basic'
+// 	classNames = ['Role', 'User', 'BasicAuthSecurity']
+// }
+
+// task MiscSuite(type: SuiteTask) {
+// 	suiteName = 'misc'
+// 	classNames = ['Misc', 'Disable']
+// }
+
+// task BcryptSuite(type: SuiteTask) {
+// 	suiteName = 'bcrypt'
+// 	classNames = ['BCrypt']
+// }
+
+// // org.gradle.api.tasks.testing.Test
+// class SuiteTask extends Test {
+// 	String suiteName
+
+// 	SuiteTask() {
+// 		testClassesDir = project.sourceSets.integrationTest.output.classesDir
+// 		classpath = project.sourceSets.integrationTest.runtimeClasspath
+// 		maxParallelForks = 1
+// 		reports.html.enabled = false
+// 	}
+
+// 	void setSuiteName(String name) {
+// 		suiteName = name
+// 		description = "Runs the '$suiteName' group of tests"
+// 	}
+
+// 	void setClassNames(List<String> names) {
+// 		filter {
+// 			names.each { String name ->
+// 				includeTestsMatching "specs.${name}Spec"
+// 			}
+// 		}
+// 	}
+// }
+
+// class SuiteTask2 extends Test {
+// 	String suiteName
+
+// 	SuiteTask2() {
+// 		testClassesDir = project.sourceSets.integrationTest.output.classesDir
+// 		classpath = project.sourceSets.integrationTest.runtimeClasspath
+// 		maxParallelForks = 1
+// 		reports.html.enabled = false
+// 	}
+
+// 	void setSuiteName(String name) {
+// 		suiteName = name
+// 		description = "Runs the '$suiteName' group of tests"
+// 		filter {
+// 			includeTestsMatching "suites.${name}Suite"
+// 		}
+// 	}
+// }
+
+// project.tasks.withType(SuiteTask) {
+// 	it.dependsOn bootRun
+// 	it.beforeSuite {
+// 		new File('testconfig').text = suiteName
+// 	}
+// 	it.finalizedBy stopGrails
+// }
+
+// tasks.withType(Test) {
+// 	testLogging {
+// 		events 'started', 'passed'
+// 	}
+// }

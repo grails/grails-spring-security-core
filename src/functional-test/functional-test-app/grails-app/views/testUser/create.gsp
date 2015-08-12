@@ -1,18 +1,17 @@
 <html>
 <head>
-	<g:set var="entityName" value="${message(code: 'testUser.label', default: 'TestUser')}" />
-	<title><g:message code="default.create.label" args="[entityName]" /></title>
+	<title>Create TestUser</title>
 </head>
 
 <body>
 
 <div class="nav">
 	<span class="menuButton"><a class="home" href="${createLink(uri: '/')}">Home</a></span>
-	<span class="menuButton"><g:link class="list" action="list"><g:message code="default.list.label" args="[entityName]" /></g:link></span>
+	<span class="menuButton"><g:link class="list">TestUser List</g:link></span>
 </div>
 
 <div class="body">
-	<h1><g:message code="default.create.label" args="[entityName]" /></h1>
+	<h1>Create TestUser</h1>
 
 	<g:if test="${flash.message}">
 	<div class="message">${flash.message}</div>
@@ -32,7 +31,7 @@
 
 		<tr class="prop">
 			<td valign="top" class="name">
-				<label for="username"><g:message code="testUser.username.label" default="Username" /></label>
+				<label for="username">Username</label>
 			</td>
 			<td valign="top" class="value ${hasErrors(bean: testUserInstance, field: 'username', 'errors')}">
 				<g:textField name="username" value="${testUserInstance?.username}" />
@@ -41,7 +40,7 @@
 
 		<tr class="prop">
 			<td valign="top" class="name">
-				<label for="password"><g:message code="testUser.password.label" default="Password" /></label>
+				<label for="password">Password</label>
 			</td>
 			<td valign="top" class="value ${hasErrors(bean: testUserInstance, field: 'password', 'errors')}">
 				<g:passwordField name="password" value="${testUserInstance?.password}" />
@@ -50,7 +49,7 @@
 
 		<tr class="prop">
 			<td valign="top" class="name">
-				<label for="enabled"><g:message code="testUser.enabled.label" default="Enabled" /></label>
+				<label for="enabled">Enabled</label>
 			</td>
 			<td valign="top" class="value ${hasErrors(bean: testUserInstance, field: 'enabled', 'errors')}">
 				<g:checkBox name="enabled" value="${testUserInstance?.enabled}" />
@@ -73,7 +72,7 @@
 	</div>
 
 	<div class="buttons">
-		<span class="button"><g:submitButton name="create" class="save" value="${message(code: 'default.button.create.label', default: 'Create')}" /></span>
+		<span class="button"><g:submitButton name="create" class="save" value='Create' /></span>
 	</div>
 	</g:form>
 </div>

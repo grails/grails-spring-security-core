@@ -1,19 +1,18 @@
 <html>
 <head>
-	<g:set var="entityName" value="${message(code: 'testUser.label', default: 'TestUser')}" />
-	<title><g:message code="default.list.label" args="[entityName]" /></title>
+	<title>TestUser List</title>
 </head>
 
 <body>
 
 <div class="nav">
 	<span class="menuButton"><a class="home" href="${createLink(uri: '/')}">Home</a></span>
-	<span class="menuButton"><g:link class="create" action="create"><g:message code="default.new.label" args="[entityName]" /></g:link></span>
+	<span class="menuButton"><g:link class="create" action="create">New TestUser</g:link></span>
 </div>
 
 <div class="body">
 
-	<h1><g:message code="default.list.label" args="[entityName]" /></h1>
+	<h1>TestUser List</h1>
 
 	<g:if test="${flash.message}">
 	<div class="message">${flash.message}</div>
@@ -23,9 +22,9 @@
 	<table>
 		<thead>
 		<tr>
-			<g:sortableColumn property="id" title="${message(code: 'testUser.id.label', default: 'Id')}" />
-			<g:sortableColumn property="username" title="${message(code: 'testUser.username.label', default: 'Username')}" />
-			<g:sortableColumn property="enabled" title="${message(code: 'testUser.enabled.label', default: 'Enabled')}" />
+			<g:sortableColumn property="id" title='ID' />
+			<g:sortableColumn property="username" title='Username' />
+			<g:sortableColumn property="enabled" title='Enabled' />
 		</tr>
 		</thead>
 
