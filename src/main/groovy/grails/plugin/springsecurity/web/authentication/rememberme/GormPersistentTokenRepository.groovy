@@ -25,7 +25,7 @@ import grails.gorm.DetachedCriteria
 import grails.plugin.springsecurity.SpringSecurityUtils
 
 /**
- * GORM-based PersistentTokenRepository implementation, based on {@link JdbcTokenRepositoryImpl}.
+ * GORM-based PersistentTokenRepository implementation, based on {@link org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl}.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
