@@ -602,9 +602,51 @@ final class SpringSecurityUtils {
 	 * @param className the name of the config class to load
 	 */
 	private static void mergeConfig(ConfigObject currentConfig, String className) {
-		ConfigObject secondaryConfig = new ConfigSlurper(Environment.current.name).parse(
+		ConfigObject secondary = new ConfigSlurper(Environment.current.name).parse(
 				  new GroovyClassLoader(this.classLoader).loadClass(className))
-		_securityConfig = ReflectionUtils.securityConfig = mergeConfig(currentConfig, (ConfigObject)secondaryConfig.security)
+		secondary = secondary.security as ConfigObject
+
+		Collection<String> keysToDefaultEmpty = []
+		findKeysToDefaultEmpty secondary, '', keysToDefaultEmpty
+
+		def merged = mergeConfig(currentConfig, secondary)
+
+		// having discovered the keys that have map values (since they initially point to empty maps),
+		// check them again and remove the damage done when Map values are 'flattened'
+		for (String key in keysToDefaultEmpty) {
+			Map value = (Map)ReflectionUtils.getConfigProperty(key, merged)
+			for (Iterator<Map.Entry> iter = value.entrySet().iterator(); iter.hasNext();) {
+				def entry = iter.next()
+				if (entry.value instanceof Map) {
+					iter.remove()
+				}
+			}
+		}
+
+		_securityConfig = ReflectionUtils.securityConfig = merged
+	}
+
+	/**
+	 * Given an unmodified config map with defaults, loop through the keys looking for values that are initially
+	 * empty maps. This will be used after merging to remove map values that cause problems by being included both as
+	 * the result from the ConfigSlurper (which is correct) and as a "flattened" maps which confuse Spring Security.
+	 * @param m the config map
+	 * @param fullPath the path to this config map, e.g. 'grails.plugin.security
+	 * @param keysToDefaultEmpty a collection of key names to add to
+	 */
+	private static void findKeysToDefaultEmpty(Map m, String fullPath, Collection keysToDefaultEmpty) {
+		m.each { k, v ->
+			if (v instanceof Map) {
+				if (v) {
+					// recurse
+					findKeysToDefaultEmpty((Map)v, fullPath + '.' + k, keysToDefaultEmpty)
+				}
+				else {
+					// since it's an empty map, capture its path for the cleanup pass
+					keysToDefaultEmpty << (fullPath + '.' + k).substring(1)
+				}
+			}
+		}
 	}
 
 	/**
@@ -617,16 +659,7 @@ final class SpringSecurityUtils {
 	 * @return the merged configs
 	 */
 	private static ConfigObject mergeConfig(ConfigObject currentConfig, ConfigObject secondary) {
-		ConfigObject config = new ConfigObject()
-		if (secondary == null) {
-			if (currentConfig != null) {
-				config << currentConfig
-			}
-		}
-		else {
-			config << currentConfig == null ? secondary : secondary.merge(currentConfig)
-		}
-		config
+		(secondary ?: new ConfigObject()).merge(currentConfig ?: new ConfigObject()) as ConfigObject
 	}
 
 	private static Collection<? extends GrantedAuthority> findInferredAuthorities(Collection<GrantedAuthority> granted) {

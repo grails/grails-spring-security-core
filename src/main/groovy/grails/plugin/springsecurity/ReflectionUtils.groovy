@@ -16,10 +16,13 @@ package grails.plugin.springsecurity
 
 import static grails.web.http.HttpHeaders.ACCEPT_VERSION
 
+import org.grails.config.PropertySourcesConfig
 import org.grails.web.mime.HttpServletResponseExtension
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.core.env.MapPropertySource
+import org.springframework.core.env.PropertySource
 import org.springframework.expression.Expression
 import org.springframework.expression.ParseException
 import org.springframework.http.HttpMethod
@@ -51,8 +54,8 @@ class ReflectionUtils {
 		// static only
 	}
 
-	static Object getConfigProperty(String name) {
-		def value = SpringSecurityUtils.securityConfig
+	static Object getConfigProperty(String name, config = SpringSecurityUtils.securityConfig) {
+		def value = config
 		name.split('\\.').each { String part -> value = value."$part" }
 		value
 	}
@@ -118,7 +121,16 @@ class ReflectionUtils {
 		grailsConfig.grails.plugin.springsecurity
 	}
 
-	static void setSecurityConfig(ConfigObject c) { getApplication().config.grails.plugin.springsecurity = c }
+	static void setSecurityConfig(ConfigObject c) {
+		ConfigObject config = new ConfigObject()
+		config.grails.plugin.springsecurity = c
+
+		PropertySource propertySource = new MapPropertySource('SecurityConfig', [:] << config)
+
+		def propertySources = application.mainContext.environment.propertySources
+		propertySources.addFirst propertySource
+		getApplication().config = new PropertySourcesConfig(propertySources)
+	}
 
 	static List<InterceptedUrl> splitMap(Map<String, Object> m, boolean expressions = true) {
 		m.collect { String key, value ->
@@ -182,6 +194,7 @@ class ReflectionUtils {
 			}
 		}
 
+		log.trace 'Built ConfigAttributes {} for tokens {}', configAttributes, tokens
 		configAttributes
 	}
 
