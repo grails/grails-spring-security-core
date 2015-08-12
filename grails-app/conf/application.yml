@@ -1,32 +1,11 @@
----
 grails:
    profile: web-plugin
-   codegen:
-      defaultPackage: demo
+   doc:
+      authors: 'Burt Beckwith, Beverley Talbott'
+      license: 'Apache License 2.0'
+      title:   'Spring Security Core Plugin'
 info:
    app:
       name: '@info.app.name@'
       version: '@info.app.version@'
       grailsVersion: '@info.app.grailsVersion@'
-spring:
-   groovy:
-      template:
-         check-template-location: false
----
-grails:
-   hibernate:
-      cache:
-         queries: false
-   doc:
-      authors: 'Burt Beckwith, Beverley Talbott'
-      license: 'Apache License 2.0'
-      title:   'Spring Security Core Plugin'
----
-dataSource:
-   dbCreate: update
-   driverClassName: org.h2.Driver
-   jmxExport: true
-   password:
-   pooled: true
-   url: jdbc:h2:mem:testDb;MVCC=TRUE;LOCK_TIMEOUT=10000;DB_CLOSE_ON_EXIT=FALSE
-   username: sa
