@@ -19,15 +19,19 @@ import test.TestRequestmap
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class ReflectionUtilsIntegrationTests extends GroovyTestCase {
+class ReflectionUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
-	void testLoadAllRequestmaps() {
-		assert !ReflectionUtils.loadAllRequestmaps()
+	void 'loadAllRequestmaps'() {
 
-		10.times {
-			new TestRequestmap(urlPattern: "/url$it", rolePattern: "ROLE_$it").save(flush: true)
-		}
+		expect:
+		!ReflectionUtils.loadAllRequestmaps()
 
-		assert 10 == ReflectionUtils.loadAllRequestmaps().size()
+		when:
+		10.times { save new TestRequestmap("/url$it", "ROLE_$it") }
+
+		flush()
+
+		then:
+		10 == ReflectionUtils.loadAllRequestmaps().size()
 	}
 }

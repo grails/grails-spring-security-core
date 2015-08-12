@@ -18,7 +18,7 @@ import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
-import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
 
 import com.test.AdditionalLogoutHandler
 
@@ -28,29 +28,35 @@ import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilte
  * @author <a href='mailto:george@georgemcintosh.com'>George McIntosh</a>
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AdditionalLogoutFiltersConfiguredTests extends GroovyTestCase {
+class AdditionalLogoutFiltersConfiguredSpec extends AbstractIntegrationSpec {
 
-	def grailsApplication
+	void 'additional handlers exist'() {
 
-	void testAdditionalHandlersExist() {
-
+		when:
 		MutableLogoutFilter logoutFilter = grailsApplication.mainContext.logoutFilter
-		assertEquals 3, logoutFilter.handlers.size()
 
-		def expected = [AdditionalLogoutHandler, SecurityContextLogoutHandler, TokenBasedRememberMeServices].sort()
+		then:
+		3 == logoutFilter.handlers.size()
+
+		when:
+		def expected = [AdditionalLogoutHandler, SecurityContextLogoutHandler, PersistentTokenBasedRememberMeServices].sort()
 		def handlerClasses = logoutFilter.handlers.collect { it.class }.sort()
 
-		assert expected == handlerClasses
+		then:
+		expected == handlerClasses
 	}
 
-	void testInvoke() {
+	void 'invoke'() {
 
+		when:
 		MutableLogoutFilter logoutFilter = grailsApplication.mainContext.logoutFilter
 		AdditionalLogoutHandler additionalLogoutHandler = grailsApplication.mainContext.additionalLogoutHandler
 		additionalLogoutHandler.called = false
 
-		logoutFilter.doFilter new MockHttpServletRequest(requestURI: '/j_spring_security_logout'), new MockHttpServletResponse(), new MockFilterChain()
+		logoutFilter.doFilter new MockHttpServletRequest(requestURI: '/j_spring_security_logout'),
+		                      new MockHttpServletResponse(), new MockFilterChain()
 
-		assert additionalLogoutHandler.called
+		then:
+		additionalLogoutHandler.called
 	}
 }

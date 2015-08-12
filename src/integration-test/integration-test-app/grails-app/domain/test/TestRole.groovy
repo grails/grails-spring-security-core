@@ -24,9 +24,10 @@ class TestRole implements Serializable {
 	String auth
 	String description
 
-	TestRole(String auth) {
+	TestRole(String auth, String description) {
 		this()
 		this.auth = auth
+		this.description = description
 	}
 
 	@Override

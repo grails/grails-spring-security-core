@@ -15,51 +15,75 @@
 package grails.plugin.springsecurity
 
 import static org.springframework.security.authentication.dao.DaoAuthenticationProvider.USER_NOT_FOUND_PASSWORD
+
 import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEncoder
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class DigestAuthPasswordEncoderTests extends GroovyTestCase {
+class DigestAuthPasswordEncoderSpec extends AbstractIntegrationSpec {
 
 	def daoAuthenticationProvider
 	def passwordEncoder
 
-	void testInitialize() {
+	void 'initialize'() {
 
+		when:
 		def providerPasswordEncoder = daoAuthenticationProvider.passwordEncoder
-		assert passwordEncoder.is(providerPasswordEncoder)
-		assert !(passwordEncoder instanceof DigestAuthPasswordEncoder)
 
+		then:
+		passwordEncoder.is providerPasswordEncoder
+		!(passwordEncoder instanceof DigestAuthPasswordEncoder)
+
+		when:
 		def digestAuthPasswordEncoder = new DigestAuthPasswordEncoder(realm: 'realm')
-		assert digestAuthPasswordEncoder.initializing
 
+		then:
+		digestAuthPasswordEncoder.initializing
+
+		when:
 		// ok since initializing is true
 		digestAuthPasswordEncoder.encodePassword USER_NOT_FOUND_PASSWORD, null
 
-		String message = shouldFail(IllegalArgumentException) {
-			digestAuthPasswordEncoder.encodePassword 'otherPassword', null
-		}
-		assert 'Salt is required and must be the username' == message
+		then:
+		noExceptionThrown()
 
+		when:
+		digestAuthPasswordEncoder.encodePassword 'otherPassword', null
+
+		then:
+		AssertionError e = thrown()
+
+		e.message.startsWith 'Salt is required and must be the username.'
+
+		when:
 		digestAuthPasswordEncoder.encodePassword 'otherPassword', 'theusername'
 
 		// reset and we should be back to standard approach
 
 		digestAuthPasswordEncoder.resetInitializing()
 
-		assert !digestAuthPasswordEncoder.initializing
+		then:
+		!digestAuthPasswordEncoder.initializing
 
-		message = shouldFail(IllegalArgumentException) {
-			digestAuthPasswordEncoder.encodePassword USER_NOT_FOUND_PASSWORD, null
-		}
-		assert 'Salt is required and must be the username' == message
+		when:
+		digestAuthPasswordEncoder.encodePassword USER_NOT_FOUND_PASSWORD, null
 
-		message = shouldFail(IllegalArgumentException) {
-			digestAuthPasswordEncoder.encodePassword 'otherPassword', null
-		}
-		assert 'Salt is required and must be the username' == message
+		then:
+		e = thrown()
+		e.message.startsWith 'Salt is required and must be the username.'
 
+		when:
+		digestAuthPasswordEncoder.encodePassword 'otherPassword', null
+
+		then:
+		e = thrown()
+		e.message.startsWith 'Salt is required and must be the username.'
+
+		when:
 		digestAuthPasswordEncoder.encodePassword 'otherPassword', 'theusername'
+
+		then:
+		noExceptionThrown()
 	}
 }

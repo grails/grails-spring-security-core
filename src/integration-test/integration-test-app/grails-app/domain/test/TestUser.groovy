@@ -23,7 +23,7 @@ class TestUser implements Serializable {
 
 	String loginName
 	String passwrrd
-	boolean enabld
+	boolean enabld = true
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired

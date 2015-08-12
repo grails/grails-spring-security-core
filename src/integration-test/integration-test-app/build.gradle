@@ -1,0 +1,64 @@
+buildscript {
+	ext {
+		grailsVersion = project.grailsVersion
+	}
+	repositories {
+		mavenLocal()
+		maven { url 'https://repo.grails.org/grails/core' }
+	}
+	dependencies {
+		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
+	}
+}
+
+plugins {
+	id 'io.spring.dependency-management' version '0.5.2.RELEASE'
+}
+
+version '0.1'
+group 'integration.test.app'
+
+apply plugin: 'spring-boot'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'org.grails.grails-web'
+
+ext {
+	grailsVersion = project.grailsVersion
+	gradleWrapperVersion = project.gradleWrapperVersion
+}
+
+repositories {
+	mavenLocal()
+	maven { url 'https://repo.grails.org/grails/core' }
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.grails:grails-bom:$grailsVersion"
+	}
+	applyMavenExclusions false
+}
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-starter-logging'
+	compile 'org.springframework.boot:spring-boot-starter-actuator'
+	compile 'org.springframework.boot:spring-boot-autoconfigure'
+	compile 'org.springframework.boot:spring-boot-starter-tomcat'
+	compile 'org.grails:grails-dependencies'
+	compile 'org.grails:grails-web-boot'
+
+	compile 'org.grails.plugins:hibernate'
+	compile 'org.grails.plugins:cache'
+
+	compile 'org.grails.plugins:grails-spring-security-core:3.0-SNAPSHOT' // TODO FIXME
+	// compile 'org.grails.plugins:spring-security-core:3.0-SNAPSHOT'
+
+	console "org.grails:grails-console"
+
+	testCompile 'org.grails:grails-plugin-testing'
+}
+
+task wrapper(type: Wrapper) {
+	gradleVersion = gradleWrapperVersion
+}

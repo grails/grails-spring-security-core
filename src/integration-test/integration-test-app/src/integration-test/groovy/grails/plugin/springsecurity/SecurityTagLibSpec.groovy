@@ -14,14 +14,16 @@
  */
 package grails.plugin.springsecurity
 
-import grails.test.GroovyPagesTestCase
-
 import java.security.Principal
 
 import javax.servlet.FilterChain
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
+import org.grails.buffer.GrailsPrintWriter
+import org.grails.gsp.GroovyPagesTemplateEngine
+import org.grails.plugins.testing.GrailsMockHttpServletRequest
+import org.grails.plugins.testing.GrailsMockHttpServletResponse
+import org.grails.web.servlet.DefaultGrailsApplicationAttributes
+import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.security.authentication.AuthenticationDetailsSource
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -32,203 +34,257 @@ import org.springframework.security.core.userdetails.UserDetailsChecker
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
+import org.springframework.web.context.request.RequestContextHolder
+
+import spock.lang.Ignore
 
 /**
  * Integration tests for <code>SecurityTagLib</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SecurityTagLibTests extends GroovyPagesTestCase {
+class SecurityTagLibSpec extends AbstractIntegrationSpec {
 
 	private final user = new Expando()
+	private GrailsMockHttpServletRequest request = new GrailsMockHttpServletRequest()
+	private GrailsMockHttpServletResponse response = new GrailsMockHttpServletResponse()
 
 	static transactional = false
 
-	def springSecurityService
+	GroovyPagesTemplateEngine groovyPagesTemplateEngine
+	def servletContext
 
-	/**
-	 * Test ifAllGranted().
-	 */
-	void testIfAllGranted() {
+	void 'ifAllGranted'() {
+
+		when:
 		String body = 'the_content'
-
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals '', "<sec:ifAllGranted roles='role1,role2'>$body</sec:ifAllGranted>"
 
+		when:
 		authenticate 'role2,role1'
+
+		then:
 		assertOutputEquals body, "<sec:ifAllGranted roles='role1,role2'>$body</sec:ifAllGranted>"
 	}
 
-	/**
-	 * Test ifNotGranted().
-	 */
-	void testIfNotGrantedMissingRole() {
+	void 'ifNotGranted'() {
+		when:
 		String body = 'the_content'
-
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals '', "<sec:ifNotGranted roles='role1,role2'>$body</sec:ifNotGranted>"
 
+		when:
 		authenticate 'role3'
+
+		then:
 		assertOutputEquals body, "<sec:ifNotGranted roles='role1,role2'>$body</sec:ifNotGranted>"
 	}
 
-	/**
-	 * Test ifAnyGranted().
-	 */
-	void testIfAnyGranted() {
+	void 'ifAnyGranted'() {
+		when:
 		String body = 'the_content'
-
 		authenticate 'role3'
+
+		then:
 		assertOutputEquals '', "<sec:ifAnyGranted roles='role1,role2'>$body</sec:ifAnyGranted>"
 
+		when:
 		authenticate 'role2'
+
+		then:
 		assertOutputEquals body, "<sec:ifAnyGranted roles='role1,role2'>$body</sec:ifAnyGranted>"
 	}
 
-	/**
-	 * Test ifLoggedIn().
-	 */
-	void testIfLoggedInTrue() {
+	void 'ifLoggedIn'() {
+		when:
 		String body = 'the_content'
 
+		then:
 		assertOutputEquals '', "<sec:ifLoggedIn roles='role1,role2'>$body</sec:ifLoggedIn>"
 
+		when:
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals body, "<sec:ifLoggedIn roles='role1,role2'>$body</sec:ifLoggedIn>"
 	}
 
-	/**
-	 * Test ifNotLoggedIn().
-	 */
-	void testIfNotLoggedIn() {
+	void 'ifNotLoggedIn'() {
+		when:
 		String body = 'the_content'
 
+		then:
 		assertOutputEquals body, "<sec:ifNotLoggedIn roles='role1,role2'>$body</sec:ifNotLoggedIn>"
 
+		when:
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals '', "<sec:ifNotLoggedIn roles='role1,role2'>$body</sec:ifNotLoggedIn>"
 	}
 
-	/**
-	 * Test loggedInUserInfo() for a principal that has a 'domainClass' property.
-	 */
-	void testLoggedInUserInfoWithDomainClass() {
+	void "loggedInUserInfo() for a principal that has a 'domainClass' property"() {
+		when:
 		String fullName = 'First Last'
 		user.fullName = fullName
 
+		then:
 		assertOutputEquals '', "<sec:loggedInUserInfo field='fullName'/>"
 
+		when:
 		def principal = new HasDomainClass('username', fullName, 'role1', user)
 		authenticate principal, 'role1'
 
+		then:
 		assertOutputEquals fullName, "<sec:loggedInUserInfo field='fullName'/>"
 	}
 
-	/**
-	 * Test loggedInUserInfo() with a nested property.
-	 */
-	void testLoggedInUserInfoNested() {
+	void 'loggedInUserInfo() with a nested property'() {
+		when:
 		String fullName = 'First Last'
 		user.foo = [bar: [fullName: fullName]]
 
+		then:
 		assertOutputEquals '', "<sec:loggedInUserInfo field='foo.bar.fullName'/>"
 
+		when:
 		def principal = new HasDomainClass('username', 'fullName', 'role1', user)
 		authenticate principal, 'role1'
 
+		then:
 		assertOutputEquals fullName, "<sec:loggedInUserInfo field='foo.bar.fullName'/>"
 
 		assertOutputEquals '', "<sec:loggedInUserInfo field='foo.fullName'/>"
 	}
 
-	/**
-	 * Test loggedInUserInfo() for a principal that doesn't have a 'domainClass' property.
-	 */
-	void testLoggedInUserInfoWithoutDomainClass() {
+	void "Test loggedInUserInfo() for a principal that doesn't have a 'domainClass' property"() {
+		when:
 		String fullName = 'First Last'
 		user.fullName = fullName
 
+		then:
 		assertOutputEquals '', "<sec:loggedInUserInfo field='fullName'/>"
 
+		when:
 		def principal = new NoDomainClass('username', fullName, 'role1')
 		authenticate principal, 'role1'
 
+		then:
 		assertOutputEquals fullName, "<sec:loggedInUserInfo field='fullName'/>"
 	}
 
-	void testUsername() {
+	void '<sec:username/>'() {
+		expect:
 		assertOutputEquals '', '<sec:username/>'
 
+		when:
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals 'username1', '<sec:username/>'
 	}
 
-	void testSwitched() {
+	void '<sec:ifSwitched> and <sec:ifNotSwitched>'() {
+		when:
 		String body = 'the_content'
 
+		then:
 		assertOutputEquals body, "<sec:ifNotSwitched>$body</sec:ifNotSwitched>"
 		assertOutputEquals '', "<sec:ifSwitched>$body</sec:ifSwitched>"
 
+		when:
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals body, "<sec:ifNotSwitched>$body</sec:ifNotSwitched>"
 		assertOutputEquals '', "<sec:ifSwitched>$body</sec:ifSwitched>"
 
+		when:
 		switchUser()
 
+		then:
 		assertOutputEquals body, "<sec:ifSwitched>$body</sec:ifSwitched>"
 		assertOutputEquals '', "<sec:ifNotSwitched>$body</sec:ifNotSwitched>"
 	}
 
-	void testSwitchedUserOriginalUsername() {
-		assertOutputEquals '', '<sec:switchedUserOriginalUsername/>'
-		authenticate 'role1'
+	void '<sec:switchedUserOriginalUsername/>'() {
+		expect:
 		assertOutputEquals '', '<sec:switchedUserOriginalUsername/>'
 
+		when:
+		authenticate 'role1'
+
+		then:
+		assertOutputEquals '', '<sec:switchedUserOriginalUsername/>'
+
+		when:
 		switchUser()
 
+		then:
 		assertOutputEquals 'username1', '<sec:switchedUserOriginalUsername/>'
 	}
 
-	void testAccess() {
+	void '<sec:access>'() {
+		when:
 		String body = 'the_content'
 
 		authenticate ''
+
+		then:
 		assertOutputEquals '', """<sec:access expression="hasRole('role1')">$body</sec:access>"""
 		assertOutputEquals body, """<sec:noAccess expression="hasRole('role1')">$body</sec:noAccess>"""
 
+		when:
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals body, """<sec:access expression="hasRole('role1')">$body</sec:access>"""
 		assertOutputEquals '', """<sec:noAccess expression="hasRole('role1')">$body</sec:noAccess>"""
 	}
 
-	void testLinkViaExpression() {
+	void '<sec:link> via expression'() {
+		when:
 		String body = 'Test link'
 
+		then:
 		assertOutputEquals '', """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">$body</sec:link>"""
 
+		when:
 		authenticate 'role1'
+
+		then:
 		assertOutputEquals 'test', """<sec:access expression="hasRole('role1')">test</sec:access>"""
 		assertOutputEquals """<a href="/testController/testAction">$body</a>""",
 		                   """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">$body</sec:link>"""
 	}
 
-	@groovy.transform.NotYetImplemented
-	void testLinkViaUrl() {
+	@Ignore
+	void '<sec:link> via url'() {
+		when:
 		String body = 'Test link'
 
+		then:
 		assertOutputEquals '', """<sec:link controller="testController" action="testAction"></sec:link>"""
 
+		when:
 		// role 'roleInMap' mapped to controller via interceptUrlMap in Config.groovy
 		authenticate 'roleInMap'
+
+		then:
 		assertOutputEquals """<a href="/testController/testAction">$body</a>""",
 		                   """<sec:link controller="testController" action="testAction">$body</sec:link>"""
 	}
 
 	private void switchUser() {
 		def filter = new SwitchUserFilter()
-		def request = new MockHttpServletRequest('POST', '/j_spring_security_switch_user')
+		request.method = 'POST'
+		request.requestURI = '/j_spring_security_switch_user'
 		request.addParameter 'j_username', 'somebody'
-		def response = new MockHttpServletResponse()
 
 		boolean chainCalled = false
 		boolean onAuthenticationSuccessCalled = false
@@ -236,10 +292,8 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 		def onAuthenticationSuccess = { req, res, targetUser -> onAuthenticationSuccessCalled = true }
 		filter.successHandler = [onAuthenticationSuccess: onAuthenticationSuccess] as AuthenticationSuccessHandler
 
-		def user = new User('somebody', 'password', true, true, true, true,
-				[new SimpleGrantedAuthority('ROLE_USER')])
-		def loadUserByUsername = { String username -> user }
-		filter.userDetailsService = [loadUserByUsername: loadUserByUsername] as UserDetailsService
+		def user = new User('somebody', 'password', true, true, true, true, [new SimpleGrantedAuthority('ROLE_USER')])
+		filter.userDetailsService = [loadUserByUsername: { String username -> user }] as UserDetailsService
 		filter.userDetailsChecker = [check: { details -> }] as UserDetailsChecker
 		filter.authenticationDetailsSource = [buildDetails: { req -> '' }] as AuthenticationDetailsSource
 
@@ -255,15 +309,28 @@ class SecurityTagLibTests extends GroovyPagesTestCase {
 
 	private void authenticate(principal, String roles) {
 		Authentication authentication = new TestingAuthenticationToken(
-				principal, null, SpringSecurityUtils.parseAuthoritiesString(roles))
+				  principal, null, SpringSecurityUtils.parseAuthoritiesString(roles))
 		authentication.authenticated = true
 		SCH.context.authentication = authentication
 	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
+	private void assertOutputEquals(String expected, String template) {
+		def sw = new StringWriter()
+		def out = new GrailsPrintWriter(sw)
+
+		GrailsWebRequest grailsWebRequest = new GrailsWebRequest(request, response,
+				  new DefaultGrailsApplicationAttributes(servletContext))
+		grailsWebRequest.out = out
+		RequestContextHolder.requestAttributes = grailsWebRequest
+
+		groovyPagesTemplateEngine.createTemplate(template, 'test_' + UUID.randomUUID()).make([:]).writeTo out
+
+		assert expected == sw.toString()
+	}
+
+	def cleanup() {
 		SCH.clearContext()
+		RequestContextHolder.resetRequestAttributes()
 	}
 }
 
