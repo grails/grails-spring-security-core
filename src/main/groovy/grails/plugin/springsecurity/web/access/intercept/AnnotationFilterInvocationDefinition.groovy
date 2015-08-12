@@ -431,13 +431,23 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	}
 
 	protected List<InterceptedUrl> findActionRoles(Class<?> clazz) {
+
+		GrailsControllerClass cc = (GrailsControllerClass)application.getArtefact(ControllerArtefactHandler.TYPE, clazz.name)
+		String defaultAction = cc.defaultAction
+
 		List<InterceptedUrl> actionRoles = []
 		for (Method method in clazz.declaredMethods) {
 			Annotation annotation = findSecuredAnnotation(method)
 			if (annotation) {
 				Collection<String> values = getValue(annotation)
 				if (values) {
-					actionRoles << new InterceptedUrl(grailsUrlConverter.toUrlElement(method.name), values, getHttpMethod(annotation))
+					log.trace 'found annotated method {} in {} with value(s) {}', method.name, clazz.name, values
+					HttpMethod httpMethod = getHttpMethod(annotation)
+					actionRoles << new InterceptedUrl(grailsUrlConverter.toUrlElement(method.name), values, httpMethod)
+
+					if (method.name == defaultAction) {
+						actionRoles << new InterceptedUrl('', values, httpMethod)
+					}
 				}
 			}
 		}
