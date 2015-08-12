@@ -21,7 +21,6 @@ import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
 
-import grails.core.DefaultGrailsApplication
 import grails.transaction.Transactional
 
 /**
@@ -29,61 +28,69 @@ import grails.transaction.Transactional
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SpringSecurityServiceTests extends GroovyTestCase {
+class SpringSecurityServiceSpec extends AbstractUnitSpec {
 
 	private SpringSecurityService service = new SpringSecurityService()
 
-	@Override
-	protected void setUp() {
-		super.setUp()
-		ReflectionUtils.application = new DefaultGrailsApplication(config: new ConfigObject())
+	void 'transactional'() {
+		expect:
+		!ClassPropertyFetcher.forClass(SpringSecurityService).getPropertyValue('transactional')
+		SpringSecurityService.methods.any { AnnotationUtils.findAnnotation(it, Transactional) }
 	}
 
-	/**
-	 * Test transactional.
-	 */
-	void testTransactional() {
-		assert !ClassPropertyFetcher.forClass(SpringSecurityService).getPropertyValue('transactional')
-		assert SpringSecurityService.methods.any { AnnotationUtils.findAnnotation(it, Transactional) }
-	}
+	void 'principal authenticated'() {
+		expect:
+		!service.principal
 
-	/**
-	 * Test getPrincipal().
-	 */
-	void testPrincipalAuthenticated() {
-		assert !service.principal
+		when:
 		authenticate 'role1'
-		assert service.principal
+
+		then:
+		service.principal
 	}
 
-	/**
-	 * Test encodePassword().
-	 */
-	void testEncodePassword() {
+	void 'encodePassword'() {
+		when:
 		service.passwordEncoder = [encodePassword: { String pwd, salt -> pwd + '_encoded' }]
-		assert 'passw0rd_encoded' == service.encodePassword('passw0rd')
+
+		then:
+		'passw0rd_encoded' == service.encodePassword('passw0rd')
 	}
 
-	void testClearCachedRequestmaps() {
+	void 'clearCachedRequestmaps'() {
+		when:
 		boolean resetCalled = false
 		service.objectDefinitionSource = [reset: { -> resetCalled = true }]
 
 		service.clearCachedRequestmaps()
 
-		assert resetCalled
+		then:
+		resetCalled
 	}
 
-	void testGetAuthentication() {
-		assert !service.authentication?.principal
+	void 'getAuthentication'() {
+		expect:
+		!service.authentication?.principal
+
+		when:
 		authenticate 'role1'
-		assert service.authentication
+
+		then:
+		service.authentication
 	}
 
-	void testIsLoggedIn() {
+	void 'isLoggedIn'() {
+		when:
 		service.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
-		assert !service.isLoggedIn()
+
+		then:
+		!service.isLoggedIn()
+
+		when:
 		authenticate 'role1'
-		assert service.isLoggedIn()
+
+		then:
+		service.isLoggedIn()
 	}
 
 	private void authenticate(roles) {
@@ -92,13 +99,5 @@ class SpringSecurityServiceTests extends GroovyTestCase {
 		def authentication = new TestingAuthenticationToken(principal, null, authorities)
 		authentication.authenticated = true
 		SCH.context.authentication = authentication
-	}
-
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SecurityTestUtils.logout()
-		SpringSecurityUtils.securityConfig = null
-		ReflectionUtils.application = null
 	}
 }

@@ -14,33 +14,32 @@
  */
 package grails.plugin.springsecurity.authentication.encoding
 
+import grails.plugin.springsecurity.AbstractUnitSpec
+
 /**
  * Unit tests for PBKDF2PasswordEncoder.
  *
  * @author havoc AT defuse.ca
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class PBKDF2PasswordEncoderTests extends GroovyTestCase {
+class PBKDF2PasswordEncoderSpec extends AbstractUnitSpec {
 
 	private PBKDF2PasswordEncoder encoder = new PBKDF2PasswordEncoder()
 
-	void testEncodePassword() {
-		100.times { int i ->
+	void 'encodePassword'() {
+		expect:
+		(1..100).every { int i ->
 			String password = i
 			String hash = encoder.encodePassword(password, null)
 			String secondHash = encoder.encodePassword(password, null)
-			if (hash == secondHash) {
-				fail 'TWO HASHES ARE EQUAL'
-			}
+			assert hash != secondHash, 'TWO HASHES ARE EQUAL'
 
 			String wrongPassword = i + 1
-			if (encoder.isPasswordValid(hash, wrongPassword, null)) {
-				fail 'WRONG PASSWORD ACCEPTED'
-			}
+			assert !encoder.isPasswordValid(hash, wrongPassword, null), 'WRONG PASSWORD ACCEPTED'
 
-			if (!encoder.isPasswordValid(hash, password, null)) {
-				fail 'GOOD PASSWORD NOT ACCEPTED'
-			}
+			assert encoder.isPasswordValid(hash, password, null), 'GOOD PASSWORD NOT ACCEPTED'
+
+			true
 		}
 	}
 }

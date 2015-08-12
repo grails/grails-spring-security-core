@@ -14,35 +14,25 @@
  */
 package grails.plugin.springsecurity.authentication.encoding
 
-import grails.plugin.springsecurity.FakeApplication
-import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.AbstractUnitSpec
 
 /**
  * Unit tests for BCryptPasswordEncoder.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class BCryptPasswordEncoderTests extends GroovyTestCase {
+class BCryptPasswordEncoderSpec extends AbstractUnitSpec {
 
 	private BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10)
 
-	@Override
-	protected void setUp() {
-		super.setUp()
-		ReflectionUtils.application = new FakeApplication()
-	}
-
-	void testEncodePassword() {
+	void 'encode password'() {
+		when:
 		String password = 'passw0rd'
 		String encoded = encoder.encodePassword(password, null)
 		String encodedAgain = encoder.encodePassword(password, null)
-		assert encoded != encodedAgain
-		assert encoder.isPasswordValid(encoded, password, null)
-	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		ReflectionUtils.application = null
+		then:
+		encoded != encodedAgain
+		encoder.isPasswordValid encoded, password, null
 	}
 }

@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.RedirectStrategy
@@ -23,24 +21,24 @@ import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.savedrequest.RequestCache
 import org.springframework.security.web.savedrequest.SavedRequest
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class AjaxAwareAuthenticationSuccessHandlerClass extends AbstractUnitSpec {
 
 	private static final String AJAX_SUCCESS_URL = '/ajaxSuccessUrl'
 	private static final String DEFAULT_TARGET_URL = '/defaultTargetUrl'
 
 	private final AjaxAwareAuthenticationSuccessHandler handler = new AjaxAwareAuthenticationSuccessHandler()
-	private MockHttpServletRequest request = new MockHttpServletRequest()
-	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	@Override
-	protected void setUp() {
-		super.setUp()
+	def setup() {
 		handler.defaultTargetUrl = DEFAULT_TARGET_URL
 		handler.ajaxSuccessUrl = AJAX_SUCCESS_URL
 
@@ -48,7 +46,8 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 		SecurityRequestHolder.set request, response
 	}
 
-	void testDetermineTargetUrl_Ajax() {
+	void 'determineTargetUrl with Ajax'() {
+		when:
 		handler.requestCache = new NullRequestCache()
 		handler.alwaysUseDefaultTargetUrl = true
 
@@ -56,17 +55,21 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 
 		handler.onAuthenticationSuccess(request, response,  new TestingAuthenticationToken('username', 'password'))
 
-		assert AJAX_SUCCESS_URL == response.redirectedUrl
+		then:
+		AJAX_SUCCESS_URL == response.redirectedUrl
 	}
 
-	void testDetermineTargetUrl_NotAjax() {
+	void 'determineTargetUrl without Ajax'() {
+		when:
 		handler.requestCache = new NullRequestCache()
 		handler.onAuthenticationSuccess(request, response, new TestingAuthenticationToken('username', 'password'))
 
-		assert DEFAULT_TARGET_URL == response.redirectedUrl
+		then:
+		DEFAULT_TARGET_URL == response.redirectedUrl
 	}
 
-	void testOnAuthenticationSuccess() {
+	void 'onAuthenticationSuccess'() {
+		when:
 		Authentication authentication = new TestingAuthenticationToken('username', 'password')
 
 		String expectedRedirect = 'expectedRedirect'
@@ -79,14 +82,8 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 
 		handler.onAuthenticationSuccess(request, response, authentication)
 
-		assert removeRequestCalled
-		assert expectedRedirect == redirectUrl
-	}
-
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SpringSecurityUtils.securityConfig = null
-		SecurityRequestHolder.reset()
+		then:
+		removeRequestCalled
+		expectedRedirect == redirectUrl
 	}
 }

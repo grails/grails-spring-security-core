@@ -16,26 +16,26 @@ package grails.plugin.springsecurity.web.authentication
 
 import javax.servlet.FilterChain
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
-
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class RequestHolderAuthenticationFilterTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class RequestHolderAuthenticationFilterSpec extends AbstractUnitSpec {
 
 	@SuppressWarnings('deprecation')
 	private RequestHolderAuthenticationFilter filter = new RequestHolderAuthenticationFilter()
 
-	void testDoFilter() {
-		assert !SecurityRequestHolder.request
-		assert !SecurityRequestHolder.response
+	void 'doFilter'() {
+		expect:
+		!SecurityRequestHolder.request
+		!SecurityRequestHolder.response
 
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
-
+		when:
 		boolean chainCalled = false
 		def chain = [doFilter: { req, res ->
 			assert SecurityRequestHolder.request
@@ -45,8 +45,9 @@ class RequestHolderAuthenticationFilterTests extends GroovyTestCase {
 
 		filter.doFilter request, response, chain
 
-		assert chainCalled
-		assert !SecurityRequestHolder.request
-		assert !SecurityRequestHolder.response
+		then:
+		chainCalled
+		!SecurityRequestHolder.request
+		!SecurityRequestHolder.response
 	}
 }

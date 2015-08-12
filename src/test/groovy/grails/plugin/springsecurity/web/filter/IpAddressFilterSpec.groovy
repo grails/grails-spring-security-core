@@ -16,67 +16,47 @@ package grails.plugin.springsecurity.web.filter
 
 import javax.servlet.FilterChain
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.security.access.vote.AuthenticatedVoter
-import org.springframework.security.access.vote.RoleVoter
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-import org.springframework.web.context.WebApplicationContext
-
-import grails.core.GrailsApplication
-import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.web.access.intercept.TestApplication
+import grails.plugin.springsecurity.AbstractUnitSpec
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * Unit tests for <code>IpAddressFilter</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class IpAddressFilterTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class IpAddressFilterSpec extends AbstractUnitSpec {
 
 	private final IpAddressFilter filter = new IpAddressFilter()
-	private final TestApplication application = new TestApplication()
 
-	protected void setUp() {
-		super.setUp()
-		def beans = [(GrailsApplication.APPLICATION_ID): application,
-		             webExpressionHandler: new DefaultWebSecurityExpressionHandler(),
-		             roleVoter: new RoleVoter(),
-		             authenticatedVoter: new AuthenticatedVoter()]
+	void 'afterPropertiesSet'() {
 
-		def ctx = [getBean: { String name, Class<?> c = null -> beans[name] },
-		           containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
-		application.mainContext = ctx
-		ReflectionUtils.application = application
-	}
+		when:
+		filter.afterPropertiesSet()
 
-	protected void tearDown() {
-		super.tearDown()
-		ReflectionUtils.application = null
-	}
+		then:
+		thrown AssertionError
 
-	void testAfterPropertiesSet() {
-
-		shouldFail(AssertionError) {
-			filter.afterPropertiesSet()
-		}
-
+		when:
 		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
 		                         '/bar/**': '10.0.0.0/8',
 		                         '/wahoo/**': '10.10.200.63']
 
 		filter.afterPropertiesSet()
+
+		then:
+		notThrown AssertionError
 	}
 
-	void testDoFilterHttpAllowed() {
+	void 'doFilter HTTP allowed'() {
 
+		when:
 		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
 		                         '/bar/**': '10.0.0.0/8',
 		                         '/wahoo/**': '10.10.200.63',
 		                         '/masked/**': '192.168.1.0/24']
 
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
 		int chainCount = 0
 		def chain = [doFilter: { req, res -> chainCount++ }] as FilterChain
 
@@ -100,65 +80,77 @@ class IpAddressFilterTests extends GroovyTestCase {
 		request.requestURI = '/masked/shouldsucceed'
 		filter.doFilter request, response, chain
 
-		assert 5 == chainCount
+		then:
+		5 == chainCount
 	}
 
-	void testDoFilterHttpDenied() {
+	void 'doFilter HTTP denied'() {
 
+		when:
 		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
 		                         '/bar/**': '10.0.0.0/8',
 		                         '/wahoo/**': '10.10.200.63',
 		                         '/masked/**': '192.168.1.0/24']
 
-		def request = new MockHttpServletRequest()
-		def response
 		int chainCount = 0
 		def chain = [doFilter: { req, res -> chainCount++ }] as FilterChain
 
 		request.remoteAddr = '63.161.169.137'
 
 		request.requestURI = '/foo/bar?x=123'
-		response = new MockHttpServletResponse()
-		filter.doFilter request, response, chain
-		assert 404 == response.status
 
+		filter.doFilter request, response, chain
+
+		then:
+		404 == response.status
+
+		when:
 		request.requestURI = '/bar/foo?x=123'
-		response = new MockHttpServletResponse()
+		response.reset()
 		filter.doFilter request, response, chain
-		assert 404 == response.status
 
+		then:
+		404 == response.status
+
+		when:
 		request.requestURI = '/wahoo/list'
-		response = new MockHttpServletResponse()
+		response.reset()
 		filter.doFilter request, response, chain
-		assert 404 == response.status
 
+		then:
+		404 == response.status
+
+		when:
 		request.requestURI = '/masked/shouldfail'
-		response = new MockHttpServletResponse()
+		response.reset()
 		filter.doFilter request, response, chain
-		assert 404 == response.status
 
-		assert 0 == chainCount
+		then:
+		404 == response.status
+
+		0 == chainCount
 	}
 
-	void testDoFilterMixIPv6IPv4() {
+	void 'doFilter mix IPv6 and IPv4'() {
 
+		when:
 		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
 		                         '/bar/**': '10.0.0.0/8',
 		                         '/wahoo/**': '10.10.200.63',
 		                         '/masked/**': '192.168.1.0/24']
 
-		def request = new MockHttpServletRequest()
-		def response
 		int chainCount = 0
 		def chain = [doFilter: { req, res -> chainCount++ }] as FilterChain
 
 		request.remoteAddr = 'fa:db8:85a3::8a2e:370:7334'
 
 		request.requestURI = '/masked/bar?x=123'
-		response = new MockHttpServletResponse()
-		filter.doFilter request, response, chain
-		assert 404 == response.status
 
-		assert 0 == chainCount
+		filter.doFilter request, response, chain
+
+		then:
+		404 == response.status
+
+		0 == chainCount
 	}
 }

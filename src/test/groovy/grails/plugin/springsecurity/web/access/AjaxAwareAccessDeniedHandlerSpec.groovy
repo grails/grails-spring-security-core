@@ -14,8 +14,6 @@
  */
 package grails.plugin.springsecurity.web.access
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl
 import org.springframework.security.authentication.RememberMeAuthenticationToken
@@ -23,116 +21,129 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 
-import grails.plugin.springsecurity.FakeApplication
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAccessDeniedHandler handler = new AjaxAwareAccessDeniedHandler()
-	private final FakeApplication application = new FakeApplication()
-	private MockHttpServletRequest request = new MockHttpServletRequest()
-	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	@Override
-	protected void setUp() {
-		super.setUp()
+	def setup() {
 		handler.errorPage = '/fail'
 		handler.ajaxErrorPage = '/ajaxFail'
 		handler.portResolver = new PortResolverImpl()
 		handler.authenticationTrustResolver = new AuthenticationTrustResolverImpl()
 		handler.requestCache = new HttpSessionRequestCache()
-		ReflectionUtils.application = application
 		ReflectionUtils.setConfigProperty 'ajaxHeader', SpringSecurityUtils.AJAX_HEADER
 		SecurityRequestHolder.set request, response
 	}
 
-	void testHandleAuthenticatedRememberMeRedirect() {
+	void 'handle authenticated, remember-me, redirect'() {
 
+		when:
 		handler.useForward = false
 
 		SCH.context.authentication = new RememberMeAuthenticationToken('username', 'password', null)
 
-		assert !request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
-		handler.handle request, response, new AccessDeniedException('fail')
-		assert request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+		then:
+		!request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
 
-		assert 'http://localhost/fail' == response.redirectedUrl
-		assert !response.forwardedUrl
+		when:
+		handler.handle request, response, new AccessDeniedException('fail')
+
+		then:
+		request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+
+		'http://localhost/fail' == response.redirectedUrl
+		!response.forwardedUrl
 	}
 
-	void testHandleAuthenticatedRememberMeForward() {
+	void 'handle authenticated, remember-me, forward'() {
 
+		when:
 		handler.useForward = true
 
 		SCH.context.authentication = new RememberMeAuthenticationToken('username', 'password', null)
 
-		assert !request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
-		handler.handle request, response, new AccessDeniedException('fail')
-		assert request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+		then:
+		!request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
 
-		assert !response.redirectedUrl
-		assert '/fail' == response.forwardedUrl
+		when:
+		handler.handle request, response, new AccessDeniedException('fail')
+
+		then:
+		request.session.getAttribute(SpringSecurityUtils.SAVED_REQUEST)
+
+		!response.redirectedUrl
+		'/fail' == response.forwardedUrl
 	}
 
-	void testHandleAuthenticatedAjaxRedirect() {
+	void 'handle authenticated, Ajax, redirect'() {
+
+		when:
 		handler.useForward = false
 
 		request.addHeader SpringSecurityUtils.AJAX_HEADER, 'XMLHttpRequest'
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assert 'http://localhost/ajaxFail' == response.redirectedUrl
-		assert !response.forwardedUrl
+		then:
+		'http://localhost/ajaxFail' == response.redirectedUrl
+		!response.forwardedUrl
 	}
 
-	void testHandleAuthenticatedAjaxForward() {
+	void 'handle authenticated, Ajax, forward'() {
+		when:
 		handler.useForward = true
 
 		request.addHeader SpringSecurityUtils.AJAX_HEADER, 'XMLHttpRequest'
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assert '/ajaxFail' == response.forwardedUrl
-		assert !response.redirectedUrl
+		then:
+		'/ajaxFail' == response.forwardedUrl
+		!response.redirectedUrl
 	}
 
-	void testHandleAuthenticatedNotAjaxRedirect() {
+	void 'handle authenticated, not Ajax, redirect'() {
+		when:
 		handler.useForward = false
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assert 'http://localhost/fail' == response.redirectedUrl
-		assert !response.forwardedUrl
+		then:
+		'http://localhost/fail' == response.redirectedUrl
+		!response.forwardedUrl
 	}
 
-	void testHandleAuthenticatedNotAjaxForward() {
+	void 'handle authenticated, not Ajax, forward'() {
+		when:
 		handler.useForward = true
 
 		handler.handle request, response, new AccessDeniedException('fail')
 
-		assert '/fail' == response.forwardedUrl
-		assert !response.redirectedUrl
+		then:
+		'/fail' == response.forwardedUrl
+		!response.redirectedUrl
 	}
 
-	void testRespectingGrailsServerURL() {
+	void 'respecting Grails serverURL'() {
+		when:
 		ReflectionUtils.application.config.grails.serverURL = 'http://somewhere.org'
 		handler.useForward = false
 
 		handler.handle request, response, new AccessDeniedException('fail')
-		assert 'http://somewhere.org/fail' == response.redirectedUrl
-		assert !response.forwardedUrl
-	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SCH.context.authentication = null
-		ReflectionUtils.application = null
-		SecurityRequestHolder.reset()
+		then:
+		'http://somewhere.org/fail' == response.redirectedUrl
+		!response.forwardedUrl
 	}
 }

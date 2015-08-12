@@ -66,12 +66,13 @@ class SecurityTestUtils {
 		SCH.clearContext()
 	}
 
-	static void testPrivateConstructor(Class clazz) {
+	static boolean testPrivateConstructor(Class clazz) {
 		assert 1 == clazz.declaredConstructors.length
 		def constructor = clazz.getDeclaredConstructor()
 		assert Modifier.isPrivate(constructor.modifiers)
 		assert !constructor.accessible
 		constructor.accessible = true
 		constructor.newInstance()
+		true
 	}
 }

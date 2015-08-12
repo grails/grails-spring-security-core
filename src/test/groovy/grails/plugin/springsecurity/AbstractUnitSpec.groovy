@@ -16,32 +16,38 @@ package grails.plugin.springsecurity
 
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-import org.springframework.web.context.WebApplicationContext
 
-import grails.core.GrailsApplication
-import grails.plugin.springsecurity.web.access.intercept.TestApplication
+import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.support.GrailsUnitTestMixin
+import spock.lang.Specification
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class TestUtils {
+@TestMixin(GrailsUnitTestMixin)
+abstract class AbstractUnitSpec extends Specification {
 
-	static createTestApplication() {
+	def setupSpec() {
+		defineBeans {
+			webExpressionHandler(DefaultWebSecurityExpressionHandler)
+			roleVoter(RoleVoter)
+			authenticatedVoter(AuthenticatedVoter)
+		}
+	}
 
-		def application = new TestApplication()
+	def setup() {
+		ReflectionUtils.application = SpringSecurityUtils.application = grailsApplication
+	}
 
-		def beans = [
-			(GrailsApplication.APPLICATION_ID): application,
-			webExpressionHandler: new DefaultWebSecurityExpressionHandler(),
-			roleVoter: new RoleVoter(),
-			authenticatedVoter: new AuthenticatedVoter()]
-
-		def ctx = [getBean: { String name, Class<?> c = null -> beans[name] },
-					  containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
-
-		application.mainContext = ctx
-
-		[application: application, beans: beans, ctx: ctx]
+	def cleanup() {
+		SecurityContextHolder.context.authentication = null
+		SecurityRequestHolder.reset()
+		SecurityTestUtils.logout()
+		SpringSecurityUtils.resetSecurityConfig()
+		ReflectionUtils.application = null
+		SpringSecurityUtils.application = null
 	}
 }

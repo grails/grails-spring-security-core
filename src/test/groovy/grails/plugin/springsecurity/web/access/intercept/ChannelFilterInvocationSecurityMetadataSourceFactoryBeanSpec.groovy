@@ -17,50 +17,71 @@ package grails.plugin.springsecurity.web.access.intercept
 import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
+import grails.plugin.springsecurity.AbstractUnitSpec
+
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanTests extends GroovyTestCase {
+class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanSpec extends AbstractUnitSpec {
 
 	private ChannelFilterInvocationSecurityMetadataSourceFactoryBean factory = new ChannelFilterInvocationSecurityMetadataSourceFactoryBean()
 
-	void testGetObjectType() {
-		assert DefaultFilterInvocationSecurityMetadataSource.is(factory.objectType)
+	void 'getObjectType'() {
+		expect:
+		DefaultFilterInvocationSecurityMetadataSource.is(factory.objectType)
 	}
 
-	void testIsSingleton() {
-		assert factory.singleton
+	void 'isSingleton'() {
+		expect:
+		factory.singleton
 	}
 
-	void testAfterPropertiesSet() {
-		shouldFail(AssertionError) {
-			factory.afterPropertiesSet()
-		}
+	void 'afterPropertiesSet'() {
+		when:
+		factory.afterPropertiesSet()
 
-		shouldFail(AssertionError) {
-			factory.afterPropertiesSet()
-		}
+		then:
+		thrown AssertionError
 
+		when:
+		factory.afterPropertiesSet()
+
+		then:
+		thrown AssertionError
+
+		when:
 		factory.definition = ['/foo1/**': 'secure_only']
-		shouldFail(AssertionError) {
-			factory.afterPropertiesSet()
-		}
+		factory.afterPropertiesSet()
 
+		then:
+		thrown AssertionError
+
+		when:
 		factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL']
 		factory.afterPropertiesSet()
+
+		then:
+		notThrown AssertionError
 	}
 
-	void testGetObject() {
+	void 'getObject'() {
+		when:
 		factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL',
 		                      '/foo2/**': 'REQUIRES_INSECURE_CHANNEL',
 		                      '/foo3/**': 'ANY_CHANNEL']
 		factory.afterPropertiesSet()
 
 		def object = factory.object
-		assert object instanceof DefaultFilterInvocationSecurityMetadataSource
+
+		then:
+		object instanceof DefaultFilterInvocationSecurityMetadataSource
+
+		when:
 		def map = object.@requestMap
-		assert 'REQUIRES_SECURE_CHANNEL'   == map[new AntPathRequestMatcher('/foo1/**')].attribute[0]
-		assert 'REQUIRES_INSECURE_CHANNEL' == map[new AntPathRequestMatcher('/foo2/**')].attribute[0]
-		assert 'ANY_CHANNEL'               == map[new AntPathRequestMatcher('/foo3/**')].attribute[0]
+
+		then:
+		'REQUIRES_SECURE_CHANNEL'   == map[new AntPathRequestMatcher('/foo1/**')].attribute[0]
+		'REQUIRES_INSECURE_CHANNEL' == map[new AntPathRequestMatcher('/foo2/**')].attribute[0]
+		'ANY_CHANNEL'               == map[new AntPathRequestMatcher('/foo3/**')].attribute[0]
 	}
 }

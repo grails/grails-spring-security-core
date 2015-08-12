@@ -14,56 +14,54 @@
  */
 package grails.plugin.springsecurity.web
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
-
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SecurityTestUtils
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * Unit tests for <code>SecurityRequestHolder</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SecurityRequestHolderTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class SecurityRequestHolderSpec extends AbstractUnitSpec {
 
-	void testSetAndGet() {
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
+	void 'set and get'() {
+		expect:
+		!SecurityRequestHolder.request
+		!SecurityRequestHolder.response
 
-		assert !SecurityRequestHolder.request
-		assert !SecurityRequestHolder.response
-
+		when:
 		SecurityRequestHolder.set request, response
 
-		assert request.is(SecurityRequestHolder.request)
-		assert response.is(SecurityRequestHolder.response)
+		then:
+		request.is(SecurityRequestHolder.request)
+		response.is(SecurityRequestHolder.response)
 	}
 
-	void testReset() {
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
+	void 'reset'() {
+		expect:
+		!SecurityRequestHolder.request
+		!SecurityRequestHolder.response
 
-		assert !SecurityRequestHolder.request
-		assert !SecurityRequestHolder.response
-
+		when:
 		SecurityRequestHolder.set request, response
 
-		assert request.is(SecurityRequestHolder.request)
-		assert response.is(SecurityRequestHolder.response)
+		then:
+		request.is(SecurityRequestHolder.request)
+		response.is(SecurityRequestHolder.response)
 
+		when:
 		SecurityRequestHolder.reset()
 
-		assert !SecurityRequestHolder.request
-		assert !SecurityRequestHolder.response
+		then:
+		!SecurityRequestHolder.request
+		!SecurityRequestHolder.response
 	}
 
 	void testPrivateConstructor() {
+		expect:
 		SecurityTestUtils.testPrivateConstructor SecurityRequestHolder
-	}
-
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SecurityRequestHolder.reset()
 	}
 }

@@ -14,79 +14,64 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
-
-import grails.plugin.springsecurity.FakeApplication
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * Unit tests for WithAjaxAuthenticationProcessingFilterEntryPoint.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AjaxAwareAuthenticationEntryPointTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class AjaxAwareAuthenticationEntryPointSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAuthenticationEntryPoint entryPoint = new AjaxAwareAuthenticationEntryPoint()
-	private final FakeApplication application = new FakeApplication()
 
 	private String loginFormUrl = '/loginFormUrl'
 	private String ajaxLoginFormUrl = '/ajaxLoginFormUrl'
 
-	private MockHttpServletRequest request = new MockHttpServletRequest()
-	private MockHttpServletResponse response = new MockHttpServletResponse()
-
-	@Override
-	protected void setUp() {
-		super.setUp()
+	def setup() {
 		entryPoint.useForward = true
 		entryPoint.loginFormUrl = loginFormUrl
 		entryPoint.ajaxLoginFormUrl = ajaxLoginFormUrl
-		ReflectionUtils.application = application
 		ReflectionUtils.setConfigProperty 'ajaxHeader', SpringSecurityUtils.AJAX_HEADER
 		SecurityRequestHolder.set request, response
 	}
 
-	/**
-	 * Test commence() with Ajax false.
-	 */
-	void testCommenceNotAjax() {
-
+	void 'commence() with Ajax false'() {
+		when:
 		entryPoint.commence request, response, null
 
-		assert loginFormUrl == response.forwardedUrl
+		then:
+		loginFormUrl == response.forwardedUrl
 	}
 
-	/**
-	 * Test commence() with Ajax true.
-	 */
-	void testCommenceAjax() {
+	void 'commence() with Ajax true'() {
 
+		when:
 		request.addHeader SpringSecurityUtils.AJAX_HEADER, 'XMLHttpRequest'
 
 		entryPoint.commence request, response, null
 
-		assert ajaxLoginFormUrl == response.forwardedUrl
+		then:
+		ajaxLoginFormUrl == response.forwardedUrl
 	}
 
-	/**
-	 * Test setAjaxLoginFormUrl().
-	 */
-	void testSetAjaxLoginFormUrl() {
-		shouldFail(AssertionError) {
-			entryPoint.ajaxLoginFormUrl = 'foo'
-		}
+	void 'setAjaxLoginFormUrl'() {
+		when:
+		entryPoint.ajaxLoginFormUrl = 'foo'
 
+		then:
+		thrown AssertionError
+
+		when:
 		entryPoint.ajaxLoginFormUrl = '/foo'
-	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SpringSecurityUtils.resetSecurityConfig()
-		ReflectionUtils.application = null
-		SecurityRequestHolder.reset()
+		then:
+		notThrown AssertionError
 	}
 }

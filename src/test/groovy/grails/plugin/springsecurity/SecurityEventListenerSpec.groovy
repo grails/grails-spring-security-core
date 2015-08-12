@@ -28,83 +28,65 @@ import org.springframework.security.web.authentication.switchuser.Authentication
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SecurityEventListenerTests extends GroovyTestCase {
+class SecurityEventListenerSpec extends AbstractUnitSpec {
 
 	private SecurityEventListener listener = new SecurityEventListener()
 	private closures = new ConfigObject()
 
-	@Override
-	protected void setUp() {
-		super.setUp()
+	def setup() {
 		SpringSecurityUtils.securityConfig = closures
 	}
 
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SpringSecurityUtils.resetSecurityConfig()
-	}
-
-	/**
-	 * Test handling <code>InteractiveAuthenticationSuccessEvent</code>.
-	 */
-	void testInteractiveAuthenticationSuccessEvent() {
-
+	void 'Test handling InteractiveAuthenticationSuccessEvent'() {
+		when:
 		boolean called = false
 		closures.onInteractiveAuthenticationSuccessEvent = { e, appCtx -> called = true }
 
 		listener.onApplicationEvent(new InteractiveAuthenticationSuccessEvent(
 				new TestingAuthenticationToken('', ''), getClass()))
 
-		assert called
+		then:
+		called
 	}
 
-	/**
-	 * Test handling <code>AbstractAuthenticationFailureEvent</code>.
-	 */
-	void testAbstractAuthenticationFailureEvent() {
-
+	void 'Test handling AbstractAuthenticationFailureEvent'() {
+		when:
 		boolean called = false
 		closures.onAbstractAuthenticationFailureEvent = { e, appCtx -> called = true }
 
 		listener.onApplicationEvent new AuthenticationFailureBadCredentialsEvent(
 				new TestingAuthenticationToken('', ''), new BadCredentialsException('bad credentials'))
 
-		assert called
+		then:
+		called
 	}
 
-	/**
-	 * Test handling <code>AuthenticationSuccessEvent</code>.
-	 */
-	void testAuthenticationSuccessEvent() {
-
+	void 'Test handling AuthenticationSuccessEvent'() {
+		when:
 		boolean called = false
 		closures.onAuthenticationSuccessEvent = { e, appCtx -> called = true }
 
 		listener.onApplicationEvent(new AuthenticationSuccessEvent(
 				new TestingAuthenticationToken('', '')))
 
-		assert called
+		then:
+		called
 	}
 
-	/**
-	 * Test handling <code>AbstractAuthorizationEvent</code>.
-	 */
-	void testAbstractAuthorizationEvent() {
-
+	void 'Test handling AbstractAuthorizationEvent'() {
+		when:
 		boolean called = false
 		closures.onAuthorizationEvent = { e, appCtx -> called = true }
 
-		listener.onApplicationEvent(new TestAuthorizationEvent())
+		listener.onApplicationEvent new AbstractAuthorizationEvent(42) {}
 
-		assert called
+		then:
+		called
 	}
 
-	/**
-	 * Test handling <code>AuthenticationSwitchUserEvent</code>.
-	 */
-	void testAuthenticationSwitchUserEvent() {
+	void 'Test handling AuthenticationSwitchUserEvent'() {
 
+		when:
 		boolean called = false
 		closures.onAuthenticationSwitchUserEvent = { e, appCtx -> called = true }
 
@@ -114,15 +96,7 @@ class SecurityEventListenerTests extends GroovyTestCase {
 
 		listener.onApplicationEvent(new AuthenticationSwitchUserEvent(authentication, targetUser))
 
-		assert called
-	}
-}
-
-/**
- * Dummy event (should be an anonymous inner class, but not possible in Groovy).
- */
-class TestAuthorizationEvent extends AbstractAuthorizationEvent {
-	TestAuthorizationEvent() {
-		super(42)
+		then:
+		called
 	}
 }

@@ -18,65 +18,74 @@ import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockFilterChain
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.mock.web.MockServletContext
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
 
 import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.web.mapping.UrlMappingInfo
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvocationDefinitionTests {
+class InterceptUrlMapFilterInvocationDefinitionSpec extends AbstractFilterInvocationDefinitionSpec {
 
 	private InterceptUrlMapFilterInvocationDefinition fid = new InterceptUrlMapFilterInvocationDefinition()
 
-	@Override
-	protected void setUp() {
-		super.setUp()
-		ReflectionUtils.application = application
-	}
+	void 'store mapping'() {
 
-	void testStoreMapping() {
+		expect:
+		!fid.configAttributeMap
 
-		assert !fid.configAttributeMap
-
+		when:
 		fid.storeMapping '/foo/bar', null, ['ROLE_ADMIN']
-		assert 1 == fid.configAttributeMap.size()
 
+		then:
+		1 == fid.configAttributeMap.size()
+
+		when:
 		fid.storeMapping '/foo/bar', null, ['ROLE_USER']
-		assert 1 == fid.configAttributeMap.size()
 
+		then:
+		1 == fid.configAttributeMap.size()
+
+		when:
 		fid.storeMapping '/other/path', null, ['ROLE_SUPERUSER']
-		assert 2 == fid.configAttributeMap.size()
+
+		then:
+		2 == fid.configAttributeMap.size()
 	}
 
-	void testInitialize() {
+	void 'initialize'() {
+		when:
 		ReflectionUtils.setConfigProperty('interceptUrlMap',
 				['/foo/**': 'ROLE_ADMIN',
 				 '/bar/**': ['ROLE_BAR', 'ROLE_BAZ']])
 
-		fid.roleVoter = ctx.getBean('roleVoter')
-		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
+		fid.roleVoter = applicationContext.getBean('roleVoter')
+		fid.authenticatedVoter = applicationContext.getBean('authenticatedVoter')
 
-		assert !fid.configAttributeMap
+		then:
+		!fid.configAttributeMap
 
+		when:
 		fid.initialize()
-		assert 2 == fid.configAttributeMap.size()
 
+		then:
+		2 == fid.configAttributeMap.size()
+
+		when:
 		fid.resetConfigs()
 
 		fid.initialize()
-		assert !fid.configAttributeMap
+
+		then:
+		!fid.configAttributeMap
 	}
 
-	void testInitializeWithNewSyntax() {
+	void 'initialize with new syntax'() {
+		when:
 		ReflectionUtils.setConfigProperty('interceptUrlMap',
 				[[pattern: '/foo/**', access: 'ROLE_ADMIN', httpMethod: HttpMethod.POST],
 				 [pattern: '/bar/**', access: ['ROLE_BAR', 'ROLE_BAZ']]])
@@ -84,44 +93,55 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 		fid.roleVoter = new RoleVoter()
 		fid.authenticatedVoter = new AuthenticatedVoter()
 
-		assert !fid.configAttributeMap
+		then:
+		!fid.configAttributeMap
 
+		when:
 		fid.initialize()
-		assert 2 == fid.configAttributeMap.size()
 
+		then:
+		2 == fid.configAttributeMap.size()
+
+		when:
 		def interceptedUrls = ([] + fid.configAttributeMap).sort { it.pattern }
-		assert interceptedUrls[0].pattern == '/bar/**'
-		assert !interceptedUrls[0].httpMethod
-		assert null == interceptedUrls[0].https
-		assert interceptedUrls[0].configAttributes*.attribute.sort() == ['ROLE_BAR', 'ROLE_BAZ']
 
-		assert interceptedUrls[1].pattern == '/foo/**'
-		assert interceptedUrls[1].httpMethod == HttpMethod.POST
-		assert null == interceptedUrls[1].https
-		assert interceptedUrls[1].configAttributes*.attribute == ['ROLE_ADMIN']
+		then:
+		interceptedUrls[0].pattern == '/bar/**'
+		!interceptedUrls[0].httpMethod
+		null == interceptedUrls[0].https
+		interceptedUrls[0].configAttributes*.attribute.sort() == ['ROLE_BAR', 'ROLE_BAZ']
+
+		interceptedUrls[1].pattern == '/foo/**'
+		interceptedUrls[1].httpMethod == HttpMethod.POST
+		null == interceptedUrls[1].https
+		interceptedUrls[1].configAttributes*.attribute == ['ROLE_ADMIN']
 	}
 
-	void testDetermineUrl() {
+	void 'determineUrl'() {
 
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
+		when:
 		def chain = new MockFilterChain()
 		request.contextPath = '/context'
 
 		request.requestURI = '/context/foo'
-		assert '/foo' == fid.determineUrl(new FilterInvocation(request, response, chain))
 
+		then:
+		'/foo' == fid.determineUrl(new FilterInvocation(request, response, chain))
+
+		when:
 		request.requestURI = '/context/fOo/Bar?x=1&y=2'
-		assert '/foo/bar' == fid.determineUrl(new FilterInvocation(request, response, chain))
+
+		then:
+		'/foo/bar' == fid.determineUrl(new FilterInvocation(request, response, chain))
 	}
 
-	void testSupports() {
-		assert fid.supports(FilterInvocation)
+	void 'supports'() {
+		expect:
+		fid.supports FilterInvocation
 	}
 
-	void testGetAttributes() {
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
+	void 'getAttributes'() {
+		when:
 		def chain = new MockFilterChain()
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, chain)
 
@@ -130,7 +150,7 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 		def initializeFid = {
 			fid = new MockInterceptUrlMapFilterInvocationDefinition()
 			fid.initialize()
-			WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
+			WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 			fid
 		}
 
@@ -138,6 +158,7 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 			request.requestURI = url
 			fid.url = url
 			assert config == fid.getAttributes(filterInvocation), "Checking config for $url"
+			true
 		}
 
 		def configAttribute = [new SecurityConfig('ROLE_ADMIN'), new SecurityConfig('ROLE_SUPERUSER')]
@@ -145,32 +166,33 @@ class InterceptUrlMapFilterInvocationDefinitionTests extends AbstractFilterInvoc
 		fid = initializeFid()
 		fid.storeMapping '/secure/**', null, configAttribute
 		fid.storeMapping '/secure/reallysecure/**', null, moreSpecificConfigAttribute
+
+		then:
 		checkConfigAttributeForUrl(configAttribute, '/secure/reallysecure/list')
 		checkConfigAttributeForUrl(configAttribute, '/secure/list')
 
+		when:
 		fid = initializeFid()
 		fid.storeMapping '/secure/reallysecure/**', null, moreSpecificConfigAttribute
 		fid.storeMapping '/secure/**', null, configAttribute
+
+		then:
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/secure/reallysecure/list')
 		checkConfigAttributeForUrl(configAttribute, '/secure/list')
 
+		when:
 		fid = initializeFid()
 		configAttribute = [new SecurityConfig('IS_AUTHENTICATED_FULLY')]
 		moreSpecificConfigAttribute = [new SecurityConfig('IS_AUTHENTICATED_ANONYMOUSLY')]
 		fid.storeMapping '/unprotected/**', null, moreSpecificConfigAttribute
 		fid.storeMapping '/**/*.jsp', null, configAttribute
+
+		then:
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/unprotected/b.jsp')
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/unprotected/path')
 		checkConfigAttributeForUrl(moreSpecificConfigAttribute, '/unprotected/path/x.jsp')
 		checkConfigAttributeForUrl(configAttribute, '/b.jsp')
 		checkConfigAttributeForUrl(null, '/path')
-	}
-
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		ReflectionUtils.application = null
-		SpringSecurityUtils.resetSecurityConfig()
 	}
 }
 

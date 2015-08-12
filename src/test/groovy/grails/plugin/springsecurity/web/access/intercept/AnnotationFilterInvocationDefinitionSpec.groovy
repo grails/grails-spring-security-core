@@ -14,145 +14,165 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import javax.servlet.ServletContext
-
 import org.grails.core.DefaultGrailsControllerClass
 import org.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.grails.web.mapping.DefaultUrlMappingsHolder
+import org.grails.web.mime.HttpServletResponseExtension
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.HttpMethod
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
-import org.springframework.mock.web.MockServletContext
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.web.FilterInvocation
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 
 import grails.core.GrailsClass
-import grails.plugin.springsecurity.FakeApplication
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
 import grails.plugin.springsecurity.annotation.Secured
 import grails.web.CamelCaseUrlConverter
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
+import spock.lang.Shared
 
 /**
  * Unit tests for AnnotationFilterInvocationDefinition.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocationDefinitionTests {
+class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationDefinitionSpec {
 
-	private AnnotationFilterInvocationDefinition fid = new AnnotationFilterInvocationDefinition()
+	private @Shared HttpServletResponseExtension httpServletResponseExtension = new HttpServletResponseExtension()
+	private @Shared AnnotationFilterInvocationDefinition fid = new AnnotationFilterInvocationDefinition(
+			  httpServletResponseExtension: httpServletResponseExtension)
 
-	void testSupports() {
-		assert fid.supports(FilterInvocation)
+	void 'supports'() {
+		expect:
+		fid.supports FilterInvocation
 	}
 
-//	void testGetConfigAttributeDefinitions() {
-//		assert !fid.configAttributeDefinitions
-//	}
-
-	void testLowercaseAndStripQuerystring() {
-		assert '/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR')
-		assert '/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/bar')
-		assert '/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
+	void 'lowercaseAndStripQuerystring'() {
+		expect:
+		'/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR')
+		'/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/bar')
+		'/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
 	}
 
-	void testGetAttributesNull() {
-		shouldFail(AssertionError) {
-			fid.getAttributes null
-		}
+	void 'getAttributes for null arg'() {
+		when:
+		fid.getAttributes null
+
+		then:
+		thrown AssertionError
 	}
 
-	void testGetAttributesNotSupports() {
-		shouldFail(AssertionError) {
-			fid.getAttributes 'foo'
-		}
+	void 'getAttributes when supports is false'() {
+		when:
+		fid.getAttributes 'foo'
+
+		then:
+		thrown AssertionError
 	}
 
-	void testGetAttributes() {
-		def request = new MockHttpServletRequest()
-		def response = new MockHttpServletResponse()
+	void 'getAttributes'() {
+		setup:
 		def chain = new MockFilterChain()
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, chain)
 
-		fid = new MockAnnotationFilterInvocationDefinition()
+		fid = new MockAnnotationFilterInvocationDefinition(httpServletResponseExtension: httpServletResponseExtension)
 
-		def urlMappingsHolder = [matchAll: { String uri -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
+		def urlMappingsHolder = [matchAll: { String uri, String httpMethod, String version -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
 		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
-		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
+		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 
+		when:
 		String pattern = '/foo/**'
 		def configAttribute = [new SecurityConfig('ROLE_ADMIN')]
 		fid.storeMapping pattern, null, configAttribute
 
 		request.requestURI = '/foo/bar'
 		fid.url = request.requestURI
-		assert configAttribute == fid.getAttributes(filterInvocation)
 
+		then:
+		configAttribute == fid.getAttributes(filterInvocation)
+
+		when:
 		fid.rejectIfNoRule = false
 		request.requestURI = '/bar/foo'
 		fid.url = request.requestURI
-		assert !fid.getAttributes(filterInvocation)
 
+		then:
+		!fid.getAttributes(filterInvocation)
+
+		when:
 		fid.rejectIfNoRule = true
-		assert AbstractFilterInvocationDefinition.DENY == fid.getAttributes(filterInvocation)
 
+		then:
+		AbstractFilterInvocationDefinition.DENY == fid.getAttributes(filterInvocation)
+
+		when:
 		String moreSpecificPattern = '/foo/ba*'
 		def moreSpecificConfigAttribute = [new SecurityConfig('ROLE_SUPERADMIN')]
 		fid.storeMapping moreSpecificPattern, null, moreSpecificConfigAttribute
 
 		request.requestURI = '/foo/bar'
 		fid.url = request.requestURI
-		assert moreSpecificConfigAttribute == fid.getAttributes(filterInvocation)
+
+		then:
+		moreSpecificConfigAttribute == fid.getAttributes(filterInvocation)
 	}
 
-	void testDetermineUrl_StaticRequest() {
+	void 'determineUrl for static request'() {
+		when:
 		def request = new MockHttpServletRequest()
 		def response = new MockHttpServletResponse()
 		def filterChain = new MockFilterChain()
 
 		request.requestURI = 'requestURI'
 
-		fid = new MockAnnotationFilterInvocationDefinition()
+		fid = new MockAnnotationFilterInvocationDefinition(httpServletResponseExtension: httpServletResponseExtension)
 
-		def urlMappingsHolder = [matchAll: { String uri -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
+		def urlMappingsHolder = [matchAll: { String uri, String httpMethod, String version -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
 		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
-		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
+		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
 
-		assert 'requesturi' == fid.determineUrl(filterInvocation)
+		then:
+		'requesturi' == fid.determineUrl(filterInvocation)
 	}
 
-	void testDetermineUrl_DynamicRequest() {
+	void 'determineUrl for dynamic request'() {
+		when:
 		def request = new MockHttpServletRequest()
 		def response = new MockHttpServletResponse()
 		def filterChain = new MockFilterChain()
 
 		request.requestURI = 'requestURI'
 
-		fid = new MockAnnotationFilterInvocationDefinition(url: 'FOO?x=1', application: application)
+		fid = new MockAnnotationFilterInvocationDefinition(url: 'FOO?x=1', application: grailsApplication,
+			                                                httpServletResponseExtension: httpServletResponseExtension)
 
 		UrlMappingInfo[] mappings = [[getControllerName: { -> 'foo' },
 		                              getActionName: { -> 'bar' },
-		                              configure: { GrailsWebRequest r -> }] as UrlMappingInfo]
-		def urlMappingsHolder = [matchAll: { String uri -> mappings }] as UrlMappingsHolder
+		                              configure: { GrailsWebRequest r -> },
+		                              getRedirectInfo: { -> }] as UrlMappingInfo]
+		def urlMappingsHolder = [matchAll: { String uri, String httpMethod, String version -> mappings }] as UrlMappingsHolder
 		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
-		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, new MockServletContext())
+		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
 
-		assert 'foo' == fid.determineUrl(filterInvocation)
+		then:
+		'foo' == fid.determineUrl(filterInvocation)
 	}
 
-	void testInitialize() {
+	void 'initialize'() {
 
+		when:
 		def mappings = {
 
 			"/admin/user/$action?/$id?"(controller: 'adminUser')
@@ -169,9 +189,7 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 			"500"(view: '/error')
 		}
 
-		ServletContext servletContext = new MockServletContext()
-
-		servletContext.setAttribute WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, ctx
+		servletContext.setAttribute WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE, applicationContext
 
 		def mappingEvaluator = new DefaultUrlMappingEvaluator(servletContext)
 
@@ -182,16 +200,19 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 		GrailsClass[] controllerClasses = [new DefaultGrailsControllerClass(ClassAnnotatedController),
 		                                   new DefaultGrailsControllerClass(MethodAnnotatedController)]
 
-		fid.roleVoter = ctx.getBean('roleVoter')
-		fid.authenticatedVoter = ctx.getBean('authenticatedVoter')
+		fid.roleVoter = applicationContext.getBean('roleVoter')
+		fid.authenticatedVoter = applicationContext.getBean('authenticatedVoter')
 		fid.grailsUrlConverter = new CamelCaseUrlConverter()
 
 		fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
 
-		assert 16 == fid.configAttributeMap.size()
+		then:
+		16 == fid.configAttributeMap.size()
 
+		when:
 		InterceptedUrl iu
 
+		then:
 		for (key in ['/classannotated', '/classannotated.*', '/classannotated/**']) {
 			iu = fid.getInterceptedUrl(key, null)
 			assert 1 == iu.configAttributes.size()
@@ -227,29 +248,30 @@ class AnnotationFilterInvocationDefinitionTests extends AbstractFilterInvocation
 			assert !iu.httpMethod
 		}
 
+		when:
 		iu = fid.getInterceptedUrl('/js/admin/**', null)
-		assert 1 == iu.configAttributes.size()
-		assert 'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
+
+		then:
+		1 == iu.configAttributes.size()
+		'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
 	}
 
-//	void testFindConfigAttribute() {
-//
-//		String pattern = '/foo/**'
-//		def configAttribute = [new SecurityConfig('ROLE_ADMIN')]
-//		_fid.storeMapping pattern, configAttribute
-//
-//		assert configAttribute == fid.findConfigAttribute('/foo/bar')
-//		assert !fid.findConfigAttribute('/bar/foo')
-//	}
+	// TODO was commented out
+	void 'findConfigAttribute'() {
 
-	protected void tearDown() {
-		super.tearDown()
+		when:
+		String pattern = '/foo/**'
+		def configAttributes = [new SecurityConfig('ROLE_ADMIN')]
+		fid.storeMapping pattern, null, configAttributes
+
+		then:
+		configAttributes == fid.findConfigAttributes('/foo/bar', null)
+		!fid.findConfigAttributes('/bar/foo', null)
+	}
+
+	def cleanup() {
 		RequestContextHolder.resetRequestAttributes()
 	}
-}
-
-class TestApplication extends FakeApplication {
-	GrailsClass getArtefactForFeature(String artefactType, featureID) { [:] as GrailsClass }
 }
 
 class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocationDefinition {

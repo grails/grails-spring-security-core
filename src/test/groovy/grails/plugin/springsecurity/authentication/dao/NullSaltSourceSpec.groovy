@@ -1,4 +1,4 @@
-/* Copyright 2011-2015 the original author or authors.
+/* Copyright 2006-2015 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,29 +12,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.springsecurity
+package grails.plugin.springsecurity.authentication.dao
 
-import org.grails.config.PropertySourcesConfig
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.User
 
-import grails.config.Config
-import grails.core.DefaultGrailsApplication
+import grails.plugin.springsecurity.AbstractUnitSpec
 
 /**
- * For testing only.
+ * Unit tests for <code>NullSaltSource</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class FakeApplication extends DefaultGrailsApplication {
+class NullSaltSourceSpec extends AbstractUnitSpec {
 
-	final Config config = new PropertySourcesConfig()
+	void 'getSalt'() {
+		when:
+		def user = new User('username', 'password', true, true, true, true, [new SimpleGrantedAuthority('ROLE_USER')])
 
-	FakeApplication() {}
-
-	@SuppressWarnings('rawtypes')
-	FakeApplication(Class[] classes, ClassLoader classLoader) {
-		super(classes, classLoader)
+		then:
+		!new NullSaltSource().getSalt(user)
 	}
-
-	@Override
-	Config getConfig() { config }
 }

@@ -21,6 +21,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SecurityTestUtils
 
 /**
@@ -28,7 +29,7 @@ import grails.plugin.springsecurity.SecurityTestUtils
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class MutableLogoutFilterTests extends GroovyTestCase {
+class MutableLogoutFilterSpec extends AbstractUnitSpec {
 
 	private final String afterLogoutUrl = '/loggedout'
 	private final logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler(defaultTargetUrl: afterLogoutUrl)
@@ -37,20 +38,20 @@ class MutableLogoutFilterTests extends GroovyTestCase {
 
 	private int logoutCount
 
-	@Override
-	protected void setUp() {
-		super.setUp()
-		(1..5).each {
+	def setup() {
+		5.times {
 			handlers << ([logout: { req, res, auth -> logoutCount++ }] as LogoutHandler)
 		}
 		filter.handlers = handlers
 	}
 
-	void testDoFilter() {
+	void 'doFilter'() {
+
+		setup:
 		String url = '/after_logout'
 		String filterProcessesUrl = '/j_spring_security_logout'
 
-		def authentication = SecurityTestUtils.authenticate()
+		SecurityTestUtils.authenticate()
 
 		def request1 = new MockHttpServletRequest('GET', '/foo/bar')
 		def response1 = new MockHttpServletResponse()
@@ -62,15 +63,21 @@ class MutableLogoutFilterTests extends GroovyTestCase {
 		def chain1 = [doFilter: { req, res -> chain1Called = true }] as FilterChain
 		def chain2 = [doFilter: { req, res -> chain2Called = true }] as FilterChain
 
+		when:
 		// not a logout url, so chain.doFilter() is called
 		filter.doFilter request1, response1, chain1
-		assert !response1.redirectedUrl
 
+		then:
+		!response1.redirectedUrl
+
+		when:
 		filter.doFilter request2, response2, chain2
-		assert response2.redirectedUrl
 
-		assert chain1Called
-		assert !chain2Called
-		assert 5 == logoutCount
+		then:
+		response2.redirectedUrl
+
+		chain1Called
+		!chain2Called
+		5 == logoutCount
 	}
 }

@@ -25,51 +25,69 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
+import grails.plugin.springsecurity.AbstractUnitSpec
+
 /**
  * Unit tests for AuthenticatedVetoableDecisionManager.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AuthenticatedVetoableDecisionManagerTests extends GroovyTestCase {
+class AuthenticatedVetoableDecisionManagerSpec extends AbstractUnitSpec {
 
 	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager()
 
-	@Override
-	protected void setUp() {
-		super.setUp()
+	def setup() {
 		manager.decisionVoters = [new AuthenticatedVoter(), new RoleVoter()]
 	}
 
-	void testDecideHasOneRole() {
+	void 'decide with one role'() {
+		when:
 		manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'ROLE_ADMIN'])
+
+		then:
+		notThrown AccessDeniedException
 	}
 
-	void testDecideHasMoreThanRequiredRoles() {
+	void 'decide with more than required roles'() {
+		when:
 		manager.decide createAuthentication(['ROLE_USER', 'ROLE_ADMIN']), null, createDefinition(['ROLE_USER'])
+
+		then:
+		notThrown AccessDeniedException
 	}
 
-	void testDecideInsufficientRoles() {
-		shouldFail(AccessDeniedException) {
-			manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_ADMIN'])
-		}
+	void 'decide insufficient roles'() {
+		when:
+		manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_ADMIN'])
+
+		then:
+		thrown AccessDeniedException
 	}
 
-	void testDecideAuthenticatedFully() {
+	void 'decide with IS_AUTHENTICATED_FULLY'() {
+		when:
 		manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+
+		then:
+		notThrown AccessDeniedException
 	}
 
-	void testDecideAuthenticatedFullyRemembered() {
+	void 'decide with IS_AUTHENTICATED_FULLY and remember-me'() {
+		when:
 		def auth = new RememberMeAuthenticationToken('key', 'principal', namesToAuthorities(['ROLE_USER']))
-		shouldFail(AccessDeniedException) {
-			manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
-		}
+		manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+
+		then:
+		thrown AccessDeniedException
 	}
 
-	void testDecideAuthenticatedFullyAnonymous() {
+	void 'decide with AnonymousAuthenticationToken'() {
+		when:
 		def auth = new AnonymousAuthenticationToken('key', 'principal', namesToAuthorities(['ROLE_USER']))
-		shouldFail(AccessDeniedException) {
-			manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
-		}
+		manager.decide auth, null, createDefinition(['ROLE_USER', 'IS_AUTHENTICATED_FULLY'])
+
+		then:
+		thrown AccessDeniedException
 	}
 
 	private Authentication createAuthentication(roleNames) {

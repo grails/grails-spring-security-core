@@ -14,25 +14,30 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import org.springframework.mock.web.MockHttpServletRequest
-import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.web.RedirectStrategy
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
+@TestMixin(ControllerUnitTestMixin)
+class AjaxAwareAuthenticationFailureHandlerSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAuthenticationFailureHandler handler = new AjaxAwareAuthenticationFailureHandler()
-	private MockHttpServletRequest request = new MockHttpServletRequest()
-	private MockHttpServletResponse response = new MockHttpServletResponse()
 
-	void testOnAuthenticationFailureNotAjax() {
+	def setup() {
+		SecurityRequestHolder.set request, response
+	}
 
+	void 'onAuthenticationFailure not Ajax'() {
+
+		when:
 		String defaultFailureUrl = '/defaultFailureUrl'
 		handler.defaultFailureUrl = defaultFailureUrl
 		handler.ajaxAuthenticationFailureUrl = '/ajaxAuthenticationFailureUrl'
@@ -47,11 +52,14 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 		SpringSecurityUtils.securityConfig = [ajaxHeader: 'ajaxHeader'] as ConfigObject
 
 		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
-		assert redirectCalled
+
+		then:
+		redirectCalled
 	}
 
-	void testOnAuthenticationFailureAjax() {
+	void 'onAuthenticationFailure Ajax'() {
 
+		when:
 		String ajaxAuthenticationFailureUrl = '/ajaxAuthenticationFailureUrl'
 		handler.defaultFailureUrl = '/defaultFailureUrl'
 		handler.ajaxAuthenticationFailureUrl = ajaxAuthenticationFailureUrl
@@ -67,28 +75,23 @@ class AjaxAwareAuthenticationFailureHandlerTests extends GroovyTestCase {
 
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
 		handler.onAuthenticationFailure request, response, new BadCredentialsException('fail')
-		assert redirectCalled
+
+		then:
+		redirectCalled
 	}
 
-	void testAfterPropertiesSet() {
-		shouldFail(AssertionError) {
-			handler.afterPropertiesSet()
-		}
+	void 'afterPropertiesSet'() {
+		when:
+		handler.afterPropertiesSet()
 
+		then:
+		thrown AssertionError
+
+		when:
 		handler.ajaxAuthenticationFailureUrl = 'url'
 		handler.afterPropertiesSet()
-	}
 
-	@Override
-	protected void setUp() {
-		super.setUp()
-		SecurityRequestHolder.set request, response
-	}
-
-	@Override
-	protected void tearDown() {
-		super.tearDown()
-		SpringSecurityUtils.resetSecurityConfig()
-		SecurityRequestHolder.reset()
+		then:
+		notThrown AssertionError
 	}
 }

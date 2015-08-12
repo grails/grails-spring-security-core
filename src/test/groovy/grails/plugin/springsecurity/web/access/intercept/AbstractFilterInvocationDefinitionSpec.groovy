@@ -14,28 +14,12 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.TestUtils
+import grails.plugin.springsecurity.AbstractUnitSpec
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-abstract class AbstractFilterInvocationDefinitionTests extends GroovyTestCase {
-
-	protected TestApplication application
-	protected ctx
-	protected Map beans
-
-	protected void setUp() {
-		super.setUp()
-		def app = TestUtils.createTestApplication()
-		application = ReflectionUtils.application = app.application
-		beans = app.beans
-		ctx = app.ctx
-	}
-
-	protected void tearDown() {
-		super.tearDown()
-		ReflectionUtils.application = null
-	}
-}
+@TestMixin(ControllerUnitTestMixin)
+abstract class AbstractFilterInvocationDefinitionSpec extends AbstractUnitSpec {}
