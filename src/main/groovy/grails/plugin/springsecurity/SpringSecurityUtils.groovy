@@ -45,6 +45,7 @@ import grails.plugin.springsecurity.web.SecurityRequestHolder
 import grails.plugin.springsecurity.web.filter.DebugFilter
 import grails.util.Environment
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * Helper methods.
@@ -52,6 +53,7 @@ import groovy.transform.CompileStatic
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @CompileStatic
+@Slf4j
 final class SpringSecurityUtils {
 
 	private static final String MULTIPART_HTTP_SERVLET_REQUEST_KEY = MultipartHttpServletRequest.name
@@ -83,7 +85,7 @@ final class SpringSecurityUtils {
 	// UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY is deprecated
 	public static final String SPRING_SECURITY_LAST_USERNAME_KEY = 'SPRING_SECURITY_LAST_USERNAME'
 
-   // AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
+	// AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
 	public static final String DEFAULT_TARGET_PARAMETER = 'spring-security-redirect'
 
 	/** Default value for the name of the Ajax header. */
@@ -228,6 +230,7 @@ final class SpringSecurityUtils {
 	 */
 	static synchronized ConfigObject getSecurityConfig() {
 		if (_securityConfig == null) {
+			log.trace 'Building security config since there is no cached config'
 			reloadSecurityConfig()
 		}
 
@@ -245,6 +248,7 @@ final class SpringSecurityUtils {
 	/** Reset the config for testing or after a dev mode Config.groovy change. */
 	static synchronized void resetSecurityConfig() {
 		_securityConfig = null
+		log.trace 'reset security config'
 	}
 
 	/**
@@ -253,11 +257,13 @@ final class SpringSecurityUtils {
 	 */
 	static synchronized void loadSecondaryConfig(String className) {
 		mergeConfig securityConfig, className
+		log.trace 'loaded secondary config {}', className
 	}
 
 	/** Force a reload of the security configuration. */
 	static void reloadSecurityConfig() {
 		mergeConfig ReflectionUtils.securityConfig, 'DefaultSecurityConfig'
+		log.trace 'reloaded security config'
 	}
 
 	/**
@@ -314,6 +320,7 @@ final class SpringSecurityUtils {
 	 */
 	static void registerProvider(String beanName) {
 		providerNames.add 0, beanName
+		log.trace 'Registered bean "{}" as a provider', beanName
 	}
 
 	/**
@@ -325,6 +332,7 @@ final class SpringSecurityUtils {
 	 */
 	static void registerLogoutHandler(String beanName) {
 		logoutHandlerNames.add 0, beanName
+		log.trace 'Registered bean "{}" as a logout handler', beanName
 	}
 
 	/**
@@ -336,6 +344,7 @@ final class SpringSecurityUtils {
 	 */
 	static void registerAfterInvocationProvider(String beanName) {
 		afterInvocationManagerProviderNames.add 0, beanName
+		log.trace 'Registered bean "{}" as an AfterInvocationProvider', beanName
 	}
 
 	/**
@@ -347,6 +356,7 @@ final class SpringSecurityUtils {
 	 */
 	static void registerVoter(String beanName) {
 		voterNames.add 0, beanName
+		log.trace 'Registered bean "{}" as a voter', beanName
 	}
 
 	/**
@@ -375,6 +385,8 @@ final class SpringSecurityUtils {
 		String oldName = orderedFilters[order]
 		assert oldName == null, "Cannot register filter '$beanName' at position $order; '$oldName' is already registered in that position"
 		orderedFilters[order] = beanName
+
+		log.trace 'Registered bean "{}" as a filter at order {}', beanName, order
 	}
 
 	/**
@@ -412,6 +424,8 @@ final class SpringSecurityUtils {
 
 		FilterChainProxy filterChain = filterChainProxy
 		filterChain.filterChainMap = mergeFilterChainMap(configuredOrderedFilters, filter, order, filterChain.filterChainMap)
+
+		log.trace 'Client registered bean "{}" as a filter at order {}', beanName, order
 	}
 
 	private static FilterChainProxy getFilterChainProxy() {

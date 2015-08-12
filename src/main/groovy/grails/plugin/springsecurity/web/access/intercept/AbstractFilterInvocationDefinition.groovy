@@ -70,14 +70,17 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		FilterInvocation filterInvocation = (FilterInvocation)object
 
 		String url = determineUrl(filterInvocation)
+		log.trace 'getAttributes(): url is {} for FilterInvocation {}', url, filterInvocation
 
 		Collection<ConfigAttribute> configAttributes = findConfigAttributes(url, filterInvocation.request.method)
 
 		if (rejectIfNoRule && !configAttributes) {
+			log.trace 'Returning DENY, rejectIfNoRule is true and no ConfigAttributes'
 			// return something that cannot be valid this will cause the voters to abstain or deny
 			return DENY
 		}
 
+		log.trace 'ConfigAttributes are {}', configAttributes
 		configAttributes
 	}
 
@@ -222,7 +225,10 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 
 		InterceptedUrl replaced = storeMapping(key, method, Collections.unmodifiableCollection(configAttributes))
 		if (replaced) {
-			log.warn "replaced rule for '{}' with roles {} with roles {}", [key, replaced.configAttributes, configAttributes] as Object[]
+			log.warn "Replaced rule for '{}' and ConfigAttributes {} with ConfigAttributes {}", [key, replaced.configAttributes, configAttributes] as Object[]
+		}
+		else {
+			log.trace "Storing ConfigAttributes {} for '{}' and HttpMethod {}", [key, configAttributes, method] as Object[]
 		}
 	}
 
@@ -237,10 +243,13 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		}
 
 		if (existing) {
+			log.trace 'Replacing existing mapping {}', existing
 			compiled.remove existing
 		}
 
-		compiled << new InterceptedUrl(pattern, method, configAttributes)
+		InterceptedUrl mapping = new InterceptedUrl(pattern, method, configAttributes)
+		compiled << mapping
+		log.trace 'Stored mapping {} for pattern "{}", HttpMethod {}, ConfigAttributes {}', mapping, pattern, method, configAttributes
 
 		existing
 	}

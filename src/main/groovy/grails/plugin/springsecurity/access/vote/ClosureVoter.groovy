@@ -41,9 +41,12 @@ class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, Application
 		assert fi, 'object cannot be null'
 		assert attributes != null, 'attributes cannot be null'
 
+		log.trace 'vote() Authentication {}, FilterInvocation {} ConfigAttributes {}', [authentication, fi, attributes] as Object[]
+
 		ClosureConfigAttribute attribute = (ClosureConfigAttribute)attributes.find { it instanceof ClosureConfigAttribute }
 
 		if (!attribute) {
+			log.trace 'No ClosureConfigAttribute found'
 			return ACCESS_ABSTAIN
 		}
 
@@ -51,10 +54,12 @@ class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, Application
 		closure.delegate = new SecuredClosureDelegate(authentication, fi, applicationContext)
 		def result = closure.call()
 		if (result instanceof Boolean) {
+			log.trace 'Closure result: {}', result
 			return result ? ACCESS_GRANTED : ACCESS_DENIED
 		}
 
-		// TODO log warning
+		log.warn 'vote() returning ACCESS_DENIED because the return value from the closure call was {}, not boolean', result?.getClass()?.name
+
 		ACCESS_DENIED
 	}
 

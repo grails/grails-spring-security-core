@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.FilterInvocation
 
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * Based on the class of the same name in Spring Security which uses the
@@ -32,6 +33,7 @@ import groovy.transform.CompileStatic
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @CompileStatic
+@Slf4j
 class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation> {
 
 	/** Dependency injection for the expression handler. */
@@ -42,8 +44,11 @@ class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation> {
 		assert fi, 'object cannot be null'
 		assert attributes, 'attributes cannot be null'
 
+		log.trace 'vote() Authentication {}, FilterInvocation {} ConfigAttributes {}', [authentication, fi, attributes] as Object[]
+
 		WebExpressionConfigAttribute weca = findConfigAttribute(attributes)
 		if (!weca) {
+			log.trace 'No WebExpressionConfigAttribute found'
 			return ACCESS_ABSTAIN
 		}
 

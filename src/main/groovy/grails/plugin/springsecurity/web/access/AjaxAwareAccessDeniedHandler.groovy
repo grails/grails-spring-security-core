@@ -31,15 +31,17 @@ import org.springframework.security.web.savedrequest.RequestCache
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @CompileStatic
+@Slf4j
 class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, InitializingBean {
 
-	protected String errorPage
 	protected String ajaxErrorPage
+	protected String errorPage
 
 	/** Dependency injection for the {@link AuthenticationTrustResolver}. */
 	AuthenticationTrustResolver authenticationTrustResolver
@@ -62,16 +64,19 @@ class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, InitializingB
 		}
 
 		if (response.committed) {
+			log.trace 'response is committed'
 			return
 		}
 
 		boolean ajaxError = ajaxErrorPage != null && SpringSecurityUtils.isAjax(request)
 		if (errorPage == null && !ajaxError) {
+			log.trace 'Sending 403 for non-Ajax request without errorPage specified'
 			response.sendError HttpServletResponse.SC_FORBIDDEN, e.message
 			return
 		}
 
 		if (useForward && (errorPage != null || ajaxError)) {
+			log.trace 'Forwarding to error page'
 			// Put exception into request scope (perhaps of use to a view)
 			request.setAttribute(WebAttributes.ACCESS_DENIED_403, e)
 			response.status = HttpServletResponse.SC_FORBIDDEN
@@ -108,7 +113,10 @@ class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, InitializingB
 		else if (errorPage != null) {
 			redirectUrl += errorPage
 		}
-		response.sendRedirect response.encodeRedirectURL(redirectUrl)
+
+		String encodedRedirectUrl = response.encodeRedirectURL(redirectUrl)
+		log.trace 'Redirecting to {}', encodedRedirectUrl
+		response.sendRedirect encodedRedirectUrl
 	}
 
 	protected Authentication getAuthentication() {

@@ -40,6 +40,8 @@ class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager
 		boolean authenticatedVotersGranted = checkAuthenticatedVoters(authentication, object, configAttributes)
 		boolean otherVotersGranted = checkOtherVoters(authentication, object, configAttributes)
 
+		logger.trace "decide(): authenticatedVotersGranted=$authenticatedVotersGranted otherVotersGranted=$otherVotersGranted"
+
 		if (!authenticatedVotersGranted && !otherVotersGranted) {
 			checkAllowIfAllAbstainDecisions()
 		}

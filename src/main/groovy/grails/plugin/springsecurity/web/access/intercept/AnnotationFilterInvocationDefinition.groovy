@@ -63,10 +63,13 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	protected UrlMappingsHolder urlMappingsHolder
 
 	ServletContext servletContext
+
 	/** Dependency injection for the application. */
 	GrailsApplication application
+
 	/** Dependency injection for the httpServletResponseExtension bean. */
 	HttpServletResponseExtension httpServletResponseExtension
+
 	/** Dependency injection for the grailsUrlConverter bean. */
 	UrlConverter grailsUrlConverter
 
@@ -90,6 +93,8 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 		String requestUrl = calculateUri(request)
 
+		log.trace 'Requested url: {}', requestUrl
+
 		String url
 		try {
 			GrailsWebRequest grailsRequest = new GrailsWebRequest(request, response, servletContext)
@@ -102,10 +107,11 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 			for (UrlMappingInfo mapping : urlInfos) {
 				if (grails.plugin.springsecurity.ReflectionUtils.isRedirect(mapping)) {
+					log.trace 'Mapping {} is a redirect', mapping
 					break
 				}
 
-				configureMapping(mapping, grailsRequest, savedParams)
+				configureMapping mapping, grailsRequest, savedParams
 
 				url = findGrailsUrl(mapping)
 				if (url) {
@@ -127,7 +133,9 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			url = requestUrl
 		}
 
-		lowercaseAndStripQuerystring url
+		String finalUrl = lowercaseAndStripQuerystring(url)
+		log.trace 'Final url is {}', finalUrl
+		finalUrl
 	}
 
 	protected String findGrailsUrl(UrlMappingInfo mapping) {
@@ -350,8 +358,10 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		String key = fullPattern.toString().toLowerCase()
 		InterceptedUrl replaced = storeMapping(key, method, configAttributes)
 		if (replaced) {
-			log.warn "'replaced rule for '{}' with tokens {} with tokens {}",
-					  [key, replaced.configAttributes, configAttributes] as Object[]
+			log.warn "Replaced rule for '{}' and ConfigAttributes {} with ConfigAttributes {}", [key, replaced.configAttributes, configAttributes] as Object[]
+		}
+		else {
+			log.trace "Storing ConfigAttributes {} for '{}' and HttpMethod {}", [key, configAttributes, method] as Object[]
 		}
 	}
 
@@ -371,15 +381,20 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			if (annotation) {
 				Class<?> closureClass = findClosureClass((grails.plugin.springsecurity.annotation.Secured)annotation)
 				if (!closureClass) {
-					classRoleMap << new InterceptedUrl(controllerName, getValue(annotation), getHttpMethod(annotation))
+					Collection<String> values = getValue(annotation)
+					log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
+					classRoleMap << new InterceptedUrl(controllerName, values, getHttpMethod(annotation))
 				}
 				else {
+					log.trace 'found class-scope annotation with a closure in {}', clazz.name
 					classClosureMap << new InterceptedUrl(controllerName, closureClass, getHttpMethod(annotation))
 				}
 			}
 		}
 		else {
-			classRoleMap << new InterceptedUrl(controllerName, getValue(annotation), null)
+			Collection<String> values = getValue(annotation)
+			log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
+			classRoleMap << new InterceptedUrl(controllerName, values, null)
 		}
 
 		List<InterceptedUrl> annotatedActionNames = findActionRoles(clazz)
@@ -408,6 +423,10 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			fullControllerName << namespaceInUrlFormat << ':'
 		}
 		fullControllerName << controllerNameInUrlFormat
+
+		log.trace 'Resolved full controller name for controller "{}" and namespace "{}" as "{}"',
+				  [controllerNameInUrlFormat, namespaceInUrlFormat, fullControllerName] as Object[]
+
 		fullControllerName
 	}
 
@@ -431,6 +450,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			grails.plugin.springsecurity.annotation.Secured annotation = method.getAnnotation(
 					  grails.plugin.springsecurity.annotation.Secured)
 			if (annotation && annotation.closure() != grails.plugin.springsecurity.annotation.Secured) {
+				log.trace 'found annotation with a closure on method {} in {}', method.name, clazz.name
 				actionClosures << new InterceptedUrl(grailsUrlConverter.toUrlElement(
 						  method.name), annotation.closure(), getHttpMethod(annotation))
 			}

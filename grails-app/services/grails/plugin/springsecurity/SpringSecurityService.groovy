@@ -21,12 +21,14 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.transaction.Transactional
+import groovy.util.logging.Slf4j
 
 /**
  * Utility methods.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 class SpringSecurityService {
 
 	protected static final List<String> NO_SALT = ['bcrypt', 'pbkdf2']
@@ -145,6 +147,7 @@ class SpringSecurityService {
 	 */
 	void clearCachedRequestmaps() {
 		objectDefinitionSource?.reset()
+		log.trace 'Cleared cached requestmaps'
 	}
 
 	/**
@@ -154,7 +157,9 @@ class SpringSecurityService {
 	void reloadDBRoleHierarchy() {
 		Class roleHierarchyEntryClass = Class.forName(securityConfig.roleHierarchyEntryClassName)
 		roleHierarchyEntryClass.withTransaction {
-			grailsApplication.mainContext.roleHierarchy.hierarchy = roleHierarchyEntryClass.list()*.entry.join('\n')
+			String hierarchy = roleHierarchyEntryClass.list()*.entry.join('\n')
+			log.trace 'Loaded persistent role hierarchy {}', hierarchy
+			grailsApplication.mainContext.roleHierarchy.hierarchy = hierarchy
 		}
 	}
 
@@ -192,6 +197,8 @@ class SpringSecurityService {
 		getClassForName(conf.userLookup.authorityJoinClassName).removeAll role
 
 		role.delete()
+
+		log.trace 'Deleted role {}', role
 	}
 
 	/**
@@ -203,9 +210,7 @@ class SpringSecurityService {
 	 */
 	@Transactional
 	boolean updateRole(role, newProperties) {
-
 		def conf = securityConfig
-		String configAttributePropertyName = conf.requestMap.configAttributeField
 		String authorityFieldName = conf.authority.nameField
 
 		String oldRoleName = role."$authorityFieldName"
@@ -215,16 +220,20 @@ class SpringSecurityService {
 			return false
 		}
 
-		if (useRequestmaps()) {
-			String newRoleName = role."$authorityFieldName"
-			if (newRoleName != oldRoleName) {
-				def requestmaps = findRequestmapsByRole(oldRoleName, conf)
-				for (rm in requestmaps) {
-					rm."$configAttributePropertyName" = rm."$configAttributePropertyName".replace(oldRoleName, newRoleName)
-				}
-			}
-			clearCachedRequestmaps()
+		if (!useRequestmaps()) {
+			return true
 		}
+
+		String newRoleName = role."$authorityFieldName"
+		if (newRoleName == oldRoleName) {
+			return true
+		}
+
+		String configAttributePropertyName = conf.requestMap.configAttributeField
+		for (rm in findRequestmapsByRole(oldRoleName, conf)) {
+			rm."$configAttributePropertyName" = rm."$configAttributePropertyName".replace(oldRoleName, newRoleName)
+		}
+		clearCachedRequestmaps()
 
 		true
 	}

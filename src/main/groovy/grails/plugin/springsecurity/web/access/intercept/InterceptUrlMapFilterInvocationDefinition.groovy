@@ -52,5 +52,9 @@ class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInvocation
 		data.each { InterceptedUrl iu -> compileAndStoreMapping iu }
 
 		initialized = true
+
+		if (log.traceEnabled) {
+			log.trace 'configs: {}', configAttributeMap
+		}
 	}
 }
