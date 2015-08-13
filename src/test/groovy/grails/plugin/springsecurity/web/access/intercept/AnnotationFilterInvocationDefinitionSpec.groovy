@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import org.grails.core.DefaultGrailsControllerClass
+import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.web.mapping.DefaultUrlMappingEvaluator
 import org.grails.web.mapping.DefaultUrlMappingsHolder
 import org.grails.web.mime.HttpServletResponseExtension
@@ -29,6 +30,7 @@ import org.springframework.security.web.FilterInvocation
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
 
+import grails.core.GrailsApplication
 import grails.core.GrailsClass
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
@@ -199,12 +201,13 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		Map<String, Collection<String>> staticRules = ['/js/admin/**': ['ROLE_ADMIN']]
 		GrailsClass[] controllerClasses = [new DefaultGrailsControllerClass(ClassAnnotatedController),
 		                                   new DefaultGrailsControllerClass(MethodAnnotatedController)]
+		controllerClasses.each { cc -> grailsApplication.addArtefact(ControllerArtefactHandler.TYPE, cc) }
 
 		fid.roleVoter = applicationContext.getBean('roleVoter')
 		fid.authenticatedVoter = applicationContext.getBean('authenticatedVoter')
 		fid.grailsUrlConverter = new CamelCaseUrlConverter()
 
-		fid.initialize(staticRules, urlMappingsHolder, controllerClasses)
+		fid.initialize staticRules, urlMappingsHolder, controllerClasses
 
 		then:
 		16 == fid.configAttributeMap.size()
@@ -256,7 +259,6 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		'ROLE_ADMIN' == iu.configAttributes.iterator().next().attribute
 	}
 
-	// TODO was commented out
 	void 'findConfigAttribute'() {
 
 		when:
