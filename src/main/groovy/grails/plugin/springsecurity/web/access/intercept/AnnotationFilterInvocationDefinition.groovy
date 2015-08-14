@@ -85,10 +85,8 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		catch (IllegalStateException e) {
 			throw new IllegalStateException(
 				'There was a problem retrieving the current GrailsWebRequest. This usually indicates a filter ordering ' +
-				"issue in web.xml (the 'springSecurityFilterChain' filter-mapping element must be positioned after the " +
-				"'grailsWebRequest' element when using @Secured annotations) but this should be handled correctly by the " +
-				'webxml plugin. Ensure that the webxml plugin is installed (it should be transitively installed as a ' +
-				'dependency of the spring-security-core plugin)')
+				"issue (the 'springSecurityFilterChain' filter-mapping element must be positioned after the " +
+				"'grailsWebRequest' element when using @Secured annotations).")
 		}
 
 		String requestUrl = calculateUri(request)
