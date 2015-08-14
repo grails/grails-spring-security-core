@@ -64,7 +64,7 @@ class TestDataService {
 				return
 			}
 
-			for (url in ['/', '/index', '/index.gsp', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
+			for (url in ['/', '/error', '/index', '/index.gsp', '/shutdown', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
 			             '/login', '/login/**', '/logout', '/logout/**',
 			             '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
 			             '/testRequestmap', '/testRequestmap/**',

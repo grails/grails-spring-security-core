@@ -39,7 +39,8 @@ security {
 
 	// 'strict' mode where an explicit grant is required to access any resource;
 	// if true make sure to allow IS_AUTHENTICATED_ANONYMOUSLY or permitAll
-	// for /, /index.gsp, /js/**, /css/**, /images/**, /login/**, /logout/**, /assets/**, etc.
+	// for /, /error, /index, /index.gsp, /shutdown, /assets/**, /**/js/**, /**/css/**, /**/images/**, etc.
+	// (and /login, /login/**, /logout, /logout/** if you're not using annotations)
 	// Also consider using fii.rejectPublicInvocations = true
 	rejectIfNoRule = true
 

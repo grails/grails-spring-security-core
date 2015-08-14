@@ -10,7 +10,7 @@ You create @Requestmap@ entries as you create entries in any Grails domain class
 
 {code}
 for (String url in [
-      '/', '/index', '/index.gsp', '/**/favicon.ico',
+      '/', '/error', '/index', '/index.gsp', '/**/favicon.ico', '/shutdown',
       '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**',
       '/login', '/login.*', '/login/*',
       '/logout', '/logout.*', '/logout/*']) {

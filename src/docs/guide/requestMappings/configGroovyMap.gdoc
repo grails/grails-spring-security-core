@@ -9,8 +9,10 @@ Define a Map in @application.groovy@:
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
    '/':                ['permitAll'],
+   '/error':           ['permitAll'],
    '/index':           ['permitAll'],
    '/index.gsp':       ['permitAll'],
+   '/shutdown':        ['permitAll'],
    '/assets/**':       ['permitAll'],
    '/**/js/**':        ['permitAll'],
    '/**/css/**':       ['permitAll'],

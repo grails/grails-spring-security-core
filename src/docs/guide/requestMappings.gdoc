@@ -32,8 +32,10 @@ Note that if you set @rejectIfNoRule@ or @rejectPublicInvocations@ to @true@ you
 {code}
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    '/':               ['permitAll'],
+   '/error':          ['permitAll'],
    '/index':          ['permitAll'],
    '/index.gsp':      ['permitAll'],
+   '/shutdown':       ['permitAll'],
    '/assets/**':      ['permitAll'],
    '/**/js/**':       ['permitAll'],
    '/**/css/**':      ['permitAll'],
@@ -46,7 +48,7 @@ This is needed when using annotations; if you use the @grails.plugin.springsecur
 
 {code}
 for (String url in [
-      '/', '/index', '/index.gsp', '/**/favicon.ico',
+      '/', '/error', '/index', '/index.gsp', '/**/favicon.ico', '/shutdown',
       '/**/js/**', '/**/css/**', '/**/images/**',
       '/login', '/login.*', '/login/*',
       '/logout', '/logout.*', '/logout/*']) {
@@ -59,8 +61,10 @@ The analogous interceptUrlMap settings would be:
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
    '/':                ['permitAll'],
+   '/error':           ['permitAll'],
    '/index':           ['permitAll'],
    '/index.gsp':       ['permitAll'],
+   '/shutdown':        ['permitAll'],
    '/assets/**':       ['permitAll'],
    '/**/js/**':        ['permitAll'],
    '/**/css/**':       ['permitAll'],
