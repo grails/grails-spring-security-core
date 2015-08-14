@@ -10,14 +10,16 @@ Use @daoAuthenticationProvider@ to authenticate using the User and Role database
 To customize this list, you define a @providerNames@ attribute with a list of bean names. The beans must be declared either by the plugin, or yourself in @resources.groovy@ or @resources.xml@. Suppose you have a custom @MyAuthenticationProvider@ in @resources.groovy@:
 
 {code}
+import com.foo.MyAuthenticationProvider
+
 beans = {
-   myAuthenticationProvider(com.foo.MyAuthenticationProvider) {
+   myAuthenticationProvider(MyAuthenticationProvider) {
       // attributes
    }
 }
 {code}
 
-You register the provider in @grails-app/conf/Config.groovy@ as:
+You register the provider in @grails-app/conf/application.groovy@ as:
 
 {code}
 grails.plugin.springsecurity.providerNames = [

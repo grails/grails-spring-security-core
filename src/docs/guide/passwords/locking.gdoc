@@ -17,7 +17,7 @@ When an accessor returns @true@ for @accountExpired@, @accountLocked@, or @passw
 @isEnabled()@ | @enabled@ | [DisabledException|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/DisabledException.html]
 {table}
 
-You can configure an exception mapping in @Config.groovy@ to associate a URL to any or all of these exceptions to determine where to redirect after a failure, for example:
+You can configure an exception mapping in @application.groovy@ to associate a URL to any or all of these exceptions to determine where to redirect after a failure, for example:
 
 {code}
 grails.plugin.springsecurity.failureHandler.exceptionMappings = [
@@ -39,7 +39,7 @@ errors.login.locked | "Sorry, your account is locked."
 errors.login.fail | "Sorry, we were not able to find a user with that username and password."
 {table}
 
-You can customize these messages by setting the corresponding property in @Config.groovy@, for example:
+You can customize these messages by setting the corresponding property in @application.groovy@, for example:
 
 {code}
 grails.plugin.springsecurity.errors.login.locked = "None shall pass."

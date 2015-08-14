@@ -27,7 +27,7 @@ new Requestmap(url: '/j_spring_security_switch_user',
 
 The @configAttribute@ value can have a single value or have multiple comma-delimited values. In this example only users with @ROLE_ADMIN@ or @ROLE_SUPERVISOR@ can access @/admin/user/\*\*@ urls, and only users with @ROLE_SWITCH_USER@ can access the switch-user url (@/j_spring_security_switch_user@) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining @IS_AUTHENTICATED_FULLY@, @IS_AUTHENTICATED_REMEMBERED@, or @IS_AUTHENTICATED_ANONYMOUSLY@ (or their corresponding SpEL expressions) with one or more roles means the user must have one of the roles and satisty the @IS_AUTHENTICATED@ rule.
 
-Unlike the [Config.groovy Map approach|guide:configGroovyMap], you do not need to revise the @Requestmap@ entry order because the plugin calculates the most specific rule that applies to the current request.
+Unlike the [application.groovy Map approach|guide:configGroovyMap], you do not need to revise the @Requestmap@ entry order because the plugin calculates the most specific rule that applies to the current request.
 
 h4. Requestmap Cache
 

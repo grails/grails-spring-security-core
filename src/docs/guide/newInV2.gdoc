@@ -1,7 +1,5 @@
 There are many changes in the 2.x versions of the plugin from the older approaches in 1.x.
 
-TODO role groups
-
 h4. Package changes
 
 All classes are now in the @grails.plugin.springsecurity@ package or a subpackage. The names tend to correspond to the analagous Spring Security classes where appropriate, for example @MutableLogoutFilter@ is in the @grails.plugin.springsecurity.web.authentication.logout@ package to correspond with the @org.springframework.security.web.authentication.logout@ package.

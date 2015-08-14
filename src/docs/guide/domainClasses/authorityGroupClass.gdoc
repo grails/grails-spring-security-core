@@ -53,7 +53,7 @@ Set<RoleGroup> getAuthorities() {
 }
 {code}
 
-The plugin assumes the attribute @authorities@ will provide the 'authority' collection for each class, but you can change the field names in @grails-app/conf/Config.groovy@. You also must ensure that the property @useRoleGroups@ is set to @true@ in order for @GormUserDetailsService@ to properly attain the @authorities@.
+The plugin assumes the attribute @authorities@ will provide the 'authority' collection for each class, but you can change the field names in @grails-app/conf/application.groovy@. You also must ensure that the property @useRoleGroups@ is set to @true@ in order for @GormUserDetailsService@ to properly attain the @authorities@.
 
 {table}
 *Property* | *Default Value* | *Assigned Value Using s2QuickstartGroups* | *Meaning*

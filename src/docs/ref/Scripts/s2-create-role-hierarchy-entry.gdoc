@@ -1,0 +1,17 @@
+h1. s2-create-role-hierarchy-entry
+
+h2. Purpose
+
+Creates a persistent role hierarchy entry domain class for storing role hierarchy information in the database. The general format is:
+
+bc.
+grails s2-create-role-hierarchy-entry <classname>
+
+h2. Example
+
+bc.
+grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry
+
+h2. Description
+
+This creates the domain class in the specified package, and also registers the name in @grails-app/conf/application.groovy@, along with enabling persistent role hierarchy storage and lookup.

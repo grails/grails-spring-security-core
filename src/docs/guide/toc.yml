@@ -1,7 +1,8 @@
 introduction:
   title: Introduction to the Spring Security Plugin
-  configGroovy: Configuration Settings Now in Config.groovy
+  configGroovy: Configuration Settings
   gettingStarted: Getting Started
+newInV3: What's New in Version 3.0
 newInV2: What's New in Version 2.0
 domainClasses:
   title: Domain Classes
@@ -15,7 +16,7 @@ domainClasses:
 requestMappings:
   title: Configuring Request Mappings to Secure URLs
   securedAnnotations: Defining Secured Annotations
-  configGroovyMap: Simple Map in Config.groovy
+  configGroovyMap: Static Map
   requestmapInstances: Requestmap Instances Stored in the Database
   expressions: Using Expressions to Create Descriptive, Fine-Grained Rules
 helperClasses:

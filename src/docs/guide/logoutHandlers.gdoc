@@ -12,14 +12,16 @@ logout.handlerNames | \['rememberMeServices', 'securityContextLogoutHandler'\] |
 The beans must be declared either by the plugin or by you in @resources.groovy@ or @resources.xml@. For example, suppose you have a custom @MyLogoutHandler@ in @resources.groovy@:
 
 {code}
+import com.foo.MyLogoutHandler
+
 beans = {
-   myLogoutHandler(com.foo.MyLogoutHandler) {
+   myLogoutHandler(MyLogoutHandler) {
       // attributes
    }
 }
 {code}
 
-You register it in @grails-app/conf/Config.groovy@ as:
+You register it in @grails-app/conf/application.groovy@ as:
 
 {code}
 grails.plugin.springsecurity.logout.handlerNames = [

@@ -1,10 +1,10 @@
-To use the @Config.groovy@ Map to secure URLs, first specify @securityConfigType="InterceptUrlMap"@:
+To use a static map in @application.groovy@ to secure URLs, first specify @securityConfigType="InterceptUrlMap"@:
 
 {code}
 grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
 {code}
 
-Define a Map in @Config.groovy@:
+Define a Map in @application.groovy@:
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
@@ -16,8 +16,18 @@ grails.plugin.springsecurity.interceptUrlMap = [
    '/**/css/**':       ['permitAll'],
    '/**/images/**':    ['permitAll'],
    '/**/favicon.ico':  ['permitAll'],
+   '/login':           ['permitAll'],
    '/login/**':        ['permitAll'],
-   '/logout/**':       ['permitAll'],
+   '/logout':          ['permitAll'],
+   '/logout/**':       ['permitAll']
+]
+{code}
+
+and add any custom mappings as needed, e.g.
+
+{code}
+grails.plugin.springsecurity.interceptUrlMap = [
+   ...
    '/secure/**':       ['ROLE_ADMIN'],
    '/finance/**':      ['ROLE_FINANCE', 'isFullyAuthenticated()'],
 ]

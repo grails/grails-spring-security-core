@@ -114,7 +114,7 @@ class SomeController {
 {code}
 
 h4. encodePassword()
-Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the @grails.plugin.springsecurity.password.algorithm@ attribute in @Config.groovy@. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2], or any message digest algorithm that is supported in your JDK; see [this Java page|https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
+Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the @grails.plugin.springsecurity.password.algorithm@ attribute in @application.groovy@. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use [PBKDF2|https://en.wikipedia.org/wiki/PBKDF2], or any message digest algorithm that is supported in your JDK; see [this Java page|https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html] for the available algorithms.
 {warning}
 You are *strongly* discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See [Salted Passwords|guide:salt].
 {warning}

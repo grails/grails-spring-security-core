@@ -35,7 +35,7 @@ new Requestmap(url: '/j_spring_security_switch_user',
                configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save(flush: true)
 {code}
 
-If you use the @Config.groovy@ map, add the rule there:
+If you use the static @application.groovy@ map, add the rule there:
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [

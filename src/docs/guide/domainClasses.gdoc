@@ -4,4 +4,14 @@ To use the standard user lookup you'll need at a minimum a 'person' and an 'auth
 
 To use the user/group lookup you'll also need a 'group' domain class. If you are using the recommended approach for mapping many-to-many relationship between 'person' and 'group' and between 'group' and 'authority' you'll need a domain class for each to map the join tables. You can still additionally use 'requestmap' with this approach.
 
-The [s2-quickstart|Scripts] script creates initial domain classes for you. You specify the package and class names, and it creates the corresponding domain classes. After that you can customize them as you like. You can add unlimited fields, methods, and so on, as long as the core security-related functionality remains.
+The [s2-quickstart|Scripts] script creates initial domain classes for you. You specify the package and class names, and it creates the corresponding domain classes. After that you can customize them as you like. You can add additional fields, methods, and so on, as long as the core security-related functionality remains.
+
+{note}
+Where practical, the generated domain classes include a parameterized constructor. These are only added to make instance creation more compact, e.g. @new Role('ROLE_ADMIN')@ vs. @new Role(authority: 'ROLE_ADMIN')@ but either approach can be used.
+
+These constructors look a bit odd because they include a call to @this()@. Ordinarily in Groovy or Java, the compiler creates an empty constructor if none are defined in the source, but if there are one or more defined constructors (with or without arguments) then the compiler doesn't add one. Grails adds a significant number of methods and other code to domain classes using AST transformations, including an empty constructor that manages dependency injection. So although the plugin-generated domain classes appear to not have an empty constructor, they do in the bytecode.
+
+This means that you can use the parameterized constructors if you want, and add more if needed, or continue to use the map constructor approach that's common in Grails applications. The call to @this()@ is there to ensure that if you use a non-default constructor and use dependency injection (e.g. to inject a service for use in custom validation), the beans get properly injected. You can remove that line in any domain class that doesn't use dependency injection.
+
+This is discussed in [this talk at Greach 2015|https://www.youtube.com/watch?v=Oxwpqh1h0s0]. The slides for the talk are available [here|http://www.slideshare.net/burtbeckwith/little-did-he-know]
+{note}

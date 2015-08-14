@@ -1,0 +1,24 @@
+Version 3.x of the plugin requires Grails 3.x or higher; to use the plugin in Grails 2.x applications use the 2.x version of the plugin.
+
+In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using @web.xml@. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin still uses Spring Security 3.2 (currently 3.2.8.RELEASE) although an upgrade to Spring Security 4 will happen in a future release.
+
+Note that the 2.x plugin was written primarily in Java, with Groovy used only for dynamic calls, but in 3.x all Java classes were converted to Groovy with the @\@CompileStatic@ annotation. Java was used because the Spring Security is configured as a chain of servlet filters that fire for every request (including static resources) and the cumulative cost of many small Groovy performance hits can be non-trivial. But with @\@CompileStatic@ we get the best of both worlds - Java performance, and Groovy compactness. If you're curious you can see these changes [in this GitHub commit|https://github.com/grails-plugins/grails-spring-security-core/commit/da06fa44d8bbea0ff374dd31b1c6b28426bdf7b4].
+
+Also, since Grails 3 no longer supports Gant scripts, the plugin's scripts were converted to the newer approach. This should have no effect on usage as the calling syntax and results are the same as before, although the console output looks somewhat different. You can see these changes [in this GitHub commit|https://github.com/grails-plugins/grails-spring-security-core/commit/16484f44fe25a6f1c8687b8e27db6f08ed871436].
+
+h4. Installation
+
+The "installation" process has changed in the 3.x versions of the plugin, but they're the same as for any Grails 3 plugin. Simply add an entry in the @dependencies@ block of your @build.gradle@ file, changing the version as needed:
+
+{code}
+dependencies {
+   ...
+   compile 'org.grails.plugins:spring-security-core:3.0.0.M1'
+   ...
+{code}
+
+Run @grails compile@ or another script that triggers dependency resolution, and then the [s2-quickstart|Scripts] script to generate the domain classes and add the initial configuration settings.
+
+h4. Configuration
+
+In Grails 2.x, configuration settings were stored in @grails-app/conf/Config.groovy@, but they're in YAML format in @grails-app/conf/application.yml@ now. You can use the Groovy @ConfigObject@ style if you want, in @grails-app/conf/application.groovy@. The file isn't created by the @create-app@ script but if you create it manually it will be recognized. When you run any of the plugin scripts, settings are added in @application.groovy@ (it will be created if necessary) but if you prefer to keep everything in YAML format, feel free to move those settings to @application.yml@.

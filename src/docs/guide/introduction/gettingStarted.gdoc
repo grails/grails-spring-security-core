@@ -1,5 +1,5 @@
-Once you install the plugin, you simply run the initialization script, [s2-quickstart|Scripts], and make any required configuration changes in @Config.groovy@. The plugin registers filters in @web.xml@, and also configures the Spring beans in the application context that implement various pieces of functionality. Grails dependency management determines which jar files to use.
+Once you install the plugin, you simply run the initialization script, [s2-quickstart|Scripts], and make any required configuration changes in @application.groovy@ / @application.yml@. The plugin registers its servlet API configuration (the Spring Security filter chain, etc.) programmatically, not in @web.xml@ as was the case in earlier versions, and also configures the Spring beans in the application context that implement various pieces of functionality. Grails dependency management determines which jar files to use.
 
 To get started using the Spring Security plugin with your Grails application, see [Tutorials|guide:tutorials].
 
-You do not need to know much about Spring Security to use the plugin, but it can be helpful to understand the underlying implementation. See [the Spring Security documentation|https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/].
+You do not need deep knowledge of Spring Security to use the plugin, but it is helpful to understand the underlying implementation. See [the Spring Security documentation|https://docs.spring.io/spring-security/site/docs/3.2.x/reference/htmlsingle/].

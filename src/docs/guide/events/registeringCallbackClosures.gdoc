@@ -1,4 +1,4 @@
-Alternatively, enable events with @grails.plugin.springsecurity.useSecurityEventListener = true@ and register one or more callback closure(s) in @grails-app/conf/Config.groovy@ and let @SecurityEventListener@ do the filtering.
+Alternatively, enable events with @grails.plugin.springsecurity.useSecurityEventListener = true@ and register one or more callback closure(s) in @grails-app/conf/application.groovy@ and let @SecurityEventListener@ do the filtering.
 
 Implement the event handlers that you need, for example:
 

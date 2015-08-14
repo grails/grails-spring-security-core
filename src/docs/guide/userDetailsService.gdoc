@@ -62,8 +62,7 @@ class MyUserDetailsService implements GrailsUserDetailsService {
    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
       User user = User.findByUsername(username)
-      if (!user) throw new UsernameNotFoundException(
-                   'User not found', username)
+      if (!user) throw new UsernameNotFoundException('User not found', username)
 
       def authorities = user.authorities.collect {
          new GrantedAuthorityImpl(it.authority)
@@ -82,8 +81,10 @@ The <code>loadUserByUsername</code> method is transactional, but read-only, to a
 To use your implementation, register it in @grails-app/conf/spring/resources.groovy@ like this:
 
 {code}
+import com.mycompany.myapp.MyUserDetailsService
+
 beans = {
-   userDetailsService(com.mycompany.myapp.MyUserDetailsService)
+   userDetailsService(MyUserDetailsService)
 }
 {code}
 

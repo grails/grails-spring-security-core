@@ -14,4 +14,4 @@ grails s2-create-persistent-token com.yourapp.PersistentLogin
 
 h2. Description
 
-This creates the domain class in the specified package, and also registers the name in @grails-app/conf/Config.groovy@, along with enabling persistent remember-me.
+This creates the domain class in the specified package, and also registers the name in @grails-app/conf/application.groovy@, along with enabling persistent remember-me.

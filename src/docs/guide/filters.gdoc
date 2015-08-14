@@ -58,14 +58,16 @@ h4. clientRegisterFilter
 An alternative to setting the @filterNames@ property is @grails.plugin.springsecurity. SpringSecurityUtils.clientRegisterFilter()@. This property allows you to add a custom filter to the chain at a specified position. Each standard filter has a corresponding position in the chain (see @grails.plugin.springsecurity. SecurityFilterPosition@ for details). So if you have created an application-specific filter, register it in @grails-app/conf/spring/resources.groovy@:
 
 {code}
+import com.mycompany.myapp.MyFilter
+
 beans = {
-   myFilter(com.mycompany.myapp.MyFilter) {
+   myFilter(MyFilter) {
       // properties
    }
 }
 {code}
 
-and then register it in @grails-app/conf/BootStrap.groovy@:
+and then register it in @grails-app/init/BootStrap.groovy@:
 
 {code}
 import grails.plugin.springsecurity.SecurityFilterPosition

@@ -1,6 +1,6 @@
 You can choose among the following approaches to configuring request mappings for secure application URLs. The goal is to map URL patterns to the roles required to access those URLs.
 * [@\@Secured@ annotations (default approach)|guide:securedAnnotations]
-* [A simple Map in @Config.groovy@|guide:configGroovyMap]
+* [A simple Map in @application.groovy@|guide:configGroovyMap]
 * [@Requestmap@ domain class instances stored in the database|guide:requestmapInstances]
 
 You can only use one method at a time. You configure it with the @securityConfigType@ attribute; the value has to be an @SecurityConfigType@ enum value or the name of the enum as a String.
@@ -42,7 +42,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 {code}
 
-This is needed when using annotations; if you use the @grails.plugin.springsecurity.interceptUrlMap@ map in @Config.groovy@ you'll need to add these URLs too, and likewise when using @Requestmap@ instances. If you don't use annotations, you must add rules for the login and logout controllers also. You can add Requestmaps manually, or in BootStrap.groovy, for example:
+This is needed when using annotations; if you use the @grails.plugin.springsecurity.interceptUrlMap@ map in @application.groovy@ you'll need to add these URLs too, and likewise when using @Requestmap@ instances. If you don't use annotations, you must add rules for the login and logout controllers also. You can add Requestmaps manually, or in BootStrap.groovy, for example:
 
 {code}
 for (String url in [
@@ -113,8 +113,8 @@ The workaround is to create separate forms without using @actionSubmit@ and expl
 
 h4. Comparing the Approaches
 
-Each approach has its advantages and disadvantages. Annotations and the @Config.groovy@ Map are less flexible because they are configured once in the code and you can update them only by restarting the application (in prod mode anyway). In practice this limitation is minor, because security mappings for most applications are unlikely to change at runtime.
+Each approach has its advantages and disadvantages. Annotations and the @application.groovy@ Map are less flexible because they are configured once in the code and you can update them only by restarting the application (in prod mode anyway). In practice this limitation is minor, because security mappings for most applications are unlikely to change at runtime.
 
-On the other hand, storing @Requestmap@ entries enables runtime-configurability. This approach gives you a core set of rules populated at application startup that you can edit, add to, and delete as needed. However, it separates the security rules from the application code, which is less convenient than having the rules defined in @grails-app/conf/Config.groovy@ or in the applicable controllers using annotations.
+On the other hand, storing @Requestmap@ entries enables runtime-configurability. This approach gives you a core set of rules populated at application startup that you can edit, add to, and delete as needed. However, it separates the security rules from the application code, which is less convenient than having the rules defined in @grails-app/conf/application.groovy@ or in the applicable controllers using annotations.
 
-URLs must be mapped in lowercase if you use the @Requestmap@ or @grails-app/conf/Config.groovy@ map approaches. For example, if you have a FooBarController, its urls will be of the form /fooBar/list, /fooBar/create, and so on, but these must be mapped as /foobar/, /foobar/list, /foobar/create. This mapping is handled automatically for you if you use annotations.
+URLs must be mapped in lowercase if you use the @Requestmap@ or @grails-app/conf/application.groovy@ map approaches. For example, if you have a FooBarController, its urls will be of the form /fooBar/list, /fooBar/create, and so on, but these must be mapped as /foobar/, /foobar/list, /foobar/create. This mapping is handled automatically for you if you use annotations.

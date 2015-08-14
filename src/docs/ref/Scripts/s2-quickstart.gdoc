@@ -27,4 +27,4 @@ grails s2-quickstart \-\-uiOnly
 
 h2. Description
 
-* Updates @grails-app/conf/Config.groovy@ with security configuration settings and creates domain classes in @grails-app/domain@ unless the uiOnly flag is specified
+* Updates @grails-app/conf/application.groovy@ with security configuration settings and creates domain classes in @grails-app/domain@ unless the uiOnly flag is specified

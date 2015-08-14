@@ -19,7 +19,7 @@ h4. ifAnyGranted()
 Checks whether the current user has any of the specified roles (a comma-delimited String of role names). Primarily used by @SecurityTagLib.ifAnyGranted@.
 
 h4. getSecurityConfig()
-Retrieves the security part of the @Configuration@ (from @grails-app/conf/Config.groovy@).
+Retrieves the security part of the @Configuration@ (from @grails-app/conf/application.groovy@ merged with the plugin's default configuration).
 
 h4. loadSecondaryConfig()
 Used by dependent plugins to add configuration attributes.
@@ -28,7 +28,7 @@ h4. reloadSecurityConfig()
 Forces a reload of the security configuration.
 
 h4. isAjax()
-Checks whether the request was triggered by an Ajax call. The standard way is to determine whether @X-Requested-With@ request header is set and has the value @XMLHttpRequest@. In addition, you can configure the name of the header with the @grails.plugin.springsecurity.ajaxHeader@ configuration attribute, but this is not recommended because all major JavaScript toolkits use the standard name. Further, you can register a closure in @Config.groovy@ with the name @ajaxCheckClosure@ that will be used to check if a request is an Ajax request. It is passed the request as its single argument, e.g.
+Checks whether the request was triggered by an Ajax call. The standard way is to determine whether @X-Requested-With@ request header is set and has the value @XMLHttpRequest@. In addition, you can configure the name of the header with the @grails.plugin.springsecurity.ajaxHeader@ configuration attribute, but this is not recommended because all major JavaScript toolkits use the standard name. Further, you can register a closure in @application.groovy@ with the name @ajaxCheckClosure@ that will be used to check if a request is an Ajax request. It is passed the request as its single argument, e.g.
 
 {code}
 grails.plugin.springsecurity.ajaxCheckClosure = { request ->

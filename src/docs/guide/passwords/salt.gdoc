@@ -27,6 +27,7 @@ An example override of the salt source bean using SystemWideSaltSource would loo
 
 {code}
 import org.springframework.security.authentication.dao.SystemWideSaltSource
+
 beans = {
    saltSource(SystemWideSaltSource) {
       systemWideSalt = 'the_salt_value'
@@ -37,8 +38,10 @@ beans = {
 To have full control over the process, you can implement the @SaltSource@ interface and replace the plugin's implementation with your own by defining a bean in @grails-app/conf/spring/resources.groovy@ with the name @saltSource@:
 
 {code}
+import com.foo.bar.MySaltSource
+
 beans = {
-   saltSource(com.foo.bar.MySaltSource) {
+   saltSource(MySaltSource) {
       // set properties
    }
 }

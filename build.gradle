@@ -88,6 +88,19 @@ dependencies {
 	testCompile 'org.grails:grails-plugin-testing'
 }
 
+docs.doLast {
+
+	// can't do this in custom css because the order doesn't support overriding, only adding
+	File mainCss = new File(project.buildDir, 'docs/manual/css/main.css')
+	mainCss.text = mainCss.text.replaceAll('font-size: 85%', 'font-size: 100%;')
+
+	// delete unused images
+	['pivotal-logo-color', 'pivotal-logo', 'springsource-logo', 'grails-icon', 'grails', 'groovy'].each { String name ->
+		assert new File(project.buildDir, 'docs/manual/img/' + name + '.png').delete()
+	}
+	assert new File(project.buildDir, 'docs/manual/img/favicon.ico').delete()
+}
+
 task docsWithPdf(dependsOn: 'docs') << {
 	// based on grails.doc.gradle.PublishPdf
 	def outputDir = new File(project.buildDir, 'docs/manual')
