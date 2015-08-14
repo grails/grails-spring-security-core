@@ -30,7 +30,8 @@ apply plugin: 'org.grails.grails-doc'
 
 String repoRoot = 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/'
 apply from: "$repoRoot/grailsCentralPublishing.gradle"
-apply from: "$repoRoot/bintrayPublishing.gradle"
+//apply from: "$repoRoot/bintrayPublishing.gradle"
+apply from: 'bintrayPublishing.gradle' // using modified local copy so the issueTrackerUrl and vcsUrl properties are correct
 
 ext {
 	grailsVersion = project.grailsVersion
