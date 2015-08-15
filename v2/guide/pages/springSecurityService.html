@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>5.2 SpringSecurityService 2.0-RC5</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClasses.html"><strong>3</strong><span>Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/requestMappings.html"><strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/helperClasses.html"><strong>5</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/events.html"><strong>6</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/domainClassProperties.html"><strong>7</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/authentication.html"><strong>8</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/authenticationProviders.html"><strong>9</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/userDetailsService.html"><strong>10</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/passwords.html"><strong>11</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/urlProperties.html"><strong>12</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/hierarchicalRoles.html"><strong>13</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/switchUser.html"><strong>14</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/filters.html"><strong>15</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/channelSecurity.html"><strong>16</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/ip.html"><strong>17</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/sessionFixation.html"><strong>18</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/logoutHandlers.html"><strong>19</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/voters.html"><strong>20</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/miscProperties.html"><strong>21</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/tutorials.html"><strong>22</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/controllerMetaClassMethods.html"><strong>23</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../../guide/i18n.html"><strong>24</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p>Spring Security Core plugin</p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../../guide/requestMappings.html">&lt;&lt; <strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../../guide/events.html"><strong>6</strong><span>Events</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>5.2 SpringSecurityService - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 2.0-RC5</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h2 id="springSecurityService">5.2 SpringSecurityService</h2>
+<code>grails.plugin.springsecurity.SpringSecurityService</code> provides security utility functions. It is a regular Grails service, so you use dependency injection to inject it into a controller, service, taglib, and so on:<p class="paragraph"/><div class="code"><pre>def springSecurityService</pre></div><p class="paragraph"/><h4>getCurrentUser()</h4>
+Retrieves a domain class instance for the currently authenticated user. During authentication a user/person domain class instance is retrieved to get the user's password, roles, etc. and the id of the instance is saved. This method uses the id and the domain class to re-load the instance, or the username if the <code>UserDetails</code> instance is not a <code>GrailsUser</code>.<p class="paragraph"/>If you do not need domain class data other than the id, you should use the <code>loadCurrentUser</code> method instead.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+      def user = springSecurityService.currentUser
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>loadCurrentUser()</h4>
+Often it is not necessary to retrieve the entire domain class instance, for example when using it in a query where only the id is needed as a foreign key. This method uses the GORM <code>load</code> method to create a proxy instance. This will never be null, but can be invalid if the id doesn't correspond to a row in the database, although this is very unlikely in this scenario because the instance would have been there during authentication.<p class="paragraph"/>If you need other data than just the id, use the <code>getCurrentUser</code> method instead.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+      def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : <span class="java&#45;keyword">null</span>
+      <span class="java&#45;keyword">if</span> (user) &#123;
+         CreditCard card = CreditCard.findByIdAndUser(params.id as <span class="java&#45;object">Long</span>, user)
+         &#8230;
+      &#125;
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>isLoggedIn()</h4>
+Checks whether there is a currently logged-in user.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+      <span class="java&#45;keyword">if</span> (springSecurityService.isLoggedIn()) &#123;
+         &#8230;
+      &#125;
+      <span class="java&#45;keyword">else</span> &#123;
+         &#8230;
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>getAuthentication()</h4><p class="paragraph"/>Retrieves the current user's <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a>. If authenticated, this will typically be a <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html" target="blank">UsernamePasswordAuthenticationToken</a>.<p class="paragraph"/>If not authenticated and the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of <code>grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken</code> with a standard <code>org.springframework.security.core.userdetails.User</code> instance as its Principal. The authentication will have a single granted role, <code>ROLE_ANONYMOUS</code>.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+      def auth = springSecurityService.authentication
+      <span class="java&#45;object">String</span> username = auth.username
+      def authorities = auth.authorities // a Collection of GrantedAuthority
+      <span class="java&#45;object">boolean</span> authenticated = auth.authenticated
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>getPrincipal()</h4><p class="paragraph"/>Retrieves the currently logged in user's <code>Principal</code>. If authenticated, the principal will be a <code>grails.plugin.springsecurity.userdetails.GrailsUser</code>, unless you have created a custom <code>UserDetailsService</code>, in which case it will be whatever implementation of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html" target="blank">UserDetails</a> you use there.<p class="paragraph"/>If not authenticated and the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then a standard <code>org.springframework.security.core.userdetails.User</code> is used.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
+      def principal = springSecurityService.principal
+      <span class="java&#45;object">String</span> username = principal.username
+      def authorities = principal.authorities // a Collection of GrantedAuthority
+      <span class="java&#45;object">boolean</span> enabled = principal.enabled
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>encodePassword()</h4>
+Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the <code>grails.plugin.springsecurity.password.algorithm</code> attribute in <code>Config.groovy</code>. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use <a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a>, or any message digest algorithm that is supported in your JDK; see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html" target="blank">this Java page</a> for the available algorithms.
+<blockquote class="warning">
+You are <strong class="bold">strongly</strong> discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See <a href="../guide/single.html#salt" class="guide">Salted Passwords</a>.
+</blockquote><p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class PersonController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def updateAction() &#123;
+      def person = Person.get(params.id)<p class="paragraph"/>      params.salt = person.salt
+      <span class="java&#45;keyword">if</span> (person.password != params.password) &#123;
+         params.password = springSecurityService.encodePassword(password, salt)
+         def salt = &#8230; // e.g. randomly generated using some utility method
+         params.salt = salt
+      &#125;
+      person.properties = params
+      <span class="java&#45;keyword">if</span> (!person.save(flush: <span class="java&#45;keyword">true</span>)) &#123;
+         render view: 'edit', model: &#91;person: person&#93;
+         <span class="java&#45;keyword">return</span>
+      &#125;
+      redirect action: 'show', id: person.id
+   &#125;
+&#125;</pre></div><p class="paragraph"/><blockquote class="note">
+If you are hashing the password in the User domain class (using <code>beforeInsert</code> and <code>encodePassword</code>) then don't call <code>springSecurityService.encodePassword()</code> in your controller since you'll double-hash the password and users won't be able to log in. It's best to encapsulate the password handling logic in the domain class.
+</blockquote><p class="paragraph"/><h4>updateRole()</h4>
+Updates a role and, if you use <code>Requestmap</code> instances to secure URLs, updates the role name in all affected <code>Requestmap</code> definitions if the name was changed.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class RoleController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def update() &#123;
+      def roleInstance = Role.get(params.id)
+      <span class="java&#45;keyword">if</span> (!springSecurityService.updateRole(roleInstance, params)) &#123;
+         render view: 'edit', model: &#91;roleInstance: roleInstance&#93;
+         <span class="java&#45;keyword">return</span>
+      &#125;<p class="paragraph"/>      flash.message = <span class="java&#45;quote">"The role was updated"</span>
+      redirect action: show, id: roleInstance.id
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>deleteRole()</h4>
+Deletes a role and, if you use <code>Requestmap</code> instances to secure URLs, removes the role from all affected <code>Requestmap</code> definitions. If a <code>Requestmap</code>'s config attribute is only the role name (for example, "/foo/bar/&#42;&#42;=ROLE_FOO"), it is deleted.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class RoleController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def delete() &#123;
+      def roleInstance = Role.get(params.id)
+      <span class="java&#45;keyword">try</span> &#123;
+         springSecurityService.deleteRole (roleInstance
+         flash.message = <span class="java&#45;quote">"The role was deleted"</span>
+         redirect action: list
+      &#125;
+      <span class="java&#45;keyword">catch</span> (DataIntegrityViolationException e) &#123;
+         flash.message = <span class="java&#45;quote">"Unable to delete the role"</span>
+         redirect action: show, id: params.id
+      &#125;
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>clearCachedRequestmaps()</h4>
+Flushes the Requestmaps cache and triggers a complete reload. If you use <code>Requestmap</code> instances to secure URLs, the plugin loads and caches all <code>Requestmap</code> instances as a performance optimization. This action saves database activity because the requestmaps are checked for each request. Do not allow the cache to become stale. When you create, edit or delete a <code>Requestmap</code>, flush the cache. Both <code>updateRole()</code> and <code>deleteRole()</code> call clearCachedRequestmaps()for you. Call this method when you create a new <code>Requestmap</code> or do other <code>Requestmap</code> work that affects the cache.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class RequestmapController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def save() &#123;
+      def requestmapInstance = <span class="java&#45;keyword">new</span> Requestmap(params)
+      <span class="java&#45;keyword">if</span> (!requestmapInstance.save(flush: <span class="java&#45;keyword">true</span>)) &#123;
+         render view: 'create', model: &#91;requestmapInstance: requestmapInstance&#93;
+         <span class="java&#45;keyword">return</span>
+      &#125;<p class="paragraph"/>      springSecurityService.clearCachedRequestmaps()
+      flash.message = <span class="java&#45;quote">"Requestmap created"</span>
+      redirect action: show, id: requestmapInstance.id
+   &#125;
+&#125;</pre></div><p class="paragraph"/><h4>reauthenticate()</h4>
+Rebuilds an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a> for the given username and registers it in the security context. You typically use this method after updating a user's authorities or other data that is cached in the <code>Authentication</code> or <code>Principal</code>. It also removes the user from the user cache to force a refresh at next login.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class UserController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def update() &#123;
+      def userInstance = User.get(params.id)<p class="paragraph"/>      params.salt = person.salt
+      <span class="java&#45;keyword">if</span> (params.password) &#123;
+         params.password = springSecurityService.encodePassword(params.password, salt)
+         def salt = &#8230; // e.g. randomly generated using some utility method
+         params.salt = salt
+      &#125;
+      userInstance.properties = params
+      <span class="java&#45;keyword">if</span> (!userInstance.save(flush: <span class="java&#45;keyword">true</span>)) &#123;
+         render view: 'edit', model: &#91;userInstance: userInstance&#93;
+         <span class="java&#45;keyword">return</span>
+      &#125;<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (springSecurityService.loggedIn &#38;&#38;
+             springSecurityService.principal.username == userInstance.username) &#123;
+         springSecurityService.reauthenticate userInstance.username
+      &#125;<p class="paragraph"/>      flash.message = <span class="java&#45;quote">"The user was updated"</span>
+      redirect action: show, id: userInstance.id
+   &#125;
+&#125;</pre></div>
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../../guide/requestMappings.html">&lt;&lt; <strong>4</strong><span>Configuring Request Mappings to Secure URLs</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../../guide/events.html"><strong>6</strong><span>Events</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>

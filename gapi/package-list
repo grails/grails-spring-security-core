@@ -1,4 +1,3 @@
-DefaultPackage
 grails.plugin.springsecurity
 grails.plugin.springsecurity.access
 grails.plugin.springsecurity.access.intercept

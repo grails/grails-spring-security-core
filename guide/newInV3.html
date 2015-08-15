@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+                      "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>2 What's New in Version 3.0 3.0.0.M1</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <script type="text/javascript">
+function addJsClass() {
+    var classes = document.body.className.split(" ");
+    classes.push("js");
+    document.body.className = classes.join(" ");
+}
+    </script>
+</head>
+
+<body class="body" onload="addJsClass();">
+<div id="navigation">
+    <ul>
+        <li>
+            <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
+                <a href="../guide/index.html" class="button">Table of contents</a>
+
+                <div id="nav-summary-childs" style="display:none;">
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/newInV3.html"><strong>2</strong><span>What's New in Version 3.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/newInV2.html"><strong>3</strong><span>What's New in Version 2.0</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClasses.html"><strong>4</strong><span>Domain Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/requestMappings.html"><strong>5</strong><span>Configuring Request Mappings to Secure URLs</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/helperClasses.html"><strong>6</strong><span>Helper Classes</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/events.html"><strong>7</strong><span>Events</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/domainClassProperties.html"><strong>8</strong><span>User, Authority (Role), and Requestmap Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authentication.html"><strong>9</strong><span>Authentication</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/authenticationProviders.html"><strong>10</strong><span>Authentication Providers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/userDetailsService.html"><strong>11</strong><span>Custom UserDetailsService</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/passwords.html"><strong>12</strong><span>Password and Account Protection</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/urlProperties.html"><strong>13</strong><span>URL Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/hierarchicalRoles.html"><strong>14</strong><span>Hierarchical Roles</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/switchUser.html"><strong>15</strong><span>Switch User</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/filters.html"><strong>16</strong><span>Filters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/channelSecurity.html"><strong>17</strong><span>Channel Security</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/ip.html"><strong>18</strong><span>IP Address Restrictions</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/sessionFixation.html"><strong>19</strong><span>Session Fixation Prevention</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/logoutHandlers.html"><strong>20</strong><span>Logout Handlers</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/voters.html"><strong>21</strong><span>Voters</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/miscProperties.html"><strong>22</strong><span>Miscellaneous Properties</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/tutorials.html"><strong>23</strong><span>Tutorials</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/controllerMetaClassMethods.html"><strong>24</strong><span>Controller MetaClass Methods</span></a>
+                    </div>
+                    
+                    <div class="toc-item" style="margin-left:0"><a href="../guide/i18n.html"><strong>25</strong><span>Internationalization</span></a>
+                    </div>
+                    
+                </div>
+            </div>
+        </li>
+        <li class="separator selected">
+            <a id="ref-button" onclick="localToggle(); return false;" href="#">Quick Reference</a>
+        </li>
+    </ul>
+</div>
+<div id="header">
+    <div class="images clearfix">
+        
+        
+    </div>
+    <p></p>
+</div>
+
+
+<table id="colset" border="0" cellpadding="0" cellspacing="0">
+    <tr>
+        <td id="col1">
+            <div id="main" class="corner-all">
+
+                
+                    <div class="toc-item prev-left"><a href="../guide/introduction.html">&lt;&lt; <strong>1</strong><span>Introduction to the Spring Security Plugin</span></a></div>
+                
+
+                <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
+
+                
+                    <div class="toc-item next-right"><a href="../guide/newInV2.html"><strong>3</strong><span>What's New in Version 2.0</span> >></a></div>
+                
+
+
+                <div class="project">
+                    <h1>2 What's New in Version 3.0 - Reference Documentation</h1>
+
+                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
+
+                    <p><strong>Version:</strong> 3.0.0.M1</p>
+
+                    
+                </div>
+
+                
+
+                
+
+<h1 id="newInV3">2 What's New in Version 3.0</h1>
+Version 3.x of the plugin requires Grails 3.x or higher; to use the plugin in Grails 2.x applications use the 2.x version of the plugin.<p class="paragraph"/>In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin still uses Spring Security 3.2 (currently 3.2.8.RELEASE) although an upgrade to Spring Security 4 will happen in a future release.<p class="paragraph"/>Note that the 2.x plugin was written primarily in Java, with Groovy used only for dynamic calls, but in 3.x all Java classes were converted to Groovy with the <code>&#64;CompileStatic</code> annotation. Java was used because the Spring Security is configured as a chain of servlet filters that fire for every request (including static resources) and the cumulative cost of many small Groovy performance hits can be non-trivial. But with <code>&#64;CompileStatic</code> we get the best of both worlds - Java performance, and Groovy compactness. If you're curious you can see these changes <a href="https://github.com/grails-plugins/grails-spring-security-core/commit/da06fa44d8bbea0ff374dd31b1c6b28426bdf7b4" target="blank">in this GitHub commit</a>.<p class="paragraph"/>Also, since Grails 3 no longer supports Gant scripts, the plugin's scripts were converted to the newer approach. This should have no effect on usage as the calling syntax and results are the same as before, although the console output looks somewhat different. You can see these changes <a href="https://github.com/grails-plugins/grails-spring-security-core/commit/16484f44fe25a6f1c8687b8e27db6f08ed871436" target="blank">in this GitHub commit</a>.<p class="paragraph"/><h4>Installation</h4><p class="paragraph"/>The "installation" process has changed in the 3.x versions of the plugin, but they're the same as for any Grails 3 plugin. Simply add an entry in the <code>dependencies</code> block of your <code>build.gradle</code> file, changing the version as needed:<p class="paragraph"/><div class="code"><pre>dependencies &#123;
+   &#8230;
+   compile 'org.grails.plugins:spring&#45;security&#45;core:3.0.0.M1'
+   ...</pre></div><p class="paragraph"/>Run <code>grails compile</code> or another script that triggers dependency resolution, and then the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script to generate the domain classes and add the initial configuration settings.<p class="paragraph"/><h4>Configuration</h4><p class="paragraph"/>In Grails 2.x, configuration settings were stored in <code>grails-app/conf/Config.groovy</code>, but they're in YAML format in <code>grails-app/conf/application.yml</code> now. You can use the Groovy <code>ConfigObject</code> style if you want, in <code>grails-app/conf/application.groovy</code>. The file isn't created by the <code>create-app</code> script but if you create it manually it will be recognized. When you run any of the plugin scripts, settings are added in <code>application.groovy</code> (it will be created if necessary) but if you prefer to keep everything in YAML format, feel free to move those settings to <code>application.yml</code>.
+
+
+
+                <div style="clear:both;margin-top:15px;"></div>
+                
+                    <div class="toc-item prev-left"><a href="../guide/introduction.html">&lt;&lt; <strong>1</strong><span>Introduction to the Spring Security Plugin</span></a></div>
+                
+                    <div class="toc-item next-right"><a href="../guide/newInV2.html"><strong>3</strong><span>What's New in Version 2.0</span> >></a></div>
+                
+                <div style="clear:both"></div>
+            </div>
+        </td>
+        <td id="col2">
+            <div class="local clearfix">
+                <div class="local-title">
+                    <a href="../guide/index.html" target="mainFrame">Quick Reference</a>
+                    <span class="toggle">(<a href="#" onclick="localToggle(); return false;">hide</a>)</span>
+                </div>
+                <div class="menu">
+                    
+                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
+                        
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
+                            </div>
+                            
+                            </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="footer">
+    
+    
+</div>
+
+<script type="text/javascript" src="../js/docs.js"></script>
+
+</body>
+</html>
