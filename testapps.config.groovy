@@ -1,5 +1,5 @@
 String version = '2.0-RC2'
-String grailsHomeRoot = "${System.getProperty('user.home')}/.gvm/grails"
+String grailsHomeRoot = "${System.getProperty('user.home')}/.sdkman/grails"
 String dotGrailsCommon = "${System.getProperty('user.home')}/.grails"
 String projectDirCommon = 'target/testapps/spring-security-test'
 
