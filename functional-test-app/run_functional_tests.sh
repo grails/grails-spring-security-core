@@ -1,7 +1,7 @@
 #!/bin/bash
 use_grails_versions="$@"
 if [ -z "$use_grails_versions" ]; then
-	use_grails_versions="2.4.5"
+	use_grails_versions="2.5.1"
 fi
 
 source ~/.sdkman/bin/sdkman-init.sh

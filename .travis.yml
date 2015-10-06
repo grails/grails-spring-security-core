@@ -1,9 +1,19 @@
 language: groovy
 jdk:
-- oraclejdk7
+  - oraclejdk8
+
 before_script:
-- rm -rf target
+  - rm -rf target
+
+# To use new Travis container infrastructure with caching
+sudo: false
+cache:
+  directories:
+  - $HOME/.sdkman
+  - $HOME/.grails
+
 script: ./travis-build.sh
+
 env:
   global:
   - GIT_NAME="Graeme Rocher"

@@ -36,6 +36,6 @@ fi
 
 source ~/.sdkman/bin/sdkman-init.sh
 
-install_grails 2.4.2
+install_grails 2.5.1
 
 exit 0
