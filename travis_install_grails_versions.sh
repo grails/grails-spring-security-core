@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -x
 
 function install_grails {
 	GRAILS_VERSION=$1
