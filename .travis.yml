@@ -11,6 +11,7 @@ cache:
   directories:
   - $HOME/.sdkman
   - $HOME/.grails
+  - $HOME/.m2
 
 script: ./travis-build.sh
 
