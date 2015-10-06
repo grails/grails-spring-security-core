@@ -31,9 +31,6 @@ function install_grails {
 	fi
 }
 
-rm -rf ~/.sdkman
-
-
 if [ ! -f ~/.sdkman/etc/config ]; then
 	curl -s get.sdkman.io | bash
 	perl -i -p -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' ~/.sdkman/etc/config
