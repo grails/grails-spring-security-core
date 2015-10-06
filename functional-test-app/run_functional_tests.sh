@@ -1,10 +1,10 @@
 #!/bin/bash
 use_grails_versions="$@"
 if [ -z "$use_grails_versions" ]; then
-	use_grails_versions="2.4.5"
+	use_grails_versions="2.5.1"
 fi
 
-source ~/.gvm/bin/gvm-init.sh
+source ~/.sdkman/bin/sdkman-init.sh
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd "$DIR"
@@ -12,7 +12,7 @@ cd "$DIR"
 function run_test {
 	GRAILS_VERSION="$1"
 	set +xe
-	gvm use grails $GRAILS_VERSION
+	sdk use grails $GRAILS_VERSION
 	set -xe
 
 	./upgrade_app.sh
