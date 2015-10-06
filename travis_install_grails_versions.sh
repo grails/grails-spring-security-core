@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 function install_grails {
 	GRAILS_VERSION=$1
 	if [ -f $HOME/.grails/wrapper/$GRAILS_VERSION/grails-$GRAILS_VERSION/bin/grails ]; then
