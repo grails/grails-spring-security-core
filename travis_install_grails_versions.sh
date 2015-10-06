@@ -31,14 +31,16 @@ function install_grails {
 	fi
 }
 
+rm -rf ~/.sdkman
+
 
 if [ ! -f ~/.sdkman/etc/config ]; then
 	curl -s get.sdkman.io | bash
+	perl -i -p -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' ~/.sdkman/etc/config
 else
     sdk selfupdate
 fi
 
-perl -i -p -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' ~/.sdkman/etc/config
 source ~/.sdkman/bin/sdkman-init.sh
 
 install_grails 2.5.1
