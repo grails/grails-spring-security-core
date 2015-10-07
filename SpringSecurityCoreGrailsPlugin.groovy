@@ -54,6 +54,8 @@ import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilt
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.IpAddressFilter
 import grails.plugin.webxml.FilterManager
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.commons.spring.GrailsApplicationContext
 
 import javax.servlet.Filter
 
@@ -759,10 +761,10 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 	}
 
-	private void initializeFromAnnotations(ctx, conf, application) {
+	private void initializeFromAnnotations(GrailsApplicationContext ctx, ConfigObject conf, GrailsApplication application) {
 		AnnotationFilterInvocationDefinition afid = ctx.objectDefinitionSource
 		afid.initialize conf.controllerAnnotations.staticRules,
-			ctx.grailsUrlMappingsHolder, application.controllerClasses
+			ctx.grailsUrlMappingsHolder, application.controllerClasses, application.domainClasses
 	}
 
 	private void addControllerMethods(MetaClass mc, ctx) {

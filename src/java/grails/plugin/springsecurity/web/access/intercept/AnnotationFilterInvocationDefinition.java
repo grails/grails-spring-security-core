@@ -36,10 +36,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.groovy.grails.commons.ControllerArtefactHandler;
-import org.codehaus.groovy.grails.commons.GrailsApplication;
-import org.codehaus.groovy.grails.commons.GrailsClass;
-import org.codehaus.groovy.grails.commons.GrailsControllerClass;
+import org.codehaus.groovy.grails.commons.*;
 import org.codehaus.groovy.grails.plugins.web.api.ResponseMimeTypesApi;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingInfo;
 import org.codehaus.groovy.grails.web.mapping.UrlMappingsHolder;
@@ -214,9 +211,10 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 	 * @param staticRules data from the controllerAnnotations.staticRules config attribute
 	 * @param mappingsHolder mapping holder
 	 * @param controllerClasses all controllers
+	 * @param domainClasses all domain classes
 	 */
 	public void initialize(final Object staticRules,
-			final UrlMappingsHolder mappingsHolder, final GrailsClass[] controllerClasses) {
+			final UrlMappingsHolder mappingsHolder, final GrailsClass[] controllerClasses, final GrailsClass[] domainClasses) {
 
 		Assert.notNull(staticRules, "staticRules map is required");
 		Assert.notNull(mappingsHolder, "urlMappingsHolder is required");
@@ -232,6 +230,10 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 		for (GrailsClass controllerClass : controllerClasses) {
 			findControllerAnnotations((GrailsControllerClass)controllerClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap);
+		}
+
+		for (GrailsClass domainClass : domainClasses) {
+			findDomainAnnotations((GrailsDomainClass) domainClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap);
 		}
 
 		compileStaticRules(staticRules);
@@ -396,6 +398,24 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		Class<?> clazz = controllerClass.getClazz();
 		String controllerName = resolveFullControllerName(controllerClass);
 
+		findAnnotations(actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, controllerName);
+	}
+
+	protected void findDomainAnnotations(
+			final GrailsDomainClass domainClass,
+			final Map<String, List<InterceptedUrl>> actionRoleMap,
+			final List<InterceptedUrl> classRoleMap,
+			final Map<String, List<InterceptedUrl>> actionClosureMap,
+			final List<InterceptedUrl> classClosureMap) {
+
+		Class<?> clazz = domainClass.getClazz();
+		String controllerName = clazz.getSimpleName().toLowerCase();
+
+		findAnnotations(actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, controllerName);
+
+	}
+
+	private void findAnnotations(Map<String, List<InterceptedUrl>> actionRoleMap, List<InterceptedUrl> classRoleMap, Map<String, List<InterceptedUrl>> actionClosureMap, List<InterceptedUrl> classClosureMap, Class<?> clazz, String controllerName) {
 		Annotation annotation = clazz.getAnnotation(org.springframework.security.access.annotation.Secured.class);
 		if (annotation == null) {
 			annotation = clazz.getAnnotation(grails.plugin.springsecurity.annotation.Secured.class);
