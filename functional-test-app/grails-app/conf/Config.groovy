@@ -61,7 +61,7 @@ log4j = {
 }
 
 grails.plugin.springsecurity.authority.className = 'com.testapp.TestRole'
-grails.plugin.springsecurity.fii.rejectPublicInvocations = false
+grails.plugin.springsecurity.fii.rejectPublicInvocations = true
 grails.plugin.springsecurity.password.algorithm = 'SHA-256'
 grails.plugin.springsecurity.rejectIfNoRule = false
 grails.plugin.springsecurity.requestMap.className = 'com.testapp.TestRequestmap'

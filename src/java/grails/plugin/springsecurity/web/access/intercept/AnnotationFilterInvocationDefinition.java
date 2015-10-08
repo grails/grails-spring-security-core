@@ -16,6 +16,7 @@ package grails.plugin.springsecurity.web.access.intercept;
 
 import grails.plugin.springsecurity.InterceptedUrl;
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute;
+import grails.rest.Resource;
 import grails.web.UrlConverter;
 import groovy.lang.Closure;
 
@@ -409,9 +410,12 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 			final List<InterceptedUrl> classClosureMap) {
 
 		Class<?> clazz = domainClass.getClazz();
-		String controllerName = clazz.getSimpleName().toLowerCase();
 
-		findAnnotations(actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, controllerName);
+		Resource resource = clazz.getAnnotation(Resource.class);
+		if (resource != null) {
+			String controllerName = clazz.getSimpleName().toLowerCase();
+			findAnnotations(actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, controllerName);
+		}
 
 	}
 
