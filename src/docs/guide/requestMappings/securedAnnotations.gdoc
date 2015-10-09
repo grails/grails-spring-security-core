@@ -73,6 +73,27 @@ class SecureClassAnnotatedController {
 
 Here you need to be authenticated and have @ROLE_ADMIN@ to see @/myapp/secureClassAnnotated@ (or @/myapp/secureClassAnnotated/index@) or @/myapp/secureClassAnnotated/otherAction@. However, you must have @ROLE_SUPERUSER@ to access @/myapp/secureClassAnnotated/super@. The action-scope annotation overrides the class-scope annotation. Note that "strict" mode isn't applicable here since all actions have an access rule defined (either explicitly or inherited from the class-level annotation).
 
+h4. Securing RESTful domain classes
+
+Since Grails 2.3, domain classes can be annotated with the @grails.rest.Resource@ AST transformation, which will generate
+internally a controller with the default CRUD operations.
+
+You can also use the @\@Secured@ annotation on such domain classes:
+
+{code}
+@Resource
+@Secured(['ROLE_ADMIN'])
+class Thing {
+
+    String name
+
+    static constraints = {
+    }
+}
+{code}
+
+This will
+
 h4. controllerAnnotations.staticRules
 
 You can also define 'static' mappings that cannot be expressed in the controllers, such as '/\*\*' or for JavaScript, CSS, or image URLs. Use the @controllerAnnotations.staticRules@ property, for example:
