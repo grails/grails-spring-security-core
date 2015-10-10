@@ -244,7 +244,9 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		compileClassMap(classRoleMap);
 
 		if (log.isTraceEnabled()) {
-			log.trace("configs: " + getConfigAttributeMap());
+			for (InterceptedUrl url : getConfigAttributeMap()) {
+				log.trace("URL: {} | Roles: {}", url.getPattern(), url.getConfigAttributes());
+			}
 		}
 	}
 
