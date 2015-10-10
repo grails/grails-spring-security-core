@@ -358,10 +358,26 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
             login 'admin1', 'password1'
 
         when:
-            go 'thing/index.json'
+            go 'stuffs.json'
 
         then:
             $().text() == '[]'
 
     }
+
+    void 'generated Resource controllers can have inherited secured actions'() {
+        when:
+            go "customer/index"
+
+        then:
+            at LoginPage
+
+        when:
+            login 'admin1', 'password1'
+            go 'customer/index.json'
+
+        then:
+            $().text() == '[]'
+    }
+
 }
