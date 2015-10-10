@@ -343,22 +343,22 @@
 	</tag>
 
 	<tag>
-		<description>URL tag based on the JSTL c:url tag.  This variant is fully
-		backwards compatible with the standard tag.  Enhancements include support
+		<description>URL tag based on the JSTL c:url tag.  This variant is fully 
+		backwards compatible with the standard tag.  Enhancements include support 
 		for URL template parameters.</description>
 		<name>url</name>
 		<tag-class>org.springframework.web.servlet.tags.UrlTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>The URL to build.  This value can include template place holders
-			that are replaced with the URL encoded value of the named parameter.  Parameters
+			<description>The URL to build.  This value can include template place holders 
+			that are replaced with the URL encoded value of the named parameter.  Parameters 
 			must be defined using the param tag inside the body of this tag.</description>
 			<name>value</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>Specifies a remote application context path.  The default is the
+			<description>Specifies a remote application context path.  The default is the 
 			current application context path.</description>
 			<name>context</name>
 			<required>false</required>
@@ -371,8 +371,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The scope for the var.  'application', 'session', 'request' and
-			'page' scopes are supported.  Defaults to page scope.  This attribute has no
+			<description>The scope for the var.  'application', 'session', 'request' and 
+			'page' scopes are supported.  Defaults to page scope.  This attribute has no 
 			effect unless the var attribute is also defined.</description>
 			<name>scope</name>
 			<required>false</required>
@@ -395,7 +395,7 @@
 	</tag>
 
 	<tag>
-		<description>Parameter tag based on the JSTL c:param tag.  The sole purpose is to
+		<description>Parameter tag based on the JSTL c:param tag.  The sole purpose is to 
 		support params inside the spring:url tag.</description>
 		<name>param</name>
 		<tag-class>org.springframework.web.servlet.tags.ParamTag</tag-class>
@@ -432,8 +432,8 @@
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
-			<description>The scope for the var.  'application', 'session', 'request' and
-			'page' scopes are supported.  Defaults to page scope.  This attribute has no
+			<description>The scope for the var.  'application', 'session', 'request' and 
+			'page' scopes are supported.  Defaults to page scope.  This attribute has no 
 			effect unless the var attribute is also defined.</description>
 			<name>scope</name>
 			<required>false</required>
