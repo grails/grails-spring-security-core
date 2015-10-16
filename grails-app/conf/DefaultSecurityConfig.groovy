@@ -70,6 +70,9 @@ security {
 
 	useExternalClasses = false
 
+	// Default UserDetailsService to use
+	userDetailsService = 'grails.plugin.springsecurity.userdetails.GormUserDetailsService'
+
 	// user and role class properties
 	userLookup {
 		userDomainClassName = null // must be set if using UserDetailsService

@@ -99,7 +99,6 @@ import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEn
 import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncoder
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
-import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.web.NullFilterChainValidator
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
 import grails.plugin.springsecurity.web.access.DefaultThrowableAnalyzer
@@ -468,8 +467,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 				}
 		}
 
-		/** userDetailsService */
-		userDetailsService(GormUserDetailsService) {
+		/** userDetailsService - loaded from DefaultSecurityConfig, can be overridden by application/plugin Config */
+		userDetailsService(this.class.classLoader.loadClass(SpringSecurityUtils.securityConfig.userDetailsService)) {
 			grailsApplication = grailsApplication
 		}
 
