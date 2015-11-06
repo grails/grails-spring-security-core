@@ -39,7 +39,6 @@ else
     sdk selfupdate force
 fi
 
-
 install_grails 2.5.1
 
 exit 0

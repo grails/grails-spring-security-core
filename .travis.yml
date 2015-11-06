@@ -9,7 +9,6 @@ before_script:
 sudo: false
 cache:
   directories:
-  - $HOME/.sdkman
   - $HOME/.grails
   - $HOME/.m2
 
