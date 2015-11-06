@@ -34,7 +34,7 @@ if [ ! -f ~/.sdkman/etc/config ]; then
 	curl -s get.sdkman.io | bash
 	perl -i -p -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' ~/.sdkman/etc/config
 else
-    sdk selfupdate
+    sdk selfupdate force
 fi
 
 source ~/.sdkman/bin/sdkman-init.sh
