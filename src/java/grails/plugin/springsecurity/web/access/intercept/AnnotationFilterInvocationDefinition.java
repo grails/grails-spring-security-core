@@ -473,7 +473,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 	protected List<InterceptedUrl> findActionRoles(final Class<?> clazz) {
 		List<InterceptedUrl> actionRoles = new ArrayList<InterceptedUrl>();
-		for (Method method : clazz.getDeclaredMethods()) {
+		for (Method method : clazz.getMethods()) {
 			Annotation annotation = findSecuredAnnotation(method);
 			if (annotation != null) {
 				Collection<String> values = getValue(annotation);
@@ -487,7 +487,7 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 
 	protected List<InterceptedUrl> findActionClosures(final Class<?> clazz) {
 		List<InterceptedUrl> actionClosures = new ArrayList<InterceptedUrl>();
-		for (Method method : clazz.getDeclaredMethods()) {
+		for (Method method : clazz.getMethods()) {
 			grails.plugin.springsecurity.annotation.Secured annotation = method.getAnnotation(
 					grails.plugin.springsecurity.annotation.Secured.class);
 			if (annotation != null && annotation.closure() != grails.plugin.springsecurity.annotation.Secured.class) {
