@@ -1,5 +1,10 @@
 package ${packageName}
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='authority')
+@ToString(includes='authority', includeNames=true, includePackage=false)
 class ${roleClassName} implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -9,21 +14,6 @@ class ${roleClassName} implements Serializable {
 	${roleClassName}(String authority) {
 		this()
 		this.authority = authority
-	}
-
-	@Override
-	int hashCode() {
-		authority?.hashCode() ?: 0
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (other instanceof ${roleClassName} && other.authority == authority)
-	}
-
-	@Override
-	String toString() {
-		authority
 	}
 
 	static constraints = {
