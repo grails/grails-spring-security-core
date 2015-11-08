@@ -58,7 +58,7 @@ dependencies {
 	provided 'org.grails:grails-web-boot'
 	provided 'org.springframework.boot:spring-boot-autoconfigure'
 
-	String springSecurityVersion = '3.2.8.RELEASE'
+	String springSecurityVersion = '3.2.9.RELEASE'
 
 	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 		['aopalliance', 'aspectjrt', 'commons-collections', 'commons-logging', 'ehcache-core',
