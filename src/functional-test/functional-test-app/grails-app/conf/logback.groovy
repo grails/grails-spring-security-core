@@ -3,7 +3,7 @@ import grails.util.Environment
 
 appender('STDOUT', ConsoleAppender) {
 	encoder(PatternLayoutEncoder) {
-		pattern = "%level %logger - %msg%n"
+		pattern = '%level %logger - %msg%n'
 	}
 }
 
@@ -19,7 +19,7 @@ if (Environment.developmentMode && targetDir) {
 		file = "$targetDir/stacktrace.log"
 		append = true
 		encoder(PatternLayoutEncoder) {
-			pattern = "%level %logger - %msg%n"
+			pattern = '%level %logger - %msg%n'
 		}
 	}
 

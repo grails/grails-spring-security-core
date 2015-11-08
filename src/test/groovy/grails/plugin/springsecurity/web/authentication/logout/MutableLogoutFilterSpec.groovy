@@ -38,7 +38,7 @@ class MutableLogoutFilterSpec extends AbstractUnitSpec {
 
 	private int logoutCount
 
-	def setup() {
+	void setup() {
 		5.times {
 			handlers << ([logout: { req, res, auth -> logoutCount++ }] as LogoutHandler)
 		}

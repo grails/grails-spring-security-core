@@ -30,7 +30,7 @@ import spock.lang.Specification
 @TestMixin(GrailsUnitTestMixin)
 abstract class AbstractUnitSpec extends Specification {
 
-	def setupSpec() {
+	void setupSpec() {
 		defineBeans {
 			webExpressionHandler(DefaultWebSecurityExpressionHandler)
 			roleVoter(RoleVoter)
@@ -38,11 +38,11 @@ abstract class AbstractUnitSpec extends Specification {
 		}
 	}
 
-	def setup() {
+	void setup() {
 		ReflectionUtils.application = SpringSecurityUtils.application = grailsApplication
 	}
 
-	def cleanup() {
+	void cleanup() {
 		SecurityContextHolder.context.authentication = null
 		SecurityRequestHolder.reset()
 		SecurityTestUtils.logout()

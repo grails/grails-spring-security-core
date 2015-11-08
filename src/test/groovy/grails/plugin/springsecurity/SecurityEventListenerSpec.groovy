@@ -33,7 +33,7 @@ class SecurityEventListenerSpec extends AbstractUnitSpec {
 	private SecurityEventListener listener = new SecurityEventListener()
 	private closures = new ConfigObject()
 
-	def setup() {
+	void setup() {
 		SpringSecurityUtils.securityConfig = closures
 	}
 

@@ -36,7 +36,7 @@ class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAccessDeniedHandler handler = new AjaxAwareAccessDeniedHandler()
 
-	def setup() {
+	void setup() {
 		handler.errorPage = '/fail'
 		handler.ajaxErrorPage = '/ajaxFail'
 		handler.portResolver = new PortResolverImpl()

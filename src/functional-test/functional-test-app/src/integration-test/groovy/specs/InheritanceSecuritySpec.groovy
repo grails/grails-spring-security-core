@@ -5,110 +5,110 @@ import pages.LoginPage
 
 class InheritanceSecuritySpec extends AbstractSecuritySpec {
 
-	def setupSpec() {
+	void setupSpec() {
 		go 'testData/addTestUsers'
 	}
 
-	def setup() {
+	void setup() {
 		browser.clearCookiesQuietly()
 	}
 
-	def 'should redirect to login page for anonymous'() {
+	void 'should redirect to login page for anonymous'() {
 		when:
-			go uri
+		go uri
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		where:
-			uri << ['base/index', 'extended/index', 'base/delete', 'extended/delete', 'base/update', 'extended/update']
+		uri << ['base/index', 'extended/index', 'base/delete', 'extended/delete', 'base/update', 'extended/update']
 	}
 
-	def 'verify security for testuser'() {
+	void 'verify security for testuser'() {
 		when:
-			login 'testuser', 'password'
+		login 'testuser', 'password'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go 'base/index'
+		go 'base/index'
 
 		then:
-			pageSource =~ /BaseController/
+		pageSource =~ /BaseController/
 
 		when:
-			go 'base/delete'
+		go 'base/delete'
 
 		then:
-			pageSource =~ /DELETED/
+		pageSource =~ /DELETED/
 
 		when:
-			go 'base/update'
+		go 'base/update'
 
 		then:
-			pageSource =~ /BaseController - UPDATED/
+		pageSource =~ /BaseController - UPDATED/
 
 		when:
-			go 'extended/index'
+		go 'extended/index'
 
 		then:
-			pageSource =~ /ExtendedController/
+		pageSource =~ /ExtendedController/
 
 		when:
-			go 'extended/delete'
+		go 'extended/delete'
 
 		then:
-			pageSource =~ /DELETED/
+		pageSource =~ /DELETED/
 
 		when:
-			go 'extended/update'
+		go 'extended/update'
 
 		then:
-			pageSource =~ /ExtendedController - UPDATED/
+		pageSource =~ /ExtendedController - UPDATED/
 	}
 
-	def 'verify security for other user'() {
+	void 'verify security for other user'() {
 		when:
-			login 'testuser_books', 'password'
+		login 'testuser_books', 'password'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go 'base/index'
+		go 'base/index'
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go 'base/delete'
+		go 'base/delete'
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go 'base/update'
+		go 'base/update'
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go 'extended/index'
+		go 'extended/index'
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go 'extended/delete'
+		go 'extended/delete'
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go 'extended/update'
+		go 'extended/update'
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 	}
 }

@@ -328,7 +328,7 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		assert expected == sw.toString()
 	}
 
-	def cleanup() {
+	void cleanup() {
 		SCH.clearContext()
 		RequestContextHolder.resetRequestAttributes()
 	}

@@ -52,7 +52,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	private static final String username = 'username'
 	private static TestUser testUser
 
-	def setup() {
+	void setup() {
 		if (testUser) return
 
 		TestUser.withNewTransaction {
@@ -65,7 +65,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		}
 	}
 
-	def cleanupSpec() {
+	void cleanupSpec() {
 		TestUser.withNewTransaction {
 			TestUserRole.deleteAll TestUserRole.list()
 			TestRole.deleteAll TestRole.list()
@@ -73,7 +73,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		}
 	}
 
-	def cleanup() {
+	void cleanup() {
 		SecurityContextHolder.clearContext() // logout
 	}
 

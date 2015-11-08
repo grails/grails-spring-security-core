@@ -33,7 +33,7 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 	SpringSecurityService springSecurityService
 	def servletContext
 
-	def setup() {
+	void setup() {
 
 		oldConfig = SpringSecurityUtils.securityConfig
 
@@ -141,7 +141,7 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 		assert 5 == TestRequestmap.count()
 	}
 
-	def cleanup() {
+	void cleanup() {
 		SpringSecurityUtils.securityConfig = oldConfig
 	}
 }

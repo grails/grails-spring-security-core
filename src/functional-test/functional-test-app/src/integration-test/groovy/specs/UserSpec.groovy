@@ -7,94 +7,94 @@ import pages.user.ShowUserPage
 
 class UserSpec extends AbstractSecuritySpec {
 
-	def 'there are no users initially'() {
+	void 'there are no users initially'() {
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 0
+		userRows.size() == 0
 	}
 
-	def 'add a user'() {
+	void 'add a user'() {
 		when:
-			to ListUserPage
-			newUserButton.click()
+		to ListUserPage
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'new_user'
-			password = 'p4ssw0rd'
-			$('#enabled').click()
-			createButton.click()
+		username = 'new_user'
+		password = 'p4ssw0rd'
+		$('#enabled').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
-			username == 'new_user'
-			userEnabled == true
+		at ShowUserPage
+		username == 'new_user'
+		userEnabled == true
 	}
 
-	def 'edit the details'() {
+	void 'edit the details'() {
 		when:
-			to ListUserPage
-			userRow(0).showLink.click()
+		to ListUserPage
+		userRow(0).showLink.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			editButton.click()
+		editButton.click()
 
 		then:
-			at EditUserPage
+		at EditUserPage
 
 		when:
-			username = 'new_user2'
-			password = 'p4ssw0rd2'
-			$('#enabled').click()
+		username = 'new_user2'
+		password = 'p4ssw0rd2'
+		$('#enabled').click()
 
-			updateButton.click()
+		updateButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 1
+		userRows.size() == 1
 
-			def row = userRow(0)
-			row.username == 'new_user2'
-			!row.userEnabled
+		def row = userRow(0)
+		row.username == 'new_user2'
+		!row.userEnabled
 	}
 
-	def 'show user'() {
+	void 'show user'() {
 		when:
-			to ListUserPage
-			userRow(0).showLink.click()
+		to ListUserPage
+		userRow(0).showLink.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 	}
 
-	def 'delete user'() {
+	void 'delete user'() {
 		when:
-			to ListUserPage
-			userRow(0).showLink.click()
-			def deletedId = id
+		to ListUserPage
+		userRow(0).showLink.click()
+		def deletedId = id
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			withConfirm { deleteButton.click() }
+		withConfirm { deleteButton.click() }
 
 		then:
-			at ListUserPage
+		at ListUserPage
 
-			message == "TestUser $deletedId deleted."
-			userRows.size() == 0
+		message == "TestUser $deletedId deleted."
+		userRows.size() == 0
 	}
 }

@@ -38,7 +38,7 @@ class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 	GormPersistentTokenRepository tokenRepository
 	def dataSource
 
-	def setup() {
+	void setup() {
 		sql = new Sql(dataSource)
 	}
 

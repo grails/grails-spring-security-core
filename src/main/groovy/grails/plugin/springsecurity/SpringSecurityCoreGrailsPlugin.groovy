@@ -138,7 +138,6 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 	List loadAfter = ['controllers', 'services', 'hibernate', 'hibernate4']
 	List pluginExcludes = [
 		'docs/**',
-		'grails-app/domain/**',
 		'src/docs/**'
 	]
 	String author = 'Burt Beckwith'
@@ -148,7 +147,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 	String documentation = 'http://grails-plugins.github.io/grails-spring-security-core/'
 	String license = 'APACHE'
 	def organization = [name: 'Grails', url: 'http://www.grails.org/']
-	def issueManagement = [system: 'Github', url: 'https://github.com/grails-plugins/grails-spring-security-core/issues']
+	def issueManagement = [url: 'https://github.com/grails-plugins/grails-spring-security-core/issues']
 	def scm = [url: 'https://github.com/grails-plugins/grails-spring-security-core']
 	def profiles = ['web']
 

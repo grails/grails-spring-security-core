@@ -12,304 +12,304 @@ class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 
 	private HttpURLConnection connection
 
-	def 'create roles'() {
+	void 'create roles'() {
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 0
+		roleRows.size() == 0
 
 		when:
-			newRoleButton.click()
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'ROLE_ADMIN'
-			createButton.click()
+		authority = 'ROLE_ADMIN'
+		createButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 1
+		roleRows.size() == 1
 
 		when:
-			newRoleButton.click()
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'ROLE_ADMIN2'
-			createButton.click()
+		authority = 'ROLE_ADMIN2'
+		createButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 2
+		roleRows.size() == 2
 	}
 
-	def 'create users'() {
+	void 'create users'() {
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 0
+		userRows.size() == 0
 
 		when:
-			newUserButton.click()
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'admin1'
-			password = 'password1'
-			$('#enabled').click()
-			$('#ROLE_ADMIN').click()
-			createButton.click()
+		username = 'admin1'
+		password = 'password1'
+		$('#enabled').click()
+		$('#ROLE_ADMIN').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 1
+		userRows.size() == 1
 
 		when:
-			newUserButton.click()
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'admin2'
-			password = 'password2'
-			$('#enabled').click()
-			$('#ROLE_ADMIN').click()
-			$('#ROLE_ADMIN2').click()
-			createButton.click()
+		username = 'admin2'
+		password = 'password2'
+		$('#enabled').click()
+		$('#ROLE_ADMIN').click()
+		$('#ROLE_ADMIN2').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 2
+		userRows.size() == 2
 	}
 
-	def 'secured urls not visible without login'() {
+	void 'secured urls not visible without login'() {
 
 		// secureClassAnnotated is Basic auth, everything else is form auth
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			go 'secureAnnotated/index'
+		go 'secureAnnotated/index'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			go 'secureAnnotated/adminEither'
+		go 'secureAnnotated/adminEither'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			getWithoutAuth 'secureClassAnnotated'
+		getWithoutAuth 'secureClassAnnotated'
 
 		then:
-			401 == connection.responseCode
+		401 == connection.responseCode
 
 		when:
-			getWithoutAuth 'secureClassAnnotated/index'
+		getWithoutAuth 'secureClassAnnotated/index'
 
 		then:
-			401 == connection.responseCode
+		401 == connection.responseCode
 
 		when:
-			getWithoutAuth 'secureClassAnnotated/otherAction'
+		getWithoutAuth 'secureClassAnnotated/otherAction'
 
 		then:
-			401 == connection.responseCode
+		401 == connection.responseCode
 
 		when:
-			getWithoutAuth 'secureClassAnnotated/admin2'
+		getWithoutAuth 'secureClassAnnotated/admin2'
 
 		then:
-			401 == connection.responseCode
+		401 == connection.responseCode
 
 		when:
-			getWithoutAuth 'secureClassAnnotated/admin2.xml'
+		getWithoutAuth 'secureClassAnnotated/admin2.xml'
 
 		then:
-			401 == connection.responseCode
+		401 == connection.responseCode
 
 		when:
-			getWithoutAuth 'secureClassAnnotated/admin2;jsessionid=5514B068198CC7DBF372713326E14C12'
+		getWithoutAuth 'secureClassAnnotated/admin2;jsessionid=5514B068198CC7DBF372713326E14C12'
 
 		then:
-			401 == connection.responseCode
+		401 == connection.responseCode
 	}
 
-	def 'check allowed for admin1'() {
+	void 'check allowed for admin1'() {
 
 		// Check with admin1 auth, some @Secure actions are accessible
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			login 'admin1', 'password1'
+		login 'admin1', 'password1'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			go 'secureAnnotated/index'
+		logout()
+		go 'secureAnnotated/index'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			login 'admin1', 'password1'
+		login 'admin1', 'password1'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			go 'secureAnnotated/adminEither'
+		logout()
+		go 'secureAnnotated/adminEither'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			login 'admin1', 'password1'
+		login 'admin1', 'password1'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated', 'admin1', 'password1'
+		logout()
+		getWithAuth 'secureClassAnnotated', 'admin1', 'password1'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated/index', 'admin1', 'password1'
+		logout()
+		getWithAuth 'secureClassAnnotated/index', 'admin1', 'password1'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated/otherAction', 'admin1', 'password1'
+		logout()
+		getWithAuth 'secureClassAnnotated/otherAction', 'admin1', 'password1'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated/admin2', 'admin1', 'password1'
+		logout()
+		getWithAuth 'secureClassAnnotated/admin2', 'admin1', 'password1'
 
 		then:
-			assertContentContains 'Error 403 Forbidden'
+		assertContentContains 'Error 403 Forbidden'
 	}
 
-	def 'check allowed for admin2'() {
+	void 'check allowed for admin2'() {
 
 		// Check that with admin2 auth, some @Secure actions are accessible
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			login 'admin2', 'password2'
+		login 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			go 'secureAnnotated/index'
+		logout()
+		go 'secureAnnotated/index'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			login 'admin2', 'password2'
+		login 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			go 'secureAnnotated/adminEither'
+		logout()
+		go 'secureAnnotated/adminEither'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			login 'admin2', 'password2'
+		login 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated', 'admin2', 'password2'
+		logout()
+		getWithAuth 'secureClassAnnotated', 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated/index', 'admin2', 'password2'
+		logout()
+		getWithAuth 'secureClassAnnotated/index', 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated/otherAction', 'admin2', 'password2'
+		logout()
+		getWithAuth 'secureClassAnnotated/otherAction', 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
-			getWithAuth 'secureClassAnnotated/admin2', 'admin2', 'password2'
+		logout()
+		getWithAuth 'secureClassAnnotated/admin2', 'admin2', 'password2'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 	}
 
 	private void getWithAuth(String path, String username, String password) {

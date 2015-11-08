@@ -14,11 +14,11 @@ import spock.lang.Stepwise
 @Stepwise
 abstract class AbstractSecuritySpec extends GebReportingSpec {
 
-	def setupSpec() {
+	void setupSpec() {
 		resetDatabase()
 	}
 
-	def cleanup() {
+	void cleanup() {
 		logout()
 	}
 

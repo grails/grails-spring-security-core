@@ -5,111 +5,111 @@ import pages.LoginPage
 
 class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
-	def setupSpec() {
+	void setupSpec() {
 		go 'testData/addTestUsers'
 	}
 
-	def setup() {
+	void setup() {
 		browser.clearCookiesQuietly()
 	}
 
-	def 'should redirect to login page for anonymous'() {
+	void 'should redirect to login page for anonymous'() {
 		when:
-			go uri
+		go uri
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		where:
-			uri << ['api/v1/books','api/v1/movies','api/v1/books.json','api/v1/movies.json']
+		uri << ['api/v1/books','api/v1/movies','api/v1/books.json','api/v1/movies.json']
 	}
 
-	def 'api not allowed for testuser'() {
+	void 'api not allowed for testuser'() {
 		when:
-			login 'testuser', 'password'
+		login 'testuser', 'password'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go('api/v1/books' + format)
+		go('api/v1/books' + format)
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go('api/v1/movies' + format)
+		go('api/v1/movies' + format)
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		where:
-			format << ['', '.json']
+		format << ['', '.json']
 	}
 
-	def 'verify security for testuser_books'() {
+	void 'verify security for testuser_books'() {
 		when:
-			login 'testuser_books', 'password'
+		login 'testuser_books', 'password'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go('api/v1/books' + format)
+		go('api/v1/books' + format)
 
 		then:
-			pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
+		pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
 
 		when:
-			go('api/v1/movies' + format)
+		go('api/v1/movies' + format)
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 		where:
-			format << ['', '.json']
+		format << ['', '.json']
 	}
 
-	def 'verify security for testuser_movies'() {
+	void 'verify security for testuser_movies'() {
 		when:
-			login 'testuser_movies', 'password'
+		login 'testuser_movies', 'password'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go('api/v1/books' + format)
+		go('api/v1/books' + format)
 
 		then:
-			$('.errors').text() == "Sorry, you're not authorized to view this page."
+		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-			go('api/v1/movies' + format)
+		go('api/v1/movies' + format)
 
 		then:
-			pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
+		pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
 		where:
-			format << ['', '.json']
+		format << ['', '.json']
 	}
 
-	def 'verify security for testuser_books_and_movies'() {
+	void 'verify security for testuser_books_and_movies'() {
 		when:
-			login 'testuser_books_and_movies', 'password'
+		login 'testuser_books_and_movies', 'password'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go('api/v1/books' + format)
+		go('api/v1/books' + format)
 
 		then:
-			pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
+		pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
 
 		when:
-			go('api/v1/movies' + format)
+		go('api/v1/movies' + format)
 
 		then:
-			pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
+		pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
 		where:
-			format << ['', '.json']
+		format << ['', '.json']
 	}
 }

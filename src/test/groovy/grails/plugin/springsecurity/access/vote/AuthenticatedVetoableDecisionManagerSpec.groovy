@@ -36,7 +36,7 @@ class AuthenticatedVetoableDecisionManagerSpec extends AbstractUnitSpec {
 
 	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager()
 
-	def setup() {
+	void setup() {
 		manager.decisionVoters = [new AuthenticatedVoter(), new RoleVoter()]
 	}
 

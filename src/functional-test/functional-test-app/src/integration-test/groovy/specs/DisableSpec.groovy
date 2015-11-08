@@ -4,163 +4,163 @@ import pages.IndexPage
 
 class DisableSpec extends AbstractSecuritySpec {
 
-	def 'lock account'() {
+	void 'lock account'() {
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
+		logout()
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
 
 		when:
-			go 'hack/setUserProperty?user=user1&accountLocked=true'
+		go 'hack/setUserProperty?user=user1&accountLocked=true'
 
 		then:
-			'true' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
+		'true' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			assertContentContains 'accountLocked'
+		assertContentContains 'accountLocked'
 
 		// reset
 		when:
-			go 'hack/setUserProperty?user=user1&accountLocked=false'
+		go 'hack/setUserProperty?user=user1&accountLocked=false'
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
 	}
 
-	def 'disable account'() {
+	void 'disable account'() {
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
+		logout()
 
 		then:
-			'true' == getContent('hack/getUserProperty?user=user1&propName=enabled')
+		'true' == getContent('hack/getUserProperty?user=user1&propName=enabled')
 
 		when:
-			go 'hack/setUserProperty?user=user1&enabled=false'
+		go 'hack/setUserProperty?user=user1&enabled=false'
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=enabled')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=enabled')
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			assertContentContains 'accountDisabled'
+		assertContentContains 'accountDisabled'
 
 		// reset
 		when:
-			go 'hack/setUserProperty?user=user1&enabled=true'
+		go 'hack/setUserProperty?user=user1&enabled=true'
 
 		then:
-			'true' == getContent('hack/getUserProperty?user=user1&propName=enabled')
+		'true' == getContent('hack/getUserProperty?user=user1&propName=enabled')
 	}
 
-	def 'expire account'() {
+	void 'expire account'() {
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
+		logout()
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
 
 		when:
-			go 'hack/setUserProperty?user=user1&accountExpired=true'
+		go 'hack/setUserProperty?user=user1&accountExpired=true'
 
 		then:
-			'true' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
+		'true' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			assertContentContains 'accountExpired'
+		assertContentContains 'accountExpired'
 
 		// reset
 		when:
-			go 'hack/setUserProperty?user=user1&accountExpired=false'
+		go 'hack/setUserProperty?user=user1&accountExpired=false'
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
 	}
 
-	def 'expire password'() {
+	void 'expire password'() {
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			logout()
+		logout()
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
 
 		when:
-			go 'hack/setUserProperty?user=user1&passwordExpired=true'
+		go 'hack/setUserProperty?user=user1&passwordExpired=true'
 
 		then:
-			'true' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
+		'true' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		login 'user1', 'p4ssw0rd'
 
 		then:
-			assertContentContains 'passwordExpired'
+		assertContentContains 'passwordExpired'
 
 		// reset
 		when:
-			go 'hack/setUserProperty?user=user1&passwordExpired=false'
+		go 'hack/setUserProperty?user=user1&passwordExpired=false'
 
 		then:
-			'false' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
+		'false' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
 	}
 }

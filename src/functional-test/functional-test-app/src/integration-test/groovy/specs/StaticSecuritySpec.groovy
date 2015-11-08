@@ -10,273 +10,273 @@ import pages.user.ShowUserPage
 
 class StaticSecuritySpec extends AbstractSecuritySpec {
 
-	def 'create roles'() {
+	void 'create roles'() {
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 0
+		roleRows.size() == 0
 
 		when:
-			newRoleButton.click()
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'ROLE_ADMIN'
-			createButton.click()
+		authority = 'ROLE_ADMIN'
+		createButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 1
+		roleRows.size() == 1
 
 		when:
-			newRoleButton.click()
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'ROLE_ADMIN2'
-			createButton.click()
+		authority = 'ROLE_ADMIN2'
+		createButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 2
+		roleRows.size() == 2
 	}
 
-	def 'create users'() {
+	void 'create users'() {
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 0
+		userRows.size() == 0
 
 		when:
-			newUserButton.click()
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'admin1'
-			password = 'password1'
-			$('#enabled').click()
-			$('#ROLE_ADMIN').click()
-			createButton.click()
+		username = 'admin1'
+		password = 'password1'
+		$('#enabled').click()
+		$('#ROLE_ADMIN').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 1
+		userRows.size() == 1
 
 		when:
-			newUserButton.click()
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'admin2'
-			password = 'password2'
-			$('#enabled').click()
-			$('#ROLE_ADMIN').click()
-			$('#ROLE_ADMIN2').click()
-			createButton.click()
+		username = 'admin2'
+		password = 'password2'
+		$('#enabled').click()
+		$('#ROLE_ADMIN').click()
+		$('#ROLE_ADMIN2').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 2
+		userRows.size() == 2
 	}
 
-	def 'secured urls not visible without login'() {
+	void 'secured urls not visible without login'() {
 
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'Please Login'
+		assertContentContains 'Please Login'
 
 		when:
-			go 'secureAnnotated/index'
+		go 'secureAnnotated/index'
 
 		then:
-			assertContentContains 'Please Login'
+		assertContentContains 'Please Login'
 
 		when:
-			go 'secureAnnotated/index.xml'
+		go 'secureAnnotated/index.xml'
 
 		then:
-			assertContentContains 'Please Login'
+		assertContentContains 'Please Login'
 
 		when:
-			go 'secureAnnotated/index;jsessionid=5514B068198CC7DBF372713326E14C12'
+		go 'secureAnnotated/index;jsessionid=5514B068198CC7DBF372713326E14C12'
 
 		then:
-			assertContentContains 'Please Login'
+		assertContentContains 'Please Login'
 
 		when:
-			go 'secureAnnotated/adminEither'
+		go 'secureAnnotated/adminEither'
 
 		then:
-			assertContentContains 'Please Login'
+		assertContentContains 'Please Login'
 
 		when:
-			go 'secureClassAnnotated'
+		go 'secureClassAnnotated'
 
 		then:
-			assertContentContains 'index: you have ROLE_ADMIN'
+		assertContentContains 'index: you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/index'
+		go 'secureClassAnnotated/index'
 
 		then:
-			assertContentContains 'index: you have ROLE_ADMIN'
+		assertContentContains 'index: you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/otherAction'
+		go 'secureClassAnnotated/otherAction'
 
 		then:
-			assertContentContains 'otherAction: you have ROLE_ADMIN'
+		assertContentContains 'otherAction: you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/admin2'
+		go 'secureClassAnnotated/admin2'
 
 		then:
-			assertContentContains 'admin2: you have ROLE_ADMIN2'
+		assertContentContains 'admin2: you have ROLE_ADMIN2'
 	}
 
-	def 'check allowed for admin1'() {
+	void 'check allowed for admin1'() {
 		when:
-			login 'admin1', 'password1'
+		login 'admin1', 'password1'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		// Check that after login as admin1, some @Secure actions are accessible
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureAnnotated/index'
+		go 'secureAnnotated/index'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureAnnotated/adminEither'
+		go 'secureAnnotated/adminEither'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated'
+		go 'secureClassAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/index'
+		go 'secureClassAnnotated/index'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/otherAction'
+		go 'secureClassAnnotated/otherAction'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/admin2'
+		go 'secureClassAnnotated/admin2'
 
 		then:
-			assertContentContains 'admin2: you have ROLE_ADMIN2'
+		assertContentContains 'admin2: you have ROLE_ADMIN2'
 
 		when:
-			go 'secureAnnotated/expression'
+		go 'secureAnnotated/expression'
 
 		then:
-			assertContentContains 'OK'
+		assertContentContains 'OK'
 	}
 
-	def 'check allowed for admin2'() {
+	void 'check allowed for admin2'() {
 		when:
-			login 'admin2', 'password2'
+		login 'admin2', 'password2'
 
 		then:
-			at IndexPage
+		at IndexPage
 
 		// Check that after login as admin2, some @Secure actions are accessible
 		when:
-			go 'secureAnnotated'
+		go 'secureAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureAnnotated/index'
+		go 'secureAnnotated/index'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureAnnotated/adminEither'
+		go 'secureAnnotated/adminEither'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated'
+		go 'secureClassAnnotated'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/index'
+		go 'secureClassAnnotated/index'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/otherAction'
+		go 'secureClassAnnotated/otherAction'
 
 		then:
-			assertContentContains 'you have ROLE_ADMIN'
+		assertContentContains 'you have ROLE_ADMIN'
 
 		when:
-			go 'secureClassAnnotated/admin2'
+		go 'secureClassAnnotated/admin2'
 
 		then:
-			assertContentContains 'admin2: you have ROLE_ADMIN2'
+		assertContentContains 'admin2: you have ROLE_ADMIN2'
 
 		when:
-			go 'secureAnnotated/expression'
+		go 'secureAnnotated/expression'
 
 		then:
-			assertContentContains "Sorry, you're not authorized to view this page."
+		assertContentContains "Sorry, you're not authorized to view this page."
 	}
 }

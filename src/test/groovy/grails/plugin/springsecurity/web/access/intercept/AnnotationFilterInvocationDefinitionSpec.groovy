@@ -271,7 +271,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		!fid.findConfigAttributes('/bar/foo', null)
 	}
 
-	def cleanup() {
+	void cleanup() {
 		RequestContextHolder.resetRequestAttributes()
 	}
 }

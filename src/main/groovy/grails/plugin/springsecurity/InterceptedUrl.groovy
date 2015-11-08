@@ -25,7 +25,7 @@ import org.springframework.security.access.ConfigAttribute
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @EqualsAndHashCode(includes='pattern,access,httpMethod')
-@ToString
+@ToString(includeNames=true)
 @CompileStatic
 class InterceptedUrl {
 	String pattern

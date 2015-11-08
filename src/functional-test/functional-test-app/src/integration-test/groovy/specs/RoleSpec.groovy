@@ -7,87 +7,87 @@ import pages.role.ShowRolePage
 
 class RoleSpec extends AbstractSecuritySpec {
 
-	def 'there are no roles initially'() {
+	void 'there are no roles initially'() {
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 0
+		roleRows.size() == 0
 	}
 
-	def 'add a role'() {
+	void 'add a role'() {
 		when:
-			to ListRolePage
-			newRoleButton.click()
+		to ListRolePage
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'test'
-			createButton.click()
+		authority = 'test'
+		createButton.click()
 
 		then:
-			at ShowRolePage
-			authority == 'test'
+		at ShowRolePage
+		authority == 'test'
 	}
 
-	def 'edit the details'() {
+	void 'edit the details'() {
 		when:
-			to ListRolePage
-			roleRow(0).showLink.click()
+		to ListRolePage
+		roleRow(0).showLink.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			editButton.click()
+		editButton.click()
 
 		then:
-			at EditRolePage
+		at EditRolePage
 
 		when:
-			authority = 'test_new'
-			updateButton.click()
+		authority = 'test_new'
+		updateButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 1
+		roleRows.size() == 1
 
-			def row = roleRow(0)
-			row.authority == 'test_new'
+		def row = roleRow(0)
+		row.authority == 'test_new'
 	}
 
-	def 'show role'() {
+	void 'show role'() {
 		when:
-			to ListRolePage
-			roleRow(0).showLink.click()
+		to ListRolePage
+		roleRow(0).showLink.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 	}
 
-	def 'delete role'() {
+	void 'delete role'() {
 		when:
-			to ListRolePage
-			roleRow(0).showLink.click()
-			def deletedId = id
+		to ListRolePage
+		roleRow(0).showLink.click()
+		def deletedId = id
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			withConfirm { deleteButton.click() }
+		withConfirm { deleteButton.click() }
 
 		then:
-			at ListRolePage
+		at ListRolePage
 
-			message == "TestRole $deletedId deleted"
-			roleRows.size() == 0
+		message == "TestRole $deletedId deleted"
+		roleRows.size() == 0
 	}
 }

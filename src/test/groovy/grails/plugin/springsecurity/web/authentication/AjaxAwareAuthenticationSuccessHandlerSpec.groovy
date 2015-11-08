@@ -38,7 +38,7 @@ class AjaxAwareAuthenticationSuccessHandlerClass extends AbstractUnitSpec {
 
 	private final AjaxAwareAuthenticationSuccessHandler handler = new AjaxAwareAuthenticationSuccessHandler()
 
-	def setup() {
+	void setup() {
 		handler.defaultTargetUrl = DEFAULT_TARGET_URL
 		handler.ajaxSuccessUrl = AJAX_SUCCESS_URL
 

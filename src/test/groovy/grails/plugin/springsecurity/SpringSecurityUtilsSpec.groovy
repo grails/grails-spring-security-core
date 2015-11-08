@@ -40,7 +40,7 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 
 	private static originalfilterChainMap
 
-	def setupSpec() {
+	void setupSpec() {
 		defineBeans {
 			dummyFilter(DummyFilter)
 			firstDummy(DummyFilter)
@@ -51,7 +51,7 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 		originalfilterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
 	}
 
-	def setup() {
+	void setup() {
 		SpringSecurityUtils.application = grailsApplication
 		SpringSecurityUtils.registerFilter 'firstDummy', 100
 		SpringSecurityUtils.registerFilter 'secondDummy', 200

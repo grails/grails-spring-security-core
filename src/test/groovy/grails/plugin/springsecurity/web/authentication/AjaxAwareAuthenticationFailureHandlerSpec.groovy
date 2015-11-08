@@ -31,7 +31,7 @@ class AjaxAwareAuthenticationFailureHandlerSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAuthenticationFailureHandler handler = new AjaxAwareAuthenticationFailureHandler()
 
-	def setup() {
+	void setup() {
 		SecurityRequestHolder.set request, response
 	}
 

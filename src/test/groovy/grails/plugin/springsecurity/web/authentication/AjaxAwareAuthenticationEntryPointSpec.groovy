@@ -34,7 +34,7 @@ class AjaxAwareAuthenticationEntryPointSpec extends AbstractUnitSpec {
 	private String loginFormUrl = '/loginFormUrl'
 	private String ajaxLoginFormUrl = '/ajaxLoginFormUrl'
 
-	def setup() {
+	void setup() {
 		entryPoint.useForward = true
 		entryPoint.loginFormUrl = loginFormUrl
 		entryPoint.ajaxLoginFormUrl = ajaxLoginFormUrl

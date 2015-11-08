@@ -42,7 +42,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 	def userDetailsService
 
-	def setup() {
+	void setup() {
 		securityConfigGroupPropertyValues = securityConfigGroupPropertyNames.collectEntries { String name ->
 			[(name): ReflectionUtils.getConfigProperty(name)]
 		}
@@ -55,7 +55,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		assert 2 == TestRole.count()
 	}
 
-	def cleanup() {
+	void cleanup() {
 		securityConfigGroupPropertyValues.each { key, value ->
 			ReflectionUtils.setConfigProperty key, value
 		}

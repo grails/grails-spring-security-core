@@ -7,96 +7,96 @@ import pages.requestmap.ShowRequestmapPage
 
 class RequestmapSpec extends AbstractSecuritySpec {
 
-	def 'there are 26 initially'() {
+	void 'there are 26 initially'() {
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
-			requestmapRows.size() == 26
+		at ListRequestmapPage
+		requestmapRows.size() == 26
 	}
 
-	def 'add a requestmap'() {
+	void 'add a requestmap'() {
 		when:
-			to ListRequestmapPage
-			newRequestmapButton.click()
+		to ListRequestmapPage
+		newRequestmapButton.click()
 
 		then:
-			at CreateRequestmapPage
+		at CreateRequestmapPage
 
 		when:
-			$('form').url = '/secure/**'
-			configAttribute = 'ROLE_ADMIN'
-			createButton.click()
+		$('form').url = '/secure/**'
+		configAttribute = 'ROLE_ADMIN'
+		createButton.click()
 
 		then:
-			at ShowRequestmapPage
-			value('Url') == '/secure/**'
-			configAttribute == 'ROLE_ADMIN'
+		at ShowRequestmapPage
+		value('Url') == '/secure/**'
+		configAttribute == 'ROLE_ADMIN'
 
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
-			requestmapRows.size() == 27
+		at ListRequestmapPage
+		requestmapRows.size() == 27
 	}
 
-	def 'edit the details'() {
+	void 'edit the details'() {
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
+		at ListRequestmapPage
 
 		when:
-			requestmapRow(26).showLink.click()
+		requestmapRow(26).showLink.click()
 
 		then:
-			at ShowRequestmapPage
+		at ShowRequestmapPage
 
 		when:
-			editButton.click()
+		editButton.click()
 
 		then:
-			at EditRequestmapPage
+		at EditRequestmapPage
 
 		when:
-			$('form').url = '/secure2/**'
-			configAttribute = 'ROLE_ADMINX'
-			updateButton.click()
+		$('form').url = '/secure2/**'
+		configAttribute = 'ROLE_ADMINX'
+		updateButton.click()
 
 		then:
-			at ShowRequestmapPage
-			value('Url') == '/secure2/**'
-			configAttribute == 'ROLE_ADMINX'
+		at ShowRequestmapPage
+		value('Url') == '/secure2/**'
+		configAttribute == 'ROLE_ADMINX'
 	}
 
-	def 'delete requestmap'() {
+	void 'delete requestmap'() {
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
+		at ListRequestmapPage
 
 		when:
-			requestmapRow(26).showLink.click()
+		requestmapRow(26).showLink.click()
 
 		then:
-			at ShowRequestmapPage
+		at ShowRequestmapPage
 
 		when:
-			def deletedId = id
-			withConfirm { deleteButton.click() }
+		def deletedId = id
+		withConfirm { deleteButton.click() }
 
 		then:
-			at ListRequestmapPage
-			message == "TestRequestmap $deletedId deleted"
+		at ListRequestmapPage
+		message == "TestRequestmap $deletedId deleted"
 
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			requestmapRows.size() == 26
+		requestmapRows.size() == 26
 	}
 }

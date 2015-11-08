@@ -14,261 +14,261 @@ import pages.user.ShowUserPage
 
 class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
-	def 'create roles'() {
+	void 'create roles'() {
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 0
+		roleRows.size() == 0
 
 		when:
-			newRoleButton.click()
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'ROLE_ADMIN'
-			createButton.click()
+		authority = 'ROLE_ADMIN'
+		createButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 1
+		roleRows.size() == 1
 
 		when:
-			newRoleButton.click()
+		newRoleButton.click()
 
 		then:
-			at CreateRolePage
+		at CreateRolePage
 
 		when:
-			authority = 'ROLE_USER'
-			createButton.click()
+		authority = 'ROLE_USER'
+		createButton.click()
 
 		then:
-			at ShowRolePage
+		at ShowRolePage
 
 		when:
-			to ListRolePage
+		to ListRolePage
 
 		then:
-			roleRows.size() == 2
+		roleRows.size() == 2
 	}
 
-	def 'create users'() {
+	void 'create users'() {
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 0
+		userRows.size() == 0
 
 		when:
-			newUserButton.click()
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'admin1'
-			password = 'password1'
-			$('#enabled').click()
-			$('#ROLE_ADMIN').click()
-			createButton.click()
+		username = 'admin1'
+		password = 'password1'
+		$('#enabled').click()
+		$('#ROLE_ADMIN').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 1
+		userRows.size() == 1
 
 		when:
-			newUserButton.click()
+		newUserButton.click()
 
 		then:
-			at CreateUserPage
+		at CreateUserPage
 
 		when:
-			username = 'user1'
-			password = 'p4ssw0rd'
-			$('#enabled').click()
-			$('#ROLE_USER').click()
-			createButton.click()
+		username = 'user1'
+		password = 'p4ssw0rd'
+		$('#enabled').click()
+		$('#ROLE_USER').click()
+		createButton.click()
 
 		then:
-			at ShowUserPage
+		at ShowUserPage
 
 		when:
-			to ListUserPage
+		to ListUserPage
 
 		then:
-			userRows.size() == 2
+		userRows.size() == 2
 	}
 
-	def 'secure page not visible without requestmap'() {
+	void 'secure page not visible without requestmap'() {
 		when:
-			go 'secure'
+		go 'secure'
 
 		then:
-			assertContentContains 'was denied as public invocations are not allowed via this interceptor'
+		assertContentContains 'was denied as public invocations are not allowed via this interceptor'
 
 		when:
-			go 'secure/expression'
+		go 'secure/expression'
 
 		then:
-			assertContentContains 'was denied as public invocations are not allowed via this interceptor'
+		assertContentContains 'was denied as public invocations are not allowed via this interceptor'
 	}
 
-	def 'create requestMaps'() {
+	void 'create requestMaps'() {
 
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
-			def initialSize = requestmapRows.size()
+		at ListRequestmapPage
+		def initialSize = requestmapRows.size()
 		initialSize in [26,27]
 
 		when:
-			newRequestmapButton.click()
+		newRequestmapButton.click()
 
 		then:
-			at CreateRequestmapPage
+		at CreateRequestmapPage
 
 		when:
-			$('form').url = '/secure'
-			configAttribute = 'ROLE_ADMIN'
-			createButton.click()
+		$('form').url = '/secure'
+		configAttribute = 'ROLE_ADMIN'
+		createButton.click()
 
 		then:
-			at ShowRequestmapPage
+		at ShowRequestmapPage
 
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
-			requestmapRows.size() == initialSize + 1
+		at ListRequestmapPage
+		requestmapRows.size() == initialSize + 1
 
 		when:
-			newRequestmapButton.click()
+		newRequestmapButton.click()
 
 		then:
-			at CreateRequestmapPage
+		at CreateRequestmapPage
 
 		when:
-			$('form').url = '/secure/**'
-			configAttribute = 'ROLE_ADMIN'
-			createButton.click()
+		$('form').url = '/secure/**'
+		configAttribute = 'ROLE_ADMIN'
+		createButton.click()
 
 		then:
-			at ShowRequestmapPage
+		at ShowRequestmapPage
 
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
-			requestmapRows.size() == initialSize + 2
+		at ListRequestmapPage
+		requestmapRows.size() == initialSize + 2
 
 		when:
-			newRequestmapButton.click()
+		newRequestmapButton.click()
 
 		then:
-			at CreateRequestmapPage
+		at CreateRequestmapPage
 
 		when:
-			$('form').url = '/secure/expression'
-			configAttribute = "authentication.name == 'user1'"
-			createButton.click()
+		$('form').url = '/secure/expression'
+		configAttribute = "authentication.name == 'user1'"
+		createButton.click()
 
 		then:
-			at ShowRequestmapPage
+		at ShowRequestmapPage
 
 		when:
-			go 'testRequestmap/list?max=100'
+		go 'testRequestmap/list?max=100'
 
 		then:
-			at ListRequestmapPage
-			requestmapRows.size() == initialSize + 3
+		at ListRequestmapPage
+		requestmapRows.size() == initialSize + 3
 	}
 
-	def 'secured urls not visible without login'() {
+	void 'secured urls not visible without login'() {
 
 		when:
-			go 'secure'
+		go 'secure'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			go 'secure/expression'
+		go 'secure/expression'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			go 'secure/index.xml'
+		go 'secure/index.xml'
 
 		then:
-			at LoginPage
+		at LoginPage
 
 		when:
-			go 'secure/index;jsessionid=5514B068198CC7DBF372713326E14C12'
+		go 'secure/index;jsessionid=5514B068198CC7DBF372713326E14C12'
 
 		then:
-			at LoginPage
+		at LoginPage
 	}
 
-	def 'check allowed for admin1'() {
+	void 'check allowed for admin1'() {
 
 		when:
-			login 'admin1', 'password1'
+		login 'admin1', 'password1'
 
 		then:
-			at IndexPage
+		at IndexPage
+
+	// Check that with a requestmap, /secure is accessible after login
+		when:
+		go 'secure'
+
+		then:
+		assertContentContains 'SECURE'
+
+		// but 'expression' requires user1
+		when:
+		go 'secure/expression'
+
+		then:
+		assertContentContains "Sorry, you're not authorized to view this page."
+	}
+
+	void 'check allowed for user1'() {
+
+		when:
+		login 'user1', 'p4ssw0rd'
+
+		then:
+		at IndexPage
 
 		// Check that with a requestmap, /secure is accessible after login
 		when:
-			go 'secure'
+		go 'secure'
 
 		then:
-			assertContentContains 'SECURE'
-
-			// but 'expression' requires user1
-		when:
-			go 'secure/expression'
-
-		then:
-			assertContentContains "Sorry, you're not authorized to view this page."
-	}
-
-	def 'check allowed for user1'() {
+		assertContentContains "Sorry, you're not authorized to view this page."
 
 		when:
-			login 'user1', 'p4ssw0rd'
+		go 'secure/expression'
 
 		then:
-			at IndexPage
-
-		// Check that with a requestmap, /secure is accessible after login
-		when:
-			go 'secure'
-
-		then:
-			assertContentContains "Sorry, you're not authorized to view this page."
-
-		when:
-			go 'secure/expression'
-
-		then:
-			assertContentContains 'OK'
+		assertContentContains 'OK'
 	}
 }
