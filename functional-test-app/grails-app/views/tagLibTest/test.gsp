@@ -25,6 +25,11 @@
 	<sec:noAccess expression="hasRole('ROLE_USER')">access with role user: false</sec:noAccess><br/>
 	<sec:noAccess expression="hasRole('ROLE_ADMIN')">access with role admin: false</sec:noAccess><br/>
 
+	<sec:access expression="hasRole('ROLE_ANONYMOUS')">anonymous access: true</sec:access><br/>
+	<sec:access url="/tagLibTest/test">Can access /tagLibTest/test</sec:access><br/>
+	<sec:noAccess expression="hasRole('ROLE_ANONYMOUS')">anonymous access: false</sec:noAccess><br/>
+	<sec:noAccess url="/tagLibTest/test">Cannot access /tagLibTest/test</sec:noAccess><br/>
+
 	<sec:access url="/login/auth">Can access /login/auth</sec:access><br/>
 	<sec:access url="/secureAnnotated">Can access /secureAnnotated</sec:access><br/>
 	<sec:noAccess url="/login/auth">Cannot access /login/auth</sec:noAccess><br/>

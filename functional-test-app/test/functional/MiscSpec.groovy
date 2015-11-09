@@ -159,10 +159,10 @@ class MiscSpec extends AbstractSecuritySpec {
 			auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-   		auth.contains 'Username: user2'
-   		auth.contains 'Authenticated: true'
-   		auth.contains 'ROLE_USER'
-   		auth.contains 'ROLE_PREVIOUS_ADMINISTRATOR'
+			auth.contains 'Username: user2'
+			auth.contains 'Authenticated: true'
+			auth.contains 'ROLE_USER'
+			auth.contains 'ROLE_PREVIOUS_ADMINISTRATOR'
 
 		when:
 			go 'secure-annotated/user-action'
@@ -195,11 +195,11 @@ class MiscSpec extends AbstractSecuritySpec {
 			auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-   		auth.contains 'Username: user1'
-   		auth.contains 'Authenticated: true'
-   		auth.contains 'ROLE_ADMIN'
-   		auth.contains 'ROLE_USER'
-   		!auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
+			auth.contains 'Username: user1'
+			auth.contains 'Authenticated: true'
+			auth.contains 'ROLE_ADMIN'
+			auth.contains 'ROLE_USER'
+			!auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
 	}
 
 	def 'hierarchical roles'() {
@@ -239,21 +239,25 @@ class MiscSpec extends AbstractSecuritySpec {
 
 		then:
 			assertContentDoesNotContain 'user and admin'
-   		assertContentDoesNotContain 'user and admin and foo'
-   		assertContentContains 'not user and not admin'
-   		assertContentDoesNotContain 'user or admin'
-   		assertContentContains 'accountNonExpired: "not logged in"'
-   		assertContentContains 'id: "not logged in"'
-   		assertContentContains 'Username is ""'
-   		assertContentDoesNotContain 'logged in true'
-   		assertContentContains 'logged in false'
-   		assertContentDoesNotContain 'switched true'
-   		assertContentContains 'switched false'
-   		assertContentContains 'switched original username ""'
-   		assertContentDoesNotContain 'access with role user: true'
-   		assertContentDoesNotContain 'access with role admin: true'
-   		assertContentContains 'access with role user: false'
-   		assertContentContains 'access with role admin: false'
+   			assertContentDoesNotContain 'user and admin and foo'
+   			assertContentContains 'not user and not admin'
+   			assertContentDoesNotContain 'user or admin'
+   			assertContentContains 'accountNonExpired: "not logged in"'
+   			assertContentContains 'id: "not logged in"'
+   			assertContentContains 'Username is ""'
+   			assertContentDoesNotContain 'logged in true'
+   			assertContentContains 'logged in false'
+   			assertContentDoesNotContain 'switched true'
+   			assertContentContains 'switched false'
+   			assertContentContains 'switched original username ""'
+   			assertContentDoesNotContain 'access with role user: true'
+   			assertContentDoesNotContain 'access with role admin: true'
+   			assertContentContains 'access with role user: false'
+   			assertContentContains 'access with role admin: false'
+   			assertContentContains 'anonymous access: true'
+   			assertContentContains 'Can access /tagLibTest/test'
+   			assertContentDoesNotContain 'anonymous access: false'
+   			assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	def 'taglibs user'() {
@@ -268,28 +272,33 @@ class MiscSpec extends AbstractSecuritySpec {
 			go 'tag-lib-test/test'
 
 		then:
-   		assertContentDoesNotContain 'user and admin'
-   		assertContentDoesNotContain 'user and admin and foo'
-   		assertContentDoesNotContain 'not user and not admin'
-   		assertContentContains 'user or admin'
-   		assertContentContains 'accountNonExpired: "true"'
-   		assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
-   		assertContentContains 'Username is "user2"'
-   		assertContentContains 'logged in true'
-   		assertContentDoesNotContain 'logged in false'
-   		assertContentDoesNotContain 'switched true'
-   		assertContentContains 'switched false'
-   		assertContentContains 'switched original username ""'
+			assertContentDoesNotContain 'user and admin'
+			assertContentDoesNotContain 'user and admin and foo'
+			assertContentDoesNotContain 'not user and not admin'
+			assertContentContains 'user or admin'
+			assertContentContains 'accountNonExpired: "true"'
+			assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
+			assertContentContains 'Username is "user2"'
+			assertContentContains 'logged in true'
+			assertContentDoesNotContain 'logged in false'
+			assertContentDoesNotContain 'switched true'
+			assertContentContains 'switched false'
+			assertContentContains 'switched original username ""'
 
-   		assertContentContains 'access with role user: true'
-   		assertContentDoesNotContain 'access with role admin: true'
-   		assertContentDoesNotContain 'access with role user: false'
-   		assertContentContains 'access with role admin: false'
+			assertContentContains 'access with role user: true'
+			assertContentDoesNotContain 'access with role admin: true'
+			assertContentDoesNotContain 'access with role user: false'
+			assertContentContains 'access with role admin: false'
 
-   		assertContentContains 'Can access /login/auth'
-   		assertContentDoesNotContain 'Can access /secureAnnotated'
-   		assertContentDoesNotContain 'Cannot access /login/auth'
-   		assertContentContains 'Cannot access /secureAnnotated'
+			assertContentContains 'Can access /login/auth'
+			assertContentDoesNotContain 'Can access /secureAnnotated'
+			assertContentDoesNotContain 'Cannot access /login/auth'
+			assertContentContains 'Cannot access /secureAnnotated'
+
+			assertContentContains 'anonymous access: false'
+			assertContentContains 'Can access /tagLibTest/test'
+			assertContentDoesNotContain 'anonymous access: true'
+			assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	def 'taglibs admin'() {
@@ -304,29 +313,34 @@ class MiscSpec extends AbstractSecuritySpec {
 			go 'tag-lib-test/test'
 
 		then:
-   		assertContentContains 'user and admin'
-   		assertContentDoesNotContain 'user and admin and foo'
-   		assertContentDoesNotContain 'not user and not admin'
-   		assertContentContains 'user or admin'
-   		assertContentContains 'accountNonExpired: "true"'
-   		assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
-   		assertContentContains 'Username is "user1"'
+			assertContentContains 'user and admin'
+			assertContentDoesNotContain 'user and admin and foo'
+			assertContentDoesNotContain 'not user and not admin'
+			assertContentContains 'user or admin'
+			assertContentContains 'accountNonExpired: "true"'
+			assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
+			assertContentContains 'Username is "user1"'
 
-   		assertContentContains 'logged in true'
-   		assertContentDoesNotContain 'logged in false'
-   		assertContentDoesNotContain 'switched true'
-   		assertContentContains 'switched false'
-   		assertContentContains 'switched original username ""'
+			assertContentContains 'logged in true'
+			assertContentDoesNotContain 'logged in false'
+			assertContentDoesNotContain 'switched true'
+			assertContentContains 'switched false'
+			assertContentContains 'switched original username ""'
 
-   		assertContentContains 'access with role user: true'
-   		assertContentContains 'access with role admin: true'
-   		assertContentDoesNotContain 'access with role user: false'
-   		assertContentDoesNotContain 'access with role admin: false'
+			assertContentContains 'access with role user: true'
+			assertContentContains 'access with role admin: true'
+			assertContentDoesNotContain 'access with role user: false'
+			assertContentDoesNotContain 'access with role admin: false'
 
-   		assertContentContains 'Can access /login/auth'
-   		assertContentContains 'Can access /secureAnnotated'
-   		assertContentDoesNotContain 'Cannot access /login/auth'
-   		assertContentDoesNotContain 'Cannot access /secureAnnotated'
+			assertContentContains 'Can access /login/auth'
+			assertContentContains 'Can access /secureAnnotated'
+			assertContentDoesNotContain 'Cannot access /login/auth'
+			assertContentDoesNotContain 'Cannot access /secureAnnotated'
+
+			assertContentContains 'anonymous access: false'
+			assertContentContains 'Can access /tagLibTest/test'
+			assertContentDoesNotContain 'anonymous access: true'
+			assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	def 'metaclass methods unauthenticated'() {
@@ -335,13 +349,13 @@ class MiscSpec extends AbstractSecuritySpec {
 			go 'tag-lib-test/testMetaclassMethods'
 
 		then:
-   		assertContentContains 'getPrincipal: org.springframework.security.core.userdetails.User'
-   		assertContentContains 'Username: __grails.anonymous.user__'
-   		assertContentContains 'Granted Authorities: ROLE_ANONYMOUS'
-   		assertContentContains 'isLoggedIn: false'
-   		assertContentContains 'loggedIn: false'
-   		assertContentContains 'getAuthenticatedUser: null'
-   		assertContentContains 'authenticatedUser: null'
+			assertContentContains 'getPrincipal: org.springframework.security.core.userdetails.User'
+			assertContentContains 'Username: __grails.anonymous.user__'
+			assertContentContains 'Granted Authorities: ROLE_ANONYMOUS'
+			assertContentContains 'isLoggedIn: false'
+			assertContentContains 'loggedIn: false'
+			assertContentContains 'getAuthenticatedUser: null'
+			assertContentContains 'authenticatedUser: null'
 	}
 
 	def 'metaclass methods authenticated'() {
@@ -356,13 +370,13 @@ class MiscSpec extends AbstractSecuritySpec {
 			go 'tag-lib-test/testMetaclassMethods'
 
 		then:
-   		assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
-   		assertContentContains 'principal: grails.plugin.springsecurity.userdetails.GrailsUser'
-   		assertContentContains 'Username: user1'
-   		assertContentContains 'isLoggedIn: true'
-   		assertContentContains 'loggedIn: true'
-   		assertContentContains 'getAuthenticatedUser: user1'
-   		assertContentContains 'authenticatedUser: user1'
+			assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
+			assertContentContains 'principal: grails.plugin.springsecurity.userdetails.GrailsUser'
+			assertContentContains 'Username: user1'
+			assertContentContains 'isLoggedIn: true'
+			assertContentContains 'loggedIn: true'
+			assertContentContains 'getAuthenticatedUser: user1'
+			assertContentContains 'authenticatedUser: user1'
 	}
 
 	def 'test hyphenated'() {
