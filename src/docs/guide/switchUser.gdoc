@@ -24,7 +24,7 @@ Here the form is guarded by a check that the logged-in user has @ROLE_SWITCH_USE
 {code}
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    ...
-   '/j_spring_security_switch_user': ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']
+   [pattern: '/j_spring_security_switch_user', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]
 {code}
 
@@ -40,7 +40,7 @@ If you use the static @application.groovy@ map, add the rule there:
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
    ...
-   '/j_spring_security_switch_user': ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']
+   [pattern: '/j_spring_security_switch_user', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]
 {code}
 

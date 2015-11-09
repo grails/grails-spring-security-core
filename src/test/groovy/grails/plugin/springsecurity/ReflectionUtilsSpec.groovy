@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import org.springframework.http.HttpMethod
+
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
@@ -103,19 +105,31 @@ class ReflectionUtilsSpec extends AbstractUnitSpec {
 
 	void 'split map'() {
 		when:
-		def map = [a: 'b', c: ['d', 'e']]
-		List<InterceptedUrl> split = ReflectionUtils.splitMap(map)
+		def listOfMaps = [
+			[pattern: '/foo',     access: ['a', 'b']],
+			[pattern: '/user/**', access: ['c'], httpMethod: HttpMethod.POST],
+			[pattern: '/bar/**',  access: 'd', httpMethod: 'GET']
+		]
+		List<InterceptedUrl> split = ReflectionUtils.splitMap(listOfMaps)
 
 		then:
-		2 == split.size()
+		3 == split.size()
 
-/*		for (InterceptedUrl iu in split) {
-			assert key instanceof String
-			assert value instanceof List
-		}
-		assert ['b'] == split.a
-		assert ['d', 'e'] == split.c
-*/	}
+		and:
+		split[0].pattern == '/foo'
+		split[0].configAttributes*.toString() == ['a', 'b']
+		!split[0].httpMethod
+
+		and:
+		split[1].pattern == '/user/**'
+		split[1].configAttributes*.toString() == ['c']
+		split[1].httpMethod == HttpMethod.POST
+
+		and:
+		split[2].pattern == '/bar/**'
+		split[2].configAttributes*.toString() == ['d']
+		split[2].httpMethod == HttpMethod.GET
+	}
 
 	void 'get grails serverURL when set'() {
 		when:

@@ -14,6 +14,13 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
+import grails.core.GrailsClass
+import grails.plugin.springsecurity.InterceptedUrl
+import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
+import grails.plugin.springsecurity.annotation.Secured
+import grails.web.CamelCaseUrlConverter
+import grails.web.mapping.UrlMappingInfo
+import grails.web.mapping.UrlMappingsHolder
 import org.grails.core.DefaultGrailsControllerClass
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.web.mapping.DefaultUrlMappingEvaluator
@@ -29,15 +36,6 @@ import org.springframework.security.access.SecurityConfig
 import org.springframework.security.web.FilterInvocation
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
-
-import grails.core.GrailsApplication
-import grails.core.GrailsClass
-import grails.plugin.springsecurity.InterceptedUrl
-import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
-import grails.plugin.springsecurity.annotation.Secured
-import grails.web.CamelCaseUrlConverter
-import grails.web.mapping.UrlMappingInfo
-import grails.web.mapping.UrlMappingsHolder
 import spock.lang.Shared
 
 /**
@@ -49,7 +47,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 
 	private @Shared HttpServletResponseExtension httpServletResponseExtension = new HttpServletResponseExtension()
 	private @Shared AnnotationFilterInvocationDefinition fid = new AnnotationFilterInvocationDefinition(
-			  httpServletResponseExtension: httpServletResponseExtension)
+			httpServletResponseExtension: httpServletResponseExtension)
 
 	void 'supports'() {
 		expect:
@@ -87,7 +85,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		fid = new MockAnnotationFilterInvocationDefinition(httpServletResponseExtension: httpServletResponseExtension)
 
 		def urlMappingsHolder = [matchAll: { String uri, String httpMethod, String version -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
-		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
+		fid.initialize([], urlMappingsHolder, [] as GrailsClass[])
 		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 
 		when:
@@ -138,7 +136,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		fid = new MockAnnotationFilterInvocationDefinition(httpServletResponseExtension: httpServletResponseExtension)
 
 		def urlMappingsHolder = [matchAll: { String uri, String httpMethod, String version -> [] as UrlMappingInfo[] }] as UrlMappingsHolder
-		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
+		fid.initialize([], urlMappingsHolder, [] as GrailsClass[])
 		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
@@ -156,14 +154,14 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		request.requestURI = 'requestURI'
 
 		fid = new MockAnnotationFilterInvocationDefinition(url: 'FOO?x=1', application: grailsApplication,
-			                                                httpServletResponseExtension: httpServletResponseExtension)
+		                                                   httpServletResponseExtension: httpServletResponseExtension)
 
 		UrlMappingInfo[] mappings = [[getControllerName: { -> 'foo' },
 		                              getActionName: { -> 'bar' },
 		                              configure: { GrailsWebRequest r -> },
 		                              getRedirectInfo: { -> }] as UrlMappingInfo]
 		def urlMappingsHolder = [matchAll: { String uri, String httpMethod, String version -> mappings }] as UrlMappingsHolder
-		fid.initialize [:], urlMappingsHolder, [] as GrailsClass[]
+		fid.initialize([], urlMappingsHolder, [] as GrailsClass[])
 		WebUtils.storeGrailsWebRequest new GrailsWebRequest(request, response, servletContext)
 
 		FilterInvocation filterInvocation = new FilterInvocation(request, response, filterChain)
@@ -198,7 +196,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationD
 		def urlMappingsHolder = new DefaultUrlMappingsHolder(
 				mappings.collect { mappingEvaluator.evaluateMappings(mappings) }.flatten())
 
-		Map<String, Collection<String>> staticRules = ['/js/admin/**': ['ROLE_ADMIN']]
+		List<Map<String, Collection<String>>> staticRules = [[pattern: '/js/admin/**', access: ['ROLE_ADMIN']]]
 		GrailsClass[] controllerClasses = [new DefaultGrailsControllerClass(ClassAnnotatedController),
 		                                   new DefaultGrailsControllerClass(MethodAnnotatedController)]
 		controllerClasses.each { cc -> grailsApplication.addArtefact(ControllerArtefactHandler.TYPE, cc) }

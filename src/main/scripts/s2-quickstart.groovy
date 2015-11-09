@@ -151,16 +151,16 @@ private void updateConfig(String userClassName, String roleClassName, String req
 			writer.writeLine "grails.plugin.springsecurity.securityConfigType = 'Requestmap'"
 		}
 		writer.writeLine 'grails.plugin.springsecurity.controllerAnnotations.staticRules = ['
-		writer.writeLine "\t'/':                ['permitAll'],"
-		writer.writeLine "\t'/error':           ['permitAll'],"
-		writer.writeLine "\t'/index':           ['permitAll'],"
-		writer.writeLine "\t'/index.gsp':       ['permitAll'],"
-		writer.writeLine "\t'/shutdown':        ['permitAll'],"
-		writer.writeLine "\t'/assets/**':       ['permitAll'],"
-		writer.writeLine "\t'/**/js/**':        ['permitAll'],"
-		writer.writeLine "\t'/**/css/**':       ['permitAll'],"
-		writer.writeLine "\t'/**/images/**':    ['permitAll'],"
-		writer.writeLine "\t'/**/favicon.ico':  ['permitAll']"
+		writer.writeLine "\t[pattern: '/',               access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/error',          access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/index',          access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/index.gsp',      access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/shutdown',       access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/assets/**',      access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/**/js/**',       access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/**/css/**',      access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/**/images/**',   access: ['permitAll']],"
+		writer.writeLine "\t[pattern: '/**/favicon.ico', access: ['permitAll']]"
 
 		writer.writeLine ']'
 		writer.newLine()

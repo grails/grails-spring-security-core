@@ -14,16 +14,17 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import java.lang.annotation.Annotation
-import java.lang.reflect.AccessibleObject
-import java.lang.reflect.Constructor
-import java.lang.reflect.InvocationTargetException
-import java.lang.reflect.Method
-
-import javax.servlet.ServletContext
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-
+import grails.core.GrailsApplication
+import grails.core.GrailsClass
+import grails.core.GrailsControllerClass
+import grails.plugin.springsecurity.InterceptedUrl
+import grails.plugin.springsecurity.ReflectionUtils as PluginReflectionUtils
+import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
+import grails.web.UrlConverter
+import grails.web.mapping.UrlMappingInfo
+import grails.web.mapping.UrlMappingsHolder
+import grails.web.servlet.mvc.GrailsParameterMap
+import groovy.transform.CompileStatic
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.web.mime.HttpServletResponseExtension
 import org.grails.web.servlet.mvc.GrailsWebRequest
@@ -36,16 +37,14 @@ import org.springframework.util.ReflectionUtils
 import org.springframework.util.StringUtils
 import org.springframework.web.context.ServletContextAware
 
-import grails.core.GrailsApplication
-import grails.core.GrailsClass
-import grails.core.GrailsControllerClass
-import grails.plugin.springsecurity.InterceptedUrl
-import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
-import grails.web.UrlConverter
-import grails.web.mapping.UrlMappingInfo
-import grails.web.mapping.UrlMappingsHolder
-import grails.web.servlet.mvc.GrailsParameterMap
-import groovy.transform.CompileStatic
+import javax.servlet.ServletContext
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
+import java.lang.annotation.Annotation
+import java.lang.reflect.AccessibleObject
+import java.lang.reflect.Constructor
+import java.lang.reflect.InvocationTargetException
+import java.lang.reflect.Method
 
 /**
  * A {@link FilterInvocationSecurityMetadataSource} that uses rules defined with
@@ -100,11 +99,11 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 			Map<String, Object> savedParams = copyParams(grailsRequest)
 
-			UrlMappingInfo[] urlInfos = grails.plugin.springsecurity.ReflectionUtils.matchAllUrlMappings(
+			UrlMappingInfo[] urlInfos = PluginReflectionUtils.matchAllUrlMappings(
 					urlMappingsHolder, requestUrl, grailsRequest, httpServletResponseExtension)
 
 			for (UrlMappingInfo mapping : urlInfos) {
-				if (grails.plugin.springsecurity.ReflectionUtils.isRedirect(mapping)) {
+				if (PluginReflectionUtils.isRedirect(mapping)) {
 					log.trace 'Mapping {} is a redirect', mapping
 					break
 				}
@@ -292,18 +291,16 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 	@SuppressWarnings('unchecked')
 	protected void compileStaticRules(staticRules) {
-		List<InterceptedUrl> rules
 		if (staticRules instanceof Map) {
-			rules = grails.plugin.springsecurity.ReflectionUtils.splitMap((Map<String, Object>)staticRules)
+			throw new IllegalArgumentException("Static rules defined as a Map are not supported; must be specified as a " +
+					"List of Maps as described in section 'Configuring Request Mappings to Secure URLs' of the reference documentation")
 		}
-		else if (staticRules instanceof List) {
-			rules = grails.plugin.springsecurity.ReflectionUtils.splitMap((List<Map<String, Object>>)staticRules)
-		}
-		else {
+
+		if (!(staticRules instanceof List)) {
 			return
 		}
 
-		rules.each { InterceptedUrl iu ->
+		PluginReflectionUtils.splitMap((List<Map<String, Object>>)staticRules).each { InterceptedUrl iu ->
 			storeMapping iu.pattern, null, iu.configAttributes, true, iu.httpMethod
 		}
 	}

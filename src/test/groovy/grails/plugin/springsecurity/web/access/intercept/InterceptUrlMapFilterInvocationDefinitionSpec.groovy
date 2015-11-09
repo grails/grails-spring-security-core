@@ -60,8 +60,8 @@ class InterceptUrlMapFilterInvocationDefinitionSpec extends AbstractFilterInvoca
 	void 'initialize'() {
 		when:
 		ReflectionUtils.setConfigProperty('interceptUrlMap',
-				['/foo/**': 'ROLE_ADMIN',
-				 '/bar/**': ['ROLE_BAR', 'ROLE_BAZ']])
+				[[pattern: '/foo/**', access: 'ROLE_ADMIN'],
+				 [pattern: '/bar/**', access: ['ROLE_BAR', 'ROLE_BAZ']]])
 
 		fid.roleVoter = applicationContext.getBean('roleVoter')
 		fid.authenticatedVoter = applicationContext.getBean('authenticatedVoter')

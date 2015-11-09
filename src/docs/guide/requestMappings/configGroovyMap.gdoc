@@ -8,20 +8,20 @@ Define a Map in @application.groovy@:
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
-   '/':                ['permitAll'],
-   '/error':           ['permitAll'],
-   '/index':           ['permitAll'],
-   '/index.gsp':       ['permitAll'],
-   '/shutdown':        ['permitAll'],
-   '/assets/**':       ['permitAll'],
-   '/**/js/**':        ['permitAll'],
-   '/**/css/**':       ['permitAll'],
-   '/**/images/**':    ['permitAll'],
-   '/**/favicon.ico':  ['permitAll'],
-   '/login':           ['permitAll'],
-   '/login/**':        ['permitAll'],
-   '/logout':          ['permitAll'],
-   '/logout/**':       ['permitAll']
+   [pattern: '/',               access: ['permitAll']],
+   [pattern: '/error',          access: ['permitAll']],
+   [pattern: '/index',          access: ['permitAll']],
+   [pattern: '/index.gsp',      access: ['permitAll']],
+   [pattern: '/shutdown',       access: ['permitAll']],
+   [pattern: '/assets/**',      access: ['permitAll']],
+   [pattern: '/**/js/**',       access: ['permitAll']],
+   [pattern: '/**/css/**',      access: ['permitAll']],
+   [pattern: '/**/images/**',   access: ['permitAll']],
+   [pattern: '/**/favicon.ico', access: ['permitAll']],
+   [pattern: '/login',          access: ['permitAll']],
+   [pattern: '/login/**',       access: ['permitAll']],
+   [pattern: '/logout',         access: ['permitAll']],
+   [pattern: '/logout/**',      access: ['permitAll']]
 ]
 {code}
 
@@ -30,21 +30,21 @@ and add any custom mappings as needed, e.g.
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
    ...
-   '/secure/**':       ['ROLE_ADMIN'],
-   '/finance/**':      ['ROLE_FINANCE', 'isFullyAuthenticated()'],
+   [pattern: '/secure/**',  access: ['ROLE_ADMIN']],
+   [pattern: '/finance/**', access: ['ROLE_FINANCE', 'isFullyAuthenticated()']]
 ]
 {code}
 
 When using this approach, make sure that you order the rules correctly. The first applicable rule is used, so for example if you have a controller that has one set of rules but an action that has stricter access rules, e.g.
 
 {code}
-'/secure/**':              ['ROLE_ADMIN', 'ROLE_SUPERUSER'],
-'/secure/reallysecure/**': ['ROLE_SUPERUSER']
+[pattern: '/secure/**',               access: ['ROLE_ADMIN', 'ROLE_SUPERUSER']],
+[pattern: '/secure/reallysecure/**',  access: ['ROLE_SUPERUSER']]
 {code}
 
 then this would fail - it wouldn't restrict access to @/secure/reallysecure/list@ to a user with @ROLE_SUPERUSER@ since the first URL pattern matches, so the second would be ignored. The correct mapping would be
 
 {code}
-'/secure/reallysecure/**': ['ROLE_SUPERUSER']
-'/secure/**':              ['ROLE_ADMIN', 'ROLE_SUPERUSER'],
+[pattern: '/secure/reallysecure/**', access: ['ROLE_SUPERUSER']],
+[pattern: '/secure/**',              access: ['ROLE_ADMIN', 'ROLE_SUPERUSER']]
 {code}

@@ -145,7 +145,6 @@ class ReflectionUtils {
 		}
 	}
 
-	// TODO doc List<Map> keys are pattern, access, httpMethod
 	static List<InterceptedUrl> splitMap(List<Map<String, Object>> map) {
 		map.collect { Map<String, Object> row ->
 

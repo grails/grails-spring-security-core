@@ -39,17 +39,21 @@ class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInvocation
 	@SuppressWarnings('unchecked')
 	@Override
 	void reset() {
-		def map = ReflectionUtils.getConfigProperty('interceptUrlMap')
-		if (!(map instanceof Map || map instanceof List)) {
-			log.warn "interceptUrlMap config property isn't a Map or a List of Maps"
+		def interceptUrlMap = ReflectionUtils.getConfigProperty('interceptUrlMap')
+
+		if (interceptUrlMap instanceof Map) {
+			throw new IllegalArgumentException("interceptUrlMap defined as a Map is not supported; must be specified as a " +
+					"List of Maps as described in section 'Configuring Request Mappings to Secure URLs' of the reference documentation")
+		}
+
+		if (!(interceptUrlMap instanceof List)) {
+			log.warn "interceptUrlMap config property isn't a List of Maps"
 			return
 		}
 
 		resetConfigs()
 
-		List<InterceptedUrl> data = map instanceof Map ? ReflectionUtils.splitMap((Map<String, Object>)map) :
-		                                                 ReflectionUtils.splitMap((List<Map<String, Object>>)map)
-		data.each { InterceptedUrl iu -> compileAndStoreMapping iu }
+		ReflectionUtils.splitMap((List<Map<String, Object>>)interceptUrlMap).each { InterceptedUrl iu -> compileAndStoreMapping iu }
 
 		initialized = true
 

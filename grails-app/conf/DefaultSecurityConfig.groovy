@@ -224,14 +224,13 @@ security {
 	// use annotations from Controllers to define security rules
 	// 	change securityConfigType to 'Annotation'
 	controllerAnnotations {
-		staticRules = [:]
+		staticRules = []
 	}
 
-	// use a Map of URL -> roles to define security rules
-	// or List of Maps where the keys are pattern (URL pattern),
+	// List of Maps where the keys are pattern (URL pattern),
 	// access (single token or List, e.g. role name(s)), httpMethod (optional restriction to particular method)
 	// 	to use, change securityConfigType to 'InterceptUrlMap'
-	interceptUrlMap = [:]
+	interceptUrlMap = []
 
 	/** basic auth */
 	useBasicAuth = false

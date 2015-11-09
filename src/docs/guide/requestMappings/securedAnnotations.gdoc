@@ -103,8 +103,8 @@ You can also define 'static' mappings that cannot be expressed in the controller
 {code}
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    ...
-   '/js/admin/**': ['ROLE_ADMIN'],
-   '/someplugin/**': ['ROLE_ADMIN']
+   [pattern: '/js/admin/**',   access: ['ROLE_ADMIN']],
+   [pattern: '/someplugin/**', access: ['ROLE_ADMIN']]
 ]
 {code}
 

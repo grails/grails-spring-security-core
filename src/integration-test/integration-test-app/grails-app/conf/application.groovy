@@ -43,7 +43,7 @@ grails {
 				]
 			}
 			interceptUrlMap = [
-				'/testController/**': ['roleInMap']
+				[pattern: '/testController/**', access: ['roleInMap']]
 			]
 
 			logout {

@@ -20,23 +20,23 @@ grails {
 			}
 			controllerAnnotations {
 				staticRules = [
-					'/j_spring_security_switch_user': ['ROLE_ADMIN'],
-					'/j_spring_security_exit_user':   ['permitAll'],
-					'/':                              ['permitAll'],
-					'/error':                         ['permitAll'],
-					'/index':                         ['permitAll'],
-					'/index.gsp':                     ['permitAll'],
-					'/shutdown':                      ['permitAll'],
-					'/**/js/**':                      ['permitAll'],
-					'/**/css/**':                     ['permitAll'],
-					'/**/images/**':                  ['permitAll'],
-					'/**/favicon.ico':                ['permitAll'],
-					'/testData/**':                   ['permitAll'],
-					'/dbconsole/**':                  ['permitAll'],
-					'/dbconsole':                     ['permitAll'],
-					'/assets/**':                     ['permitAll'],
-					'/securityinfo':                  ['permitAll'],
-					'/securityinfo/**':               ['permitAll']
+					[pattern: '/j_spring_security_switch_user', access: ['ROLE_ADMIN']],
+					[pattern: '/j_spring_security_exit_user',   access: ['permitAll']],
+					[pattern: '/',                              access: ['permitAll']],
+					[pattern: '/error':,                        access: ['permitAll']],
+					[pattern: '/index':,                        access: ['permitAll']],
+					[pattern: '/index.gsp':,                    access: ['permitAll']],
+					[pattern: '/shutdown':,                     access: ['permitAll']],
+					[pattern: '/**/js/**':,                     access: ['permitAll']],
+					[pattern: '/**/css/**':,                    access: ['permitAll']],
+					[pattern: '/**/images/**':,                 access: ['permitAll']],
+					[pattern: '/**/favicon.ico':,               access: ['permitAll']],
+					[pattern: '/testData/**':,                  access: ['permitAll']],
+					[pattern: '/dbconsole/**':,                 access: ['permitAll']],
+					[pattern: '/dbconsole':,                    access: ['permitAll']],
+					[pattern: '/assets/**':,                    access: ['permitAll']],
+					[pattern: '/securityinfo':,                 access: ['permitAll']],
+					[pattern: '/securityinfo/**':,              access: ['permitAll']]
 				]
 			}
 		}
@@ -86,10 +86,10 @@ switch (testconfig) {
 	case 'static':
 		grails.plugin.springsecurity.securityConfigType = 'InterceptUrlMap'
 		grails.plugin.springsecurity.interceptUrlMap = [
-			'/secureannotated/admineither': ['ROLE_ADMIN', 'ROLE_ADMIN2'],
-			'/secureannotated/expression': ["authentication.name == 'admin1'"],
-			'/secureannotated/**': 'ROLE_ADMIN',
-			'/**': 'permitAll'
+			[pattern: '/secureannotated/admineither', access: ['ROLE_ADMIN', 'ROLE_ADMIN2']],
+			[pattern: '/secureannotated/expression',  access: ["authentication.name == 'admin1'"]],
+			[pattern: '/secureannotated/**',          access: 'ROLE_ADMIN'],
+			[pattern: '/**',                          access: 'permitAll']
 		]
 		break
 }

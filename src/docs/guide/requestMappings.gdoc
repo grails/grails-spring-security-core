@@ -31,18 +31,45 @@ Note that if you set @rejectIfNoRule@ or @rejectPublicInvocations@ to @true@ you
 
 {code}
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
-   '/':               ['permitAll'],
-   '/error':          ['permitAll'],
-   '/index':          ['permitAll'],
-   '/index.gsp':      ['permitAll'],
-   '/shutdown':       ['permitAll'],
-   '/assets/**':      ['permitAll'],
-   '/**/js/**':       ['permitAll'],
-   '/**/css/**':      ['permitAll'],
-   '/**/images/**':   ['permitAll'],
-   '/**/favicon.ico': ['permitAll']
+   [pattern: '/',               access: ['permitAll']],
+   [pattern: '/error',          access: ['permitAll']],
+   [pattern: '/index',          access: ['permitAll']],
+   [pattern: '/index.gsp',      access: ['permitAll']],
+   [pattern: '/shutdown',       access: ['permitAll']],
+   [pattern: '/assets/**',      access: ['permitAll']],
+   [pattern: '/**/js/**',       access: ['permitAll']],
+   [pattern: '/**/css/**',      access: ['permitAll']],
+   [pattern: '/**/images/**',   access: ['permitAll']],
+   [pattern: '/**/favicon.ico', access: ['permitAll']]
 ]
 {code}
+
+{note}
+Note that the syntax of the @staticRules@ block has changed from previous versions of the plugin where the keys were URL patterns and the values were access rules (roles, expressions, etc.) To avoid issues in configuration parsing and to allow optionally specifying the HTTP method associated with one or more of the rules, the @staticRules@ block is now specified as a List of Maps. Each Map defines one combination of url pattern and access rules (and optionally HTTP method). If there are multiple access rules, specify them as a List of Strings; of there is only one access rule, its value can be a String or a single-element List.
+
+The preceding @staticRules@ example includes the default mappings defined when running the @s2-quickstart@ script. Here's a more complete example using all configuration options:
+
+{code}
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+   [pattern: '/',               access: ['permitAll']],
+   [pattern: '/error',          access: ['permitAll']],
+   [pattern: '/index',          access: ['permitAll']],
+   [pattern: '/index.gsp',      access: ['permitAll']],
+   [pattern: '/shutdown',       access: ['permitAll']],
+   [pattern: '/assets/**',      access: ['permitAll']],
+   [pattern: '/**/js/**',       access: ['permitAll']],
+   [pattern: '/**/css/**',      access: ['permitAll']],
+   [pattern: '/**/images/**',   access: ['permitAll']],
+   [pattern: '/**/favicon.ico', access: ['permitAll']],
+
+   [pattern: '/user/**',        access: 'ROLE_USER'],
+   [pattern: '/admin/**',       access: ['ROLE_ADMIN', 'isFullyAuthenticated()']],
+   [pattern: '/thing/register', access: 'isAuthenticated()', httpMethod: 'PUT']
+]
+{code}
+
+Now in addition to the default mappings, we require an authentication with @ROLE_USER@ for any URL starting with @/user@, an "fully authenticated" authentication (i.e. an explicit login was performed without using remember-me) with @ROLE_USER@ for any URL starting with @/admin@, and finally that to access the URL @/thing/register@ the user must be authenticated with any role(s) but must use a PUT request.
+{note}
 
 This is needed when using annotations; if you use the @grails.plugin.springsecurity.interceptUrlMap@ map in @application.groovy@ you'll need to add these URLs too, and likewise when using @Requestmap@ instances. If you don't use annotations, you must add rules for the login and logout controllers also. You can add Requestmaps manually, or in BootStrap.groovy, for example:
 
@@ -60,18 +87,18 @@ The analogous interceptUrlMap settings would be:
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
-   '/':                ['permitAll'],
-   '/error':           ['permitAll'],
-   '/index':           ['permitAll'],
-   '/index.gsp':       ['permitAll'],
-   '/shutdown':        ['permitAll'],
-   '/assets/**':       ['permitAll'],
-   '/**/js/**':        ['permitAll'],
-   '/**/css/**':       ['permitAll'],
-   '/**/images/**':    ['permitAll'],
-   '/**/favicon.ico':  ['permitAll'],
-   '/login/**':        ['permitAll'],
-   '/logout/**':       ['permitAll']
+   [pattern: '/',               access: ['permitAll']],
+   [pattern: '/error',          access: ['permitAll']],
+   [pattern: '/index',          access: ['permitAll']],
+   [pattern: '/index.gsp',      access: ['permitAll']],
+   [pattern: '/shutdown',       access: ['permitAll']],
+   [pattern: '/assets/**',      access: ['permitAll']],
+   [pattern: '/**/js/**',       access: ['permitAll']],
+   [pattern: '/**/css/**',      access: ['permitAll']],
+   [pattern: '/**/images/**',   access: ['permitAll']],
+   [pattern: '/**/favicon.ico', access: ['permitAll']],
+   [pattern: '/login/**',       access: ['permitAll']],
+   [pattern: '/logout/**',      access: ['permitAll']]
 ]
 {code}
 

@@ -37,8 +37,8 @@ and the corresponding static mappings would be
 
 {code}
 grails.plugin.springsecurity.interceptUrlMap = [
-   '/secure/someAction':      ["hasRole('ROLE_ADMIN')"],
-   '/secure/someOtherAction': ["authentication.name == 'ralph'"]
+   [pattern: '/secure/someAction',      access: ["hasRole('ROLE_ADMIN')"]],
+   [pattern: '/secure/someOtherAction', access: ["authentication.name == 'ralph'"]]
 ]
 {code}
 
