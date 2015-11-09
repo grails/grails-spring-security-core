@@ -21,6 +21,9 @@ function run_test {
 	grails -refresh-dependencies clean --non-interactive
 	grails compile --non-interactive
 
+    # https://github.com/grails-plugins/grails-spring-security-core/issues/152
+	grails dbm-drop-all
+
 	TESTGROUPS="static annotation requestmap basic misc bcrypt"
 	for TESTGROUP in $TESTGROUPS; do
 		echo $TESTGROUP > testconfig

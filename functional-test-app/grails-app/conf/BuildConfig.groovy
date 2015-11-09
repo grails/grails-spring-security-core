@@ -36,6 +36,7 @@ grails.project.dependency.resolution = {
 		build ':tomcat:7.0.54'
 
 		runtime ':hibernate:3.6.10.16'
+		runtime ":database-migration:1.4.1-SNAPSHOT"
 
 		test ":geb:$gebVersion"
 	}
