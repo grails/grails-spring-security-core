@@ -216,7 +216,7 @@ class SecurityTagLib {
 
 	protected boolean hasAccess(attrs, String tagName) {
 
-		if (!springSecurityService.authentication.authenticated) {
+		if (!springSecurityService.authentication?.authenticated) {
 			return false
 		}
 
