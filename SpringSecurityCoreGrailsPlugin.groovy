@@ -787,7 +787,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 				}
 				Class User = dc.clazz
 				String usernamePropertyName = SpringSecurityUtils.securityConfig.userLookup.usernamePropertyName
-				User.findWhere((usernamePropertyName): SCH.context.authentication.principal.username)
+				User.findWhere((usernamePropertyName): SCH.context.authentication.principal[usernamePropertyName])
 			}
 		}
 	}
