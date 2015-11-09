@@ -118,12 +118,12 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 			go 'openNamespaced'
 
 		then:
-			pageSource == "open"
+			pageSource.contains 'open'
 	}
 
 	def 'namespaced controller with same name can have different secured annotations - secured'() {
 		when:
-			go 'securedNamespaced'
+			go 'secureNamespaced'
 
 		then:
 			at LoginPage
