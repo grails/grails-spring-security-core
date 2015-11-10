@@ -236,7 +236,9 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		compileClassMap classRoleMap
 
 		if (log.traceEnabled) {
-			log.trace 'configs: {}', configAttributeMap
+			for (InterceptedUrl url in configAttributeMap) {
+				log.trace 'URL: {} | Roles: {}', url.pattern, url.configAttributes
+			}
 		}
 	}
 
