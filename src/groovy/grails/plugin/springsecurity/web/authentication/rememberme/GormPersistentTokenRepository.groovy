@@ -90,7 +90,7 @@ class GormPersistentTokenRepository implements PersistentTokenRepository, Grails
 		def conf = SpringSecurityUtils.securityConfig
 		String domainClassName = conf.rememberMe.persistentToken.domainClassName ?: ''
 		def clazz = SpringSecurityUtils.securityConfig.userLookup.useExternalClasses ?
-                Class.forName(domainClassName) : grailsApplication.getClassForName(domainClassName)
+				Class.forName(domainClassName) : grailsApplication.getClassForName(domainClassName)
 		if (!clazz) {
 			log.error "Persistent token class not found: '$domainClassName'"
 		}

@@ -54,7 +54,7 @@ class AjaxAwareAuthenticationSuccessHandlerTests extends GroovyTestCase {
 
 		request.addHeader 'ajaxHeader', 'XMLHttpRequest'
 
-		handler.onAuthenticationSuccess(request, response,  new TestingAuthenticationToken('username', 'password'))
+		handler.onAuthenticationSuccess(request, response, new TestingAuthenticationToken('username', 'password'))
 
 		assert AJAX_SUCCESS_URL == response.redirectedUrl
 	}

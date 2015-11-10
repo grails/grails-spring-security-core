@@ -63,7 +63,7 @@ import org.springframework.web.context.ServletContextAware;
  */
 public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefinition implements ServletContextAware {
 
-   protected static final String SLASH = "/";
+	protected static final String SLASH = "/";
 
 	protected GrailsApplication application;
 	protected ResponseMimeTypesApi responseMimeTypesApi;

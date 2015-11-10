@@ -35,12 +35,12 @@ public class BCryptPasswordEncoder implements org.springframework.security.authe
 	}
 
 	public String encodePassword(String rawPass, Object salt) {
-      checkSalt(salt);
+		checkSalt(salt);
 		return delegate.encode(rawPass);
 	}
 
 	public boolean isPasswordValid(String encPass, String rawPass, Object salt) {
-      checkSalt(salt);
+		checkSalt(salt);
 		return delegate.matches(rawPass, encPass);
 	}
 

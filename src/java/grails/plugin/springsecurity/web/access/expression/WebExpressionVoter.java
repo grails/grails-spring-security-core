@@ -34,7 +34,7 @@ import org.springframework.util.Assert;
  */
 public class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation> {
 
-   protected SecurityExpressionHandler<FilterInvocation> expressionHandler;
+	protected SecurityExpressionHandler<FilterInvocation> expressionHandler;
 
 	public int vote(Authentication authentication, FilterInvocation fi, Collection<ConfigAttribute> attributes) {
 		Assert.notNull(authentication, "authentication cannot be null");

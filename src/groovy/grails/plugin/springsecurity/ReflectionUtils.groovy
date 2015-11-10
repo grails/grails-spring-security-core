@@ -196,9 +196,9 @@ class ReflectionUtils {
 		configAttributes
 	}
 
-    static String getGrailsServerURL() {
-        getApplication().config.grails.serverURL ? application.config?.grails?.serverURL?.toString() : null
-    }
+	static String getGrailsServerURL() {
+		getApplication().config.grails.serverURL ? application.config?.grails?.serverURL?.toString() : null
+	}
 
 	private static boolean supports(ConfigAttribute config, AccessDecisionVoter<?> voter) {
 		voter.supports(config)

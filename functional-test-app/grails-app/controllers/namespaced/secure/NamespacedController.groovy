@@ -5,9 +5,9 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured('IS_AUTHENTICATED_FULLY')
 class NamespacedController {
 
-    static namespace = "secure"
+	static namespace = 'secure'
 
-    def index() {
-        render 'secure'
-    }
+	def index() {
+		render 'secure'
+	}
 }

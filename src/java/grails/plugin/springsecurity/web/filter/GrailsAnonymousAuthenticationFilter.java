@@ -41,8 +41,8 @@ public class GrailsAnonymousAuthenticationFilter extends GenericFilterBean {
 
 	protected final Logger log = LoggerFactory.getLogger(getClass());
 
-   protected AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource;
-   protected String key;
+	protected AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource;
+	protected String key;
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
@@ -90,10 +90,10 @@ public class GrailsAnonymousAuthenticationFilter extends GenericFilterBean {
 		this.key = key;
 	}
 
-   @Override
+	@Override
 	public void afterPropertiesSet() throws ServletException {
-   	super.afterPropertiesSet();
-   	Assert.notNull(authenticationDetailsSource, "authenticationDetailsSource must be set");
-   	Assert.hasText(key, "key must be set");
-   }
+		super.afterPropertiesSet();
+		Assert.notNull(authenticationDetailsSource, "authenticationDetailsSource must be set");
+		Assert.hasText(key, "key must be set");
+	}
 }

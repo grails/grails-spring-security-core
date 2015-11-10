@@ -274,9 +274,9 @@ class MethodAnnotatedController {
 	def list() { [results: []] }
 
 	@Secured(closure = {
-	   assert request
-	   assert ctx
-	   authentication.name == 'admin1'
+		assert request
+		assert ctx
+		authentication.name == 'admin1'
 	})
 	def foo() { [results: []] }
 

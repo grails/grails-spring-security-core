@@ -38,7 +38,7 @@ class TestUtils {
 			authenticatedVoter: new AuthenticatedVoter()]
 
 		def ctx = [getBean: { String name, Class<?> c = null -> beans[name] },
-					  containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
+		           containsBean: { String name -> beans.containsKey(name) } ] as WebApplicationContext
 
 		application.mainContext = ctx
 

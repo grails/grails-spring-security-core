@@ -4,11 +4,8 @@ import grails.plugin.springsecurity.annotation.Secured
 import grails.rest.Resource
 
 @Resource
-@Secured(['ROLE_ADMIN'])
+@Secured('ROLE_ADMIN')
 class Thing {
 
-    String name
-
-    static constraints = {
-    }
+	String name
 }

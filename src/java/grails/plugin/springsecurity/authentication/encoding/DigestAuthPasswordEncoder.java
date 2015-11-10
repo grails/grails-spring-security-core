@@ -70,8 +70,8 @@ public class DigestAuthPasswordEncoder implements org.springframework.security.a
 	 * Called after the ApplicationContext is built to enable standard behavior.
 	 */
 	public void resetInitializing() {
-	   initializing = false;
-   }
+		initializing = false;
+	}
 
 	public void afterPropertiesSet() {
 		Assert.hasLength(realm, "realm is required");

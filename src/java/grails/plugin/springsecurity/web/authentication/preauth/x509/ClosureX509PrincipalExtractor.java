@@ -39,7 +39,7 @@ public class ClosureX509PrincipalExtractor implements X509PrincipalExtractor {
 	public Object extractPrincipal(X509Certificate clientCert) {
 		String subjectDN = clientCert.getSubjectDN().getName();
 
-      log.debug("Subject DN is '{}'", subjectDN);
+		log.debug("Subject DN is '{}'", subjectDN);
 
 		Object username = closure.call(subjectDN);
 

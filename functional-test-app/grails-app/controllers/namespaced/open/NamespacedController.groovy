@@ -5,9 +5,9 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured('permitAll')
 class NamespacedController {
 
-    static namespace = "open"
+	static namespace = 'open'
 
-    def index() {
-        render 'open'
-    }
+	def index() {
+		render 'open'
+	}
 }

@@ -83,10 +83,10 @@ public final class SpringSecurityUtils {
 	public static final String SAVED_REQUEST = "SPRING_SECURITY_SAVED_REQUEST"; // TODO use requestCache
 
 	// UsernamePasswordAuthenticationFilter.SPRING_SECURITY_LAST_USERNAME_KEY is deprecated
-   public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
+	public static final String SPRING_SECURITY_LAST_USERNAME_KEY = "SPRING_SECURITY_LAST_USERNAME";
 
-   // AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
-   public static final String DEFAULT_TARGET_PARAMETER = "spring-security-redirect";
+	// AbstractAuthenticationTargetUrlRequestHandler.DEFAULT_TARGET_PARAMETER was removed
+	public static final String DEFAULT_TARGET_PARAMETER = "spring-security-redirect";
 
 	/**
 	 * Default value for the name of the Ajax header.
