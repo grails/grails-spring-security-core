@@ -460,7 +460,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		String defaultAction = cc.defaultAction
 
 		List<InterceptedUrl> actionRoles = []
-		for (Method method in clazz.declaredMethods) {
+		for (Method method in clazz.methods) {
 			Annotation annotation = findSecuredAnnotation(method)
 			if (annotation) {
 				Collection<String> values = getValue(annotation)
@@ -480,7 +480,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 	protected List<InterceptedUrl> findActionClosures(Class<?> clazz) {
 		List<InterceptedUrl> actionClosures = []
-		for (Method method : clazz.declaredMethods) {
+		for (Method method : clazz.methods) {
 			grails.plugin.springsecurity.annotation.Secured annotation = method.getAnnotation(
 					  grails.plugin.springsecurity.annotation.Secured)
 			if (annotation && annotation.closure() != grails.plugin.springsecurity.annotation.Secured) {
