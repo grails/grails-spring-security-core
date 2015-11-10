@@ -112,4 +112,20 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		where:
 		format << ['', '.json']
 	}
+
+	void 'namespaced controller with same name can have different secured annotations - open'() {
+		when:
+		go 'openNamespaced'
+
+		then:
+		pageSource.contains 'open'
+	}
+
+	void 'namespaced controller with same name can have different secured annotations - secured'() {
+		when:
+		go 'secureNamespaced'
+
+		then:
+		at LoginPage
+	}
 }

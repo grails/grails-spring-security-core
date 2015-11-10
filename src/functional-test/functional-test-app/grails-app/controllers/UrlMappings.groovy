@@ -6,6 +6,9 @@ class UrlMappings {
 		"/api/v1/books"(resources: 'book', namespace: 'v1')
 		"/api/v1/movies"(resources: 'movie')
 
+		"/openNamespaced"(controller: 'namespaced', namespace: 'open')
+		"/secureNamespaced"(controller: 'namespaced', namespace: 'secure')
+
 		"/"(view: '/index')
 
 		"401"(view: '/error401')
