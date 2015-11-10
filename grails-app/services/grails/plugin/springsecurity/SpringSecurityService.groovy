@@ -86,7 +86,8 @@ class SpringSecurityService {
 		}
 		else {
 			User.createCriteria().get {
-				eq securityConfig.userLookup.usernamePropertyName, principal.username
+				String usernamePropertyName = securityConfig.userLookup.usernamePropertyName
+				eq usernamePropertyName, principal[usernamePropertyName]
 				cache true
 			}
 		}
