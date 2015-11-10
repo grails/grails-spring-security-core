@@ -17,9 +17,11 @@ package grails.plugin.springsecurity.web.access.intercept
 import grails.core.GrailsApplication
 import grails.core.GrailsClass
 import grails.core.GrailsControllerClass
+import grails.core.GrailsDomainClass
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.ReflectionUtils as PluginReflectionUtils
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
+import grails.rest.Resource
 import grails.web.UrlConverter
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
@@ -203,8 +205,9 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	 * @param staticRules data from the controllerAnnotations.staticRules config attribute
 	 * @param mappingsHolder mapping holder
 	 * @param controllerClasses all controllers
+	 * @param domainClasses all domain classes
 	 */
-	void initialize(staticRules, UrlMappingsHolder mappingsHolder, GrailsClass[] controllerClasses) {
+	void initialize(staticRules, UrlMappingsHolder mappingsHolder, GrailsClass[] controllerClasses, GrailsClass[] domainClasses) {
 
 		assert staticRules != null, 'staticRules map is required'
 		assert mappingsHolder, 'urlMappingsHolder is required'
@@ -220,6 +223,10 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 		for (GrailsClass controllerClass in controllerClasses) {
 			findControllerAnnotations((GrailsControllerClass)controllerClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap)
+		}
+
+		for (GrailsClass domainClass in domainClasses) {
+			findDomainAnnotations((GrailsDomainClass) domainClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap)
 		}
 
 		compileStaticRules staticRules
@@ -370,19 +377,39 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		Class<?> clazz = controllerClass.clazz
 		String controllerName = resolveFullControllerName(controllerClass)
 
+		findAnnotations actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, controllerName
+	}
+
+	protected void findDomainAnnotations(
+			GrailsDomainClass domainClass,
+			Map<String, List<InterceptedUrl>> actionRoleMap,
+			List<InterceptedUrl> classRoleMap,
+			Map<String, List<InterceptedUrl>> actionClosureMap,
+			List<InterceptedUrl> classClosureMap) {
+
+		Class<?> clazz = domainClass.clazz
+		if (clazz.getAnnotation(Resource)) {
+			findAnnotations actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, clazz.simpleName.toLowerCase()
+		}
+	}
+
+	private void findAnnotations(Map<String, List<InterceptedUrl>> actionRoleMap, List<InterceptedUrl> classRoleMap,
+	                             Map<String, List<InterceptedUrl>> actionClosureMap, List<InterceptedUrl> classClosureMap,
+	                             Class<?> clazz, String controllerName) {
+
 		Annotation annotation = clazz.getAnnotation(org.springframework.security.access.annotation.Secured)
 		if (!annotation) {
 			annotation = clazz.getAnnotation(grails.plugin.springsecurity.annotation.Secured)
 			if (annotation) {
 				Class<?> closureClass = findClosureClass((grails.plugin.springsecurity.annotation.Secured)annotation)
-				if (!closureClass) {
+				if (closureClass) {
+					log.trace 'found class-scope annotation with a closure in {}', clazz.name
+					classClosureMap << new InterceptedUrl(controllerName, closureClass, getHttpMethod(annotation))
+				}
+				else {
 					Collection<String> values = getValue(annotation)
 					log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
 					classRoleMap << new InterceptedUrl(controllerName, values, getHttpMethod(annotation))
-				}
-				else {
-					log.trace 'found class-scope annotation with a closure in {}', clazz.name
-					classClosureMap << new InterceptedUrl(controllerName, closureClass, getHttpMethod(annotation))
 				}
 			}
 		}

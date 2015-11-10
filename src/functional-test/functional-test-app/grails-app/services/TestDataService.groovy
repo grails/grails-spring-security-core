@@ -78,6 +78,7 @@ class TestDataService {
 
 	def addTestUsers() {
 		println 'Adding test users'
+		addTestUser 'admin',                     'ROLE_ADMIN'
 		addTestUser 'testuser',                  'ROLE_USER', 'ROLE_BASE', 'ROLE_EXTENDED'
 		addTestUser 'testuser_books',            'ROLE_BOOKS'
 		addTestUser 'testuser_movies',           'ROLE_MOVIES'

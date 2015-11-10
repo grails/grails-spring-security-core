@@ -340,4 +340,26 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		then:
 		assertContentContains "Sorry, you're not authorized to view this page."
 	}
+
+	void 'restful domains can be secured'() {
+		when:
+		go action
+
+		then:
+		at LoginPage
+
+		where:
+		action << ['thing', 'thing/index', 'thing/show/1', 'thing/create', 'thing/edit', 'thing/delete']
+	}
+
+	void 'authenticated user can access secured restful domain'() {
+		given:
+		login 'admin1', 'password1'
+
+		when:
+		go 'thing/index.json'
+
+		then:
+		$().text() == '[]'
+	}
 }

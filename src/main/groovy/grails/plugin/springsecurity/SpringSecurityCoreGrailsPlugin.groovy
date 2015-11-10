@@ -794,7 +794,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private void initializeFromAnnotations(conf) {
 		AnnotationFilterInvocationDefinition afid = applicationContext.objectDefinitionSource
 		afid.initialize conf.controllerAnnotations.staticRules,
-			applicationContext.grailsUrlMappingsHolder, grailsApplication.controllerClasses
+			applicationContext.grailsUrlMappingsHolder, grailsApplication.controllerClasses,
+			grailsApplication.domainClasses
 	}
 
 	private void addControllerMethods(MetaClass mc) {
