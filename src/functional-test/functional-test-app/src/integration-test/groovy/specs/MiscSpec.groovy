@@ -254,6 +254,10 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentDoesNotContain 'access with role admin: true'
 		assertContentContains 'access with role user: false'
 		assertContentContains 'access with role admin: false'
+		assertContentContains 'anonymous access: true'
+		assertContentContains 'Can access /tagLibTest/test'
+		assertContentDoesNotContain 'anonymous access: false'
+		assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	void 'taglibs user'() {
@@ -290,6 +294,11 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentDoesNotContain 'Can access /secureAnnotated'
 		assertContentDoesNotContain 'Cannot access /login/auth'
 		assertContentContains 'Cannot access /secureAnnotated'
+
+		assertContentContains 'anonymous access: false'
+		assertContentContains 'Can access /tagLibTest/test'
+		assertContentDoesNotContain 'anonymous access: true'
+		assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	void 'taglibs admin'() {
@@ -327,6 +336,11 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentContains 'Can access /secureAnnotated'
 		assertContentDoesNotContain 'Cannot access /login/auth'
 		assertContentDoesNotContain 'Cannot access /secureAnnotated'
+
+		assertContentContains 'anonymous access: false'
+		assertContentContains 'Can access /tagLibTest/test'
+		assertContentDoesNotContain 'anonymous access: true'
+		assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	void 'metaclass methods unauthenticated'() {
