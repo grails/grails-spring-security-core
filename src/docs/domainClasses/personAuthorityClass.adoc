@@ -9,6 +9,7 @@ Like the other domain classes, this class is generated for you, so you don't nee
 ----
 package com.mycompany.myapp
 
+import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
@@ -21,15 +22,22 @@ class UserRole implements Serializable {
    User user
    Role role
 
+   UserRole(User u, Role r) {
+      this()
+      user = u
+      role = r
+   }
+
+   @Override
    boolean equals(other) {
       if (!(other instanceof UserRole)) {
          return false
       }
 
-      other.user?.id == user?.id &&
-      other.role?.id == role?.id
+      other.user?.id == user?.id && other.role?.id == role?.id
    }
 
+   @Override
    int hashCode() {
       def builder = new HashCodeBuilder()
       if (user) builder.append(user.id)
@@ -38,11 +46,18 @@ class UserRole implements Serializable {
    }
 
    static UserRole get(long userId, long roleId) {
-      UserRole.where { user.id == userId && role.id == roleId }.get()
+      criteriaFor(userId, roleId).get()
    }
 
    static boolean exists(long userId, long roleId) {
-      UserRole.where { user.id == userId && role.id == roleId }.count() > 0
+      criteriaFor(userId, roleId).count()
+   }
+
+   private static DetachedCriteria criteriaFor(long userId, long roleId) {
+      UserRole.where {
+         user == User.load(userId) &&
+         role == Role.load(roleId)
+      }
    }
 
    static UserRole create(User user, Role role, boolean flush = false) {
@@ -58,7 +73,7 @@ class UserRole implements Serializable {
 
       if (flush) { UserRole.withSession { it.flush() } }
 
-      rowCount > 0
+      rowCount
    }
 
    static void removeAll(User u, boolean flush = false) {

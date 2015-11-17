@@ -73,6 +73,11 @@ will generate this class in `grails-app/domain/com/yourapp/RoleHierarchyEntry.gr
 ----
 package com.yourapp
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='entry')
+@ToString(includes='entry', includeNames=true, includePackage=false)
 class RoleHierarchyEntry implements Serializable {
 
    private static final long serialVersionUID = 1
@@ -82,21 +87,6 @@ class RoleHierarchyEntry implements Serializable {
    RoleHierarchyEntry(String entry) {
       this()
       this.entry = entry
-   }
-
-   @Override
-   int hashCode() {
-      entry?.hashCode() ?: 0
-   }
-
-   @Override
-   boolean equals(other) {
-      is(other) || (other instanceof RoleHierarchyEntry && other.entry == entry)
-   }
-
-   @Override
-   String toString() {
-      entry
    }
 
    static constraints = {
