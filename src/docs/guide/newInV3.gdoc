@@ -19,6 +19,19 @@ dependencies {
 
 Run @grails compile@ or another script that triggers dependency resolution, and then the [s2-quickstart|Scripts] script to generate the domain classes and add the initial configuration settings.
 
+{warning}
+There is a dependency resolution bug in Grails 3.1.x where instead of using the version of jars that's specified by the plugin, it's using the latest available. This plugin uses a deprecated method that was removed in Spring Security 4 (this will be addressed when the plugin is upgraded to use Spring Security 4) and that will cause your application to fail to start. As a workaround until this is fixed in a newer version of Grails 3.1, add the plugin's dependencies in @build.gradle@ in addition to the dependency for the plugin:
+
+{code}
+dependencies {
+   ...
+   compile 'org.grails.plugins:spring-security-core:3.0.0.M1'
+   compile 'org.springframework.security:spring-security-core:3.2.9.RELEASE'
+   compile 'org.springframework.security:spring-security-web:3.2.9.RELEASE'
+   ...
+{code}
+{warning}
+
 h4. Configuration
 
 In Grails 2.x, configuration settings were stored in @grails-app/conf/Config.groovy@, but they're in YAML format in @grails-app/conf/application.yml@ now. You can use the Groovy @ConfigObject@ style if you want, in @grails-app/conf/application.groovy@. The file isn't created by the @create-app@ script but if you create it manually it will be recognized. When you run any of the plugin scripts, settings are added in @application.groovy@ (it will be created if necessary) but if you prefer to keep everything in YAML format, feel free to move those settings to @application.yml@.
