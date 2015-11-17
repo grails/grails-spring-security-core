@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>4 Configuring Request Mappings to Secure URLs 2.0-RC5</title>
+    <title>4 Configuring Request Mappings to Secure URLs 2.0-RC6</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC5</p>
+                    <p><strong>Version:</strong> 2.0-RC6</p>
 
                     
                 </div>
@@ -227,7 +227,7 @@ You can use an <code>&#64;Secured</code> annotation (either the standard <code>o
    def adminEither() &#123;
       render 'you have ROLE_ADMIN or SUPERUSER'
    &#125;<p class="paragraph"/>   def anybody() &#123;
-      render 'anyone can see <span class="java&#45;keyword">this</span>' // assuming you're not using <span class="java&#45;quote">"strict"</span> mode
+      render 'anyone can see <span class="java&#45;keyword">this</span>' // assuming you're not using <span class="java&#45;quote">"strict"</span> mode, otherwise the action is not viewable by anyone
    &#125;
 &#125;</pre></div><p class="paragraph"/>you must be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureAnnotated</code> (or <code>/myapp/secureAnnotated/index</code>) and be authenticated and have <code>ROLE_ADMIN</code> or <code>ROLE_SUPERUSER</code> to see <code>/myapp/secureAnnotated/adminEither</code>. Any user can access <code>/myapp/secureAnnotated/anybody</code> if you have disabled "strict" mode (using <code>rejectIfNoRule</code>), and nobody can access the action by default since it has no access rule configured.<p class="paragraph"/>In addition, you can define a closure in the annotation which will be called during access checking. The closure must return <code>true</code> or <code>false</code> and has all of the methods and properties that are available when using SpEL expressions, since the closure's <code>delegate</code> is set to a subclass of <code>WebSecurityExpressionRoot</code>, and also the Spring <code>ApplicationContext</code> as the <code>ctx</code> property:<p class="paragraph"/><div class="code"><pre>@Secured(closure = &#123;
    assert request
@@ -245,7 +245,19 @@ class SecureClassAnnotatedController &#123;<p class="paragraph"/>   def index() 
    def <span class="java&#45;keyword">super</span>() &#123;
       render '<span class="java&#45;keyword">super</span>: you have ROLE_SUPERUSER'
    &#125;
-&#125;</pre></div><p class="paragraph"/>Here you need to be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureClassAnnotated</code> (or <code>/myapp/secureClassAnnotated/index</code>) or <code>/myapp/secureClassAnnotated/otherAction</code>. However, you must have <code>ROLE_SUPERUSER</code> to access <code>/myapp/secureClassAnnotated/super</code>. The action-scope annotation overrides the class-scope annotation. Note that "strict" mode isn't applicable here since all actions have an access rule defined (either explicitly or inherited from the class-level annotation).<p class="paragraph"/><h4>controllerAnnotations.staticRules</h4><p class="paragraph"/>You can also define 'static' mappings that cannot be expressed in the controllers, such as '/&#42;&#42;' or for JavaScript, CSS, or image URLs. Use the <code>controllerAnnotations.staticRules</code> property, for example:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.controllerAnnotations.staticRules = &#91;
+&#125;</pre></div><p class="paragraph"/>Here you need to be authenticated and have <code>ROLE_ADMIN</code> to see <code>/myapp/secureClassAnnotated</code> (or <code>/myapp/secureClassAnnotated/index</code>) or <code>/myapp/secureClassAnnotated/otherAction</code>. However, you must have <code>ROLE_SUPERUSER</code> to access <code>/myapp/secureClassAnnotated/super</code>. The action-scope annotation overrides the class-scope annotation. Note that "strict" mode isn't applicable here since all actions have an access rule defined (either explicitly or inherited from the class-level annotation).<p class="paragraph"/><h4>Securing RESTful domain classes</h4><p class="paragraph"/>Since Grails 2.3, domain classes can be annotated with the <code>grails.rest.Resource</code> AST transformation, which will generate
+internally a controller with the default CRUD operations.<p class="paragraph"/>You can also use the <code>&#64;Secured</code> annotation on such domain classes:<p class="paragraph"/><div class="code"><pre>@Resource
+@Secured('ROLE_ADMIN')
+class Thing &#123;
+   <span class="java&#45;object">String</span> name
+&#125;</pre></div><p class="paragraph"/>Additionally, you can specify the HTTP method that is required in each annotation for the access rule, e.g.<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.plugin.springsecurity.annotation.Secured<p class="paragraph"/>class SecureAnnotatedController &#123;<p class="paragraph"/>   @Secured(value = &#91;'ROLE_ADMIN'&#93;, httpMethod = 'GET')
+   def create() &#123;
+      &#8230;
+   &#125;<p class="paragraph"/>   @Secured(value = &#91;'ROLE_ADMIN'&#93;, httpMethod = 'POST')
+   def save() &#123;
+      &#8230;
+   &#125;
+&#125;</pre></div><p class="paragraph"/>Here you must have ROLE_ADMIN for both the <code>create</code> and <code>save</code> actions but <code>create</code> requires a GET request (since it renders the form to create a new instance) and <code>save</code> requires POST (since it's the action that the form posts to).<p class="paragraph"/><h4>controllerAnnotations.staticRules</h4><p class="paragraph"/>You can also define 'static' mappings that cannot be expressed in the controllers, such as '/&#42;&#42;' or for JavaScript, CSS, or image URLs. Use the <code>controllerAnnotations.staticRules</code> property, for example:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.controllerAnnotations.staticRules = &#91;
    &#8230;
    '/js/admin/&#42;&#42;': &#91;'ROLE_ADMIN'&#93;,
    '/someplugin/&#42;&#42;': &#91;'ROLE_ADMIN'&#93;
