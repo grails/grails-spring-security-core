@@ -26,7 +26,7 @@ class SecureAnnotatedController {
    }
 
    def anybody() {
-      render 'anyone can see this' // assuming you're not using "strict" mode
+      render 'anyone can see this' // assuming you're not using "strict" mode, otherwise the action is not viewable by anyone
    }
 }
 {code}
@@ -82,17 +82,34 @@ You can also use the @\@Secured@ annotation on such domain classes:
 
 {code}
 @Resource
-@Secured(['ROLE_ADMIN'])
+@Secured('ROLE_ADMIN')
 class Thing {
-
-    String name
-
-    static constraints = {
-    }
+   String name
 }
 {code}
 
-This will
+Additionally, you can specify the HTTP method that is required in each annotation for the access rule, e.g.
+
+{code}
+package com.mycompany.myapp
+
+import grails.plugin.springsecurity.annotation.Secured
+
+class SecureAnnotatedController {
+
+   @Secured(value = ['ROLE_ADMIN'], httpMethod = 'GET')
+   def create() {
+      ...
+   }
+
+   @Secured(value = ['ROLE_ADMIN'], httpMethod = 'POST')
+   def save() {
+      ...
+   }
+}
+{code}
+
+Here you must have ROLE_ADMIN for both the @create@ and @save@ actions but @create@ requires a GET request (since it renders the form to create a new instance) and @save@ requires POST (since it's the action that the form posts to).
 
 h4. controllerAnnotations.staticRules
 
