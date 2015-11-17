@@ -39,9 +39,11 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 		thrown AssertionError
 
 		when:
-		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                         '/bar/**': '10.0.0.0/8',
-		                         '/wahoo/**': '10.10.200.63']
+		filter.ipRestrictions = [
+			[pattern: '/foo/**',   access: '127.0.0.1'],
+			[pattern: '/bar/**',   access: '10.0.0.0/8'],
+			[pattern: '/wahoo/**', access: '10.10.200.63']
+		]
 
 		filter.afterPropertiesSet()
 
@@ -49,13 +51,47 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 		notThrown AssertionError
 	}
 
+	void 'access can be String or Collection/Array of String'() {
+
+		given:
+		filter.ipRestrictions = [
+			[pattern: '/foo/**',   access: '127.0.0.1'],
+			[pattern: '/bar/**',   access: '10.0.0.0/8'],
+			[pattern: '/wahoo/**', access: ['10.10.200.63', '10.10.200.64']]
+		]
+
+		when:
+		filter.afterPropertiesSet()
+
+		then:
+		filter.restrictions.size() == 3
+
+		and:
+		filter.restrictions[0].pattern == '/foo/**'
+		filter.restrictions[0].configAttributes.size() == 1
+		filter.restrictions[0].configAttributes[0].attribute == '127.0.0.1'
+
+		and:
+		filter.restrictions[1].pattern == '/bar/**'
+		filter.restrictions[1].configAttributes.size() == 1
+		filter.restrictions[1].configAttributes[0].attribute == '10.0.0.0/8'
+
+		and:
+		filter.restrictions[2].pattern == '/wahoo/**'
+		filter.restrictions[2].configAttributes.size() == 2
+		filter.restrictions[2].configAttributes[0].attribute == '10.10.200.63'
+		filter.restrictions[2].configAttributes[1].attribute == '10.10.200.64'
+	}
+
 	void 'doFilter HTTP allowed'() {
 
 		when:
-		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                         '/bar/**': '10.0.0.0/8',
-		                         '/wahoo/**': '10.10.200.63',
-		                         '/masked/**': '192.168.1.0/24']
+		filter.ipRestrictions = [
+			[pattern: '/foo/**',    access: '127.0.0.1'],
+			[pattern: '/bar/**',    access: '10.0.0.0/8'],
+			[pattern: '/wahoo/**',  access: '10.10.200.63'],
+			[pattern: '/masked/**', access: '192.168.1.0/24']
+		]
 
 		int chainCount = 0
 		def chain = [doFilter: { req, res -> chainCount++ }] as FilterChain
@@ -87,10 +123,12 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	void 'doFilter HTTP denied'() {
 
 		when:
-		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                         '/bar/**': '10.0.0.0/8',
-		                         '/wahoo/**': '10.10.200.63',
-		                         '/masked/**': '192.168.1.0/24']
+		filter.ipRestrictions = [
+			[pattern: '/foo/**',    access: '127.0.0.1'],
+			[pattern: '/bar/**',    access: '10.0.0.0/8'],
+			[pattern: '/wahoo/**',  access: '10.10.200.63'],
+			[pattern: '/masked/**', access: '192.168.1.0/24']
+		]
 
 		int chainCount = 0
 		def chain = [doFilter: { req, res -> chainCount++ }] as FilterChain
@@ -134,10 +172,12 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	void 'doFilter mix IPv6 and IPv4'() {
 
 		when:
-		filter.ipRestrictions = ['/foo/**': '127.0.0.1',
-		                         '/bar/**': '10.0.0.0/8',
-		                         '/wahoo/**': '10.10.200.63',
-		                         '/masked/**': '192.168.1.0/24']
+		filter.ipRestrictions = [
+			[pattern: '/foo/**',    access: '127.0.0.1'],
+			[pattern: '/bar/**',    access: '10.0.0.0/8'],
+			[pattern: '/wahoo/**',  access: '10.10.200.63'],
+			[pattern: '/masked/**', access: '192.168.1.0/24']
+		]
 
 		int chainCount = 0
 		def chain = [doFilter: { req, res -> chainCount++ }] as FilterChain

@@ -48,7 +48,7 @@ security {
 	roleHierarchy = ''
 
 	// ip restriction filter
-	ipRestrictions = [:]
+	ipRestrictions = []
 
 	// voters
 	voterNames = [] // 'authenticatedVoter', 'roleVoter', 'closureVoter'

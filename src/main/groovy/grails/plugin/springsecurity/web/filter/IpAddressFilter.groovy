@@ -14,13 +14,9 @@
  */
 package grails.plugin.springsecurity.web.filter
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
-
+import grails.plugin.springsecurity.InterceptedUrl
+import grails.plugin.springsecurity.ReflectionUtils
+import groovy.transform.CompileStatic
 import org.grails.web.util.WebUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -29,9 +25,12 @@ import org.springframework.security.web.util.matcher.IpAddressMatcher
 import org.springframework.util.AntPathMatcher
 import org.springframework.web.filter.GenericFilterBean
 
-import grails.plugin.springsecurity.InterceptedUrl
-import grails.plugin.springsecurity.ReflectionUtils
-import groovy.transform.CompileStatic
+import javax.servlet.FilterChain
+import javax.servlet.ServletException
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletResponse
 
 /**
  * Blocks access to protected resources based on IP address. Sends 404 rather than
@@ -87,8 +86,21 @@ class IpAddressFilter extends GenericFilterBean {
 	 *
 	 * @param ipRestrictions the map
 	 */
-	void setIpRestrictions(Map<String, Object> ipRestrictions) {
-		restrictions = ReflectionUtils.splitMap(ipRestrictions, false)
+	void setIpRestrictions(List<Map<String, Object>> ipRestrictions) {
+		restrictions = ipRestrictions.collect { Map<String, Object> entry ->
+			List tokens
+			def access = entry.access
+			if (access?.getClass()?.array) {
+				access = access as List
+			}
+			if (access instanceof Collection) {
+				tokens = ((Collection)access)*.toString()
+			}
+			else { // String/GString
+				tokens = [access.toString()]
+			}
+			new InterceptedUrl(entry.pattern as String, null, ReflectionUtils.buildConfigAttributes(tokens, false))
+		}
 	}
 
 	protected boolean isAllowed(HttpServletRequest request) {

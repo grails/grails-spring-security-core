@@ -11,18 +11,23 @@ Ordinarily you can guard URLs sufficiently with roles, but the plugin provides a
 
 For example, make an admin-only part of your site accessible only from IP addresses of the local LAN or VPN, such as 192.168.1.xxx or 10.xxx.xxx.xxx. You can also set this up at your firewall and/or routers, but it is convenient to encapsulate it within your application.
 
-To use this feature, specify an `ipRestrictions` configuration map, where the keys are URL patterns, and the values are IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[CIDR] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
+To use this feature, specify an `ipRestrictions` configuration as a `List` of `Map`s, one for each combination of URL pattern to IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[CIDR] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
 
 [source,java]
 ----
 grails.plugin.springsecurity.ipRestrictions = [
-   '/pattern1/**': '123.234.345.456',
-   '/pattern2/**': '10.0.0.0/8',
-   '/pattern3/**': ['10.10.200.42', '10.10.200.63']
+   [pattern: '/pattern1/**', access: '123.234.345.456'],
+   [pattern: '/pattern2/**', access: '10.0.0.0/8'],
+   [pattern: '/pattern3/**', access: ['10.10.200.42', '10.10.200.63']]
 ]
 ----
 
 `pattern1` URLs can be accessed only from the external address 123.234.345.456, `pattern2` URLs can be accessed only from a 10.xxx.xxx.xxx intranet address, and `pattern3` URLs can be accessed only from 10.10.200.42 or 10.10.200.63. All other URL patterns are accessible from any IP address.
+
+[WARNING]
+====
+The format of `ipRestrictions` has changed from previous versions to avoid configuration parsing issues. In previous versions the property was a single Map, where the keys were the access patterns and the values were the IP addresses that are allowed. The old format is no longer supported and your configurations must be updated to the newer format.
+====
 
 All addresses can always be accessed from localhost regardless of IP pattern, primarily to support local development mode.
 

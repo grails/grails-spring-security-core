@@ -132,19 +132,6 @@ class ReflectionUtils {
 		getApplication().config = new PropertySourcesConfig(propertySources)
 	}
 
-	static List<InterceptedUrl> splitMap(Map<String, Object> m, boolean expressions = true) {
-		m.collect { String key, value ->
-			List tokens
-			if (value instanceof Collection || value.getClass().array) {
-				tokens = value*.toString()
-			}
-			else { // String/GString
-				tokens = [value.toString()]
-			}
-			new InterceptedUrl(key, null, buildConfigAttributes(tokens, expressions))
-		}
-	}
-
 	static List<InterceptedUrl> splitMap(List<Map<String, Object>> map) {
 		map.collect { Map<String, Object> row ->
 

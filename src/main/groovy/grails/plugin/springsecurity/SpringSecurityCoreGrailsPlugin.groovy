@@ -1094,6 +1094,16 @@ to default to 'Annotation'; setting value to 'Annotation'
 	}
 
 	private configureIpFilter = { conf ->
+
+		if (conf.ipRestrictions instanceof Map) {
+			throw new IllegalArgumentException("ipRestrictions defined as a Map are not supported; must be specified as a " +
+					  "List of Maps as described in section 'IP Address Restrictions' of the reference documentation")
+		}
+
+		if (!(conf.ipRestrictions instanceof List)) {
+			return
+		}
+
 		ipAddressFilter(IpAddressFilter) {
 			ipRestrictions = conf.ipRestrictions
 		}
