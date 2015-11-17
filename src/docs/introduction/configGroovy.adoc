@@ -1,0 +1,16 @@
+[[configGroovy]]
+=== Configuration Settings
+
+The Spring Security plugin maintains its configuration in `grails-app/conf/application.groovy`, although you can keep the plugin config in `application.yml` with the rest of the configuration if you prefer. Default values are in the plugin's `grails-app/conf/DefaultSecurityConfig.groovy` file, and you add application-specific values to `application.groovy` (or `application.yml`). The default configuration is merged with your settings, with application values overriding the defaults and setting missing values.
+
+This structure enables environment-specific configuration such as, for example, fewer structure-restrictive security rules during development than in production. Like any environment-specific configuration parameters, you wrap them in an `environments` block.
+
+[NOTE]
+====
+The plugin's configuration values all start with `grails.plugin.springsecurity` to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the `grails.plugin.springsecurity` suffix. For example, you specify the attribute `password.algorithm` as:
+
+[source,java]
+----
+grails.plugin.springsecurity.password.algorithm = 'bcrypt'
+----
+====

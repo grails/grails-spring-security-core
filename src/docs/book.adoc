@@ -1,0 +1,61 @@
+= Spring Security Core Plugin - Reference Documentation
+Burt Beckwith
+
+:doctype: book
+:encoding: utf-8
+:lang: en
+:toc: left
+:toclevels: 2
+:numbered:
+
+include::introduction.adoc[]
+
+include::newInV3.adoc[]
+
+include::newInV2.adoc[]
+
+include::domainClasses.adoc[]
+
+include::requestMappings.adoc[]
+
+include::helperClasses.adoc[]
+
+include::events.adoc[]
+
+include::domainClassProperties.adoc[]
+
+include::authentication.adoc[]
+
+include::authenticationProviders.adoc[]
+
+include::userDetailsService.adoc[]
+
+include::passwords.adoc[]
+
+include::urlProperties.adoc[]
+
+include::hierarchicalRoles.adoc[]
+
+include::switchUser.adoc[]
+
+include::filters.adoc[]
+
+include::channelSecurity.adoc[]
+
+include::ip.adoc[]
+
+include::sessionFixation.adoc[]
+
+include::logoutHandlers.adoc[]
+
+include::voters.adoc[]
+
+include::miscProperties.adoc[]
+
+include::tutorials.adoc[]
+
+include::controllerMetaClassMethods.adoc[]
+
+include::i18n.adoc[]
+
+include::scripts.adoc[]

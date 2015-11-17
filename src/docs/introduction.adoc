@@ -1,0 +1,93 @@
+[[introduction]]
+== Introduction to the Spring Security Plugin
+
+The Spring Security plugin simplifies the integration of http://projects.spring.io/spring-security/[Spring Security] into Grails applications. The plugin provides sensible defaults with many configuration options for customization. Nearly everything is configurable or replaceable in the plugin and in Spring Security itself, which makes extensive use of interfaces.
+
+This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.
+
+=== Release History and Acknowledgment
+
+* August 14, 2015
+** 3.0.0.M1 release
+* June 4, 2015
+** 2.0-RC5 release
+* July 8, 2014
+** 2.0-RC4 release
+* May 19, 2014
+** 2.0-RC3 release
+* October 4, 2013
+** 2.0-RC2 release
+** http://jira.grails.org/issues/?jql=project%20%3D%20GPSPRINGSECURITYCORE%20AND%20fixVersion%20%3D%20%22Grails-Spring-Security-Core%202.0%22%20ORDER%20BY%20updated%20DESC%2C%20priority%20DESC%2C%20created%20ASC[JIRA Issues]
+* October 3, 2013
+** 2.0-RC1 release
+* April 6, 2012
+** 1.2.7.3 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13100[JIRA Issues]
+* February 2, 2012
+** 1.2.7.2 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13062[JIRA Issues]
+* January 18, 2012
+** 1.2.7.1 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13051[JIRA Issues]
+* December 30, 2011
+** 1.2.7 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13025[JIRA Issues]
+* December 2, 2011
+** 1.2.6 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=13024[JIRA Issues]
+* December 1, 2011
+** 1.2.5 release
+* October 18, 2011
+** 1.2.4 release
+* October 15, 2011
+** 1.2.3 release
+* October 15, 2011
+** 1.2.2 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=12907[JIRA Issues]
+* August 17, 2011
+** 1.2.1 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=12811[JIRA Issues]
+* July 31, 2011
+** 1.2 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=12503[JIRA Issues]
+* May 23, 2011
+** 1.1.3 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=12502[JIRA Issues]
+* February 26, 2011
+** 1.1.2 release
+* February 26, 2011
+** 1.1.1 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11909[JIRA Issues]
+* August 8, 2010
+** 1.1 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11908[JIRA Issues]
+* August 1, 2010
+** 1.0.1 release
+* July 27, 2010
+** 1.0 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11907[JIRA Issues]
+* July 16, 2010
+** 0.4.2 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11906[JIRA Issues]
+* June 29, 2010
+** 0.4.1 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11905[JIRA Issues]
+* June 21, 2010
+** 0.4 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11904[JIRA Issues]
+* May 12, 2010
+** 0.3.1 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11903[JIRA Issues]
+* May 12, 2010
+** 0.3 release
+** http://jira.grails.org/secure/ReleaseNote.jspa?projectId=10229&amp;version=11902[JIRA Issues]
+* May 2, 2010
+** 0.2 release
+* April 27, 2010
+** initial 0.1 release
+
+This plugin is based on work done for the https://grails.org/plugin/acegi/[Acegi] plugin by Tsuyoshi Yamamoto.
+
+include::introduction/configGroovy.adoc[]
+
+include::introduction/gettingStarted.adoc[]

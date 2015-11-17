@@ -1,0 +1,68 @@
+[[authorityGroupClass]]
+=== Group Class
+
+This Spring Security plugin provides you the option of creating an access inheritance level between 'person' and 'authority': the 'group'. The next three classes you will read about (including this one) are only used in a 'person'/'group'/'authority' implementation. Rather than giving a 'person' authorities directly, you can create a 'group', map authorities to it, and then map a 'person' to that 'group'. For applications that have a one or more groups of users who need the same level of access, having one or more 'group' instances makes managing changes to access levels easier because the authorities that make up that access level are encapsulated in the 'group', and a single change will affect all of the users.
+
+If you run the <<s2-quickstart>> script with the group name specified and use `com.mycompany.myapp` as your package and `RoleGroup` and `Role` as your class names, you'll generate this class:
+
+[source,java]
+----
+package com.mycompany.myapp
+
+class RoleGroup implements Serializable {
+
+   private static final long serialVersionUID = 1
+
+   String name
+
+   RoleGroup(String name) {
+      this()
+      this.name = name
+   }
+
+   @Override
+   int hashCode() {
+      name?.hashCode() ?: 0
+   }
+
+   @Override
+   boolean equals(other) {
+      is(other) || (other instanceof RoleGroup && other.name == name)
+   }
+
+   @Override
+   String toString() {
+      name
+   }
+
+   static mapping = {
+      cache true
+   }
+
+   Set<Role> getAuthorities() {
+      RoleGroupRole.findAllByRoleGroup(this).collect { it.role }
+   }
+
+   static constraints = {
+      name blank: false, unique: true
+   }
+}
+----
+
+When running the <<s2-quickstart>> script with the group name specified, the 'person' class will be generated differently to accommodate the use of groups. Assuming you use `com.mycompany.myapp` as your package and `User` and `RoleGroup` as your class names, the `getAuthorities()` method will be generated like so:
+
+[source,java]
+----
+Set<RoleGroup> getAuthorities() {
+   UserRoleGroup.findAllByUser(this).collect { it.roleGroup }
+}
+----
+
+The plugin assumes the attribute `authorities` will provide the 'authority' collection for each class, but you can change the field names in `grails-app/conf/application.groovy`. You also must ensure that the property `useRoleGroups` is set to `true` in order for `GormUserDetailsService` to properly attain the `authorities`.
+
+[width="100%",options="header"]
+|====================
+| *Property* | *Default Value* | *Assigned Value Using s2QuickstartGroups* | *Meaning*
+| useRoleGroups | false | true | Use 'authority group' implementation when loading user authorities
+| authority. groupAuthorityNameField | null | 'authorities' | AuthorityGroup class role collection field
+|====================

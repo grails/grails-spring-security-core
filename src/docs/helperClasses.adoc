@@ -1,0 +1,10 @@
+[[helperClasses]]
+== Helper Classes
+
+Use the plugin helper classes in your application to avoid dealing with some lower-level details of Spring Security.
+
+include::helperClasses/securityTagLib.adoc[]
+
+include::helperClasses/springSecurityService.adoc[]
+
+include::helperClasses/springSecurityUtils.adoc[]

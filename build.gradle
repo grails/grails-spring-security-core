@@ -5,10 +5,13 @@ buildscript {
 	repositories {
 		mavenLocal()
 		maven { url 'https://repo.grails.org/grails/core' }
+		jcenter()
 	}
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-		classpath "org.grails:grails-docs:$grailsVersion"
+		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.2'
+		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.4'
+		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.9'
 	}
 }
 
@@ -26,7 +29,7 @@ apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'org.grails.grails-plugin'
 apply plugin: 'org.grails.grails-gsp'
-apply plugin: 'org.grails.grails-doc'
+apply plugin: 'org.asciidoctor.convert'
 
 apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
 apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
@@ -56,7 +59,6 @@ dependencies {
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
 	provided 'org.grails:grails-dependencies'
 	provided 'org.grails:grails-web-boot'
-	provided 'org.springframework.boot:spring-boot-autoconfigure'
 
 	String springSecurityVersion = '3.2.9.RELEASE'
 
@@ -87,26 +89,35 @@ dependencies {
 	testCompile 'org.grails:grails-plugin-testing'
 }
 
-docs.doLast {
-
-	// can't do this in custom css because the order doesn't support overriding, only adding
-	File mainCss = new File(project.buildDir, 'docs/manual/css/main.css')
-	mainCss.text = mainCss.text.replaceAll('font-size: 85%', 'font-size: 100%;')
-
-	// delete unused images
-	['pivotal-logo-color', 'pivotal-logo', 'springsource-logo', 'grails-icon', 'grails', 'groovy'].each { String name ->
-		assert new File(project.buildDir, 'docs/manual/img/' + name + '.png').delete()
+asciidoctor {
+	separateOutputDirs = false
+	sourceDir = file('src/docs')
+	sources {
+		include 'book.adoc'
 	}
-	assert new File(project.buildDir, 'docs/manual/img/favicon.ico').delete()
+	outputDir file('docs/manual')
+	backends 'html5', 'pdf', 'epub3'
+	attributes 'source-highlighter': 'prettify',
+			  icons:               'font',
+			  setanchors:          'true',
+			  idprefix:            '',
+			  idseparator:         '-',
+			  toc2:                '',
+			  numbered:            '',
+			  revnumber:           project.version
 }
 
-task docsWithPdf(dependsOn: 'docs') << {
-	// based on grails.doc.gradle.PublishPdf
-	def outputDir = new File(project.buildDir, 'docs/manual')
-	def htmlFile = new File(outputDir, 'guide/single.html')
-	def pdfBuilder = new grails.doc.PdfBuilder()
-	def xml = pdfBuilder.createXml(htmlFile, outputDir.absolutePath)
-	pdfBuilder.createPdf xml, new File(htmlFile.parentFile, 'single.pdf'), htmlFile
+task docs(dependsOn: 'asciidoctor') << {
+	File dir = new File('docs/manual')
+	File f = new File(dir, 'book.html')
+	if (f.exists()) f.renameTo(new File(dir, 'index.html'))
+
+	['pdf', 'epub'].each { String ext ->
+		f = new File(dir, 'book.' + ext)
+		if (f.exists()) {
+			f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
+		}
+	}
 }
 
 task wrapper(type: Wrapper) {

@@ -1,0 +1,8 @@
+[[scripts]]
+== Scripts
+
+include::scripts/s2-quickstart.adoc[]
+
+include::scripts/s2-create-persistent-token.adoc[]
+
+include::scripts/s2-create-role-hierarchy-entry.adoc[]

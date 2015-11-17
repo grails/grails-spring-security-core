@@ -1,0 +1,39 @@
+[[voters]]
+== Voters
+
+Voters are classes that implement the Spring Security https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/AccessDecisionVoter.html[AccessDecisionVoter] interface and are used to confirm whether a successful authentication is authorized for the current request.
+
+You can register the voters to use with the `voterNames` setting; each element in the collection is the name of an existing Spring bean.
+
+[width="100%",options="header"]
+|====================
+| *Property* | *Default Value* | *Meaning*
+| voterNames | ['authenticatedVoter', 'roleVoter', 'webExpressionVoter', 'closureVoter'] | Bean names of voters.
+|====================
+
+The default voters include a https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/vote/RoleHierarchyVoter.html[RoleHierarchyVoter] to ensure users have the required roles for the request, an https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/vote/AuthenticatedVoter.html[AuthenticatedVoter] to support `IS_AUTHENTICATED_FULLY`, `IS_AUTHENTICATED_REMEMBERED`, and `IS_AUTHENTICATED_ANONYMOUSLY` tokens, a https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/access/expression/WebExpressionVoter.html[WebExpressionVoter] to evaluate SpEL expressions, and a `grails.plugin.springsecurity.access.vote.ClosureVoter` to invoke annotation closures.
+
+To customize this list, you define a `voterNames` attribute with a list of bean names. Any existing bean that implements the interface can be used, whether it is declared by this plugin, in your application's resources.groovy, another plugin, or any other source.
+
+Suppose you have registered a bean for a custom `MyAccessDecisionVoter` in `resources.groovy`:
+
+[source,java]
+----
+import com.foo.MyAccessDecisionVoter
+
+beans = {
+   myAccessDecisionVoter(MyAccessDecisionVoter) {
+      // attributes
+   }
+}
+----
+
+You register it in `grails-app/conf/application.groovy` as:
+
+[source,java]
+----
+grails.plugin.springsecurity.voterNames = [
+   'authenticatedVoter', 'roleVoter', 'webExpressionVoter',
+   'closureVoter', 'myAccessDecisionVoter'
+]
+----

@@ -1,0 +1,58 @@
+[[configGroovyMap]]
+=== Static Map
+
+To use a static map in `application.groovy` to secure URLs, first specify `securityConfigType="InterceptUrlMap"`:
+
+[source,java]
+----
+grails.plugin.springsecurity.securityConfigType = "InterceptUrlMap"
+----
+
+Define a Map in `application.groovy`:
+
+[source,java]
+----
+grails.plugin.springsecurity.interceptUrlMap = [
+   [pattern: '/',               access: ['permitAll']],
+   [pattern: '/error',          access: ['permitAll']],
+   [pattern: '/index',          access: ['permitAll']],
+   [pattern: '/index.gsp',      access: ['permitAll']],
+   [pattern: '/shutdown',       access: ['permitAll']],
+   [pattern: '/assets/**',      access: ['permitAll']],
+   [pattern: '/**/js/**',       access: ['permitAll']],
+   [pattern: '/**/css/**',      access: ['permitAll']],
+   [pattern: '/**/images/**',   access: ['permitAll']],
+   [pattern: '/**/favicon.ico', access: ['permitAll']],
+   [pattern: '/login',          access: ['permitAll']],
+   [pattern: '/login/**',       access: ['permitAll']],
+   [pattern: '/logout',         access: ['permitAll']],
+   [pattern: '/logout/**',      access: ['permitAll']]
+]
+----
+
+and add any custom mappings as needed, e.g.
+
+[source,java]
+----
+grails.plugin.springsecurity.interceptUrlMap = [
+   ...
+   [pattern: '/secure/**',  access: ['ROLE_ADMIN']],
+   [pattern: '/finance/**', access: ['ROLE_FINANCE', 'isFullyAuthenticated()']]
+]
+----
+
+When using this approach, make sure that you order the rules correctly. The first applicable rule is used, so for example if you have a controller that has one set of rules but an action that has stricter access rules, e.g.
+
+[source,java]
+----
+[pattern: '/secure/**',               access: ['ROLE_ADMIN', 'ROLE_SUPERUSER']],
+[pattern: '/secure/reallysecure/**',  access: ['ROLE_SUPERUSER']]
+----
+
+then this would fail - it wouldn't restrict access to `/secure/reallysecure/list` to a user with `ROLE_SUPERUSER` since the first URL pattern matches, so the second would be ignored. The correct mapping would be
+
+[source,java]
+----
+[pattern: '/secure/reallysecure/**', access: ['ROLE_SUPERUSER']],
+[pattern: '/secure/**',              access: ['ROLE_ADMIN', 'ROLE_SUPERUSER']]
+----

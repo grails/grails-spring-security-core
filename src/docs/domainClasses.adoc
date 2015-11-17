@@ -1,0 +1,35 @@
+[[domainClasses]]
+== Domain Classes
+
+By default the plugin uses regular Grails domain classes to access its required data. It's easy to create your own user lookup code though, which can access the database or any other source to retrieve user and authority data. See <<userDetailsService>> for how to implement this.
+
+To use the standard user lookup you'll need at a minimum a 'person' and an 'authority' domain class. In addition, if you want to store URL pass:[&lt;-&gt;] Role mappings in the database (this is one of multiple approaches for defining the mappings) you need a 'requestmap' domain class. If you use the recommended approach for mapping the many-to-many relationship between 'person' and 'authority,' you also need a domain class to map the join table.
+
+To use the user/group lookup you'll also need a 'group' domain class. If you are using the recommended approach for mapping many-to-many relationship between 'person' and 'group' and between 'group' and 'authority' you'll need a domain class for each to map the join tables. You can still additionally use 'requestmap' with this approach.
+
+The <<s2-quickstart>> script creates initial domain classes for you. You specify the package and class names, and it creates the corresponding domain classes. After that you can customize them as you like. You can add additional fields, methods, and so on, as long as the core security-related functionality remains.
+
+[NOTE]
+====
+Where practical, the generated domain classes include a parameterized constructor. These are only added to make instance creation more compact, e.g. `new Role('ROLE_ADMIN')` vs. `new Role(authority: 'ROLE_ADMIN')` but either approach can be used.
+
+These constructors look a bit odd because they include a call to `this()`. Ordinarily in Groovy or Java, the compiler creates an empty constructor if none are defined in the source, but if there are one or more defined constructors (with or without arguments) then the compiler doesn't add one. Grails adds a significant number of methods and other code to domain classes using AST transformations, including an empty constructor that manages dependency injection. So although the plugin-generated domain classes appear to not have an empty constructor, they do in the bytecode.
+
+This means that you can use the parameterized constructors if you want, and add more if needed, or continue to use the map constructor approach that's common in Grails applications. The call to `this()` is there to ensure that if you use a non-default constructor and use dependency injection (e.g. to inject a service for use in custom validation), the beans get properly injected. You can remove that line in any domain class that doesn't use dependency injection.
+
+This is discussed in https://www.youtube.com/watch?v=Oxwpqh1h0s0[this talk at Greach 2015]. The slides for the talk are available http://www.slideshare.net/burtbeckwith/little-did-he-know[here]
+====
+
+include::domainClasses/personClass.adoc[]
+
+include::domainClasses/authorityClass.adoc[]
+
+include::domainClasses/personAuthorityClass.adoc[]
+
+include::domainClasses/authorityGroupClass.adoc[]
+
+include::domainClasses/personAuthorityGroupClass.adoc[]
+
+include::domainClasses/authorityGroupAuthorityClass.adoc[]
+
+include::domainClasses/requestmapClass.adoc[]
