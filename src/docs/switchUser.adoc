@@ -34,7 +34,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 ----
 
-If you use `Requestmap`s, create a rule like this (for example, in `BootStrap`):
+If you use ``Requestmap``s, create a rule like this (for example, in `BootStrap`):
 
 [source,java]
 ----

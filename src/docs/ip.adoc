@@ -11,7 +11,7 @@ Ordinarily you can guard URLs sufficiently with roles, but the plugin provides a
 
 For example, make an admin-only part of your site accessible only from IP addresses of the local LAN or VPN, such as 192.168.1.xxx or 10.xxx.xxx.xxx. You can also set this up at your firewall and/or routers, but it is convenient to encapsulate it within your application.
 
-To use this feature, specify an `ipRestrictions` configuration as a `List` of `Map`s, one for each combination of URL pattern to IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[CIDR] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
+To use this feature, specify an `ipRestrictions` configuration as a `List` of ``Map``s, one for each combination of URL pattern to IP address patterns that can access those URLs. The IP patterns can be single-value strings, or multi-value lists of strings. They can use https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing[CIDR] masks, and can specify either IPv4 or IPv6 patterns. For example, given this configuration:
 
 [source,java]
 ----

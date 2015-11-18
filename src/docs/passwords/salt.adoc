@@ -55,7 +55,7 @@ beans = {
 ----
 
 ==== Hashing Passwords
-Regardless of the implementation, you need to be aware of what value to use for a salt when creating or updating users, for example, in a `UserController`'s `save` or `update` action. When hashing the password, you use the two-parameter version of `springSecurityService.encodePassword()`:
+Regardless of the implementation, you need to be aware of what value to use for a salt when creating or updating users, for example, in a ``UserController``'s `save` or `update` action. When hashing the password, you use the two-parameter version of `springSecurityService.encodePassword()`:
 
 [source,java]
 ----
