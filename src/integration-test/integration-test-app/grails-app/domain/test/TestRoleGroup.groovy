@@ -1,5 +1,10 @@
 package test
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='name')
+@ToString(includes='name', includeNames=true, includePackage=false)
 class TestRoleGroup implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -9,21 +14,6 @@ class TestRoleGroup implements Serializable {
 	TestRoleGroup(String name) {
 		this()
 		this.name = name
-	}
-
-	@Override
-	int hashCode() {
-		name?.hashCode() ?: 0
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (other instanceof TestRoleGroup && other.name == name)
-	}
-
-	@Override
-	String toString() {
-		name
 	}
 
 	Set<TestRole> getRoles() {

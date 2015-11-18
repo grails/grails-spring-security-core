@@ -14,9 +14,14 @@
  */
 package test
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@EqualsAndHashCode(includes='auth')
+@ToString(includes='auth', includeNames=true, includePackage=false)
 class TestRole implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -28,21 +33,6 @@ class TestRole implements Serializable {
 		this()
 		this.auth = auth
 		this.description = description
-	}
-
-	@Override
-	int hashCode() {
-		auth?.hashCode() ?: 0
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (other instanceof TestRole && other.auth == auth)
-	}
-
-	@Override
-	String toString() {
-		auth
 	}
 
 	static constraints = {

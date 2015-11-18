@@ -19,8 +19,6 @@ version '0.1'
 group 'integration.test.app'
 
 apply plugin: 'spring-boot'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
 apply plugin: 'org.grails.grails-web'
 
 ext {
@@ -41,24 +39,15 @@ dependencyManagement {
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-logging'
-	compile 'org.springframework.boot:spring-boot-starter-actuator'
 	compile 'org.springframework.boot:spring-boot-autoconfigure'
 	compile 'org.springframework.boot:spring-boot-starter-tomcat'
 	compile 'org.grails:grails-dependencies'
-	compile 'org.grails:grails-web-boot'
 
 	compile 'org.grails.plugins:hibernate'
 	compile 'org.grails.plugins:cache'
+	compile 'org.hibernate:hibernate-ehcache'
 
-	compile 'org.grails.plugins:grails-spring-security-core:3.0-SNAPSHOT' // TODO FIXME
-	// compile 'org.grails.plugins:spring-security-core:3.0-SNAPSHOT'
-
-	console "org.grails:grails-console"
+	compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
 
 	testCompile 'org.grails:grails-plugin-testing'
-}
-
-task wrapper(type: Wrapper) {
-	gradleVersion = gradleWrapperVersion
 }

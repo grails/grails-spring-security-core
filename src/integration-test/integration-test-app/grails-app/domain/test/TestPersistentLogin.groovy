@@ -14,11 +14,11 @@
  */
 package test
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
-import org.apache.commons.lang.builder.HashCodeBuilder
-
-@ToString(cache=true, includeNames=true, includePackage=false)
+@EqualsAndHashCode(includes=['series', 'username'])
+@ToString(includes=['series', 'username'], cache=true, includeNames=true, includePackage=false)
 class TestPersistentLogin implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -27,19 +27,6 @@ class TestPersistentLogin implements Serializable {
 	String username
 	String token
 	Date lastUsed
-
-	@Override
-	int hashCode() {
-		new HashCodeBuilder().append(series).append(username).toHashCode()
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (
-			other instanceof TestPersistentLogin &&
-			other.series == series &&
-			other.username == username)
-	}
 
 	static constraints = {
 		series maxSize: 64

@@ -14,15 +14,15 @@
  */
 package test
 
+import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
-
-import org.apache.commons.lang.builder.HashCodeBuilder
 import org.springframework.http.HttpMethod
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@ToString(cache=true, includeNames=true, includePackage=false)
+@EqualsAndHashCode(includes=['rolePattern', 'httpMethod', 'urlPattern'])
+@ToString(includes=['rolePattern', 'httpMethod', 'urlPattern'], cache=true, includeNames=true, includePackage=false)
 class TestRequestmap implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -36,20 +36,6 @@ class TestRequestmap implements Serializable {
 		this.rolePattern = rolePattern
 		this.httpMethod = httpMethod
 		this.urlPattern = urlPattern
-	}
-
-	@Override
-	int hashCode() {
-		new HashCodeBuilder().append(rolePattern).append(httpMethod).append(urlPattern).toHashCode()
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (
-			other instanceof TestRequestmap &&
-			other.rolePattern == rolePattern &&
-			other.httpMethod == httpMethod &&
-			other.urlPattern == urlPattern)
 	}
 
 	static constraints = {

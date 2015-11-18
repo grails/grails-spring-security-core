@@ -69,7 +69,7 @@ class TestUserRole implements Serializable {
 	}
 
 	static TestUserRole create(TestUser user, TestRole role, boolean flush = false) {
-		def instance = new TestUserRole(user, role)
+		def instance = new TestUserRole(user: user, role: role)
 		instance.save(flush: flush, insert: true)
 		instance
 	}

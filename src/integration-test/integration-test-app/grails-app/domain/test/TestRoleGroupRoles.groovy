@@ -1,5 +1,6 @@
 package test
 
+import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
@@ -36,15 +37,22 @@ class TestRoleGroupRoles implements Serializable {
 	}
 
 	static TestRoleGroupRoles get(long roleGroupId, long roleId) {
-		TestRoleGroupRoles.where { roleGroup.id == roleGroupId && role.id == roleId }.get()
+		criteriaFor(roleGroupId, roleId).get()
 	}
 
 	static boolean exists(long roleGroupId, long roleId) {
-		TestRoleGroupRoles.where { roleGroup.id == roleGroupId && role.id == roleId }.count() > 0
+		criteriaFor(roleGroupId, roleId).count()
+	}
+
+	private static DetachedCriteria criteriaFor(long roleGroupId, long roleId) {
+		TestRoleGroupRoles.where {
+			roleGroup == TestRoleGroup.load(roleGroupId) &&
+			role == TestRole.load(roleId)
+		}
 	}
 
 	static TestRoleGroupRoles create(TestRoleGroup roleGroup, TestRole role, boolean flush = false) {
-		def instance = new TestRoleGroupRoles(roleGroup, role)
+		def instance = new TestRoleGroupRoles(roleGroup: roleGroup, role: role)
 		instance.save(flush: flush, insert: true)
 		instance
 	}
@@ -56,13 +64,13 @@ class TestRoleGroupRoles implements Serializable {
 
 		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
 
-		rowCount > 0
+		rowCount
 	}
 
 	static void removeAll(TestRole r, boolean flush = false) {
-		TestRoleGroupRoles.where {
-			role == TestRole.load(r.id)
-		}.deleteAll()
+		if (r == null) return
+
+		TestRoleGroupRoles.where { role == r }.deleteAll()
 
 		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
 	}
