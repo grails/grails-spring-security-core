@@ -49,6 +49,15 @@ class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthenticati
 		}
 	}
 
+	/**
+	 * Dependency injection for the exception -> url mappings; each map has an 'exception' key and a 'url' key, and
+	 * all are merged into one map, where each key is an exception name and each value is the url.
+	 * @param mappings list of single-entry maps
+	 */
+	void setExceptionMappings(List<Map<String, ?>> mappings) {
+		super.setExceptionMappings((Map)mappings.inject([:], { LinkedHashMap map, Map mapping -> map[mapping.exception] = mapping.url; map }))
+	}
+
 	void afterPropertiesSet() {
 		assert ajaxAuthenticationFailureUrl, 'ajaxAuthenticationFailureUrl is required'
 	}

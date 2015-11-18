@@ -71,10 +71,10 @@ switch (testconfig) {
 		grails.plugin.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
 		grails.plugin.springsecurity.useSwitchUserFilter = true
 		grails.plugin.springsecurity.failureHandler.exceptionMappings = [
-			'org.springframework.security.authentication.LockedException':             '/testUser/accountLocked',
-			'org.springframework.security.authentication.DisabledException':           '/testUser/accountDisabled',
-			'org.springframework.security.authentication.AccountExpiredException':     '/testUser/accountExpired',
-			'org.springframework.security.authentication.CredentialsExpiredException': '/testUser/passwordExpired'
+			[exception: 'org.springframework.security.authentication.LockedException',             url: '/testUser/accountLocked'],
+			[exception: 'org.springframework.security.authentication.DisabledException',           url: '/testUser/accountDisabled'],
+			[exception: 'org.springframework.security.authentication.AccountExpiredException',     url: '/testUser/accountExpired'],
+			[exception: 'org.springframework.security.authentication.CredentialsExpiredException', url: '/testUser/passwordExpired']
 		]
 //		grails.web.url.converter = 'hyphenated'
 		break

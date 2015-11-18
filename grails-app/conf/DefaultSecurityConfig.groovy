@@ -104,7 +104,7 @@ security {
 	failureHandler {
 		defaultFailureUrl = '/login/authfail?login_error=1'
 		ajaxAuthFailUrl = '/login/authfail?ajax=true'
-		exceptionMappings = [:]
+		exceptionMappings = []
 		useForward = false
 		allowSessionCreation = true
 	}

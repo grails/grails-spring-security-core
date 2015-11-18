@@ -26,10 +26,10 @@ You can configure an exception mapping in `application.groovy` to associate a UR
 [source,java]
 ----
 grails.plugin.springsecurity.failureHandler.exceptionMappings = [
-   'org.springframework.security.authentication.LockedException':             '/user/accountLocked',
-   'org.springframework.security.authentication.DisabledException':           '/user/accountDisabled',
-   'org.springframework.security.authentication.AccountExpiredException':     '/user/accountExpired',
-   'org.springframework.security.authentication.CredentialsExpiredException': '/user/passwordExpired'
+   [exception: 'org.springframework.security.authentication.LockedException',             url: '/user/accountLocked'],
+   [exception: 'org.springframework.security.authentication.DisabledException',           url: '/user/accountDisabled'],
+   [exception: 'org.springframework.security.authentication.AccountExpiredException',     url: '/user/accountExpired'],
+   [exception: 'org.springframework.security.authentication.CredentialsExpiredException', url: '/user/passwordExpired']
 ]
 ----
 

@@ -1123,12 +1123,23 @@ to default to 'Annotation'; setting value to 'Annotation'
 			sessionAuthenticationStrategy(NullAuthenticatedSessionStrategy)
 		}
 
+		if (conf.failureHandler.exceptionMappings instanceof Map) {
+			throw new IllegalArgumentException('failureHandler.exceptionMappings defined as a Map are not supported; ' +
+					  '''must be specified as a List of Maps, e.g.
+[
+   [exception: 'org.springframework.security.authentication.LockedException',             url: '/user/accountLocked'],
+   [exception: 'org.springframework.security.authentication.DisabledException',           url: '/user/accountDisabled'],
+   [exception: 'org.springframework.security.authentication.AccountExpiredException',     url: '/user/accountExpired'],
+   [exception: 'org.springframework.security.authentication.CredentialsExpiredException', url: '/user/passwordExpired']
+]
+''')
+		}
 		authenticationFailureHandler(AjaxAwareAuthenticationFailureHandler) {
 			redirectStrategy = ref('redirectStrategy')
 			defaultFailureUrl = conf.failureHandler.defaultFailureUrl //'/login/authfail?login_error=1'
 			useForward = conf.failureHandler.useForward // false
 			ajaxAuthenticationFailureUrl = conf.failureHandler.ajaxAuthFailUrl // '/login/authfail?ajax=true'
-			exceptionMappings = conf.failureHandler.exceptionMappings // [:]
+			exceptionMappings = conf.failureHandler.exceptionMappings // []
 			allowSessionCreation = conf.failureHandler.allowSessionCreation // true
 		}
 

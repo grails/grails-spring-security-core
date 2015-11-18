@@ -36,10 +36,10 @@ grails {
 
 			failureHandler {
 				exceptionMappings = [
-					(LockedException.name): '/testUser/accountLocked',
-					(DisabledException.name): '/testUser/accountDisabled',
-					(AccountExpiredException.name): '/testUser/accountExpired',
-					(CredentialsExpiredException.name): '/testUser/passwordExpired'
+					[exception: LockedException.name,             url: '/testUser/accountLocked'],
+					[exception: DisabledException.name,           url: '/testUser/accountDisabled'],
+					[exception: AccountExpiredException.name,     url: '/testUser/accountExpired'],
+					[exception: CredentialsExpiredException.name, url: '/testUser/passwordExpired']
 				]
 			}
 			interceptUrlMap = [
