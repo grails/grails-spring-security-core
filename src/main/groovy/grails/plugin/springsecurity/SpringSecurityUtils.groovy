@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpSession
 
 import org.apache.commons.lang.StringEscapeUtils
+import org.springframework.context.ApplicationContext
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -36,6 +37,7 @@ import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority
 import org.springframework.security.web.savedrequest.SavedRequest
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartHttpServletRequest
@@ -604,49 +606,7 @@ final class SpringSecurityUtils {
 	private static void mergeConfig(ConfigObject currentConfig, String className) {
 		ConfigObject secondary = new ConfigSlurper(Environment.current.name).parse(
 				  new GroovyClassLoader(this.classLoader).loadClass(className))
-		secondary = secondary.security as ConfigObject
-
-		Collection<String> keysToDefaultEmpty = []
-		findKeysToDefaultEmpty secondary, '', keysToDefaultEmpty
-
-		def merged = mergeConfig(currentConfig, secondary)
-
-		// having discovered the keys that have map values (since they initially point to empty maps),
-		// check them again and remove the damage done when Map values are 'flattened'
-		for (String key in keysToDefaultEmpty) {
-			Map value = (Map)ReflectionUtils.getConfigProperty(key, merged)
-			for (Iterator<Map.Entry> iter = value.entrySet().iterator(); iter.hasNext();) {
-				def entry = iter.next()
-				if (entry.value instanceof Map) {
-					iter.remove()
-				}
-			}
-		}
-
-		_securityConfig = ReflectionUtils.securityConfig = merged
-	}
-
-	/**
-	 * Given an unmodified config map with defaults, loop through the keys looking for values that are initially
-	 * empty maps. This will be used after merging to remove map values that cause problems by being included both as
-	 * the result from the ConfigSlurper (which is correct) and as a "flattened" maps which confuse Spring Security.
-	 * @param m the config map
-	 * @param fullPath the path to this config map, e.g. 'grails.plugin.security
-	 * @param keysToDefaultEmpty a collection of key names to add to
-	 */
-	private static void findKeysToDefaultEmpty(Map m, String fullPath, Collection keysToDefaultEmpty) {
-		m.each { k, v ->
-			if (v instanceof Map) {
-				if (v) {
-					// recurse
-					findKeysToDefaultEmpty((Map)v, fullPath + '.' + k, keysToDefaultEmpty)
-				}
-				else {
-					// since it's an empty map, capture its path for the cleanup pass
-					keysToDefaultEmpty << (fullPath + '.' + k).substring(1)
-				}
-			}
-		}
+		_securityConfig = ReflectionUtils.securityConfig = mergeConfig(currentConfig, secondary.security as ConfigObject)
 	}
 
 	/**
@@ -694,5 +654,133 @@ final class SpringSecurityUtils {
 
 	private static Authentication getAuthentication() {
 		SecurityContextHolder.context?.authentication
+	}
+
+	static SortedMap<Integer, String> findFilterChainNames(conf, filterChainFilterNames, boolean useSecureChannel,
+	                                                       boolean useIpRestrictions, boolean useX509, boolean useDigestAuth,
+	                                                       boolean useBasicAuth, boolean useSwitchUserFilter) {
+
+		SortedMap<Integer, String> orderedNames = new TreeMap()
+
+		// if the user listed the names, use those
+		if (filterChainFilterNames) {
+			// cheat and put them in the map in order - the key values don't matter in this case since
+			// the user has chosen the order and the map will be used to insert single filters, which
+			// wouldn't happen if they've defined the order already
+			filterChainFilterNames.eachWithIndex { String name, int index -> orderedNames[index] = name }
+		}
+		else {
+
+			if (useSecureChannel) {
+				orderedNames[SecurityFilterPosition.CHANNEL_FILTER.order] = 'channelProcessingFilter'
+			}
+
+			// CONCURRENT_SESSION_FILTER
+
+			orderedNames[SecurityFilterPosition.SECURITY_CONTEXT_FILTER.order] = 'securityContextPersistenceFilter'
+
+			orderedNames[SecurityFilterPosition.LOGOUT_FILTER.order] = 'logoutFilter'
+
+			if (useIpRestrictions) {
+				orderedNames[SecurityFilterPosition.LOGOUT_FILTER.order + 1] = 'ipAddressFilter'
+			}
+
+			if (useX509) {
+				orderedNames[SecurityFilterPosition.X509_FILTER.order] = 'x509ProcessingFilter'
+			}
+
+			// PRE_AUTH_FILTER
+
+			// CAS_FILTER
+
+			orderedNames[SecurityFilterPosition.FORM_LOGIN_FILTER.order] = 'authenticationProcessingFilter'
+
+			// OPENID_FILTER
+
+			// facebook
+
+			if (useDigestAuth) {
+				orderedNames[SecurityFilterPosition.DIGEST_AUTH_FILTER.order] = 'digestAuthenticationFilter'
+				orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order + 1] = 'digestExceptionTranslationFilter'
+			}
+
+			if (useBasicAuth) {
+				orderedNames[SecurityFilterPosition.BASIC_AUTH_FILTER.order] = 'basicAuthenticationFilter'
+				orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order + 1] = 'basicExceptionTranslationFilter'
+			}
+
+			// REQUEST_CACHE_FILTER
+
+			orderedNames[SecurityFilterPosition.SERVLET_API_SUPPORT_FILTER.order] = 'securityContextHolderAwareRequestFilter'
+
+			orderedNames[SecurityFilterPosition.REMEMBER_ME_FILTER.order] = 'rememberMeAuthenticationFilter'
+
+			orderedNames[SecurityFilterPosition.ANONYMOUS_FILTER.order] = 'anonymousAuthenticationFilter'
+
+			// SESSION_MANAGEMENT_FILTER
+
+			orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order] = 'exceptionTranslationFilter'
+
+			orderedNames[SecurityFilterPosition.FILTER_SECURITY_INTERCEPTOR.order] = 'filterInvocationInterceptor'
+
+			if (useSwitchUserFilter) {
+				orderedNames[SecurityFilterPosition.SWITCH_USER_FILTER.order] = 'switchUserProcessingFilter'
+			}
+
+			// add in filters contributed by secondary plugins
+			orderedNames << SpringSecurityUtils.orderedFilters
+		}
+
+		orderedNames
+	}
+
+	static Map<RequestMatcher, List<Filter>> buildFilterChainMap(SortedMap<Integer, String> filterNames,
+	                                                             List<Map<String, ?>> chainMap, ApplicationContext applicationContext) {
+		Map<RequestMatcher, List<Filter>> filterChainMap = [:]
+
+		def allConfiguredFilters = [:]
+		filterNames.each { Integer order, String name ->
+			Filter filter = applicationContext.getBean(name, Filter)
+			allConfiguredFilters[name] = filter
+			SpringSecurityUtils.configuredOrderedFilters[order] = filter
+		}
+		log.trace 'Ordered filters: {}', SpringSecurityUtils.configuredOrderedFilters
+
+		if (chainMap) {
+			for (Map<String, ?> entry in chainMap) {
+				String value = (entry.filters ?: '').toString().trim()
+				List<Filter> filters
+				if (value.toLowerCase() == 'none') {
+					filters = Collections.emptyList()
+				}
+				else if (value.contains('JOINED_FILTERS')) {
+					// special case to use either the filters defined by conf.filterChain.filterNames or
+					// the filters defined by config settings; can also remove one or more with a prefix of -
+					def copy = [:] << allConfiguredFilters
+					for (item in value.split(',')) {
+						item = item.toString().trim()
+						if (item == 'JOINED_FILTERS') continue
+						if (item.startsWith('-')) {
+							item = item.substring(1)
+							copy.remove item
+						}
+						else {
+							throw new IllegalArgumentException("Cannot add a filter to JOINED_FILTERS, can only remove: $item")
+						}
+					}
+					filters = copy.values() as List
+				}
+				else {
+					// explicit filter names
+					filters = value.toString().split(',').collect { String name -> applicationContext.getBean(name, Filter) }
+				}
+				filterChainMap[new AntPathRequestMatcher(entry.pattern as String)] = filters
+			}
+		}
+		else {
+			filterChainMap[new AntPathRequestMatcher('/**')] = allConfiguredFilters.values() as List
+		}
+
+		filterChainMap
 	}
 }

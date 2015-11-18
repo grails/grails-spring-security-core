@@ -55,8 +55,8 @@ switch (testconfig) {
 		grails.plugin.springsecurity.useBasicAuth = true
 		grails.plugin.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
 		grails.plugin.springsecurity.filterChain.chainMap = [
-			'/secureclassannotated/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
-			'/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+			[pattern: '/secureclassannotated/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter'],
+			[pattern: '/**',                      filters: 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter']
 		]
 		break
 

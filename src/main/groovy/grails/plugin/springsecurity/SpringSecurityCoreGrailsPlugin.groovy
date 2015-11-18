@@ -15,7 +15,6 @@
 package grails.plugin.springsecurity
 
 import javax.servlet.DispatcherType
-import javax.servlet.Filter
 
 import org.grails.web.mime.HttpServletResponseExtension
 import org.springframework.boot.context.embedded.FilterRegistrationBean
@@ -83,9 +82,7 @@ import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.security.web.session.HttpSessionEventPublisher
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
-import org.springframework.security.web.util.matcher.RequestMatcher
 
 import grails.plugin.springsecurity.access.NullAfterInvocationProvider
 import grails.plugin.springsecurity.access.intercept.NullAfterInvocationManager
@@ -658,54 +655,11 @@ to default to 'Annotation'; setting value to 'Annotation'
 		log.trace 'Using SecurityContextHolder strategy {}', SCH.strategyName
 
 		// build filters here to give dependent plugins a chance to register some
+		SortedMap<Integer, String> filterNames = SpringSecurityUtils.findFilterChainNames(conf.filterChain.filterNames,
+				  conf.secureChannel.definition, conf.ipRestrictions, conf.useX509, conf.useDigestAuth, conf.useBasicAuth,
+				  conf.useSwitchUserFilter)
 		def filterChain = applicationContext.springSecurityFilterChain
-		Map<RequestMatcher, List<Filter>> filterChainMap = [:]
-
-		SortedMap<Integer, String> filterNames = findFilterChainNames(conf)
-		def allConfiguredFilters = [:]
-		filterNames.each { int order, String name ->
-			def filter = applicationContext.getBean(name)
-			allConfiguredFilters[name] = filter
-			SpringSecurityUtils.configuredOrderedFilters[order] = filter
-		}
-		log.trace 'Ordered filters: {}', SpringSecurityUtils.configuredOrderedFilters
-
-		if (conf.filterChain.chainMap) {
-			conf.filterChain.chainMap.each { key, value ->
-				value = value.toString().trim()
-				def filters
-				if (value.toLowerCase() == 'none') {
-					filters = Collections.emptyList()
-				}
-				else if (value.contains('JOINED_FILTERS')) {
-					// special case to use either the filters defined by conf.filterChain.filterNames or
-					// the filters defined by config settings; can also remove one or more with a prefix of -
-					def copy = [:] << allConfiguredFilters
-					for (item in value.split(',')) {
-						item = item.toString().trim()
-						if (item == 'JOINED_FILTERS') continue
-						if (item.startsWith('-')) {
-							item = item.substring(1)
-							copy.remove item
-						}
-						else {
-							throw new IllegalArgumentException("Cannot add a filter to JOINED_FILTERS, can only remove: $item")
-						}
-					}
-					filters = copy.values() as List
-				}
-				else {
-					// explicit filter names
-					filters = value.toString().split(',').collect { name -> applicationContext.getBean(name) }
-				}
-				filterChainMap[new AntPathRequestMatcher(key)] = filters
-			}
-		}
-		else {
-			filterChainMap[new AntPathRequestMatcher('/**')] = allConfiguredFilters.values() as List
-		}
-
-		filterChain.filterChainMap = filterChainMap
+		filterChain.filterChainMap = SpringSecurityUtils.buildFilterChainMap(filterNames, conf.filterChain.chainMap, applicationContext)
 		log.trace 'Filter chain: {}', filterChain.filterChainMap
 
 		// build voters list here to give dependent plugins a chance to register some
@@ -963,83 +917,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		springConfig.addAlias 'springSecurityFilterChain', 'springSecurityFilterChainProxy'
-	}
-
-	private SortedMap<Integer, String> findFilterChainNames(conf) {
-
-		SortedMap<Integer, String> orderedNames = new TreeMap()
-
-		// if the user listed the names, use those
-		def filterNames = conf.filterChain.filterNames
-		if (filterNames) {
-			// cheat and put them in the map in order - the key values don't matter in this case since
-			// the user has chosen the order and the map will be used to insert single filters, which
-			// wouldn't happen if they've defined the order already
-			filterNames.eachWithIndex { name, index -> orderedNames[index] = name }
-		}
-		else {
-
-			if (conf.secureChannel.definition) {
-				orderedNames[SecurityFilterPosition.CHANNEL_FILTER.order] = 'channelProcessingFilter'
-			}
-
-			// CONCURRENT_SESSION_FILTER
-
-			orderedNames[SecurityFilterPosition.SECURITY_CONTEXT_FILTER.order] = 'securityContextPersistenceFilter'
-
-			orderedNames[SecurityFilterPosition.LOGOUT_FILTER.order] = 'logoutFilter'
-
-			if (conf.ipRestrictions) {
-				orderedNames[SecurityFilterPosition.LOGOUT_FILTER.order + 1] = 'ipAddressFilter'
-			}
-
-			if (conf.useX509) {
-				orderedNames[SecurityFilterPosition.X509_FILTER.order] = 'x509ProcessingFilter'
-			}
-
-			// PRE_AUTH_FILTER
-
-			// CAS_FILTER
-
-			orderedNames[SecurityFilterPosition.FORM_LOGIN_FILTER.order] = 'authenticationProcessingFilter'
-
-			// OPENID_FILTER
-
-			// facebook
-
-			if (conf.useDigestAuth) {
-				orderedNames[SecurityFilterPosition.DIGEST_AUTH_FILTER.order] = 'digestAuthenticationFilter'
-				orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order + 1] = 'digestExceptionTranslationFilter'
-			}
-
-			if (conf.useBasicAuth) {
-				orderedNames[SecurityFilterPosition.BASIC_AUTH_FILTER.order] = 'basicAuthenticationFilter'
-				orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order + 1] = 'basicExceptionTranslationFilter'
-			}
-
-			// REQUEST_CACHE_FILTER
-
-			orderedNames[SecurityFilterPosition.SERVLET_API_SUPPORT_FILTER.order] = 'securityContextHolderAwareRequestFilter'
-
-			orderedNames[SecurityFilterPosition.REMEMBER_ME_FILTER.order] = 'rememberMeAuthenticationFilter'
-
-			orderedNames[SecurityFilterPosition.ANONYMOUS_FILTER.order] = 'anonymousAuthenticationFilter'
-
-			// SESSION_MANAGEMENT_FILTER
-
-			orderedNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order] = 'exceptionTranslationFilter'
-
-			orderedNames[SecurityFilterPosition.FILTER_SECURITY_INTERCEPTOR.order] = 'filterInvocationInterceptor'
-
-			if (conf.useSwitchUserFilter) {
-				orderedNames[SecurityFilterPosition.SWITCH_USER_FILTER.order] = 'switchUserProcessingFilter'
-			}
-
-			// add in filters contributed by secondary plugins
-			orderedNames << SpringSecurityUtils.orderedFilters
-		}
-
-		orderedNames
 	}
 
 	private configureChannelProcessingFilter = { conf ->

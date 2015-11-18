@@ -29,11 +29,16 @@ Use the `filterChain.chainMap` attribute to define which filters are applied to 
 [source,java]
 ----
 grails.plugin.springsecurity.filterChain.chainMap = [
-   '/urlpattern1/**': 'filter1,filter2,filter3,filter4',
-   '/urlpattern2/**': 'filter1,filter3,filter5',
-   '/**': 'JOINED_FILTERS',
+   [pattern: '/urlpattern1/**', filters: 'filter1,filter2,filter3,filter4'],
+   [pattern: '/urlpattern2/**', filters: 'filter1,filter3,filter5'],
+   [pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
 ----
+
+[WARNING]
+====
+The format of `filterChain.chainMap` has changed from previous versions to avoid configuration parsing issues. In previous versions the property was a single Map, where the keys were the access patterns and the values were filter names. The old format is no longer supported and your configurations must be updated to the newer format.
+====
 
 In this example, four filters are applied to URLs matching `/urlpattern1/pass:[**]` and three different filters are applied to URLs matching `/urlpattern2/pass:[**]`. In addition the special token `JOINED_FILTERS` is applied to all URLs. This is a conventient way to specify that all defined filters (configured either with configuration rules like `useSwitchUserFilter` or explicitly using `filterNames`) should apply to this pattern.
 
@@ -44,8 +49,8 @@ There's also a filter negation syntax that can be very convenient. Rather than s
 [source,java]
 ----
 grails.plugin.springsecurity.filterChain.chainMap = [
-   '/webservice/**': 'JOINED_FILTERS,-exceptionTranslationFilter',
-   '/**': 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter'
+   [pattern: '/webservice/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter'],
+   [pattern: '/**',            filters: 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter']
 ]
 ----
 
@@ -56,8 +61,8 @@ Additionally, you can use a `chainMap` configuration to declare one or more URL 
 [source,java]
 ----
 grails.plugin.springsecurity.filterChain.chainMap = [
-   '/someurlpattern/**': 'none',
-   '/**': 'JOINED_FILTERS'
+   [pattern: '/someurlpattern/**', filters: 'none'],
+   [pattern: '/**',                filters: 'JOINED_FILTERS']
 ]
 ----
 
