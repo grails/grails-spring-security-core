@@ -30,7 +30,7 @@ If you want to use a message digest hashing algorithm, see https://docs.oracle.c
 [width="100%",options="header"]
 |====================
 | *Property* | *Default* | *Description*
-| password.algorithm | 'bcrypt' | passwordEncoder algorithm; 'bcrypt' to use bcrypt, 'pbkdf2' to use https://en.wikipedia.org/wiki/PBKDF2[PBKDF2], or any message digest algorithm that is supported in your JDK
+| password.algorithm | '`bcrypt`' | passwordEncoder algorithm; '`bcrypt`' to use bcrypt, '`pbkdf2`' to use https://en.wikipedia.org/wiki/PBKDF2[PBKDF2], or any message digest algorithm that is supported in your JDK
 | password.encodeHashAsBase64 | `false` | If `true`, Base64-encode the hashed password.
 | password.bcrypt.logrounds | 10 | the number of rekeying rounds to use when using bcrypt
 | password.hash.iterations | 10000 | the number of iterations which will be executed on the hashed password/salt.

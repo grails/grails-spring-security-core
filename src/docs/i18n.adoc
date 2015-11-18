@@ -8,11 +8,11 @@ If you want to customize or translate the texts then add messages for the follow
 [width="100%",options="header"]
 |====================
 | *Message* | *Default Value* | *Exception*
-| springSecurity.errors.login.expired | "Sorry, your account has expired." | AccountExpiredException
-| springSecurity.errors.login.passwordExpired | "Sorry, your password has expired." | CredentialsExpiredException
-| springSecurity.errors.login.disabled | "Sorry, your account is disabled." | DisabledException
-| springSecurity.errors.login.locked | "Sorry, your account is locked." | LockedException
-| springSecurity.errors.login.fail | "Sorry, we were not able to find a user with that username and password." | Other exceptions
+| springSecurity.errors.login.expired | "`Sorry, your account has expired.`" | AccountExpiredException
+| springSecurity.errors.login.passwordExpired | "`Sorry, your password has expired.`" | CredentialsExpiredException
+| springSecurity.errors.login.disabled | "`Sorry, your account is disabled.`" | DisabledException
+| springSecurity.errors.login.locked | "`Sorry, your account is locked.`" | LockedException
+| springSecurity.errors.login.fail | "`Sorry, we were not able to find a user with that username and password.`" | Other exceptions
 |====================
 
 You can customize all messages in auth.gsp and denied.gsp:

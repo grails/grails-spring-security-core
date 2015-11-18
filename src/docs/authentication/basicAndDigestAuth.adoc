@@ -13,8 +13,8 @@ grails.plugin.springsecurity.basic.realmName = "Ralph's Bait and Tackle"
 |====================
 | *Property* | *Default* | *Description*
 | useBasicAuth | `false` | Whether to use basic authentication.
-| basic.realmName | 'Grails Realm' | Realm name displayed in the browser authentication popup.
-| basic. credentialsCharset | 'UTF-8' | The character set used to decode Base64-encoded data
+| basic.realmName | '`Grails Realm`' | Realm name displayed in the browser authentication popup.
+| basic. credentialsCharset | '`UTF-8`' | The character set used to decode Base64-encoded data
 |====================
 
 With this authentication in place, users are prompted with the standard browser login dialog instead of being redirected to a login page.
@@ -39,8 +39,8 @@ https://en.wikipedia.org/wiki/Digest_access_authentication[Digest Authentication
 |====================
 | *Property* | *Default Value* | *Meaning*
 | useDigestAuth | `false` | Whether to use Digest authentication.
-| digest.realmName | 'Grails Realm' | Realm name displayed in the browser popup
-| digest.key | 'changeme' | Key used to build the nonce for authentication; it should be changed but that's not required.
+| digest.realmName | '`Grails Realm`' | Realm name displayed in the browser popup
+| digest.key | '`changeme`' | Key used to build the nonce for authentication; it should be changed but that's not required.
 | digest. nonceValiditySeconds | 300 | How long a nonce stays valid.
 | digest. passwordAlreadyEncoded | `false` | Whether you are managing the password hashing yourself.
 | digest. createAuthenticatedToken | `false` | If `true`, creates an authenticated `UsernamePasswordAuthenticationToken` to avoid loading the user from the database twice. However, this process skips the isAccountNonExpired(), isAccountNonLocked(), isCredentialsNonExpired(), isEnabled() checks, so it is not advised.
@@ -63,7 +63,7 @@ Digest authentication cannot be applied to a subset of URLs like Basic authentic
 
 [NOTE]
 ====
-Note that since the Digest auth password encoder is different from the typical encoders you must to pass the username as the "salt" value. The generated User class uses `springSecurityService` which assumes you're not using a salt value. If you
+Note that since the Digest auth password encoder is different from the typical encoders you must to pass the username as the "`salt`" value. The generated User class uses `springSecurityService` which assumes you're not using a salt value. If you
 use the generated code in the User class to encode your password, change the dependency injection for springSecurityService with one for the passwordEncoder bean instead:
 
 [source,java]

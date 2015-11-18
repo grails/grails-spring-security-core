@@ -9,7 +9,7 @@ $ grails create-app bookstore
 $ cd bookstore
 ----
 
-==== 2. "Install" the plugin by adding it to build.gradle
+==== 2. "`Install`" the plugin by adding it to build.gradle
 [source,java]
 ----
 dependencies {
@@ -36,7 +36,7 @@ You can choose your names for your domain classes and package; these are just ex
 
 [NOTE]
 ====
-Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "User" or "Group", make sure they are not reserved keywords in your database. or escape the name with backticks in the `mapping` block, e.g.
+Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "`User`" or "`Group`", make sure they are not reserved keywords in your database. or escape the name with backticks in the `mapping` block, e.g.
 
 [source,java]
 ----

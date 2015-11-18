@@ -12,7 +12,7 @@ You can only use one method at a time. You configure it with the `securityConfig
 
 Many applications are mostly public, with some pages only accessible to authenticated users with various roles. In this case, it might make sense to leave URLs open by default and restrict access on a case-by-case basis. However, if your application is primarily secure, you can use a pessimistic lockdown approach to deny access to all URLs that do not have an applicable URL-Role request mapping. But the pessimistic approach is safer; if you forget to restrict access to a URL using the optimistic approach, it might take a while to discover that unauthorized users can access the URL, but if you forget to allow access when using the pessimistic approach, no user can access it and the error should be quickly discovered.
 
-The pessimistic approach is the default, and there are two configuration options that apply. If `rejectIfNoRule` is `true` (the default) then any URL that has no request mappings (an annotation, entry in `controllerAnnotations.staticRules` or `interceptUrlMap`, or a `Requestmap` instance) will be denied to all users. The other option is `fii.rejectPublicInvocations` and if it is `true` (the default) then un-mapped URLs will trigger an `IllegalArgumentException` and will show the error page. This is uglier, but more useful because it's very clear that there is a misconfiguration. When `fii.rejectPublicInvocations` is `false` but `rejectIfNoRule` is `true` you just see the "Sorry, you're not authorized to view this page." error 403 message.
+The pessimistic approach is the default, and there are two configuration options that apply. If `rejectIfNoRule` is `true` (the default) then any URL that has no request mappings (an annotation, entry in `controllerAnnotations.staticRules` or `interceptUrlMap`, or a `Requestmap` instance) will be denied to all users. The other option is `fii.rejectPublicInvocations` and if it is `true` (the default) then un-mapped URLs will trigger an `IllegalArgumentException` and will show the error page. This is uglier, but more useful because it's very clear that there is a misconfiguration. When `fii.rejectPublicInvocations` is `false` but `rejectIfNoRule` is `true` you just see the "`Sorry, you're not authorized to view this page.`" error 403 message.
 
 Note that the two settings are mutually exclusive. If `rejectIfNoRule` is `true` then `fii.rejectPublicInvocations` is ignored because the request will transition to the login page or the error 403 page. If you want the more obvious error page, set `fii.rejectPublicInvocations` to `true` and `rejectIfNoRule` to `false` to allow that check to occur.
 
@@ -76,7 +76,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 ]
 ----
 
-Now in addition to the default mappings, we require an authentication with `ROLE_USER` for any URL starting with `/user`, a "fully authenticated" authentication (i.e. an explicit login was performed without using remember-me) with `ROLE_USER` for any URL starting with `/admin`, and finally to access the URL `/thing/register` the user must be authenticated with any role(s) but must use a PUT request.
+Now in addition to the default mappings, we require an authentication with `ROLE_USER` for any URL starting with `/user`, a "`fully authenticated`" authentication (i.e. an explicit login was performed without using remember-me) with `ROLE_USER` for any URL starting with `/admin`, and finally to access the URL `/thing/register` the user must be authenticated with any role(s) but must use a PUT request.
 ====
 
 This is needed when using annotations; if you use the `grails.plugin.springsecurity.interceptUrlMap` map in `application.groovy` you'll need to add these URLs too, and likewise when using `Requestmap` instances. If you don't use annotations, you must add rules for the login and logout controllers also. You can add Requestmaps manually, or in BootStrap.groovy, for example:
@@ -125,7 +125,7 @@ In addition, when you enable the switch-user feature, you'll have to specify acc
 In each approach you configure a mapping for a URL pattern to the role(s) that are required to access those URLs, for example, `/admin/user/pass:[**]` requires `ROLE_ADMIN`. In addition, you can combine the role(s) with tokens such as IS_AUTHENTICATED_ANONYMOUSLY, IS_AUTHENTICATED_REMEMBERED, and IS_AUTHENTICATED_FULLY. One or more voters (<<voters>>) will process any tokens and enforce a rule based on them:
 
 * IS_AUTHENTICATED_ANONYMOUSLY
-** signifies that anyone can access this URL. By default the `AnonymousAuthenticationFilter` ensures an 'anonymous' `Authentication` with no roles so that every user has an authentication. The token accepts any authentication, even anonymous.
+** signifies that anyone can access this URL. By default the `AnonymousAuthenticationFilter` ensures an "`anonymous`" `Authentication` with no roles so that every user has an authentication. The token accepts any authentication, even anonymous.
 * IS_AUTHENTICATED_REMEMBERED
 ** requires the user to be authenticated through a remember-me cookie or an explicit login.
 * IS_AUTHENTICATED_FULLY

@@ -40,7 +40,7 @@ The default implementation of channel security is fairly simple; if you're using
 grails.plugin.springsecurity.secureChannel.useHeaderCheckChannelSecurity = true
 ----
 
-By default the header name is "X-Forwarded-Proto" and the secure header value is "http" (i.e. if you're not secure, redirect to secure) and the insecure header value is "https" (i.e. if you're secure, redirect to insecure). You can change any or all of these default values though:
+By default the header name is "`X-Forwarded-Proto`" and the secure header value is "`http`" (i.e. if you're not secure, redirect to secure) and the insecure header value is "`https`" (i.e. if you're secure, redirect to insecure). You can change any or all of these default values though:
 
 [source,java]
 ----

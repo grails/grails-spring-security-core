@@ -15,7 +15,7 @@ The prefix used in `Config.groovy` for the plugin's configuration settings has c
 
 === More aggressively secure by default
 
-In 1.x it was assumed that defaulting pages to not be secured, and configuring guarded URLs as needed, was a more pragmatic approach. Now however, all URLs are initially blocked unless there is a request mapping rule, even if that rule allows all access. The assumption behind this change is that if you forget to guard a new URL, it can take a long time to discover that users had access, whereas if you forget to open access for allowed users when using the "pessimistic" approach, nobody can access the URL and the error will be quickly discovered. This approach is more work, but much safer.
+In 1.x it was assumed that defaulting pages to not be secured, and configuring guarded URLs as needed, was a more pragmatic approach. Now however, all URLs are initially blocked unless there is a request mapping rule, even if that rule allows all access. The assumption behind this change is that if you forget to guard a new URL, it can take a long time to discover that users had access, whereas if you forget to open access for allowed users when using the "`pessimistic`" approach, nobody can access the URL and the error will be quickly discovered. This approach is more work, but much safer.
 
 This is described in more detail in <<requestMappings>>.
 
@@ -75,13 +75,13 @@ def someMethod() { ... }
 
 === Anonymous authentication
 
-In standard Spring Security and older versions of the plugin, there is support for an "anonymous" authentication. This is implemented by a filter that registers a simple `Authentication` in the `SecurityContext` to remove the need for null checks, since there will always be an `Authentication` available. This approach is still problematic though because the Principal of the anonymous authentication is a String, whereas it is a `UserDetails` instance when there is a non-anonymous authentication.
+In standard Spring Security and older versions of the plugin, there is support for an "`anonymous`" authentication. This is implemented by a filter that registers a simple `Authentication` in the `SecurityContext` to remove the need for null checks, since there will always be an `Authentication` available. This approach is still problematic though because the Principal of the anonymous authentication is a String, whereas it is a `UserDetails` instance when there is a non-anonymous authentication.
 
 Since you still have to be careful to differentiate between anonymous and non-anonymous authentications, the plugin now creates an anonymous `Authentication` which will be an instance of `grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken` with a standard `org.springframework.security.core.userdetails.User` instance as its Principal. The authentication will have a single granted role, `ROLE_ANONYMOUS`.
 
 === No HQL
 
-Some parts of the code used HQL queries, for example in the generated `UserRole` class and in `SpringSecurityService.findRequestmapsByRole`. These have been replaced  by "where" queries to make data access more portable across GORM implementatioins.
+Some parts of the code used HQL queries, for example in the generated `UserRole` class and in `SpringSecurityService.findRequestmapsByRole`. These have been replaced  by "`where`" queries to make data access more portable across GORM implementatioins.
 
 === Changes in generated classes
 
@@ -104,7 +104,7 @@ You can now define the `SecurityContextHolder` strategy. By default it is stored
 
 === Debug filter
 
-You can enable a "debug" filter based on the `org.springframework.security.config.debug.DebugFilter` class. It will log security information at the "info" level and can help when debugging configuration issues. This should only be enabled in development mode so consider adding the property that enables it inside an `environments` block in `Config.groovy`
+You can enable a "`debug`" filter based on the `org.springframework.security.config.debug.DebugFilter` class. It will log security information at the "`info`" level and can help when debugging configuration issues. This should only be enabled in development mode so consider adding the property that enables it inside an `environments` block in `Config.groovy`
 
 [source,java]
 ----
@@ -128,7 +128,7 @@ info 'grails.plugin.springsecurity.web.filter.DebugFilter'
 
 === Storing usernames in the session
 
-In Spring Security 3.0 and earlier, the username was stored in the HTTP session under the key "SPRING_SECURITY_LAST_USERNAME". This no longer done, but the plugin will use the old behavior if the `grails.plugin.springsecurity.apf.storeLastUsername` setting is set to `true` (the default is `false`). Further, the name is no longer escaped before storing, it is stored exactly as entered by the user, so you must escape it when redisplaying to avoid XSS attacks.
+In Spring Security 3.0 and earlier, the username was stored in the HTTP session under the key "`SPRING_SECURITY_LAST_USERNAME`". This no longer done, but the plugin will use the old behavior if the `grails.plugin.springsecurity.apf.storeLastUsername` setting is set to `true` (the default is `false`). Further, the name is no longer escaped before storing, it is stored exactly as entered by the user, so you must escape it when redisplaying to avoid XSS attacks.
 
 === @Authorities annotation
 

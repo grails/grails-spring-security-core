@@ -11,7 +11,7 @@ Also, since Grails 3 no longer supports Gant scripts, the plugin's scripts were 
 
 === Installation
 
-The "installation" process has changed in the 3.x versions of the plugin, but they're the same as for any Grails 3 plugin. Simply add an entry in the `dependencies` block of your `build.gradle` file, changing the version as needed:
+The "`installation`" process has changed in the 3.x versions of the plugin, but they're the same as for any Grails 3 plugin. Simply add an entry in the `dependencies` block of your `build.gradle` file, changing the version as needed:
 
 [source,java]
 ----

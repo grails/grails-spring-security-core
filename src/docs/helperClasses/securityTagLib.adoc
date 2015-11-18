@@ -34,7 +34,7 @@ Example:
 
 [source,html]
 ----
-<sec:ifAllGranted roles="ROLE_ADMIN,ROLE_SUPERVISOR">
+<sec:ifAllGranted roles='ROLE_ADMIN,ROLE_SUPERVISOR'>
 ...
 secure stuff here
 ...
@@ -48,7 +48,7 @@ Example:
 
 [source,html]
 ----
-<sec:ifAnyGranted roles="ROLE_ADMIN,ROLE_SUPERVISOR">
+<sec:ifAnyGranted roles='ROLE_ADMIN,ROLE_SUPERVISOR'>
 ...
 secure stuff here
 ...
@@ -62,7 +62,7 @@ Example:
 
 [source,html]
 ----
-<sec:ifNotGranted roles="ROLE_USER">
+<sec:ifNotGranted roles='ROLE_USER'>
 ...
 non-user stuff here
 ...
@@ -74,14 +74,14 @@ Displays the value of the specified UserDetails field if logged in. For example,
 
 [source,html]
 ----
-<sec:loggedInUserInfo field="username"/>
+<sec:loggedInUserInfo field='username'/>
 ----
 
 If you have customized the UserDetails (e.g. with a custom UserDetailsService) to add a `fullName` property, you access it as follows:
 
 [source,html]
 ----
-Welcome Back <sec:loggedInUserInfo field="fullName"/>
+Welcome Back <sec:loggedInUserInfo field='fullName'/>
 ----
 
 ==== username
@@ -158,7 +158,7 @@ You're a user
 
 [source,html]
 ----
-<sec:access url="/admin/user">
+<sec:access url='/admin/user'>
 
 <g:link controller='admin' action='user'>Manage Users</g:link>
 
@@ -191,14 +191,14 @@ For even more control of the generated URL (still avoiding hard-coding) you can 
 
 [source,html]
 ----
-<sec:access url='${createLink(controller: 'admin', action: 'user', base: "/")}'>
+<sec:access url='${createLink(controller: 'admin', action: 'user', base: '/')}'>
 
 <g:link controller='admin' action='user'>Manage Users</g:link>
 
 </sec:access>
 ----
 
-Be sure to include the `base: "/"` attribute in this case to avoid appending the context name to the URL.
+Be sure to include the `base: '/'` attribute in this case to avoid appending the context name to the URL.
 
 ==== noAccess
 
@@ -221,12 +221,12 @@ To define the expression to evaluate within the tag itself:
 
 [source,html]
 ----
-<sec:link controller="myController" action="myAction" expression="hasRole('ROLE_USER')">My link text</sec:link>
+<sec:link controller='myController' action='myAction' expression="hasRole('ROLE_USER')">My link text</sec:link>
 ----
 
 To use access controls defined, for example, in the interceptUrlMap:
 
 [source,html]
 ----
-<sec:link controller="myController" action="myAction">My link text</sec:link>
+<sec:link controller='myController' action='myAction'>My link text</sec:link>
 ----

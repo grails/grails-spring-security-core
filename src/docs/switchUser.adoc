@@ -1,7 +1,7 @@
 [[switchUser]]
 == Switch User
 
-To enable a user to switch from the current `Authentication` to another user's, set the `useSwitchUserFilter` attribute to `true`. This feature is similar to the 'su' command in Unix. It enables, for example, an admin to act as a regular user to perform some actions, and then switch back.
+To enable a user to switch from the current `Authentication` to another user's, set the `useSwitchUserFilter` attribute to `true`. This feature is similar to the "`su`" command in Unix. It enables, for example, an admin to act as a regular user to perform some actions, and then switch back.
 
 [WARNING]
 ====
@@ -88,7 +88,7 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...
 
 === GSP Code
 
-One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the `sec:ifSwitched` tag) then a 'resume' link is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:
+One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the `sec:ifSwitched` tag) then a "`resume`" link is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:
 
 [source,html]
 ----

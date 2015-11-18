@@ -10,7 +10,7 @@ Hierarchical roles are a convenient way to reduce clutter in your request mappin
 | roleHierarchyEntryClassName | none | Domain class used to manage persistent role hierarchy entries
 |====================
 
-For example, if you have several types of 'admin' roles that can be used to access a URL pattern and you do not use hierarchical roles, you need to specify all the admin roles:
+For example, if you have several types of "`admin`" roles that can be used to access a URL pattern and you do not use hierarchical roles, you need to specify all the admin roles:
 
 [source,java]
 ----
