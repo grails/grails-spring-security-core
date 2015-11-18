@@ -320,6 +320,7 @@ class BootStrap {
 ----
 
 Some things to note about the preceding `BootStrap.groovy`:
+
 * The example does not use a traditional GORM many-to-many mapping for the User<->Role relationship; instead you are mapping the join table with the `UserRole` class. This performance optimization helps significantly when many users have one or more common roles.
 * We explicitly flush (using the 3-arg `UserRole.create()` call) because `BootStrap` does not run in a transaction or OpenSessionInView.
 

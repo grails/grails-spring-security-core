@@ -2,6 +2,7 @@
 == Configuring Request Mappings to Secure URLs
 
 You can choose among the following approaches to configuring request mappings for secure application URLs. The goal is to map URL patterns to the roles required to access those URLs.
+
 * `@Secured` annotations (default approach) - <<securedAnnotations>>
 * A simple Map in `application.groovy` - <<configGroovyMap>>
 * `Requestmap` domain class instances stored in the database - <<requestmapInstances>>

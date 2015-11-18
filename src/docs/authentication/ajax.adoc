@@ -222,6 +222,7 @@ Most Ajax libraries (Prototype, JQuery, and Dojo as of v2.1) include an `X-Reque
 You can see the Ajax-aware actions in `LoginController`, specifically `ajaxSuccess` and `ajaxDenied`, which send JSON responses that can be used by client JavaScript code. Also `authfail` will check whether the authentication request used Ajax and will render a JSON error response if it did.
 
 To summarize, the typical flow would be
+
 * click the link to display the login form
 * enter authentication details and click login
 * the form is submitted using an Ajax request

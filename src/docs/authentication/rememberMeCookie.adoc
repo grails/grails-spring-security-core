@@ -21,6 +21,7 @@ Spring Security supports creating a remember-me cookie so that users are not req
 |====================
 
 You are most likely to change these attributes:
+
 * `rememberMe.cookieName`. Purely aesthetic as most users will not look at their cookies, but you probably want the display name to be application-specific rather than "`grails_remember_me`".
 * `rememberMe.key`. Part of a salt when the cookie is encrypted. Changing the default makes it harder to execute brute-force attacks.
 * `rememberMe.tokenValiditySeconds`. Default is two weeks; set it to what makes sense for your application.
