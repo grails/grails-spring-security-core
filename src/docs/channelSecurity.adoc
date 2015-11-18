@@ -11,17 +11,23 @@ Use channel security to configure which URLs require HTTP and which require HTTP
 | secureChannel.definition | none | Map of URL pattern to channel rule
 |====================
 
-Build a Map under the `secureChannel.definition` key, where the keys are URL patterns, and the values are one of `REQUIRES_SECURE_CHANNEL`, `REQUIRES_INSECURE_CHANNEL`, or `ANY_CHANNEL`:
+Build a `List` of single-entry ``Map``s under the `secureChannel.definition` key, where URL patterns are stored under the key "`pattern`", and the values are stored under the key "`access`" and are one of the access keywords `REQUIRES_SECURE_CHANNEL`, `REQUIRES_INSECURE_CHANNEL`, or `ANY_CHANNEL`:
 
 [source,java]
 ----
 grails.plugin.springsecurity.secureChannel.definition = [
-   '/login/**':         'REQUIRES_SECURE_CHANNEL',
-   '/maps/**':          'REQUIRES_INSECURE_CHANNEL',
-   '/images/login/**':  'REQUIRES_SECURE_CHANNEL',
-   '/images/**':        'ANY_CHANNEL'
+   [pattern: '/login/**',        access: 'REQUIRES_SECURE_CHANNEL'],
+   [pattern: '/maps/**',         access: 'REQUIRES_INSECURE_CHANNEL'],
+   [pattern: '/images/login/**', access: 'REQUIRES_SECURE_CHANNEL'],
+   [pattern: '/images/**',       access: 'ANY_CHANNEL']
 ]
 ----
+
+
+[WARNING]
+====
+The format of `secureChannel.definition` has changed from previous versions to avoid configuration parsing issues. In previous versions the property was a single Map, where the keys were the access patterns and the values were one of the access keywords above. The old format is no longer supported and your configurations must be updated to the newer format.
+====
 
 URLs are checked in order, so be sure to put more specific rules before less specific. In the preceding example, `/images/login/pass:[**]` is more specific than `/images/pass:[**]`, so it appears first in the configuration.
 

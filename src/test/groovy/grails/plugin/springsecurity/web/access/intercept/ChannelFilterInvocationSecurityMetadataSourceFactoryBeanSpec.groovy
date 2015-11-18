@@ -50,14 +50,14 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanSpec extends Abstr
 		thrown AssertionError
 
 		when:
-		factory.definition = ['/foo1/**': 'secure_only']
+		factory.definition = [[pattern: '/foo1/**', access: 'secure_only']]
 		factory.afterPropertiesSet()
 
 		then:
 		thrown AssertionError
 
 		when:
-		factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL']
+		factory.definition = [[pattern: '/foo1/**', access: 'REQUIRES_SECURE_CHANNEL']]
 		factory.afterPropertiesSet()
 
 		then:
@@ -66,9 +66,11 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanSpec extends Abstr
 
 	void 'getObject'() {
 		when:
-		factory.definition = ['/foo1/**': 'REQUIRES_SECURE_CHANNEL',
-		                      '/foo2/**': 'REQUIRES_INSECURE_CHANNEL',
-		                      '/foo3/**': 'ANY_CHANNEL']
+		factory.definition = [
+			[pattern: '/foo1/**', access: 'REQUIRES_SECURE_CHANNEL'],
+			[pattern: '/foo2/**', access: 'REQUIRES_INSECURE_CHANNEL'],
+			[pattern: '/foo3/**', access: 'ANY_CHANNEL']
+		]
 		factory.afterPropertiesSet()
 
 		def object = factory.object

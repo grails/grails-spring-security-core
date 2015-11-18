@@ -40,9 +40,10 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBean implements Factor
 	protected DefaultFilterInvocationSecurityMetadataSource source
 
 	/**
-	 * Dependency injection for the definition map. keys are URL patterns, values are ANY_CHANNEL, REQUIRES_SECURE_CHANNEL, or REQUIRES_INSECURE_CHANNEL.
+	 * Dependency injection for the definition maps. Each map has a single entry, with URL patterns stored under the
+	 * 'pattern' key and ANY_CHANNEL, REQUIRES_SECURE_CHANNEL, or REQUIRES_INSECURE_CHANNEL stored under the 'access' key.
 	 */
-	Map<String, String> definition
+	List<Map<String, String>> definition
 
 	FilterInvocationSecurityMetadataSource getObject() {
 		source
@@ -65,14 +66,15 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBean implements Factor
 
 	protected LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> buildMap() {
 		LinkedHashMap<RequestMatcher, Collection<ConfigAttribute>> map = [:]
-		definition.each { String key, String value ->
-			assert value != null, "The rule for URL '$value' cannot be null"
-			value = value.trim()
+		definition.each { Map<String, String> entry ->
+			String access = entry.access
+			assert access != null, "The rule for URL '$access' cannot be null"
+			access = access.trim()
 
-			assert SUPPORTED.contains(value),
-				"The rule for URL '$value' must be one of REQUIRES_SECURE_CHANNEL, REQUIRES_INSECURE_CHANNEL, or ANY_CHANNEL"
+			assert SUPPORTED.contains(access),
+				"The rule for URL '$access' must be one of REQUIRES_SECURE_CHANNEL, REQUIRES_INSECURE_CHANNEL, or ANY_CHANNEL"
 
-			map[new AntPathRequestMatcher(key)] = SecurityConfig.createList(value)
+			map[new AntPathRequestMatcher(entry.pattern)] = SecurityConfig.createList(access)
 		}
 
 		map

@@ -1084,6 +1084,10 @@ to default to 'Annotation'; setting value to 'Annotation'
 			channelProcessors = [ref('insecureChannelProcessor'), ref('secureChannelProcessor')]
 		}
 
+		if (conf.secureChannel.definition instanceof Map) {
+			throw new IllegalArgumentException('secureChannel.definition defined as a Map is not supported; must be specified as a ' +
+					  "List of Maps as described in section 'Channel Security' of the reference documentation")
+		}
 		channelFilterInvocationSecurityMetadataSource(ChannelFilterInvocationSecurityMetadataSourceFactoryBean) {
 			definition = conf.secureChannel.definition
 		}
@@ -1096,7 +1100,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private configureIpFilter = { conf ->
 
 		if (conf.ipRestrictions instanceof Map) {
-			throw new IllegalArgumentException("ipRestrictions defined as a Map are not supported; must be specified as a " +
+			throw new IllegalArgumentException("ipRestrictions defined as a Map is not supported; must be specified as a " +
 					  "List of Maps as described in section 'IP Address Restrictions' of the reference documentation")
 		}
 
@@ -1124,7 +1128,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		if (conf.failureHandler.exceptionMappings instanceof Map) {
-			throw new IllegalArgumentException('failureHandler.exceptionMappings defined as a Map are not supported; ' +
+			throw new IllegalArgumentException('failureHandler.exceptionMappings defined as a Map is not supported; ' +
 					  '''must be specified as a List of Maps, e.g.
 [
    [exception: 'org.springframework.security.authentication.LockedException',             url: '/user/accountLocked'],

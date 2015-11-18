@@ -268,7 +268,7 @@ security {
 
 	// secure channel filter (http/https)
 	secureChannel {
-		definition = [:]
+		definition = []
 		useHeaderCheckChannelSecurity = false
 		secureHeaderName = 'X-Forwarded-Proto'
 		secureHeaderValue = 'http'
