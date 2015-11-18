@@ -9,6 +9,11 @@ Note that the 2.x plugin was written primarily in Java, with Groovy used only fo
 
 Also, since Grails 3 no longer supports Gant scripts, the plugin's scripts were converted to the newer approach. This should have no effect on usage as the calling syntax and results are the same as before, although the console output looks somewhat different. You can see these changes https://github.com/grails-plugins/grails-spring-security-core/commit/16484f44fe25a6f1c8687b8e27db6f08ed871436[in this GitHub commit].
 
+[WARNING]
+====
+There are a few breaking configuration changes as of version 3.0.0.M2. Prior to that version, some configuration properties were specified as a `Map` where the keys and values were both data. This caused various problems, primarily due to period characters in map keys. There are now no configuration properties that are single maps; all have been converted to lists of single-entry maps. This includes `controllerAnnotations.staticRules` and `interceptUrlMap` (see <<requestMappings>>), `ipRestrictions` (see <<ip>>), `filterChain.chainMap` (see <<filters>>), `secureChannel.definition` (see <<channelSecurity>>), and `failureHandler.exceptionMappings`.
+====
+
 === Installation
 
 The "`installation`" process has changed in the 3.x versions of the plugin, but they're the same as for any Grails 3 plugin. Simply add an entry in the `dependencies` block of your `build.gradle` file, changing the version as needed:
