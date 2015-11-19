@@ -21,6 +21,7 @@ import grails.core.GrailsDomainClass
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.ReflectionUtils as PluginReflectionUtils
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
+import grails.plugin.springsecurity.annotation.Secured as PluginSecured
 import grails.rest.Resource
 import grails.web.UrlConverter
 import grails.web.mapping.UrlMappingInfo
@@ -33,6 +34,7 @@ import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.HttpMethod
 import org.springframework.security.access.ConfigAttribute
+import org.springframework.security.access.annotation.Secured as SpringSecured
 import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource
 import org.springframework.util.ReflectionUtils
@@ -216,24 +218,24 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 		urlMappingsHolder = mappingsHolder
 
-		Map<String, List<InterceptedUrl>> actionRoleMap = [:]
-		List<InterceptedUrl> classRoleMap = []
-		Map<String, List<InterceptedUrl>> actionClosureMap = [:]
-		List<InterceptedUrl> classClosureMap = []
+		Map<String, List<InterceptedUrl>> actionRoles = [:]
+		List<InterceptedUrl> classRoles = []
+		Map<String, List<InterceptedUrl>> actionClosures = [:]
+		List<InterceptedUrl> classClosures = []
 
 		for (GrailsClass controllerClass in controllerClasses) {
-			findControllerAnnotations((GrailsControllerClass)controllerClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap)
+			findControllerAnnotations((GrailsControllerClass)controllerClass, actionRoles, classRoles, actionClosures, classClosures)
 		}
 
 		for (GrailsClass domainClass in domainClasses) {
-			findDomainAnnotations((GrailsDomainClass) domainClass, actionRoleMap, classRoleMap, actionClosureMap, classClosureMap)
+			findDomainAnnotations((GrailsDomainClass) domainClass, actionRoles, classRoles, actionClosures, classClosures)
 		}
 
 		compileStaticRules staticRules
-		compileActionClosureMap actionClosureMap
-		compileClassClosureMap classClosureMap
-		compileActionMap actionRoleMap
-		compileClassMap classRoleMap
+		compileActionClosures actionClosures
+		compileClassClosures classClosures
+		compileActionRoles actionRoles
+		compileClassRoles classRoles
 
 		if (log.traceEnabled) {
 			for (InterceptedUrl url in configAttributeMap) {
@@ -242,7 +244,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		}
 	}
 
-	protected void compileActionMap(Map<String, List<InterceptedUrl>> map) {
+	protected void compileActionRoles(Map<String, List<InterceptedUrl>> map) {
 		map.each { String controllerName, List<InterceptedUrl> urls ->
 			for (InterceptedUrl iu in urls) {
 				Collection<ConfigAttribute> configAttributes = iu.configAttributes
@@ -257,7 +259,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		}
 	}
 
-	protected void compileActionClosureMap(Map<String, List<InterceptedUrl>> map) {
+	protected void compileActionClosures(Map<String, List<InterceptedUrl>> map) {
 		map.each { String controllerName, List<InterceptedUrl> actionClosures ->
 			for (InterceptedUrl iu in actionClosures) {
 				String actionName = iu.pattern
@@ -272,14 +274,14 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		}
 	}
 
-	protected void compileClassMap(List<InterceptedUrl> classRoleMap) {
-		classRoleMap.each { InterceptedUrl iu ->
+	protected void compileClassRoles(List<InterceptedUrl> classRoles) {
+		for (InterceptedUrl iu in classRoles) {
 			storeMapping iu.pattern, null, iu.configAttributes, false, iu.httpMethod
 		}
 	}
 
-	protected void compileClassClosureMap(List<InterceptedUrl> classClosureMap) {
-		classClosureMap.each { InterceptedUrl iu ->
+	protected void compileClassClosures(List<InterceptedUrl> classClosures) {
+		for (InterceptedUrl iu in classClosures) {
 			storeMapping iu.pattern, null, iu.closureClass, iu.httpMethod
 		}
 	}
@@ -309,7 +311,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			return
 		}
 
-		PluginReflectionUtils.splitMap((List<Map<String, Object>>)staticRules).each { InterceptedUrl iu ->
+		for (InterceptedUrl iu in PluginReflectionUtils.splitMap((List<Map<String, Object>>)staticRules)) {
 			storeMapping iu.pattern, null, iu.configAttributes, true, iu.httpMethod
 		}
 	}
@@ -317,17 +319,17 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	protected void storeMapping(String controllerNameOrPattern, String actionName,
 	                            Collection<ConfigAttribute> configAttributes, boolean isPattern, HttpMethod method) {
 
-		generatePatterns(controllerNameOrPattern, actionName, isPattern).each { String pattern ->
+		for (String pattern in generatePatterns(controllerNameOrPattern, actionName, isPattern)) {
 			doStoreMapping pattern, method, configAttributes
 		}
 	}
 
 	protected void storeMapping(String controllerName, String actionName, Class<?> closureClass, HttpMethod method) {
-		if (closureClass == grails.plugin.springsecurity.annotation.Secured) {
+		if (closureClass == PluginSecured) {
 			return
 		}
 
-		generatePatterns(controllerName, actionName, false).each { String pattern ->
+		for (String pattern in generatePatterns(controllerName, actionName, false)) {
 			Collection<ConfigAttribute> configAttributes = [new ClosureConfigAttribute(newInstance(closureClass))] as Collection
 
 			String key = pattern.toLowerCase()
@@ -369,66 +371,60 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		}
 	}
 
-	protected void findControllerAnnotations(
-			GrailsControllerClass controllerClass,
-			Map<String, List<InterceptedUrl>> actionRoleMap,
-			List<InterceptedUrl> classRoleMap,
-			Map<String, List<InterceptedUrl>> actionClosureMap,
-			List<InterceptedUrl> classClosureMap) {
+	protected void findControllerAnnotations(GrailsControllerClass controllerClass, Map<String, List<InterceptedUrl>> actionRoles,
+	                                         List<InterceptedUrl> classRoles, Map<String, List<InterceptedUrl>> actionClosures,
+	                                         List<InterceptedUrl> classClosures) {
 
 		Class<?> clazz = controllerClass.clazz
 		String controllerName = resolveFullControllerName(controllerClass)
 
-		findAnnotations actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, controllerName
+		findAnnotations actionRoles, classRoles, actionClosures, classClosures, clazz, controllerName
 	}
 
-	protected void findDomainAnnotations(
-			GrailsDomainClass domainClass,
-			Map<String, List<InterceptedUrl>> actionRoleMap,
-			List<InterceptedUrl> classRoleMap,
-			Map<String, List<InterceptedUrl>> actionClosureMap,
-			List<InterceptedUrl> classClosureMap) {
+	protected void findDomainAnnotations(GrailsDomainClass domainClass, Map<String, List<InterceptedUrl>> actionRoles,
+	                                     List<InterceptedUrl> classRoles, Map<String, List<InterceptedUrl>> actionClosures,
+	                                     List<InterceptedUrl> classClosures) {
 
 		Class<?> clazz = domainClass.clazz
 		if (clazz.getAnnotation(Resource)) {
-			findAnnotations actionRoleMap, classRoleMap, actionClosureMap, classClosureMap, clazz, clazz.simpleName.toLowerCase()
+			findAnnotations actionRoles, classRoles, actionClosures, classClosures, clazz, clazz.simpleName.toLowerCase()
 		}
 	}
 
-	private void findAnnotations(Map<String, List<InterceptedUrl>> actionRoleMap, List<InterceptedUrl> classRoleMap,
-	                             Map<String, List<InterceptedUrl>> actionClosureMap, List<InterceptedUrl> classClosureMap,
+	private void findAnnotations(Map<String, List<InterceptedUrl>> actionRoles, List<InterceptedUrl> classRoles,
+	                             Map<String, List<InterceptedUrl>> actionClosures, List<InterceptedUrl> classClosures,
 	                             Class<?> clazz, String controllerName) {
 
-		Annotation annotation = clazz.getAnnotation(org.springframework.security.access.annotation.Secured)
+		Annotation annotation = clazz.getAnnotation(SpringSecured)
 		if (!annotation) {
-			annotation = clazz.getAnnotation(grails.plugin.springsecurity.annotation.Secured)
+			annotation = clazz.getAnnotation(PluginSecured)
 			if (annotation) {
-				Class<?> closureClass = findClosureClass((grails.plugin.springsecurity.annotation.Secured)annotation)
+				Class<?> closureClass = findClosureClass((PluginSecured)annotation)
 				if (closureClass) {
 					log.trace 'found class-scope annotation with a closure in {}', clazz.name
-					classClosureMap << new InterceptedUrl(controllerName, closureClass, getHttpMethod(annotation))
+					classClosures << new InterceptedUrl(controllerName, closureClass, getHttpMethod(annotation))
 				}
 				else {
 					Collection<String> values = getValue(annotation)
 					log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
-					classRoleMap << new InterceptedUrl(controllerName, values, getHttpMethod(annotation))
+					classRoles << new InterceptedUrl(controllerName, values, getHttpMethod(annotation))
 				}
 			}
 		}
 		else {
 			Collection<String> values = getValue(annotation)
 			log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
-			classRoleMap << new InterceptedUrl(controllerName, values, null)
+			classRoles << new InterceptedUrl(controllerName, values, null)
 		}
 
 		List<InterceptedUrl> annotatedActionNames = findActionRoles(clazz)
 		if (annotatedActionNames) {
-			actionRoleMap[controllerName] = annotatedActionNames
+			actionRoles[controllerName] = annotatedActionNames
 		}
 
 		List<InterceptedUrl> closureAnnotatedActionNames = findActionClosures(clazz)
 		if (closureAnnotatedActionNames) {
-			actionClosureMap[controllerName] = closureAnnotatedActionNames
+			actionClosures[controllerName] = closureAnnotatedActionNames
 		}
 	}
 
@@ -481,9 +477,8 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	protected List<InterceptedUrl> findActionClosures(Class<?> clazz) {
 		List<InterceptedUrl> actionClosures = []
 		for (Method method : clazz.methods) {
-			grails.plugin.springsecurity.annotation.Secured annotation = method.getAnnotation(
-					  grails.plugin.springsecurity.annotation.Secured)
-			if (annotation && annotation.closure() != grails.plugin.springsecurity.annotation.Secured) {
+			PluginSecured annotation = method.getAnnotation(PluginSecured)
+			if (annotation && annotation.closure() != PluginSecured) {
 				log.trace 'found annotation with a closure on method {} in {}', method.name, clazz.name
 				actionClosures << new InterceptedUrl(grailsUrlConverter.toUrlElement(
 						  method.name), annotation.closure(), getHttpMethod(annotation))
@@ -492,35 +487,31 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		actionClosures
 	}
 
-	protected Class<?> findClosureClass(grails.plugin.springsecurity.annotation.Secured annotation) {
+	protected Class<?> findClosureClass(PluginSecured annotation) {
 		Class<?> closureClass = annotation.closure()
-		closureClass == grails.plugin.springsecurity.annotation.Secured ? null : closureClass
+		closureClass == PluginSecured ? null : closureClass
 	}
 
 	protected Annotation findSecuredAnnotation(AccessibleObject annotatedTarget) {
-		Annotation annotation = annotatedTarget.getAnnotation(grails.plugin.springsecurity.annotation.Secured)
-		if (annotation) {
-			return annotation
-		}
-		annotatedTarget.getAnnotation org.springframework.security.access.annotation.Secured
+		annotatedTarget.getAnnotation(PluginSecured) ?: annotatedTarget.getAnnotation(SpringSecured)
 	}
 
 	protected Collection<String> getValue(Annotation annotation) {
 		String[] strings
-		if (annotation instanceof grails.plugin.springsecurity.annotation.Secured) {
-			strings = ((grails.plugin.springsecurity.annotation.Secured)annotation).value()
+		if (annotation instanceof PluginSecured) {
+			strings = ((PluginSecured)annotation).value()
 		}
 		else {
-			strings = ((org.springframework.security.access.annotation.Secured)annotation).value()
+			strings = ((SpringSecured)annotation).value()
 		}
 		new LinkedHashSet<String>(Arrays.asList(strings))
 	}
 
 	protected HttpMethod getHttpMethod(Annotation annotation) {
 		String method
-		if (annotation instanceof grails.plugin.springsecurity.annotation.Secured) {
-			method = ((grails.plugin.springsecurity.annotation.Secured)annotation).httpMethod()
-			if (grails.plugin.springsecurity.annotation.Secured.ANY_METHOD == method) {
+		if (annotation instanceof PluginSecured) {
+			method = ((PluginSecured)annotation).httpMethod()
+			if (PluginSecured.ANY_METHOD == method) {
 				method = null
 			}
 		}

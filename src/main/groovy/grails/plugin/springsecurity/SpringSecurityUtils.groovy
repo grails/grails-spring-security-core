@@ -656,7 +656,7 @@ final class SpringSecurityUtils {
 		SecurityContextHolder.context?.authentication
 	}
 
-	static SortedMap<Integer, String> findFilterChainNames(conf, filterChainFilterNames, boolean useSecureChannel,
+	static SortedMap<Integer, String> findFilterChainNames(filterChainFilterNames, boolean useSecureChannel,
 	                                                       boolean useIpRestrictions, boolean useX509, boolean useDigestAuth,
 	                                                       boolean useBasicAuth, boolean useSwitchUserFilter) {
 

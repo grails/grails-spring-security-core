@@ -656,10 +656,10 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		// build filters here to give dependent plugins a chance to register some
 		SortedMap<Integer, String> filterNames = SpringSecurityUtils.findFilterChainNames(conf.filterChain.filterNames,
-				  conf.secureChannel.definition, conf.ipRestrictions, conf.useX509, conf.useDigestAuth, conf.useBasicAuth,
-				  conf.useSwitchUserFilter)
+				  conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509,
+				  conf.useDigestAuth, conf.useBasicAuth, conf.useSwitchUserFilter)
 		def filterChain = applicationContext.springSecurityFilterChain
-		filterChain.filterChainMap = SpringSecurityUtils.buildFilterChainMap(filterNames, conf.filterChain.chainMap, applicationContext)
+		filterChain.filterChainMap = SpringSecurityUtils.buildFilterChainMap(filterNames, conf.filterChain.chainMap ?: [], applicationContext)
 		log.trace 'Filter chain: {}', filterChain.filterChainMap
 
 		// build voters list here to give dependent plugins a chance to register some
