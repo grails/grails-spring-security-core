@@ -1,27 +1,33 @@
 #!/bin/bash
 set -e
-rm -rf *.zip
-./grailsw refresh-dependencies --non-interactive
-./grailsw test-app --non-interactive
-./grailsw package-plugin --non-interactive
-./grailsw maven-install --non-interactive
-./travis_install_grails_versions.sh
 
-./integration-test-app/run_integration_tests.sh
-./functional-test-app/run_functional_tests.sh
-./grailsw doc --pdf --non-interactive
+curl -s get.sdkman.io | bash
+source "$HOME/.sdkman/bin/sdkman-init.sh"
+sdk install grails
 
-filename=$(find . -name "grails-*.zip" | head -1)
+grails test-app
+grails install
+
+cd secured
+grails test-app
+cd ..
+
+#./integration-test-app/run_integration_tests.sh
+#./functional-test-app/run_functional_tests.sh
+#./grailsw doc --pdf --non-interactive
+
+filename=$(find build -name "spring-security-core-*.zip" | head -1)
 filename=$(basename $filename)
-plugin=${filename:7}
+plugin=${filename}
 plugin=${plugin/.zip/}
 plugin=${plugin/-SNAPSHOT/}
-version="${plugin#*-}";
+version="${plugin##*-}";
 plugin=${plugin/"-$version"/}
 
-echo "Publishing plugin grails-spring-security-core with version $version"
-
 if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "grails-plugins/grails-spring-security-core" && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+  
+  echo "Publishing plugin $plugin with version $version"
+  
   git config --global user.name "$GIT_NAME"
   git config --global user.email "$GIT_EMAIL"
   git config --global credential.helper "store --file=~/.git-credentials"
@@ -43,7 +49,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_REPO_SLUG == "grails-plugins/grails-
   fi
 
 
-  ./grailsw publish-plugin --allow-overwrite --non-interactive
+  grails publish-plugin --allow-overwrite --non-interactive
 else
   echo "Not on master branch, so not publishing"
   echo "TRAVIS_BRANCH: $TRAVIS_BRANCH"
