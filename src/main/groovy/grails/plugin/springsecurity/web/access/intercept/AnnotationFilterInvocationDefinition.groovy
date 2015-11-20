@@ -376,9 +376,9 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	                                         List<InterceptedUrl> classClosures) {
 
 		Class<?> clazz = controllerClass.clazz
-		String controllerName = resolveFullControllerName(controllerClass)
+		String controllerUri = resolveFullControllerName(controllerClass)
 
-		findAnnotations actionRoles, classRoles, actionClosures, classClosures, clazz, controllerName
+		findAnnotations actionRoles, classRoles, actionClosures, classClosures, clazz, controllerUri
 	}
 
 	protected void findDomainAnnotations(GrailsDomainClass domainClass, Map<String, List<InterceptedUrl>> actionRoles,
@@ -387,13 +387,13 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 		Class<?> clazz = domainClass.clazz
 		if (clazz.getAnnotation(Resource)) {
-			findAnnotations actionRoles, classRoles, actionClosures, classClosures, clazz, clazz.simpleName.toLowerCase()
+			findAnnotations actionRoles, classRoles, actionClosures, classClosures, clazz, clazz.simpleName.toLowerCase(), false
 		}
 	}
 
 	private void findAnnotations(Map<String, List<InterceptedUrl>> actionRoles, List<InterceptedUrl> classRoles,
 	                             Map<String, List<InterceptedUrl>> actionClosures, List<InterceptedUrl> classClosures,
-	                             Class<?> clazz, String controllerName) {
+	                             Class<?> clazz, String controllerUri, boolean forController = true) {
 
 		Annotation annotation = clazz.getAnnotation(SpringSecured)
 		if (!annotation) {
@@ -402,29 +402,29 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 				Class<?> closureClass = findClosureClass((PluginSecured)annotation)
 				if (closureClass) {
 					log.trace 'found class-scope annotation with a closure in {}', clazz.name
-					classClosures << new InterceptedUrl(controllerName, closureClass, getHttpMethod(annotation))
+					classClosures << new InterceptedUrl(controllerUri, closureClass, getHttpMethod(annotation))
 				}
 				else {
 					Collection<String> values = getValue(annotation)
 					log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
-					classRoles << new InterceptedUrl(controllerName, values, getHttpMethod(annotation))
+					classRoles << new InterceptedUrl(controllerUri, values, getHttpMethod(annotation))
 				}
 			}
 		}
 		else {
 			Collection<String> values = getValue(annotation)
 			log.trace 'found class-scope annotation in {} with value(s) {}', clazz.name, values
-			classRoles << new InterceptedUrl(controllerName, values, null)
+			classRoles << new InterceptedUrl(controllerUri, values, null)
 		}
 
-		List<InterceptedUrl> annotatedActionNames = findActionRoles(clazz)
+		List<InterceptedUrl> annotatedActionNames = forController ? findActionRoles(clazz) : null
 		if (annotatedActionNames) {
-			actionRoles[controllerName] = annotatedActionNames
+			actionRoles[controllerUri] = annotatedActionNames
 		}
 
-		List<InterceptedUrl> closureAnnotatedActionNames = findActionClosures(clazz)
+		List<InterceptedUrl> closureAnnotatedActionNames = forController ? findActionClosures(clazz) : null
 		if (closureAnnotatedActionNames) {
-			actionClosures[controllerName] = closureAnnotatedActionNames
+			actionClosures[controllerUri] = closureAnnotatedActionNames
 		}
 	}
 
@@ -451,6 +451,8 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 	}
 
 	protected List<InterceptedUrl> findActionRoles(Class<?> clazz) {
+
+		log.trace 'finding @Secured annotations for actions in {}', clazz.name
 
 		GrailsControllerClass cc = (GrailsControllerClass)application.getArtefact(ControllerArtefactHandler.TYPE, clazz.name)
 		String defaultAction = cc.defaultAction
@@ -480,8 +482,8 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			PluginSecured annotation = method.getAnnotation(PluginSecured)
 			if (annotation && annotation.closure() != PluginSecured) {
 				log.trace 'found annotation with a closure on method {} in {}', method.name, clazz.name
-				actionClosures << new InterceptedUrl(grailsUrlConverter.toUrlElement(
-						  method.name), annotation.closure(), getHttpMethod(annotation))
+				actionClosures << new InterceptedUrl(grailsUrlConverter.toUrlElement(method.name),
+						annotation.closure(), getHttpMethod(annotation))
 			}
 		}
 		actionClosures
