@@ -2,6 +2,7 @@
 set -e
 
 curl -s get.sdkman.io | bash
+perl -i -p -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' ~/.sdkman/etc/config
 source "$HOME/.sdkman/bin/sdkman-init.sh"
 sdk install grails
 
