@@ -1,9 +1,10 @@
 language: groovy
+
 jdk:
-- oraclejdk7
-before_script:
-- rm -rf target
+- oraclejdk8
+
 script: ./travis-build.sh
+
 env:
   global:
   - GIT_NAME="Graeme Rocher"
