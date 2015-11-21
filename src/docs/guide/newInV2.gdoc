@@ -95,7 +95,7 @@ One small change is that there is no longer a default value for the domain class
 
 h4. SecurityContextHolder strategy
 
-You can now define the @SecurityContextHolder@ strategy. By default it is stored in a @ThreadLocal@, but you can also configure it to use an @InheritableThreadLocal@ to maintain the context in new threads, or a custom class that implements the @org.springframework.security.core.context.SecurityContextHolderStrategy@ interface. To change the strategy, set the @grails.plugin.springsecurity.sch.strategyName@ config property to @"MODE_THREADLOCAL"@ (the default) to use a @ThreadLocal@, @"MODE_INHERITABLETHREADLOCAL"@ to use an @InheritableThreadLocal@, or the name of a class that implements @SecurityContextHolderStrategy@.
+You can now define the @SecurityContextHolder@ strategy. By default it is stored in a @InheritableThreadLocal@ so the context will be maintained in new threads, but you can also use @ThreadLocal@, or a custom class that implements the @org.springframework.security.core.context.SecurityContextHolderStrategy@ interface. To change the strategy, set the @grails.plugin.springsecurity.sch.strategyName@ config property to @"MODE_INHERITABLETHREADLOCAL"@ (the default) to use a @InheritableThreadLocal@, @"MODE_THREADLOCAL"@ to use an @ThreadLocal@, or the name of a class that implements @SecurityContextHolderStrategy@.
 
 h4. Debug filter
 

@@ -23,7 +23,7 @@ scr. allowSessionCreation | @true@ | Whether to allow creating a session in the 
 scr. disableUrlRewriting | @true@ | Whether to disable URL rewriting (and the jsessionid attribute)
 scr. springSecurity ContextKey | @HttpSessionSecurity ContextRepository. SPRING_SECURITY_ CONTEXT_KEY@ | The HTTP session key to store the @SecurityContext@ under
 scpf. forceEager SessionCreation | @false@ | Whether to eagerly create a session in the @securityContextRepository@ bean
-sch. strategyName | @SecurityContextHolder. MODE_THREADLOCAL@ | The strategy to use for storing the @SecurityContext@ - can be one of @MODE_THREADLOCAL@, @MODE_INHERITABLETHREADLOCAL@, or @MODE_GLOBAL@, or the name of a class implementing [SecurityContextHolderStrategy|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolderStrategy.html]
+sch. strategyName | @SecurityContextHolder. MODE_INHERITABLETHREADLOCAL@ | The strategy to use for storing the @SecurityContext@ - can be one of @MODE_THREADLOCAL@, @MODE_INHERITABLETHREADLOCAL@, or @MODE_GLOBAL@, or the name of a class implementing [SecurityContextHolderStrategy|https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/context/SecurityContextHolderStrategy.html]
 debug. useFilter | @false@ | Whether to use the @DebugFilter@ to log request debug information to the console
 providerManager. eraseCredentials AfterAuthentication | @true@ | Whether to remove the password from the @Authentication@ and its child objects after successful authentication
 {table}
