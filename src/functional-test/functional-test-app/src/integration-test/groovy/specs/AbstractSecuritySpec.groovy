@@ -2,6 +2,7 @@ package specs
 
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 
+import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
 import grails.test.mixin.integration.Integration
 import pages.LoginPage
@@ -24,6 +25,10 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 			resetDatabase()
 			databaseReset = true
 		}
+	}
+
+	void cleanup() {
+		CachingDriverFactory.clearCache()
 	}
 
 	void cleanupSpec() {
