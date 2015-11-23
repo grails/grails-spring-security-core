@@ -29,6 +29,7 @@ import grails.web.mapping.UrlMappingsHolder
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.transform.CompileStatic
 import org.grails.core.artefact.ControllerArtefactHandler
+import org.grails.web.mapping.mvc.GrailsControllerUrlMappingInfo
 import org.grails.web.mime.HttpServletResponseExtension
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
@@ -154,20 +155,17 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			return viewName
 		}
 
-		String actionName = mapping.actionName ?: ''
+		if (!(mapping instanceof GrailsControllerUrlMappingInfo)) {
+			return
+		}
+
+		String namespace = mapping.namespace
 		String controllerName = mapping.controllerName
-
-		if (isController(controllerName, actionName)) {
-			return createControllerUri(controllerName, actionName)
+		if (namespace) {
+			controllerName = resolveFullControllerName(controllerName, namespace)
 		}
 
-		if (controllerName != null) {
-			String namespace = mapping.namespace
-			if (namespace != null) {
-				String fullControllerName = resolveFullControllerName(controllerName, namespace)
-				return createControllerUri(fullControllerName, actionName)
-			}
-		}
+		createControllerUri controllerName, mapping.actionName ?: ''
 	}
 
 	protected String createControllerUri(String controllerName, String actionName) {
@@ -175,10 +173,6 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			actionName = 'index'
 		}
 		(SLASH + controllerName + SLASH + actionName).trim()
-	}
-
-	protected boolean isController(String controllerName, String actionName) {
-		application.getArtefactForFeature(ControllerArtefactHandler.TYPE, SLASH + controllerName + SLASH + actionName)
 	}
 
 	protected void configureMapping(UrlMappingInfo mapping, GrailsWebRequest grailsRequest, Map<String, Object> savedParams) {
@@ -349,13 +343,15 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 		StringBuilder sb = new StringBuilder()
 		sb << '/' << controllerNameOrPattern
-		if (actionName != null) {
+		if (actionName) {
 			sb << '/' << actionName
 		}
 		List<String> patterns = [sb.toString(), sb.toString() + '.*'] // TODO
 
 		sb << '/**'
 		patterns << sb.toString()
+
+		log.trace 'Patterns generated for controller "{}" action "{}" -> {}', controllerNameOrPattern, actionName, patterns
 
 		patterns
 	}
