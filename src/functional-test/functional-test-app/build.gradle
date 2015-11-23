@@ -79,7 +79,7 @@ task wrapper(type: Wrapper) {
 
 integrationTest {
 	def file = new File('testconfig')
-	String testconfig = file.exists() ? file.text.trim().toLowerCase() : ''
+	String testconfig = file.exists() ? file.text.trim().toLowerCase() : 'annotation'
 	def tests
 	switch (testconfig) {
 		case 'annotation': tests = ['AnnotationSecurity', 'InheritanceSecurity', 'NamespaceSecurity', 'Role', 'User']; break
