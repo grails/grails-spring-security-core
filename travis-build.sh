@@ -1,18 +1,10 @@
-#!/bin/bash
+#!/usr/bin/env bash
+
 set -e
 
-curl -s get.sdkman.io | bash
-perl -i -p -e 's/sdkman_auto_answer=false/sdkman_auto_answer=true/' ~/.sdkman/etc/config
-source "$HOME/.sdkman/bin/sdkman-init.sh"
-sdk install grails
+rm -rf build
+./gradlew clean check assemble install
 
-grails test-app
-grails install
+src/integration-test/integration-test-app/run_integration_tests.sh
 
-cd secured
-grails test-app
-cd ..
-
-#./integration-test-app/run_integration_tests.sh
-#./functional-test-app/run_functional_tests.sh
-#./grailsw doc --pdf --non-interactive
+src/functional-test/functional-test-app/run_functional_tests.sh
