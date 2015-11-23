@@ -44,7 +44,7 @@ class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation> {
 		assert fi, 'object cannot be null'
 		assert attributes, 'attributes cannot be null'
 
-		log.trace 'vote() Authentication {}, FilterInvocation {} ConfigAttributes {}', [authentication, fi, attributes] as Object[]
+		log.trace 'vote() Authentication {}, FilterInvocation {} ConfigAttributes {}', authentication, fi, attributes
 
 		WebExpressionConfigAttribute weca = findConfigAttribute(attributes)
 		if (!weca) {

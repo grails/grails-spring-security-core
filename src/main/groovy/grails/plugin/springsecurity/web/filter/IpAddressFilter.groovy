@@ -131,7 +131,7 @@ class IpAddressFilter extends GenericFilterBean {
 			}
 		}
 
-		log.warn 'disallowed request {} from {}', [uri, ip] as Object[]
+		log.warn 'disallowed request {} from {}', uri, ip
 		false
 	}
 

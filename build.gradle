@@ -125,8 +125,8 @@ task wrapper(type: Wrapper) {
 }
 
 test {
-    testLogging {
-        exceptionFormat = 'full'
-        events "failed", "standardOut", "standardError"
-    }
+	testLogging {
+		exceptionFormat = 'full'
+		events 'failed', 'standardOut', 'standardError'
+	}
 }

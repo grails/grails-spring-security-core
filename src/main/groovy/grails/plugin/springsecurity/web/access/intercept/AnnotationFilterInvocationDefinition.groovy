@@ -336,7 +336,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			InterceptedUrl replaced = storeMapping(key, method, configAttributes)
 			if (replaced) {
 				log.warn "replaced rule for '{}' with tokens {} with tokens {}",
-						  [key, replaced.configAttributes, configAttributes] as Object[]
+						  key, replaced.configAttributes, configAttributes
 			}
 		}
 	}
@@ -364,10 +364,10 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		String key = fullPattern.toString().toLowerCase()
 		InterceptedUrl replaced = storeMapping(key, method, configAttributes)
 		if (replaced) {
-			log.warn "Replaced rule for '{}' and ConfigAttributes {} with ConfigAttributes {}", [key, replaced.configAttributes, configAttributes] as Object[]
+			log.warn "Replaced rule for '{}' and ConfigAttributes {} with ConfigAttributes {}", key, replaced.configAttributes, configAttributes
 		}
 		else {
-			log.trace "Storing ConfigAttributes {} for '{}' and HttpMethod {}", [key, configAttributes, method] as Object[]
+			log.trace "Storing ConfigAttributes {} for '{}' and HttpMethod {}", key, configAttributes, method
 		}
 	}
 
@@ -417,35 +417,34 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			classRoles << new InterceptedUrl(controllerUri, values, null)
 		}
 
-		List<InterceptedUrl> annotatedActionNames = forController ? findActionRoles(clazz) : null
+		if (!forController) {
+			return
+		}
+
+		List<InterceptedUrl> annotatedActionNames = findActionRoles(clazz)
 		if (annotatedActionNames) {
 			actionRoles[controllerUri] = annotatedActionNames
 		}
 
-		List<InterceptedUrl> closureAnnotatedActionNames = forController ? findActionClosures(clazz) : null
+		List<InterceptedUrl> closureAnnotatedActionNames = findActionClosures(clazz)
 		if (closureAnnotatedActionNames) {
 			actionClosures[controllerUri] = closureAnnotatedActionNames
 		}
 	}
 
 	protected String resolveFullControllerName(GrailsControllerClass controllerClass) {
-		String controllerName = controllerClass.name
 		String namespace = controllerClass.namespace
 		if (namespace) {
 			namespace = grailsUrlConverter.toUrlElement(namespace)
 		}
-		resolveFullControllerName grailsUrlConverter.toUrlElement(controllerName), namespace
+		resolveFullControllerName grailsUrlConverter.toUrlElement(controllerClass.name), namespace
 	}
 
 	protected String resolveFullControllerName(String controllerNameInUrlFormat, String namespaceInUrlFormat) {
-		StringBuilder fullControllerName = new StringBuilder()
-		if (namespaceInUrlFormat != null) {
-			fullControllerName << namespaceInUrlFormat << ':'
-		}
-		fullControllerName << controllerNameInUrlFormat
+		String fullControllerName = namespaceInUrlFormat ? namespaceInUrlFormat + ':' + controllerNameInUrlFormat : controllerNameInUrlFormat
 
 		log.trace 'Resolved full controller name for controller "{}" and namespace "{}" as "{}"',
-				  [controllerNameInUrlFormat, namespaceInUrlFormat, fullControllerName] as Object[]
+				  controllerNameInUrlFormat, namespaceInUrlFormat, fullControllerName
 
 		fullControllerName
 	}

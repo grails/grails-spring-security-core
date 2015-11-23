@@ -114,10 +114,8 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		boolean stopAtFirstMatch = stopAtFirstMatch()
 		for (InterceptedUrl iu in compiled) {
 
-			if (iu.httpMethod && requestMethod && iu.httpMethod != HttpMethod.valueOf(requestMethod)) {
-				if (log.debugEnabled) {
-					log.debug "Request '{} {}' doesn't match '{} {}'", [requestMethod, url, iu.httpMethod, iu.pattern] as Object[]
-				}
+			if (requestMethod && iu.httpMethod && iu.httpMethod != HttpMethod.valueOf(requestMethod)) {
+				log.debug "Request '{} {}' doesn't match '{} {}'", requestMethod, url, iu.httpMethod, iu.pattern
 				continue
 			}
 
@@ -125,9 +123,7 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 				if (configAttributes == null || urlMatcher.match(configAttributePattern, iu.pattern)) {
 					configAttributes = iu.configAttributes
 					configAttributePattern = iu.pattern
-					if (log.traceEnabled) {
-						log.trace "new candidate for '{}': '{}':{}", [url, iu.pattern, configAttributes] as Object[]
-					}
+					log.trace "new candidate for '{}': '{}':{}", url, iu.pattern, configAttributes
 					if (stopAtFirstMatch) {
 						break
 					}
@@ -140,7 +136,7 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 				log.trace "no config for '{}'", url
 			}
 			else {
-				log.trace "config for '{}' is '{}':{}", [url, configAttributePattern, configAttributes] as Object[]
+				log.trace "config for '{}' is '{}':{}", url, configAttributePattern, configAttributes
 			}
 		}
 
@@ -225,10 +221,10 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 
 		InterceptedUrl replaced = storeMapping(key, method, Collections.unmodifiableCollection(configAttributes))
 		if (replaced) {
-			log.warn "Replaced rule for '{}' and ConfigAttributes {} with ConfigAttributes {}", [key, replaced.configAttributes, configAttributes] as Object[]
+			log.warn "Replaced rule for '{}' and ConfigAttributes {} with ConfigAttributes {}", key, replaced.configAttributes, configAttributes
 		}
 		else {
-			log.trace "Storing ConfigAttributes {} for '{}' and HttpMethod {}", [key, configAttributes, method] as Object[]
+			log.trace "Storing ConfigAttributes {} for '{}' and HttpMethod {}", key, configAttributes, method
 		}
 	}
 

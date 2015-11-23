@@ -52,9 +52,7 @@ class RequestmapFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 		loadRequestmaps().each { InterceptedUrl iu -> compileAndStoreMapping(iu) }
 
-		if (log.traceEnabled) {
-			log.trace 'configs: {}', configAttributeMap
-		}
+		log.trace 'configs: {}', configAttributeMap
 	}
 
 	protected List<InterceptedUrl> loadRequestmaps() {

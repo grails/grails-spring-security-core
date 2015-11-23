@@ -41,7 +41,7 @@ class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, Application
 		assert fi, 'object cannot be null'
 		assert attributes != null, 'attributes cannot be null'
 
-		log.trace 'vote() Authentication {}, FilterInvocation {} ConfigAttributes {}', [authentication, fi, attributes] as Object[]
+		log.trace 'vote() Authentication {}, FilterInvocation {} ConfigAttributes {}', authentication, fi, attributes
 
 		ClosureConfigAttribute attribute = (ClosureConfigAttribute)attributes.find { it instanceof ClosureConfigAttribute }
 

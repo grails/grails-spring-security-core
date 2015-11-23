@@ -57,16 +57,10 @@ class GrailsAnonymousAuthenticationFilter extends GenericFilterBean {
 		SecurityContext context = SecurityContextHolder.context
 		if (!context.authentication) {
 			context.authentication = createAuthentication(request)
-
-			if (log.debugEnabled) {
-				log.debug "Populated SecurityContextHolder with anonymous token: '{}'", context.authentication
-			}
+			log.debug "Populated SecurityContextHolder with anonymous token: '{}'", context.authentication
 		}
 		else {
-			if (log.debugEnabled) {
-				log.debug "SecurityContextHolder not populated with anonymous token, as it already contained: '{}'",
-						context.authentication
-			}
+			log.debug "SecurityContextHolder not populated with anonymous token, as it already contained: '{}'", context.authentication
 		}
 	}
 

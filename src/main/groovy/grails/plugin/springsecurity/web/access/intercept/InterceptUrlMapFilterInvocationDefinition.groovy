@@ -57,8 +57,6 @@ class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInvocation
 
 		initialized = true
 
-		if (log.traceEnabled) {
-			log.trace 'configs: {}', configAttributeMap
-		}
+		log.trace 'configs: {}', configAttributeMap
 	}
 }
