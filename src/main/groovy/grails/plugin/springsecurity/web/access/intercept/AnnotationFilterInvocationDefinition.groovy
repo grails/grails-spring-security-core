@@ -107,7 +107,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 					urlMappingsHolder, requestUrl, grailsRequest, httpServletResponseExtension)
 
 			for (UrlMappingInfo mapping : urlInfos) {
-				if (PluginReflectionUtils.isRedirect(mapping)) {
+				if (mapping.redirectInfo) {
 					log.trace 'Mapping {} is a redirect', mapping
 					break
 				}
