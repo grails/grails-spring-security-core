@@ -17,6 +17,7 @@ package grails.plugin.springsecurity.web.access.intercept
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.security.web.FilterInvocation
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.InterceptedUrl
 
 /**
@@ -24,7 +25,7 @@ import grails.plugin.springsecurity.InterceptedUrl
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class RequestmapFilterInvocationDefinitionSpec extends AbstractFilterInvocationDefinitionSpec  {
+class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 
 	private RequestmapFilterInvocationDefinition fid = new TestRequestmapFilterInvocationDefinition()
 

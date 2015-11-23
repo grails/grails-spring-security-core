@@ -18,13 +18,10 @@ import javax.servlet.FilterChain
 
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class RequestHolderAuthenticationFilterSpec extends AbstractUnitSpec {
 
 	@SuppressWarnings('deprecation')

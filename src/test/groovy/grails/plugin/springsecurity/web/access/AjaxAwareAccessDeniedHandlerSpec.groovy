@@ -25,13 +25,10 @@ import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAccessDeniedHandler handler = new AjaxAwareAccessDeniedHandler()

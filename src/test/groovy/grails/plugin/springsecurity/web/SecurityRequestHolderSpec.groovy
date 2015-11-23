@@ -16,15 +16,12 @@ package grails.plugin.springsecurity.web
 
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SecurityTestUtils
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * Unit tests for <code>SecurityRequestHolder</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class SecurityRequestHolderSpec extends AbstractUnitSpec {
 
 	void 'set and get'() {

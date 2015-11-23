@@ -17,15 +17,12 @@ package grails.plugin.springsecurity.web.filter
 import javax.servlet.FilterChain
 
 import grails.plugin.springsecurity.AbstractUnitSpec
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * Unit tests for <code>IpAddressFilter</code>.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class IpAddressFilterSpec extends AbstractUnitSpec {
 
 	private final IpAddressFilter filter = new IpAddressFilter()

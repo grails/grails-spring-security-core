@@ -29,13 +29,10 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 import org.springframework.web.filter.GenericFilterBean
 
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 
 	private static originalfilterChainMap

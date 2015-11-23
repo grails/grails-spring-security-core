@@ -20,13 +20,10 @@ import org.springframework.security.web.RedirectStrategy
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class AjaxAwareAuthenticationFailureHandlerSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAuthenticationFailureHandler handler = new AjaxAwareAuthenticationFailureHandler()

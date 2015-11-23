@@ -18,15 +18,12 @@ import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * Unit tests for WithAjaxAuthenticationProcessingFilterEntryPoint.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
 class AjaxAwareAuthenticationEntryPointSpec extends AbstractUnitSpec {
 
 	private final AjaxAwareAuthenticationEntryPoint entryPoint = new AjaxAwareAuthenticationEntryPoint()

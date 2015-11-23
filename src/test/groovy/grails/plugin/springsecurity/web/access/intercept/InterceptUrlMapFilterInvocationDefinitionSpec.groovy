@@ -23,13 +23,14 @@ import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.web.mapping.UrlMappingInfo
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class InterceptUrlMapFilterInvocationDefinitionSpec extends AbstractFilterInvocationDefinitionSpec {
+class InterceptUrlMapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 
 	private InterceptUrlMapFilterInvocationDefinition fid = new InterceptUrlMapFilterInvocationDefinition()
 

@@ -24,14 +24,11 @@ import org.springframework.security.web.savedrequest.SavedRequest
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
-class AjaxAwareAuthenticationSuccessHandlerClass extends AbstractUnitSpec {
+class AjaxAwareAuthenticationSuccessHandlerSpec extends AbstractUnitSpec {
 
 	private static final String AJAX_SUCCESS_URL = '/ajaxSuccessUrl'
 	private static final String DEFAULT_TARGET_URL = '/defaultTargetUrl'

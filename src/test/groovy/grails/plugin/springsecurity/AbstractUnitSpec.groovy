@@ -21,13 +21,13 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 
 import grails.plugin.springsecurity.web.SecurityRequestHolder
 import grails.test.mixin.TestMixin
-import grails.test.mixin.support.GrailsUnitTestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 import spock.lang.Specification
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(GrailsUnitTestMixin)
+@TestMixin(ControllerUnitTestMixin)
 abstract class AbstractUnitSpec extends Specification {
 
 	void setupSpec() {

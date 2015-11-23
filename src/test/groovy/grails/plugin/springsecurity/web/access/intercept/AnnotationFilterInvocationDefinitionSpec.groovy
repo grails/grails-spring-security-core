@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import grails.core.GrailsClass
+import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
 import grails.plugin.springsecurity.annotation.Secured
@@ -43,7 +44,7 @@ import spock.lang.Shared
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class AnnotationFilterInvocationDefinitionSpec extends AbstractFilterInvocationDefinitionSpec {
+class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 
 	private @Shared HttpServletResponseExtension httpServletResponseExtension = new HttpServletResponseExtension()
 	private @Shared AnnotationFilterInvocationDefinition fid = new AnnotationFilterInvocationDefinition(
