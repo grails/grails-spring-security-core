@@ -14,7 +14,7 @@ $ cd bookstore
 ----
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M1'
+   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
    ...
 }
 ----

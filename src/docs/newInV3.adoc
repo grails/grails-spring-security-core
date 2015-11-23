@@ -22,7 +22,7 @@ The "`installation`" process has changed in the 3.x versions of the plugin, but 
 ----
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M1'
+   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
    ...
 ----
 
@@ -36,7 +36,7 @@ There is a dependency resolution bug in Grails 3.1.x where instead of using the 
 ----
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M1'
+   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
    compile 'org.springframework.security:spring-security-core:3.2.9.RELEASE'
    compile 'org.springframework.security:spring-security-web:3.2.9.RELEASE'
    ...
