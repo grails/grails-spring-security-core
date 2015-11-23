@@ -47,7 +47,7 @@ dependencies {
 	compile 'org.grails.plugins:cache'
 	compile 'org.hibernate:hibernate-ehcache'
 
-	String pluginVersion = file('../../../version.txt').text.trim()
+	String pluginVersion = file('../version.txt').text.trim()
 	compile 'org.grails.plugins:spring-security-core:' + pluginVersion
 
 	testCompile 'org.grails:grails-plugin-testing'

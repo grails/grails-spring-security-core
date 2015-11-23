@@ -5,6 +5,6 @@ set -e
 rm -rf build
 ./gradlew clean check assemble install --stacktrace
 
-src/integration-test/integration-test-app/run_integration_tests.sh
+integration-test-app/run_integration_tests.sh
 
-src/functional-test/functional-test-app/run_functional_tests.sh
+functional-test-app/run_functional_tests.sh

@@ -51,7 +51,7 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-logging'
 	compile 'org.springframework.boot:spring-boot-starter-tomcat'
 
-	String pluginVersion = file('../../../version.txt').text.trim()
+	String pluginVersion = file('../version.txt').text.trim()
 	compile 'org.grails.plugins:spring-security-core:' + pluginVersion
 	compile 'org.grails.plugins:spring-security-appinfo:3.0.0.M1'
 
