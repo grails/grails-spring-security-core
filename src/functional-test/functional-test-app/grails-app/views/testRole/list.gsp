@@ -21,15 +21,15 @@
 					</tr>
 				</thead>
 				<tbody>
-    				<g:each in="${testRoleInstanceList}" status="i" var="testRoleInstance">
+    				<g:each in="${testRoles}" status="i" var="testRole">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-						<td><g:link action="show" id="${testRoleInstance.id}">${fieldValue(bean: testRoleInstance, field: "authority")}</g:link></td>
+						<td><g:link action="show" id="${testRole.id}">${fieldValue(bean: testRole, field: "authority")}</g:link></td>
 					</tr>
 	    			</g:each>
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${testRoleInstanceCount ?: 0}" />
+				<g:paginate total="${testRoleCount ?: 0}" />
 			</div>
 		</div>
 	</body>

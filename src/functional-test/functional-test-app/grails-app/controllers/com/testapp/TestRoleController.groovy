@@ -12,90 +12,81 @@ class TestRoleController {
 
 	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		[testRoleInstanceList: TestRole.list(params), testRoleInstanceTotal: TestRole.count()]
+		[testRoles: TestRole.list(params), testRoleCount: TestRole.count()]
 	}
 
-	def create() {
-		[testRoleInstance: new TestRole(params)]
+	def create(TestRole testRole) {
+		[testRole: testRole]
 	}
 
-	def save() {
-		def testRoleInstance = new TestRole(params)
-		if (!testRoleInstance.save(flush: true)) {
-			render view: 'create', model: [testRoleInstance: testRoleInstance]
+	def save(TestRole testRole) {
+		if (!testRole.save(flush: true)) {
+			render view: 'create', model: [testRole: testRole]
 			return
 		}
 
-		flash.message = "${message(code: 'default.created.message', args: [message(code: 'testRole.label', default: 'TestRole'), testRoleInstance.id])}"
-		redirect action: 'show', id: testRoleInstance.id
+		flash.message = "TestRole $testRole.id created"
+		redirect action: 'show', id: testRole.id
 	}
 
-	def show() {
-		def testRoleInstance = TestRole.get(params.id)
-		if (!testRoleInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRole.label', default: 'TestRole'), params.id])}"
+	def show(TestRole testRole, Long id) {
+		if (!testRole) {
+			flash.message = "TestRole not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
-		[testRoleInstance: testRoleInstance]
+		[testRole: testRole]
 	}
 
-	def edit() {
-		def testRoleInstance = TestRole.get(params.id)
-		if (!testRoleInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRole.label', default: 'TestRole'), params.id])}"
+	def edit(TestRole testRole, Long id) {
+		if (!testRole) {
+			flash.message = "TestRole not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
-		[testRoleInstance: testRoleInstance]
+		[testRole: testRole]
 	}
 
-	def update() {
-		def testRoleInstance = TestRole.get(params.id)
-		if (!testRoleInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRole.label', default: 'TestRole'), params.id])}"
+	def update(TestRole testRole, Long id, Long version) {
+		if (!testRole) {
+			flash.message = "TestRole not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
-		if (params.version) {
-			def version = params.version.toLong()
-			if (testRoleInstance.version > version) {
-				testRoleInstance.errors.rejectValue('version', 'default.optimistic.locking.failure',
-						[message(code: 'testRole.label', default: 'TestRole')] as Object[],
-						'Another user has updated this TestRole while you were editing')
-				render(view: 'edit', model: [testRoleInstance: testRoleInstance])
-				return
-			}
-		}
-
-		if (!springSecurityService.updateRole(testRoleInstance, params)) {
-			render view: 'edit', model: [testRoleInstance: testRoleInstance]
+		if (version != null && testRole.version > version) {
+			testRole.errors.rejectValue 'version', 'default.optimistic.locking.failure',
+				'Another user has updated this TestRole while you were editing'
+			render(view: 'edit', model: [testRole: testRole])
 			return
 		}
 
-		flash.message = "${message(code: 'default.updated.message', args: [message(code: 'testRole.label', default: 'TestRole'), testRoleInstance.id])}"
-		redirect action: 'show', id: testRoleInstance.id
+		if (!springSecurityService.updateRole(testRole, params)) {
+			render view: 'edit', model: [testRole: testRole]
+			return
+		}
+
+		flash.message = "TestRole $testRole.id updated"
+		redirect action: 'show', id: testRole.id
 	}
 
-	def delete() {
-		def testRoleInstance = TestRole.get(params.id)
-		if (!testRoleInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRole.label', default: 'TestRole'), params.id])}"
+	def delete(TestRole testRole, Long id) {
+		if (!testRole) {
+			flash.message = "TestRole not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
 		try {
-			springSecurityService.deleteRole testRoleInstance
-			flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'testRole.label', default: 'TestRole'), params.id])}"
+			springSecurityService.deleteRole testRole
+			flash.message = "TestRole $id deleted"
 			redirect action: 'list'
 		}
 		catch (DataIntegrityViolationException e) {
-			flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'testRole.label', default: 'TestRole'), params.id])}"
-			redirect action: 'show', id: params.id
+			flash.message = "TestRole $id could not be deleted"
+			redirect action: 'show', id: id
 		}
 	}
 }

@@ -12,95 +12,85 @@ class TestRequestmapController {
 
 	def list() {
 		params.max = Math.min(params.max ? params.int('max') : 10, 100)
-		[testRequestmapInstanceList: TestRequestmap.list(params),
-		 testRequestmapInstanceTotal: TestRequestmap.count()]
+		[testRequestmaps: TestRequestmap.list(params), testRequestmapCount: TestRequestmap.count()]
 	}
 
-	def create() {
-		[testRequestmapInstance: new TestRequestmap(params)]
+	def create(TestRequestmap testRequestmap) {
+		[testRequestmap: testRequestmap]
 	}
 
-	def save() {
-		def testRequestmapInstance = new TestRequestmap(params)
-		if (!testRequestmapInstance.save(flush: true)) {
-			render view: 'create', model: [testRequestmapInstance: testRequestmapInstance]
+	def save(TestRequestmap testRequestmap) {
+		if (!testRequestmap.save(flush: true)) {
+			render view: 'create', model: [testRequestmap: testRequestmap]
 			return
 		}
 
 		springSecurityService.clearCachedRequestmaps()
-		flash.message = "${message(code: 'default.created.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), testRequestmapInstance.id])}"
-		redirect action: 'show', id: testRequestmapInstance.id
+		flash.message = "TestRequestmap $testRequestmap.id created"
+		redirect action: 'show', id: testRequestmap.id
 	}
 
-	def show() {
-		def testRequestmapInstance = TestRequestmap.get(params.id)
-		if (!testRequestmapInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
+	def show(TestRequestmap testRequestmap, Long id) {
+		if (!testRequestmap) {
+			flash.message = "TestRequestmap not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
-		[testRequestmapInstance: testRequestmapInstance]
+		[testRequestmap: testRequestmap]
 	}
 
-	def edit() {
-		def testRequestmapInstance = TestRequestmap.get(params.id)
-		if (!testRequestmapInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
+	def edit(TestRequestmap testRequestmap, Long id) {
+		if (!testRequestmap) {
+			flash.message = "TestRequestmap not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
-		[testRequestmapInstance: testRequestmapInstance]
+		[testRequestmap: testRequestmap]
 	}
 
-	def update() {
-		def testRequestmapInstance = TestRequestmap.get(params.id)
-		if (!testRequestmapInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
+	def update(TestRequestmap testRequestmap, Long id, Long version) {
+		if (!testRequestmap) {
+			flash.message = "TestRequestmap not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
-		if (params.version) {
-			def version = params.version.toLong()
-			if (testRequestmapInstance.version > version) {
-				testRequestmapInstance.errors.rejectValue('version', 'default.optimistic.locking.failure',
-						[message(code: 'testRequestmap.label', default: 'TestRequestmap')] as Object[],
-						'Another user has updated this TestRequestmap while you were editing')
-				render view: 'edit', model: [testRequestmapInstance: testRequestmapInstance]
-				return
-			}
+		if (version != null && testRequestmap.version > version) {
+			testRequestmap.errors.rejectValue 'version', 'default.optimistic.locking.failure',
+				'Another user has updated this TestRequestmap while you were editing'
+			render view: 'edit', model: [testRequestmap: testRequestmap]
+			return
 		}
 
-		testRequestmapInstance.properties = params
-		if (!testRequestmapInstance.hasErrors() && testRequestmapInstance.save(flush: true)) {
+		testRequestmap.properties = params
+		if (!testRequestmap.hasErrors() && testRequestmap.save(flush: true)) {
 			springSecurityService.clearCachedRequestmaps()
-			flash.message = "${message(code: 'default.updated.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), testRequestmapInstance.id])}"
-			redirect action: 'show', id: testRequestmapInstance.id
+			flash.message = "TestRequestmap $testRequestmap.id updated"
+			redirect action: 'show', id: testRequestmap.id
 		}
 		else {
-			render view: 'edit', model: [testRequestmapInstance: testRequestmapInstance]
+			render view: 'edit', model: [testRequestmap: testRequestmap]
 		}
 	}
 
-	def delete() {
-		def testRequestmapInstance = TestRequestmap.get(params.id)
-		if (!testRequestmapInstance) {
-			flash.message = "${message(code: 'default.not.found.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
+	def delete(TestRequestmap testRequestmap, Long id) {
+		if (!testRequestmap) {
+			flash.message = "TestRequestmap not found with id $id"
 			redirect action: 'list'
 			return
 		}
 
 		try {
-			testRequestmapInstance.delete(flush: true)
+			testRequestmap.delete(flush: true)
 			springSecurityService.clearCachedRequestmaps()
-			flash.message = "${message(code: 'default.deleted.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
+			flash.message = "TestRequestmap $id deleted"
 			redirect action: 'list'
 		}
 		catch (DataIntegrityViolationException e) {
-			flash.message = "${message(code: 'default.not.deleted.message', args: [message(code: 'testRequestmap.label', default: 'TestRequestmap'), params.id])}"
-			redirect action: 'show', id: params.id
+			flash.message = "TestRequestmap $id could not be deleted"
+			redirect action: 'show', id: id
 		}
 	}
 }

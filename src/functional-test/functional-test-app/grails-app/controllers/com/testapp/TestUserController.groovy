@@ -15,14 +15,12 @@ class TestUserController {
 		[personList: TestUser.list(params), personCount: TestUser.count()]
 	}
 
-	def create() {
-		[person: new TestUser(params), authorityList: TestRole.list()]
+	def create(TestUser person) {
+		[person: person, authorityList: TestRole.list()]
 	}
 
-	def save() {
-
-		def person = new TestUser(params)
-		if (person.save(flush:true)) {
+	def save(TestUser person) {
+		if (person.save(flush: true)) {
 			addRoles person
 			redirect action: 'show', id: person.id
 		}
@@ -31,10 +29,9 @@ class TestUserController {
 		}
 	}
 
-	def show() {
-		def person = TestUser.get(params.id)
+	def show(TestUser person, Long id) {
 		if (!person) {
-			flash.message = "TestUser not found with id $params.id"
+			flash.message = "TestUser not found with id $id"
 			redirect action: 'list'
 			return
 		}
@@ -42,11 +39,9 @@ class TestUserController {
 		[person: person, roleNames: roleNames.sort()]
 	}
 
-	def edit() {
-
-		def person = TestUser.get(params.id)
+	def edit(TestUser person, Long id) {
 		if (!person) {
-			flash.message = "TestUser not found with id $params.id"
+			flash.message = "TestUser not found with id $id"
 			redirect action: 'list'
 			return
 		}
@@ -54,19 +49,16 @@ class TestUserController {
 		return buildPersonModel(person)
 	}
 
-	def update() {
-
-		def person = TestUser.get(params.id)
+	def update(TestUser person, Long id, Long version) {
 		if (!person) {
-			flash.message = "TestUser not found with id $params.id"
-			redirect action: 'edit', id: params.id
+			flash.message = "TestUser not found with id $id"
+			redirect action: 'edit', id: id
 			return
 		}
 
-		long version = params.version.toLong()
-		if (person.version > version) {
-			person.errors.rejectValue 'version', 'person.optimistic.locking.failure',
-				'Another user has updated this TestUser while you were editing.'
+		if (version != null && person.version > version) {
+			person.errors.rejectValue 'version', 'default.optimistic.locking.failure',
+				'Another user has updated this TestUser while you were editing'
 				render view: 'edit', model: buildPersonModel(person)
 			return
 		}
@@ -74,7 +66,7 @@ class TestUserController {
 		def oldPassword = person.password
 		person.properties = params
 
-		if (person.save(flush:true)) {
+		if (person.save(flush: true)) {
 			TestUserTestRole.removeAll person
 			addRoles person
 			redirect action: 'show', id: person.id
@@ -84,9 +76,7 @@ class TestUserController {
 		}
 	}
 
-	def delete() {
-
-		def person = TestUser.get(params.id)
+	def delete(TestUser person, Long id) {
 		if (person) {
 			def authPrincipal = springSecurityService.principal
 			// avoid self-delete if the logged-in user is an admin
@@ -97,16 +87,16 @@ class TestUserController {
 				try {
 					TestUserTestRole.removeAll person
 					person.delete flush: true
-					flash.message = "TestUser $params.id deleted."
+					flash.message = "TestUser $id deleted."
 				}
 				catch (DataIntegrityViolationException e) {
-					flash.message = "TestUser $params.id could not be deleted"
-					redirect action: 'show', id: params.id
+					flash.message = "TestUser $id could not be deleted"
+					redirect action: 'show', id: id
 				}
 			}
 		}
 		else {
-			flash.message = "TestUser not found with id $params.id"
+			flash.message = "TestUser not found with id $id"
 		}
 
 		redirect action: 'list'

@@ -312,6 +312,13 @@ class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 		assertContentContains 'you have ROLE_ADMIN'
 	}
 
+	protected void logout() {
+		super.logout()
+		// cheesy, but the 'Authentication' header from basic auth
+		// isn't cleared, so this forces an invalid header
+		getWithAuth '', 'not_a_valid_username', ''
+	}
+
 	private void getWithAuth(String path, String username, String password) {
 		String uri = new URI(getBaseUrlRequired()).resolve(new URI(path))
 		uri = uri.replace('http://', 'http://' + username + ':' + password + '@')

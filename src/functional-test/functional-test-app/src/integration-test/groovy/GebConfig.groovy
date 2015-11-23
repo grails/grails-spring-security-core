@@ -40,10 +40,10 @@ environments {
 	}
 }
 
-reportingListener = new ReportingListener() {
-	void onReport(Reporter reporter, ReportState reportState, List<File> reportFiles) {
-		reportFiles.each {
-			println "Report taken: $it.absolutePath"
-		}
-	}
-}
+//reportingListener = new ReportingListener() {
+//	void onReport(Reporter reporter, ReportState reportState, List<File> reportFiles) {
+//		reportFiles.each {
+//			println "Report taken: $it.absolutePath"
+//		}
+//	}
+//}

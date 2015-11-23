@@ -1,130 +1,29 @@
 package specs
 
 import pages.IndexPage
-import pages.role.CreateRolePage
-import pages.role.ListRolePage
-import pages.role.ShowRolePage
-import pages.user.CreateUserPage
-import pages.user.ListUserPage
-import pages.user.ShowUserPage
 
-class MiscSpec extends AbstractSecuritySpec {
-
-	void 'create roles'() {
-		when:
-		to ListRolePage
-
-		then:
-		roleRows.size() == 0
-
-		when:
-		newRoleButton.click()
-
-		then:
-		at CreateRolePage
-
-		when:
-		authority = 'ROLE_ADMIN'
-		createButton.click()
-
-		then:
-		at ShowRolePage
-
-		when:
-		to ListRolePage
-
-		then:
-		roleRows.size() == 1
-
-		when:
-		newRoleButton.click()
-
-		then:
-		at CreateRolePage
-
-		when:
-		authority = 'ROLE_USER'
-		createButton.click()
-
-		then:
-		at ShowRolePage
-
-		when:
-		to ListRolePage
-
-		then:
-		roleRows.size() == 2
-	}
-
-	void 'create users'() {
-		when:
-		to ListUserPage
-
-		then:
-		userRows.size() == 0
-
-		when:
-		newUserButton.click()
-
-		then:
-		at CreateUserPage
-
-		when:
-		username = 'user1'
-		password = 'p4ssw0rd'
-		$('#enabled').click()
-		$('#ROLE_ADMIN').click()
-		createButton.click()
-
-		then:
-		at ShowUserPage
-
-		when:
-		to ListUserPage
-
-		then:
-		userRows.size() == 1
-
-		when:
-		newUserButton.click()
-
-		then:
-		at CreateUserPage
-
-		when:
-		username = 'user2'
-		password = 'p4ssw0rd2'
-		$('#enabled').click()
-		$('#ROLE_USER').click()
-		createButton.click()
-
-		then:
-		at ShowUserPage
-
-		when:
-		to ListUserPage
-
-		then:
-		userRows.size() == 2
-	}
+class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'salted password'() {
 
-		when:
-		String encryptedPassword = getContent('hack/getUserProperty?user=user1&propName=password')
+		given:
+		String username = 'testuser_books_and_movies'
 		def passwordEncoder = createSha256Encoder()
-		String notSalted = passwordEncoder.encodePassword('p4ssw0rd', null)
-		String salted = passwordEncoder.encodePassword('p4ssw0rd', 'user1')
+
+		when:
+		String hashedPassword = getUserProperty(username, 'password')
+		String notSalted = passwordEncoder.encodePassword('password', null)
+		String salted = passwordEncoder.encodePassword('password', username)
 
 		then:
-		salted == encryptedPassword
-		notSalted != encryptedPassword
+		salted == hashedPassword
+		notSalted != hashedPassword
 	}
 
 	void 'switch user'() {
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login 'admin'
 
 		then:
 		at IndexPage
@@ -140,7 +39,7 @@ class MiscSpec extends AbstractSecuritySpec {
 		String auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Username: user1'
+		auth.contains 'Username: admin'
 		auth.contains 'Authenticated: true'
 		auth.contains 'ROLE_ADMIN'
 		auth.contains 'ROLE_USER' // new, added since inferred from role hierarchy
@@ -148,18 +47,18 @@ class MiscSpec extends AbstractSecuritySpec {
 
 		// switch
 		when:
-		go 'j_spring_security_switch_user?j_username=user2'
+		go 'j_spring_security_switch_user?j_username=testuser'
 
 		then:
-		assertContentContains 'Welcome to Grails'
+		assertContentContains 'Available Controllers:'
 
-		// verify logged in as user2
+		// verify logged in as testuser
 
 		when:
 		auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Username: user2'
+		auth.contains 'Username: testuser'
 		auth.contains 'Authenticated: true'
 		auth.contains 'ROLE_USER'
 		auth.contains 'ROLE_PREVIOUS_ADMINISTRATOR'
@@ -182,7 +81,7 @@ class MiscSpec extends AbstractSecuritySpec {
 		go 'j_spring_security_exit_user'
 
 		then:
-		assertContentContains 'Welcome to Grails'
+		assertContentContains 'Available Controllers:'
 
 		// verify logged in as admin
 		when:
@@ -195,7 +94,7 @@ class MiscSpec extends AbstractSecuritySpec {
 		auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Username: user1'
+		auth.contains 'Username: admin'
 		auth.contains 'Authenticated: true'
 		auth.contains 'ROLE_ADMIN'
 		auth.contains 'ROLE_USER'
@@ -205,7 +104,7 @@ class MiscSpec extends AbstractSecuritySpec {
 	void 'hierarchical roles'() {
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login 'admin'
 
 		then:
 		at IndexPage
@@ -250,20 +149,27 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentDoesNotContain 'switched true'
 		assertContentContains 'switched false'
 		assertContentContains 'switched original username ""'
+
 		assertContentDoesNotContain 'access with role user: true'
 		assertContentDoesNotContain 'access with role admin: true'
 		assertContentContains 'access with role user: false'
 		assertContentContains 'access with role admin: false'
+
+		assertContentContains 'Can access /login/auth'
+		assertContentDoesNotContain 'Can access /secure-annotated'
+		assertContentDoesNotContain 'Cannot access /login/auth'
+		assertContentContains 'Cannot access /secure-annotated'
+
 		assertContentContains 'anonymous access: true'
-		assertContentContains 'Can access /tagLibTest/test'
+		assertContentContains 'Can access /tag-lib-test/test'
 		assertContentDoesNotContain 'anonymous access: false'
-		assertContentDoesNotContain 'Cannot access /tagLibTest/test'
+		assertContentDoesNotContain 'Cannot access /tag-lib-test/test'
 	}
 
 	void 'taglibs user'() {
 
 		when:
-		login 'user2', 'p4ssw0rd2'
+		login 'testuser'
 
 		then:
 		at IndexPage
@@ -278,7 +184,7 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentContains 'user or admin'
 		assertContentContains 'accountNonExpired: "true"'
 		assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
-		assertContentContains 'Username is "user2"'
+		assertContentContains 'Username is "testuser"'
 		assertContentContains 'logged in true'
 		assertContentDoesNotContain 'logged in false'
 		assertContentDoesNotContain 'switched true'
@@ -291,20 +197,19 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentContains 'access with role admin: false'
 
 		assertContentContains 'Can access /login/auth'
-		assertContentDoesNotContain 'Can access /secureAnnotated'
+		assertContentDoesNotContain 'Can access /secure-annotated'
 		assertContentDoesNotContain 'Cannot access /login/auth'
-		assertContentContains 'Cannot access /secureAnnotated'
+		assertContentContains 'Cannot access /secure-annotated'
 
 		assertContentContains 'anonymous access: false'
-		assertContentContains 'Can access /tagLibTest/test'
+		assertContentContains 'Can access /tag-lib-test/test'
 		assertContentDoesNotContain 'anonymous access: true'
-		assertContentDoesNotContain 'Cannot access /tagLibTest/test'
 	}
 
 	void 'taglibs admin'() {
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login 'admin'
 
 		then:
 		at IndexPage
@@ -319,7 +224,7 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentContains 'user or admin'
 		assertContentContains 'accountNonExpired: "true"'
 		assertContentDoesNotContain 'id: "not logged in"' // can't test on exact id, don't know what it is
-		assertContentContains 'Username is "user1"'
+		assertContentContains 'Username is "admin"'
 
 		assertContentContains 'logged in true'
 		assertContentDoesNotContain 'logged in false'
@@ -333,14 +238,14 @@ class MiscSpec extends AbstractSecuritySpec {
 		assertContentDoesNotContain 'access with role admin: false'
 
 		assertContentContains 'Can access /login/auth'
-		assertContentContains 'Can access /secureAnnotated'
+		assertContentContains 'Can access /secure-annotated'
 		assertContentDoesNotContain 'Cannot access /login/auth'
-		assertContentDoesNotContain 'Cannot access /secureAnnotated'
+		assertContentDoesNotContain 'Cannot access /secure-annotated'
 
 		assertContentContains 'anonymous access: false'
-		assertContentContains 'Can access /tagLibTest/test'
+		assertContentContains 'Can access /tag-lib-test/test'
 		assertContentDoesNotContain 'anonymous access: true'
-		assertContentDoesNotContain 'Cannot access /tagLibTest/test'
+		assertContentDoesNotContain 'Cannot access /tag-lib-test/test'
 	}
 
 	void 'metaclass methods unauthenticated'() {
@@ -361,22 +266,22 @@ class MiscSpec extends AbstractSecuritySpec {
 	void 'metaclass methods authenticated'() {
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login 'admin'
 
 		then:
 		at IndexPage
 
 		when:
-		go 'tag-lib-test/testMetaclassMethods'
+		go 'tag-lib-test/test-metaclass-methods'
 
 		then:
 		assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
 		assertContentContains 'principal: grails.plugin.springsecurity.userdetails.GrailsUser'
-		assertContentContains 'Username: user1'
+		assertContentContains 'Username: admin'
 		assertContentContains 'isLoggedIn: true'
 		assertContentContains 'loggedIn: true'
-		assertContentContains 'getAuthenticatedUser: user1'
-		assertContentContains 'authenticatedUser: user1'
+		assertContentContains 'getAuthenticatedUser: admin'
+		assertContentContains 'authenticatedUser: admin'
 	}
 
 	void 'test hyphenated'() {
@@ -401,7 +306,7 @@ class MiscSpec extends AbstractSecuritySpec {
 
 		when:
 		logout()
-		login 'user1', 'p4ssw0rd'
+		login 'admin'
 
 		then:
 		at IndexPage

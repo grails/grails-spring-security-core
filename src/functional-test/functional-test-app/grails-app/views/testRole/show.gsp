@@ -16,16 +16,16 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<ol class="property-list testRole">
-				<g:if test="${testRoleInstance?.authority}">
+				<g:if test="${testRole?.authority}">
 				<li class="fieldcontain">
 					<span id="authority-label" class="property-label">Authority</span>
-					<span class="property-value" aria-labelledby="authority-label"><g:fieldValue bean="${testRoleInstance}" field="authority"/></span>
+					<span class="property-value" aria-labelledby="authority-label"><g:fieldValue bean="${testRole}" field="authority"/></span>
 				</li>
 				</g:if>
 			</ol>
-			<g:form url="[resource:testRoleInstance, action:'delete']" method="DELETE">
+			<g:form url="[resource:testRole, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${testRoleInstance}">Edit</g:link>
+					<g:link class="edit" action="edit" resource="${testRole}">Edit</g:link>
 					<g:actionSubmit class="delete" action="delete" value='Delete' onclick="return confirm('Are you sure?');" />
 				</fieldset>
 			</g:form>

@@ -17,9 +17,9 @@
 	<div class="message">${flash.message}</div>
 	</g:if>
 
-	<g:hasErrors bean="${testUserInstance}">
+	<g:hasErrors bean="${testUser}">
 	<div class="errors">
-	<g:renderErrors bean="${testUserInstance}" as="list" />
+	<g:renderErrors bean="${testUser}" as="list" />
 	</div>
 	</g:hasErrors>
 
@@ -33,8 +33,8 @@
 			<td valign="top" class="name">
 				<label for="username">Username</label>
 			</td>
-			<td valign="top" class="value ${hasErrors(bean: testUserInstance, field: 'username', 'errors')}">
-				<g:textField name="username" value="${testUserInstance?.username}" />
+			<td valign="top" class="value ${hasErrors(bean: testUser, field: 'username', 'errors')}">
+				<g:textField name="username" value="${testUser?.username}" />
 			</td>
 		</tr>
 
@@ -42,8 +42,8 @@
 			<td valign="top" class="name">
 				<label for="password">Password</label>
 			</td>
-			<td valign="top" class="value ${hasErrors(bean: testUserInstance, field: 'password', 'errors')}">
-				<g:passwordField name="password" value="${testUserInstance?.password}" />
+			<td valign="top" class="value ${hasErrors(bean: testUser, field: 'password', 'errors')}">
+				<g:passwordField name="password" value="${testUser?.password}" />
 			</td>
 		</tr>
 
@@ -51,8 +51,8 @@
 			<td valign="top" class="name">
 				<label for="enabled">Enabled</label>
 			</td>
-			<td valign="top" class="value ${hasErrors(bean: testUserInstance, field: 'enabled', 'errors')}">
-				<g:checkBox name="enabled" value="${testUserInstance?.enabled}" />
+			<td valign="top" class="value ${hasErrors(bean: testUser, field: 'enabled', 'errors')}">
+				<g:checkBox name="enabled" value="${testUser?.enabled}" />
 			</td>
 		</tr>
 

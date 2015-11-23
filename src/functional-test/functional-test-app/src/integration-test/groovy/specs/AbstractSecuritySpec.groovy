@@ -4,22 +4,30 @@ import org.springframework.security.authentication.encoding.MessageDigestPasswor
 
 import geb.spock.GebReportingSpec
 import grails.test.mixin.integration.Integration
-import grails.transaction.Rollback
 import pages.LoginPage
 import pages.LogoutPage
+import spock.lang.Shared
 import spock.lang.Stepwise
 
 @Integration
-@Rollback
 @Stepwise
 abstract class AbstractSecuritySpec extends GebReportingSpec {
 
-	void setupSpec() {
-		resetDatabase()
+	private @Shared boolean databaseReset = false
+
+	void setup() {
+		logout()
+
+		// call resetDatabase() once per suite, before the first test; would
+		// be better in a setupSpec() method, but can't make go() calls there
+		if (!databaseReset) {
+			resetDatabase()
+			databaseReset = true
+		}
 	}
 
-	void cleanup() {
-		logout()
+	void cleanupSpec() {
+		databaseReset = false
 	}
 
 	protected void resetDatabase() {

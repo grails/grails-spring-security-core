@@ -220,7 +220,7 @@ class StaticSecuritySpec extends AbstractSecuritySpec {
 		go 'secureAnnotated/expression'
 
 		then:
-		assertContentContains 'OK'
+		assertContentContains 'expression: OK'
 	}
 
 	void 'check allowed for admin2'() {

@@ -5,23 +5,20 @@ import pages.LoginPage
 
 class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
-	void setupSpec() {
-		go 'testData/addTestUsers'
-	}
-
-	void setup() {
-		browser.clearCookiesQuietly()
+	protected void resetDatabase() {
+		super.resetDatabase()
+		go browser.baseUrl + 'testData/addTestUsers'
 	}
 
 	void 'should redirect to login page for anonymous'() {
 		when:
-		go uri
+		go 'api/v1/' + uri
 
 		then:
 		at LoginPage
 
 		where:
-		uri << ['api/v1/books','api/v1/movies','api/v1/books.json','api/v1/movies.json']
+		uri << ['books', 'books.json', 'movies', 'movies.json']
 	}
 
 	void 'api not allowed for testuser'() {
@@ -87,6 +84,7 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 		pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
+
 		where:
 		format << ['', '.json']
 	}

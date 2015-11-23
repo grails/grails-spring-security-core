@@ -16,28 +16,28 @@
 			<div class="message" role="status">${flash.message}</div>
 			</g:if>
 			<ol class="property-list testRequestmap">
-				<g:if test="${testRequestmapInstance?.url}">
+				<g:if test="${testRequestmap?.url}">
 				<li class="fieldcontain">
 					<span id="url-label" class="property-label">URL</span>
-					<span class="property-value" aria-labelledby="url-label"><g:fieldValue bean="${testRequestmapInstance}" field="url"/></span>
+					<span class="property-value" aria-labelledby="url-label"><g:fieldValue bean="${testRequestmap}" field="url"/></span>
 				</li>
 				</g:if>
-				<g:if test="${testRequestmapInstance?.configAttribute}">
+				<g:if test="${testRequestmap?.configAttribute}">
 				<li class="fieldcontain">
 					<span id="configAttribute-label" class="property-label">Config Attribute</span>
-					<span class="property-value" aria-labelledby="configAttribute-label"><g:fieldValue bean="${testRequestmapInstance}" field="configAttribute"/></span>
+					<span class="property-value" aria-labelledby="configAttribute-label"><g:fieldValue bean="${testRequestmap}" field="configAttribute"/></span>
 				</li>
 				</g:if>
-				<g:if test="${testRequestmapInstance?.httpMethod}">
+				<g:if test="${testRequestmap?.httpMethod}">
 				<li class="fieldcontain">
 					<span id="httpMethod-label" class="property-label">HTTP Method</span>
-					<span class="property-value" aria-labelledby="httpMethod-label"><g:fieldValue bean="${testRequestmapInstance}" field="httpMethod"/></span>
+					<span class="property-value" aria-labelledby="httpMethod-label"><g:fieldValue bean="${testRequestmap}" field="httpMethod"/></span>
 				</li>
 				</g:if>
 			</ol>
-			<g:form url="[resource:testRequestmapInstance, action:'delete']" method="DELETE">
+			<g:form url="[resource:testRequestmap, action:'delete']" method="DELETE">
 				<fieldset class="buttons">
-					<g:link class="edit" action="edit" resource="${testRequestmapInstance}">Edit</g:link>
+					<g:link class="edit" action="edit" resource="${testRequestmap}">Edit</g:link>
 					<g:actionSubmit class="delete" action="delete" value='Delete' onclick="return confirm('Are you sure?');" />
 				</fieldset>
 			</g:form>

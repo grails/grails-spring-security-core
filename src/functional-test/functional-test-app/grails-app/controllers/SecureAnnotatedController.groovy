@@ -19,7 +19,7 @@ class SecureAnnotatedController {
 
 	@Secured(["authentication.name == 'admin1'"])
 	def expression() {
-		render 'OK'
+		render 'expression: OK'
 	}
 
 	@Secured(['ROLE_ADMIN'])

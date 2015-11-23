@@ -20,23 +20,22 @@ grails {
 			}
 			controllerAnnotations {
 				staticRules = [
-					[pattern: '/j_spring_security_switch_user', access: ['ROLE_ADMIN']],
-					[pattern: '/j_spring_security_exit_user',   access: ['permitAll']],
-					[pattern: '/',                              access: ['permitAll']],
-					[pattern: '/error':,                        access: ['permitAll']],
-					[pattern: '/index':,                        access: ['permitAll']],
-					[pattern: '/index.gsp':,                    access: ['permitAll']],
-					[pattern: '/shutdown':,                     access: ['permitAll']],
-					[pattern: '/**/js/**':,                     access: ['permitAll']],
-					[pattern: '/**/css/**':,                    access: ['permitAll']],
-					[pattern: '/**/images/**':,                 access: ['permitAll']],
-					[pattern: '/**/favicon.ico':,               access: ['permitAll']],
-					[pattern: '/testData/**':,                  access: ['permitAll']],
-					[pattern: '/dbconsole/**':,                 access: ['permitAll']],
-					[pattern: '/dbconsole':,                    access: ['permitAll']],
-					[pattern: '/assets/**':,                    access: ['permitAll']],
-					[pattern: '/securityinfo':,                 access: ['permitAll']],
-					[pattern: '/securityinfo/**':,              access: ['permitAll']]
+					[pattern: '/j_spring_security_switch_user', access: 'ROLE_ADMIN'],
+					[pattern: '/j_spring_security_exit_user',   access: 'permitAll'],
+					[pattern: '/',                              access: 'permitAll'],
+					[pattern: '/error',                         access: 'permitAll'],
+					[pattern: '/index',                         access: 'permitAll'],
+					[pattern: '/index.gsp',                     access: 'permitAll'],
+					[pattern: '/shutdown',                      access: 'permitAll'],
+					[pattern: '/**/js/**',                      access: 'permitAll'],
+					[pattern: '/**/css/**',                     access: 'permitAll'],
+					[pattern: '/**/images/**',                  access: 'permitAll'],
+					[pattern: '/**/favicon.ico',                access: 'permitAll'],
+					[pattern: '/dbconsole/**',                  access: 'permitAll'],
+					[pattern: '/dbconsole',                     access: 'permitAll'],
+					[pattern: '/assets/**',                     access: 'permitAll'],
+					[pattern: '/securityinfo',                  access: 'permitAll'],
+					[pattern: '/securityinfo/**',               access: 'permitAll']
 				]
 			}
 		}
@@ -71,12 +70,12 @@ switch (testconfig) {
 		grails.plugin.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
 		grails.plugin.springsecurity.useSwitchUserFilter = true
 		grails.plugin.springsecurity.failureHandler.exceptionMappings = [
-			[exception: 'org.springframework.security.authentication.LockedException',             url: '/testUser/accountLocked'],
-			[exception: 'org.springframework.security.authentication.DisabledException',           url: '/testUser/accountDisabled'],
-			[exception: 'org.springframework.security.authentication.AccountExpiredException',     url: '/testUser/accountExpired'],
-			[exception: 'org.springframework.security.authentication.CredentialsExpiredException', url: '/testUser/passwordExpired']
+			[exception: 'org.springframework.security.authentication.LockedException',             url: '/test-user/account-locked'],
+			[exception: 'org.springframework.security.authentication.DisabledException',           url: '/test-user/account-disabled'],
+			[exception: 'org.springframework.security.authentication.AccountExpiredException',     url: '/test-user/account-expired'],
+			[exception: 'org.springframework.security.authentication.CredentialsExpiredException', url: '/test-user/password-expired']
 		]
-//		grails.web.url.converter = 'hyphenated'
+		grails.web.url.converter = 'hyphenated'
 		break
 
 	case 'requestmap':

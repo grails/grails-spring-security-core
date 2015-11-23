@@ -233,7 +233,7 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		go 'secureAnnotated/expression'
 
 		then:
-		assertContentContains 'OK'
+		assertContentContains 'expression: OK'
 
 		when:
 		go 'secureAnnotated/indexMethod'
@@ -251,13 +251,13 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		go 'secureAnnotated/expressionMethod'
 
 		then:
-		assertContentContains 'OK'
+		assertContentContains 'OK - method'
 
 		when:
 		go 'secureAnnotated/closureMethod'
 
 		then:
-		assertContentContains 'OK'
+		assertContentContains 'OK - closureMethod'
 	}
 
 	void 'check allowed for admin2'() {

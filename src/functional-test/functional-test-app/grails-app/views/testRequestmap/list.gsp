@@ -23,17 +23,17 @@
 					</tr>
 				</thead>
 				<tbody>
-    				<g:each in="${testRequestmapInstanceList}" status="i" var="testRequestmapInstance">
+    				<g:each in="${testRequestmaps}" status="i" var="testRequestmap">
 					<tr class="${(i % 2) == 0 ? 'even' : 'odd'}">
-						<td><g:link action="show" id="${testRequestmapInstance.id}">${fieldValue(bean: testRequestmapInstance, field: "url")}</g:link></td>
-						<td>${fieldValue(bean: testRequestmapInstance, field: "configAttribute")}</td>
-						<td>${fieldValue(bean: testRequestmapInstance, field: "httpMethod")}</td>
+						<td><g:link action="show" id="${testRequestmap.id}">${fieldValue(bean: testRequestmap, field: "url")}</g:link></td>
+						<td>${fieldValue(bean: testRequestmap, field: "configAttribute")}</td>
+						<td>${fieldValue(bean: testRequestmap, field: "httpMethod")}</td>
 					</tr>
 	    			</g:each>
 				</tbody>
 			</table>
 			<div class="pagination">
-				<g:paginate total="${testRequestmapInstanceCount ?: 0}" />
+				<g:paginate total="${testRequestmapCount ?: 0}" />
 			</div>
 		</div>
 	</body>

@@ -134,7 +134,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		then:
 		at ListRequestmapPage
 		def initialSize = requestmapRows.size()
-		initialSize in [26,27]
+		initialSize == 28
 
 		when:
 		newRequestmapButton.click()
@@ -235,7 +235,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		then:
 		at IndexPage
 
-	// Check that with a requestmap, /secure is accessible after login
+		// Check that with a requestmap, /secure is accessible after login
 		when:
 		go 'secure'
 
@@ -269,6 +269,6 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		go 'secure/expression'
 
 		then:
-		assertContentContains 'OK'
+		assertContentContains 'expression: OK'
 	}
 }

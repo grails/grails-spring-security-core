@@ -5,6 +5,6 @@ class SecureController {
 	}
 
 	def expression() {
-		render 'OK'
+		render 'expression: OK'
 	}
 }

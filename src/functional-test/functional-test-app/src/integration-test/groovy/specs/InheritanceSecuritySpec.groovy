@@ -5,12 +5,9 @@ import pages.LoginPage
 
 class InheritanceSecuritySpec extends AbstractSecuritySpec {
 
-	void setupSpec() {
-		go 'testData/addTestUsers'
-	}
-
-	void setup() {
-		browser.clearCookiesQuietly()
+	protected void resetDatabase() {
+		super.resetDatabase()
+		go browser.baseUrl + 'testData/addTestUsers'
 	}
 
 	void 'should redirect to login page for anonymous'() {

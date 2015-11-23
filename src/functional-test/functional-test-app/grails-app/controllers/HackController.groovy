@@ -9,8 +9,8 @@ class HackController {
 
 	def userCache
 
-	def getSessionValue() {
-		def value = session[params.name]
+	def getSessionValue(String name) {
+		def value = session[name]
 		render value ? value.toString() : ''
 	}
 
@@ -22,20 +22,20 @@ class HackController {
 		render sb.toString()
 	}
 
-	def getUserProperty() {
-		render TestUser.findByUsername(params.user)."$params.propName"
+	def getUserProperty(String user, String propName) {
+		render TestUser.findByUsername(user)."$propName"
 	}
 
 	def setUserProperty() {
-		def user=TestUser.findByUsername(params.user)
+		def user = TestUser.findByUsername(params.user)
 		user.properties = params
-		user.save(flush:true)
-		userCache.removeUserFromCache params.user
-		render 'ok'
+		user.save(flush: true)
+		userCache.removeUserFromCache user.username
+		render 'setUserProperty: OK'
 	}
 
 	def clearAllData() {
-		render 'ok'
+		render 'clearAllData: OK'
 	}
 
 	def grailsVersion() {

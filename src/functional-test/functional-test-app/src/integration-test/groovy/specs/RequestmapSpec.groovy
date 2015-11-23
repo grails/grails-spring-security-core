@@ -7,13 +7,13 @@ import pages.requestmap.ShowRequestmapPage
 
 class RequestmapSpec extends AbstractSecuritySpec {
 
-	void 'there are 26 initially'() {
+	void 'there are 28 initially'() {
 		when:
 		go 'testRequestmap/list?max=100'
 
 		then:
 		at ListRequestmapPage
-		requestmapRows.size() == 26
+		requestmapRows.size() == 28
 	}
 
 	void 'add a requestmap'() {
@@ -25,13 +25,13 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		at CreateRequestmapPage
 
 		when:
-		$('form').url = '/secure/**'
+		$('form').url = '/nuevo/**'
 		configAttribute = 'ROLE_ADMIN'
 		createButton.click()
 
 		then:
 		at ShowRequestmapPage
-		value('Url') == '/secure/**'
+		value('URL') == '/nuevo/**'
 		configAttribute == 'ROLE_ADMIN'
 
 		when:
@@ -39,7 +39,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 
 		then:
 		at ListRequestmapPage
-		requestmapRows.size() == 27
+		requestmapRows.size() == 29
 	}
 
 	void 'edit the details'() {
@@ -68,7 +68,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 
 		then:
 		at ShowRequestmapPage
-		value('Url') == '/secure2/**'
+		value('URL') == '/secure2/**'
 		configAttribute == 'ROLE_ADMINX'
 	}
 
@@ -97,6 +97,6 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		go 'testRequestmap/list?max=100'
 
 		then:
-		requestmapRows.size() == 26
+		requestmapRows.size() == 28
 	}
 }

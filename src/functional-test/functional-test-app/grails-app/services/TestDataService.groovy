@@ -9,8 +9,16 @@ import rest.Book
 import rest.Movie
 
 class TestDataService {
+
 	def grailsApplication
 	def dataSource
+
+	private static final List<String> URIS_FOR_REQUESTMAPS = [
+		'/', '/error', '/index', '/index.gsp', '/shutdown', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
+		'/login', '/login/**', '/logout', '/logout/**',
+		'/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
+		'/testRequestmap', '/testRequestmap/**',
+		'/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']
 
 	void returnToInitialState() {
 		truncateTablesAndRetry 3, false
@@ -29,13 +37,15 @@ class TestDataService {
 	}
 
 	boolean truncateTables(boolean ignoreExceptions = false) {
+		println "truncateTables: start"
 		Sql sql
 		boolean success = true
 		try {
 			sql = new Sql(dataSource)
 			sql.rows('SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = SCHEMA()').each { row ->
 				try {
-					sql.executeUpdate 'DELETE FROM ' + row.TABLE_NAME
+					int rowCount = sql.executeUpdate('DELETE FROM ' + row.TABLE_NAME)
+					if (rowCount) println "truncateTables: deleted $rowCount row(s) from $row.TABLE_NAME"
 				}
 				catch (e) {
 					success = false
@@ -46,6 +56,7 @@ class TestDataService {
 			}
 		}
 		finally {
+			println "truncateTables: end"
 			sql?.close()
 		}
 		success
@@ -59,24 +70,22 @@ class TestDataService {
 			addTestUsers()
 		}
 
-		if (SpringSecurityUtils.securityConfigType == 'Requestmap') {
-			if (TestRequestmap.count()) {
-				return
-			}
-
-			for (url in ['/', '/error', '/index', '/index.gsp', '/shutdown', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
-			             '/login', '/login/**', '/logout', '/logout/**',
-			             '/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
-			             '/testRequestmap', '/testRequestmap/**',
-			             '/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']) {
-				save new TestRequestmap(url, 'permitAll')
-			}
-
-			assert 26 == TestRequestmap.count()
+		if (SpringSecurityUtils.securityConfigType != 'Requestmap') {
+			return
 		}
+
+		if (TestRequestmap.count()) {
+			return
+		}
+
+		for (url in URIS_FOR_REQUESTMAPS) {
+			save new TestRequestmap(url, 'permitAll')
+		}
+
+		assert URIS_FOR_REQUESTMAPS.size() == TestRequestmap.count()
 	}
 
-	def addTestUsers() {
+	void addTestUsers() {
 		println 'Adding test users'
 		addTestUser 'admin',                     'ROLE_ADMIN'
 		addTestUser 'testuser',                  'ROLE_USER', 'ROLE_BASE', 'ROLE_EXTENDED'

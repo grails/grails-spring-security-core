@@ -2,18 +2,21 @@ package specs
 
 import pages.IndexPage
 
-class DisableSpec extends AbstractSecuritySpec {
+class DisableSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'lock account'() {
 
+		given:
+		String username = 'admin'
+
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		at IndexPage
 
 		when:
-		go 'secureAnnotated'
+		go 'secure-annotated'
 
 		then:
 		assertContentContains 'you have ROLE_ADMIN'
@@ -22,38 +25,41 @@ class DisableSpec extends AbstractSecuritySpec {
 		logout()
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
+		'false' == getUserProperty(username, 'accountLocked')
 
 		when:
-		go 'hack/setUserProperty?user=user1&accountLocked=true'
+		setUserProperty username, 'accountLocked', true
 
 		then:
-		'true' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
+		'true' == getUserProperty(username, 'accountLocked')
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		assertContentContains 'accountLocked'
 
 		// reset
 		when:
-		go 'hack/setUserProperty?user=user1&accountLocked=false'
+		setUserProperty username, 'accountLocked', false
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=accountLocked')
+		'false' == getUserProperty(username, 'accountLocked')
 	}
 
 	void 'disable account'() {
 
+		given:
+		String username = 'admin'
+
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		at IndexPage
 
 		when:
-		go 'secureAnnotated'
+		go 'secure-annotated'
 
 		then:
 		assertContentContains 'you have ROLE_ADMIN'
@@ -62,38 +68,41 @@ class DisableSpec extends AbstractSecuritySpec {
 		logout()
 
 		then:
-		'true' == getContent('hack/getUserProperty?user=user1&propName=enabled')
+		'true' == getUserProperty(username, 'enabled')
 
 		when:
-		go 'hack/setUserProperty?user=user1&enabled=false'
+		setUserProperty username, 'enabled', false
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=enabled')
+		'false' == getUserProperty(username, 'enabled')
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		assertContentContains 'accountDisabled'
 
 		// reset
 		when:
-		go 'hack/setUserProperty?user=user1&enabled=true'
+		setUserProperty username, 'enabled', true
 
 		then:
-		'true' == getContent('hack/getUserProperty?user=user1&propName=enabled')
+		'true' == getUserProperty(username, 'enabled')
 	}
 
 	void 'expire account'() {
 
+		given:
+		String username = 'admin'
+
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		at IndexPage
 
 		when:
-		go 'secureAnnotated'
+		go 'secure-annotated'
 
 		then:
 		assertContentContains 'you have ROLE_ADMIN'
@@ -102,38 +111,41 @@ class DisableSpec extends AbstractSecuritySpec {
 		logout()
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
+		'false' == getUserProperty(username, 'accountExpired')
 
 		when:
-		go 'hack/setUserProperty?user=user1&accountExpired=true'
+		setUserProperty username, 'accountExpired', true
 
 		then:
-		'true' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
+		'true' == getUserProperty(username, 'accountExpired')
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		assertContentContains 'accountExpired'
 
 		// reset
 		when:
-		go 'hack/setUserProperty?user=user1&accountExpired=false'
+		setUserProperty username, 'accountExpired', false
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=accountExpired')
+		'false' == getUserProperty(username, 'accountExpired')
 	}
 
 	void 'expire password'() {
 
+		given:
+		String username = 'admin'
+
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		at IndexPage
 
 		when:
-		go 'secureAnnotated'
+		go 'secure-annotated'
 
 		then:
 		assertContentContains 'you have ROLE_ADMIN'
@@ -142,25 +154,29 @@ class DisableSpec extends AbstractSecuritySpec {
 		logout()
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
+		'false' == getUserProperty(username, 'passwordExpired')
 
 		when:
-		go 'hack/setUserProperty?user=user1&passwordExpired=true'
+		setUserProperty username, 'passwordExpired', true
 
 		then:
-		'true' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
+		'true' == getUserProperty(username, 'passwordExpired')
 
 		when:
-		login 'user1', 'p4ssw0rd'
+		login username
 
 		then:
 		assertContentContains 'passwordExpired'
 
 		// reset
 		when:
-		go 'hack/setUserProperty?user=user1&passwordExpired=false'
+		setUserProperty username, 'passwordExpired', false
 
 		then:
-		'false' == getContent('hack/getUserProperty?user=user1&propName=passwordExpired')
+		'false' == getUserProperty(username, 'passwordExpired')
+	}
+
+	private void setUserProperty(String user, String propertyName, value) {
+		go "hack/set-user-property?user=$user&$propertyName=$value"
 	}
 }

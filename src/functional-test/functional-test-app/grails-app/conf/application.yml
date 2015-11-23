@@ -15,6 +15,8 @@ spring:
 
 ---
 grails:
+   dbconsole:
+      enabled: true
    mime:
       disable:
          accept:

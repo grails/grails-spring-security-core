@@ -6,6 +6,5 @@ import grails.rest.Resource
 @Resource
 @Secured('ROLE_ADMIN')
 class Thing {
-
 	String name
 }
