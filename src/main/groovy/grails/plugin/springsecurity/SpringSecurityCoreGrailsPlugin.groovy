@@ -515,9 +515,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 				userDetailsChecker = ref('userDetailsChecker')
 				authenticationDetailsSource = ref('authenticationDetailsSource')
 				switchUserAuthorityChanger = ref('switchUserAuthorityChanger')
-				switchUserUrl = conf.switchUser.switchUserUrl // '/j_spring_security_switch_user'
-				exitUserUrl = conf.switchUser.exitUserUrl // '/j_spring_security_exit_user'
-				usernameParameter = conf.switchUser.usernameParameter // '/j_spring_security_exit_user'
+				switchUserUrl = conf.switchUser.switchUserUrl // '/login/impersonate'
+				exitUserUrl = conf.switchUser.exitUserUrl // '/logout/impersonate'
+				usernameParameter = conf.switchUser.usernameParameter // 'username'
 				if (conf.switchUser.targetUrl) {
 					targetUrl = conf.switchUser.targetUrl
 				}
@@ -654,14 +654,16 @@ to default to 'Annotation'; setting value to 'Annotation'
 		SortedMap<Integer, String> filterNames = SpringSecurityUtils.findFilterChainNames(conf.filterChain.filterNames,
 				  conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509,
 				  conf.useDigestAuth, conf.useBasicAuth, conf.useSwitchUserFilter)
-		def filterChain = applicationContext.springSecurityFilterChain
-		filterChain.filterChainMap = SpringSecurityUtils.buildFilterChainMap(filterNames, conf.filterChain.chainMap ?: [], applicationContext)
-		log.trace 'Filter chain: {}', filterChain.filterChainMap
+		def securityFilterChains = applicationContext.securityFilterChains
+		SpringSecurityUtils.buildFilterChains filterNames, conf.filterChain.chainMap ?: [], securityFilterChains, applicationContext
+		log.trace 'Filter chain: {}', securityFilterChains
 
 		// build voters list here to give dependent plugins a chance to register some
 		def voterNames = conf.voterNames ?: SpringSecurityUtils.voterNames
-		applicationContext.accessDecisionManager.decisionVoters = createBeanList(voterNames)
-		log.trace 'AccessDecisionVoters: {}', applicationContext.accessDecisionManager.decisionVoters
+		def decisionVoters = applicationContext.accessDecisionManager.decisionVoters
+		decisionVoters.clear()
+		decisionVoters.addAll createBeanList(voterNames)
+		log.trace 'AccessDecisionVoters: {}', decisionVoters
 
 		// build providers list here to give dependent plugins a chance to register some
 		def providerNames = []
@@ -787,7 +789,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		/** logoutFilter */
 		logoutFilter(MutableLogoutFilter, ref('logoutSuccessHandler')) {
-			filterProcessesUrl = conf.logout.filterProcessesUrl // '/j_spring_security_logout'
+			filterProcessesUrl = conf.logout.filterProcessesUrl // '/logoff'
 			handlers = ref('logoutHandlers')
 		}
 	}
@@ -881,9 +883,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 		def voters = createRefList(SpringSecurityUtils.voterNames)
 
 		/** accessDecisionManager */
-		accessDecisionManager(AuthenticatedVetoableDecisionManager) {
+		accessDecisionManager(AuthenticatedVetoableDecisionManager, voters) {
 			allowIfAllAbstainDecisions = false
-			decisionVoters = voters
 		}
 	}
 
@@ -893,8 +894,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		def providerRefs = createRefList(SpringSecurityUtils.providerNames)
 
 		/** authenticationManager */
-		authenticationManager(ProviderManager) {
-			providers = providerRefs
+		authenticationManager(ProviderManager, providerRefs) {
 			authenticationEventPublisher = ref('authenticationEventPublisher')
 			eraseCredentialsAfterAuthentication = conf.providerManager.eraseCredentialsAfterAuthentication // true
 		}
@@ -906,8 +906,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		httpFirewall(DefaultHttpFirewall)
 
-		springSecurityFilterChainProxy(FilterChainProxy) {
-			filterChainMap = [:] // will be set in doWithApplicationContext
+		securityFilterChains(ArrayList)
+
+		springSecurityFilterChainProxy(FilterChainProxy, ref('securityFilterChains')) {
 			filterChainValidator = ref('filterChainValidator')
 			firewall = ref('httpFirewall')
 		}
@@ -1020,7 +1021,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			allowSessionCreation = conf.failureHandler.allowSessionCreation // true
 		}
 
-		filterProcessUrlRequestMatcher(FilterProcessUrlRequestMatcher, conf.apf.filterProcessesUrl) // '/j_spring_security_check'
+		filterProcessUrlRequestMatcher(FilterProcessUrlRequestMatcher, conf.apf.filterProcessesUrl) // '/login/authenticate'
 
 		authenticationProcessingFilter(RequestHolderAuthenticationFilter) {
 			authenticationManager = ref('authenticationManager')
@@ -1030,8 +1031,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 			rememberMeServices = ref('rememberMeServices')
 			authenticationDetailsSource = ref('authenticationDetailsSource')
 			requiresAuthenticationRequestMatcher = ref('filterProcessUrlRequestMatcher')
-			usernameParameter = conf.apf.usernameParameter // j_username
-			passwordParameter = conf.apf.passwordParameter // j_password
+			usernameParameter = conf.apf.usernameParameter // username
+			passwordParameter = conf.apf.passwordParameter // password
 			continueChainBeforeSuccessfulAuthentication = conf.apf.continueChainBeforeSuccessfulAuthentication // false
 			allowSessionCreation = conf.apf.allowSessionCreation // true
 			postOnly = conf.apf.postOnly // true

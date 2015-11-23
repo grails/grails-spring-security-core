@@ -52,11 +52,8 @@ class SecurityTestUtils {
 		authentication
 	}
 
-	static Authentication authenticate(roleNames, boolean useGrantedAuthorityImpl = false) {
-		def authorities = roleNames.collect { useGrantedAuthorityImpl ?
-			new org.springframework.security.core.authority.GrantedAuthorityImpl(it) :
-			new SimpleGrantedAuthority(it) }
-		authenticate null, null, authorities
+	static Authentication authenticate(roleNames) {
+		authenticate null, null, roleNames.collect { new SimpleGrantedAuthority(it) }
 	}
 
 	/**

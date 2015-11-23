@@ -46,7 +46,7 @@ import test.TestUserRole
  */
 class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
-	def springSecurityFilterChain
+	def securityFilterChains
 	def springSecurityService
 
 	private static final String username = 'username'
@@ -122,8 +122,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		map[410] instanceof DummyFilter
 
 		when:
-		def filterChainMap = springSecurityFilterChain.filterChainMap
-		def filters = filterChainMap.values()[0]
+		def filters = securityFilterChains[0].filters
 
 		then:
 		filters[0] instanceof SecurityContextPersistenceFilter

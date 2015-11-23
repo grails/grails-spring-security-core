@@ -32,19 +32,18 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserCache
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.web.FilterChainProxy
+import org.springframework.security.web.DefaultSecurityFilterChain
+import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority
 import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 import grails.core.GrailsApplication
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.plugin.springsecurity.web.filter.DebugFilter
 import grails.util.Environment
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -194,7 +193,7 @@ final class SpringSecurityUtils {
 	 */
 	static boolean ifAllGranted(String roles) {
 		ifAllGranted parseAuthoritiesString(roles)
- 	}
+	}
 
 	static boolean ifAllGranted(Collection<? extends GrantedAuthority> roles) {
 		authoritiesToRoles(findInferredAuthorities(principalAuthorities)).containsAll authoritiesToRoles(roles)
@@ -424,35 +423,29 @@ final class SpringSecurityUtils {
 		Filter filter = getBean(beanName)
 		configuredOrderedFilters[order] = filter
 
-		FilterChainProxy filterChain = filterChainProxy
-		filterChain.filterChainMap = mergeFilterChainMap(configuredOrderedFilters, filter, order, filterChain.filterChainMap)
+		List<SecurityFilterChain> filterChains = getBean('securityFilterChains', List)
+		mergeFilterChains configuredOrderedFilters, filter, order, filterChains
 
 		log.trace 'Client registered bean "{}" as a filter at order {}', beanName, order
 	}
 
-	private static FilterChainProxy getFilterChainProxy() {
-		def bean = getBean('springSecurityFilterChain')
-		bean instanceof DebugFilter ? bean.getFilterChainProxy() : (FilterChainProxy)bean
-	}
-
-	private static Map<RequestMatcher, List<Filter>> mergeFilterChainMap(Map<Integer, Filter> orderedFilters,
-			Filter filter, int order, Map<RequestMatcher, List<Filter>> filterChainMap) {
+	private static void mergeFilterChains(Map<Integer, Filter> orderedFilters, Filter filter,
+	                                      int order, List<SecurityFilterChain> filterChains) {
 
 		Map<Filter, Integer> filterToPosition = new HashMap<Filter, Integer>()
 		orderedFilters.each { Integer position, Filter f -> filterToPosition[f] = position }
 
-		Map<RequestMatcher, List<Filter>> fixedFilterChainMap = [:]
-		filterChainMap.each { RequestMatcher matcher, List<Filter> value ->
-			List<Filter> filters = [] + value // copy
+		for (SecurityFilterChain filterChain in filterChains) {
+			List<Filter> filters = [] + filterChain.filters // copy
 			int index = 0
 			while (index < filters.size() && filterToPosition[filters[index]] < order) {
 				index++
 			}
 			filters.add index, filter
-			fixedFilterChainMap[matcher] = filters
-		}
 
-		fixedFilterChainMap
+			filterChain.filters.clear()
+			filterChain.filters.addAll filters
+		}
 	}
 
 	/**
@@ -734,9 +727,10 @@ final class SpringSecurityUtils {
 		orderedNames
 	}
 
-	static Map<RequestMatcher, List<Filter>> buildFilterChainMap(SortedMap<Integer, String> filterNames,
-	                                                             List<Map<String, ?>> chainMap, ApplicationContext applicationContext) {
-		Map<RequestMatcher, List<Filter>> filterChainMap = [:]
+	static void buildFilterChains(SortedMap<Integer, String> filterNames, List<Map<String, ?>> chainMap,
+	                              List<SecurityFilterChain> filterChains, ApplicationContext applicationContext) {
+
+		filterChains.clear()
 
 		def allConfiguredFilters = [:]
 		filterNames.each { Integer order, String name ->
@@ -774,13 +768,11 @@ final class SpringSecurityUtils {
 					// explicit filter names
 					filters = value.toString().split(',').collect { String name -> applicationContext.getBean(name, Filter) }
 				}
-				filterChainMap[new AntPathRequestMatcher(entry.pattern as String)] = filters
+				filterChains << new DefaultSecurityFilterChain(new AntPathRequestMatcher(entry.pattern as String), filters)
 			}
 		}
 		else {
-			filterChainMap[new AntPathRequestMatcher('/**')] = allConfiguredFilters.values() as List
+			filterChains << new DefaultSecurityFilterChain(new AntPathRequestMatcher('/**'), allConfiguredFilters.values() as List)
 		}
-
-		filterChainMap
 	}
 }

@@ -9,6 +9,6 @@ class LogoutController {
 	def index() {}
 
 	def logout() {
-		redirect uri: SpringSecurityUtils.securityConfig.logout.filterProcessesUrl // '/j_spring_security_logout'
+		redirect uri: SpringSecurityUtils.securityConfig.logout.filterProcessesUrl // '/logoff'
 	}
 }

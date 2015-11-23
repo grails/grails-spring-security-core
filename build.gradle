@@ -60,10 +60,10 @@ dependencies {
 	provided 'org.grails:grails-dependencies'
 	provided 'org.grails:grails-web-boot'
 
-	String springSecurityVersion = '3.2.9.RELEASE'
+	String springSecurityVersion = '4.0.3.RELEASE'
 
 	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
-		['aopalliance', 'aspectjrt', 'commons-collections', 'commons-logging', 'ehcache-core',
+		['aopalliance', 'aspectjrt', 'commons-collections', 'commons-logging', 'ehcache',
 		 'fest-assert', 'hsqldb', 'jcl-over-slf4j', 'jsr250-api', 'junit', 'logback-classic',
 		 'mockito-core', 'powermock-api-mockito', 'powermock-api-support', 'powermock-core',
 		 'powermock-module-junit4', 'powermock-module-junit4-common', 'powermock-reflect',

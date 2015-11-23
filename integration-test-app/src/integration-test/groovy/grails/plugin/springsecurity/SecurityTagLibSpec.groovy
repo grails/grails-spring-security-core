@@ -49,8 +49,6 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	private GrailsMockHttpServletRequest request = new GrailsMockHttpServletRequest()
 	private GrailsMockHttpServletResponse response = new GrailsMockHttpServletResponse()
 
-	static transactional = false
-
 	GroovyPagesTemplateEngine groovyPagesTemplateEngine
 	def servletContext
 
@@ -61,13 +59,13 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		authenticate 'role1'
 
 		then:
-		assertOutputEquals '', "<sec:ifAllGranted roles='role1,role2'>$body</sec:ifAllGranted>"
+		assertOutputEquals '', "<sec:ifAllGranted roles='ROLE_role1,ROLE_role2'>$body</sec:ifAllGranted>"
 
 		when:
-		authenticate 'role2,role1'
+		authenticate 'role2', 'role1'
 
 		then:
-		assertOutputEquals body, "<sec:ifAllGranted roles='role1,role2'>$body</sec:ifAllGranted>"
+		assertOutputEquals body, "<sec:ifAllGranted roles='ROLE_role1,ROLE_role2'>$body</sec:ifAllGranted>"
 	}
 
 	void 'ifNotGranted'() {
@@ -76,13 +74,13 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		authenticate 'role1'
 
 		then:
-		assertOutputEquals '', "<sec:ifNotGranted roles='role1,role2'>$body</sec:ifNotGranted>"
+		assertOutputEquals '', "<sec:ifNotGranted roles='ROLE_role1,ROLE_role2'>$body</sec:ifNotGranted>"
 
 		when:
 		authenticate 'role3'
 
 		then:
-		assertOutputEquals body, "<sec:ifNotGranted roles='role1,role2'>$body</sec:ifNotGranted>"
+		assertOutputEquals body, "<sec:ifNotGranted roles='ROLE_role1,ROLE_role2'>$body</sec:ifNotGranted>"
 	}
 
 	void 'ifAnyGranted'() {
@@ -91,13 +89,13 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		authenticate 'role3'
 
 		then:
-		assertOutputEquals '', "<sec:ifAnyGranted roles='role1,role2'>$body</sec:ifAnyGranted>"
+		assertOutputEquals '', "<sec:ifAnyGranted roles='ROLE_role1,ROLE_role2'>$body</sec:ifAnyGranted>"
 
 		when:
 		authenticate 'role2'
 
 		then:
-		assertOutputEquals body, "<sec:ifAnyGranted roles='role1,role2'>$body</sec:ifAnyGranted>"
+		assertOutputEquals body, "<sec:ifAnyGranted roles='ROLE_role1,ROLE_role2'>$body</sec:ifAnyGranted>"
 	}
 
 	void 'ifLoggedIn'() {
@@ -281,10 +279,10 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	}
 
 	private void switchUser() {
-		def filter = new SwitchUserFilter()
+		def filter = new SwitchUserFilter(switchUserUrl: '/login/impersonate', exitUserUrl: '/logout/impersonate')
 		request.method = 'POST'
-		request.requestURI = '/j_spring_security_switch_user'
-		request.addParameter 'j_username', 'somebody'
+		request.requestURI = '/login/impersonate'
+		request.addParameter 'username', 'somebody'
 
 		boolean chainCalled = false
 		boolean onAuthenticationSuccessCalled = false
@@ -303,13 +301,13 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		assert onAuthenticationSuccessCalled
 	}
 
-	private void authenticate(String roles) {
+	private void authenticate(String... roles) {
 		authenticate new SimplePrincipal(name: 'username1', domainClass: user), roles
 	}
 
-	private void authenticate(principal, String roles) {
+	private void authenticate(Principal principal, String... roles) {
 		Authentication authentication = new TestingAuthenticationToken(
-				  principal, null, SpringSecurityUtils.parseAuthoritiesString(roles))
+				  principal, null, roles.collect { new SimpleGrantedAuthority('ROLE_' + it) })
 		authentication.authenticated = true
 		SCH.context.authentication = authentication
 	}
@@ -334,7 +332,7 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	}
 }
 
-class NoDomainClass extends User {
+class NoDomainClass extends User implements Principal {
 
 	final String fullName
 
@@ -342,9 +340,11 @@ class NoDomainClass extends User {
 		super(username, 'password', true, true, true, true, SpringSecurityUtils.parseAuthoritiesString(roles))
 		fullName = name
 	}
+
+	String getName() { username }
 }
 
-class HasDomainClass extends User {
+class HasDomainClass extends User implements Principal {
 
 	final String fullName
 	final domainClass
@@ -354,6 +354,8 @@ class HasDomainClass extends User {
 		fullName = name
 		domainClass = dc
 	}
+
+	String getName() { username }
 }
 
 class SimplePrincipal implements Principal {

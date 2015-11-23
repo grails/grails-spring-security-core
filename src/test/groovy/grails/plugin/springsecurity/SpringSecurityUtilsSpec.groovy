@@ -35,17 +35,16 @@ import grails.plugin.springsecurity.web.SecurityRequestHolder
  */
 class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 
-	private static originalfilterChainMap
-
 	void setupSpec() {
 		defineBeans {
 			dummyFilter(DummyFilter)
 			firstDummy(DummyFilter)
 			secondDummy(DummyFilter)
-			defaultFilterChain(DefaultSecurityFilterChain, AnyRequestMatcher.INSTANCE, [ref('firstDummy'), ref('secondDummy')])
-			springSecurityFilterChain(FilterChainProxy, ref('defaultFilterChain'))
+			securityFilterChains(ArrayList)
+			springSecurityFilterChain(FilterChainProxy, ref('securityFilterChains'))
 		}
-		originalfilterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
+
+		applicationContext.securityFilterChains << new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, [])
 	}
 
 	void setup() {
@@ -54,15 +53,16 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 		SpringSecurityUtils.registerFilter 'secondDummy', 200
 		def configured = SpringSecurityUtils.configuredOrderedFilters
 		SpringSecurityUtils.orderedFilters.each { order, name -> configured[order] = applicationContext.getBean(name) }
-		applicationContext.springSecurityFilterChain.filterChainMap = originalfilterChainMap
 		SecurityRequestHolder.set request, null
+
+		applicationContext.securityFilterChains[0].filters.clear()
+		applicationContext.securityFilterChains[0].filters << applicationContext.firstDummy << applicationContext.secondDummy
 	}
 
 	void 'should retain existing chainmap'() {
 		when:
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', 101
-		def filterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
-		def filters = filterChainMap.values()[0]
+		def filters = applicationContext.securityFilterChains[0].filters
 
 		then:
 		filters.size() == 3
@@ -73,8 +73,7 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 
 		when:
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', 99
-		def filterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
-		def filters = filterChainMap.values()[0]
+		def filters = applicationContext.securityFilterChains[0].filters
 
 		then:
 		filters.size() == 3
@@ -85,8 +84,7 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 
 		when:
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', 201
-		def filterChainMap = applicationContext.springSecurityFilterChain.filterChainMap
-		def filters = filterChainMap.values()[0]
+		def filters = applicationContext.securityFilterChains[0].filters
 
 		then:
 		filters.size() == 3
@@ -239,7 +237,7 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 	void 'ifAllGranted'() {
 		when:
 		initRoleHierarchy ''
-		SecurityTestUtils.authenticate(['ROLE_1', 'ROLE_2'], true)
+		SecurityTestUtils.authenticate(['ROLE_1', 'ROLE_2'])
 
 		then:
 		SpringSecurityUtils.ifAllGranted('ROLE_1')
@@ -253,18 +251,12 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 		SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2')])
 		!SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2'), new SimpleGrantedAuthority('ROLE_3')])
 		!SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_3')])
-
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1')])
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_2')])
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2')])
-		!SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2'), newGrantedAuthorityImpl('ROLE_3')])
-		!SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_3')])
 	}
 
 	void 'ifAllGranted using hierarchy'() {
 		when:
 		initRoleHierarchy 'ROLE_3 > ROLE_2 \n ROLE_2 > ROLE_1'
-		SecurityTestUtils.authenticate(['ROLE_3'], true)
+		SecurityTestUtils.authenticate(['ROLE_3'])
 
 		then:
 		SpringSecurityUtils.ifAllGranted('ROLE_1')
@@ -280,13 +272,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 		SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2'), new SimpleGrantedAuthority('ROLE_3')])
 		SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_3')])
 		!SpringSecurityUtils.ifAllGranted([new SimpleGrantedAuthority('ROLE_4')])
-
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1')])
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_2')])
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2')])
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2'), newGrantedAuthorityImpl('ROLE_3')])
-		SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_3')])
-		!SpringSecurityUtils.ifAllGranted([newGrantedAuthorityImpl('ROLE_4')])
 	}
 
 	void 'ifNotGranted'() {
@@ -306,12 +291,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 		!SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2')])
 		!SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_1'), new SimpleGrantedAuthority('ROLE_2'), new SimpleGrantedAuthority('ROLE_3')])
 		SpringSecurityUtils.ifNotGranted([new SimpleGrantedAuthority('ROLE_3')])
-
-		!SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_1')])
-		!SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_2')])
-		!SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2')])
-		!SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_1'), newGrantedAuthorityImpl('ROLE_2'), newGrantedAuthorityImpl('ROLE_3')])
-		SpringSecurityUtils.ifNotGranted([newGrantedAuthorityImpl('ROLE_3')])
 	}
 
 	void 'ifNotGranted using hierarchy'() {
@@ -440,10 +419,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 				hierarchy = hierarchyString
 			}
 		}
-	}
-
-	private GrantedAuthority newGrantedAuthorityImpl(String name) {
-		new org.springframework.security.core.authority.GrantedAuthorityImpl(name)
 	}
 }
 

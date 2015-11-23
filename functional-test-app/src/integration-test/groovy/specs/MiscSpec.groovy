@@ -47,7 +47,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 		// switch
 		when:
-		go 'j_spring_security_switch_user?j_username=testuser'
+		go 'login/impersonate?username=testuser'
 
 		then:
 		assertContentContains 'Available Controllers:'
@@ -78,7 +78,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 		// switch back
 		when:
-		go 'j_spring_security_exit_user'
+		go 'logout/impersonate'
 
 		then:
 		assertContentContains 'Available Controllers:'

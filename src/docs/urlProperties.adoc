@@ -6,9 +6,9 @@ The table shows configurable URL-related properties.
 [width="100%",options="header"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| apf.filterProcessesUrl | '/j_spring_security_check' | Login form post URL, intercepted by Spring Security filter.
-| apf.usernameParameter | 'j_username' | Login form username parameter.
-| apf.passwordParameter | 'j_password' | Login form password parameter.
+| apf.filterProcessesUrl | '/login/authenticate' | Login form post URL, intercepted by Spring Security filter.
+| apf.usernameParameter | 'username' | Login form username parameter.
+| apf.passwordParameter | 'password' | Login form password parameter.
 | apf.allowSessionCreation | `true` | Whether to allow authentication to create an HTTP session.
 | apf.postOnly | `true` | Whether to allow only POST login requests.
 | apf.continueChainBefore SuccessfulAuthentication | `false` | whether to continue calling subsequent filters in the filter chain
@@ -28,7 +28,7 @@ The table shows configurable URL-related properties.
 | auth.ajaxLoginFormUrl | '/login/authAjax' | URL of Ajax login page.
 | auth.useForward | false | Whether to render the login page (`true`) or redirect (`false`).
 | logout.afterLogoutUrl | '/' | URL for redirect after logout.
-| logout.filterProcessesUrl | '/j_spring_security_logout' | Logout URL, intercepted by Spring Security filter.
+| logout.filterProcessesUrl | '/logoff' | Logout URL, intercepted by Spring Security filter.
 | logout.handlerNames | ['rememberMeServices', 'securityContextLogoutHandler'] | Logout handler bean names. See <<logoutHandlers>>
 | logout.clearAuthentication | `true` | If `true` removes the `Authentication` from the `SecurityContext` to prevent issues with concurrent requests
 | logout.invalidateHttpSession | `true` | Whether to invalidate the HTTP session when logging out

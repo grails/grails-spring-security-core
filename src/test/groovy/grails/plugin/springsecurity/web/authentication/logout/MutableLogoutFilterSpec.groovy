@@ -31,7 +31,9 @@ import grails.plugin.springsecurity.SecurityTestUtils
  */
 class MutableLogoutFilterSpec extends AbstractUnitSpec {
 
-	private final String afterLogoutUrl = '/loggedout'
+	private static final String filterProcessesUrl = '/logoff'
+	private static final String afterLogoutUrl = '/loggedout'
+
 	private final logoutSuccessHandler = new SimpleUrlLogoutSuccessHandler(defaultTargetUrl: afterLogoutUrl)
 	private final handlers = []
 	private final filter = new MutableLogoutFilter(logoutSuccessHandler)
@@ -43,19 +45,17 @@ class MutableLogoutFilterSpec extends AbstractUnitSpec {
 			handlers << ([logout: { req, res, auth -> logoutCount++ }] as LogoutHandler)
 		}
 		filter.handlers = handlers
+		filter.filterProcessesUrl = filterProcessesUrl
 	}
 
 	void 'doFilter'() {
 
-		setup:
-		String url = '/after_logout'
-		String filterProcessesUrl = '/j_spring_security_logout'
-
+		given:
 		SecurityTestUtils.authenticate()
 
-		def request1 = new MockHttpServletRequest('GET', '/foo/bar')
+		def request1 = new MockHttpServletRequest(method: 'GET', servletPath: '/foo/bar')
 		def response1 = new MockHttpServletResponse()
-		def request2 = new MockHttpServletRequest('GET', filterProcessesUrl)
+		def request2 = new MockHttpServletRequest(method: 'GET', servletPath: filterProcessesUrl)
 		def response2 = new MockHttpServletResponse()
 
 		boolean chain1Called = false

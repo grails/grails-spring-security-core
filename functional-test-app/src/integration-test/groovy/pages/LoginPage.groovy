@@ -10,10 +10,9 @@ class LoginPage extends Page {
 
 	static content = {
 		loginForm { $('form') }
-		username { $('input', type: 'text',     name: 'j_username') }
-		password { $('input', type: 'password', name: 'j_password') }
-		rememberMe { $('input', type: 'checkbox', name: '_spring_security_remember_me') }
-//		$('#remember_me')
+		username { $('input', type: 'text',     name: 'username') }
+		password { $('input', type: 'password', name: 'password') }
+		rememberMe { $('input', type: 'checkbox', name: 'remember-me') }
 		loginButton { $('input', type: 'submit', value: 'Login') }
 	}
 }

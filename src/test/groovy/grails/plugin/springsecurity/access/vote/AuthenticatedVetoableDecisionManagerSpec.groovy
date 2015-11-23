@@ -34,11 +34,7 @@ import grails.plugin.springsecurity.AbstractUnitSpec
  */
 class AuthenticatedVetoableDecisionManagerSpec extends AbstractUnitSpec {
 
-	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager()
-
-	void setup() {
-		manager.decisionVoters = [new AuthenticatedVoter(), new RoleVoter()]
-	}
+	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager([new AuthenticatedVoter(), new RoleVoter()])
 
 	void 'decide with one role'() {
 		when:

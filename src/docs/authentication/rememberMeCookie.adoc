@@ -9,7 +9,7 @@ Spring Security supports creating a remember-me cookie so that users are not req
 | rememberMe. cookieName | '`grails_remember_me`' | remember-me cookie name; should be unique per application.
 | rememberMe. alwaysRemember | `false` | If `true`, create a remember-me cookie even if no checkbox is on the form.
 | rememberMe. tokenValiditySeconds | 1209600 (14 days) | Max age of the cookie in seconds.
-| rememberMe. parameter | '`_spring_security_remember_me`' | Login form remember-me checkbox name.
+| rememberMe. parameter | '`remember-me`' | Login form remember-me checkbox name.
 | rememberMe. key | '`grailsRocks`' | Value used to encode cookies; should be unique per application.
 | rememberMe. useSecureCookie | none | Whether to use a secure cookie or not; if `true` a secure cookie is created, if `false` a non-secure cookie is created, and if not set, a secure cookie is created if the request used HTTPS
 | rememberMe. createSessionOnSuccess | `true` | Whether to create a session of one doesn't exist to ensure that the `Authentication` is stored for future requests

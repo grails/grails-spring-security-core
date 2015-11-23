@@ -57,7 +57,10 @@ class LoginController {
 		}
 
 		String postUrl = request.contextPath + config.apf.filterProcessesUrl
-		render view: 'auth', model: [postUrl: postUrl, rememberMeParameter: config.rememberMe.parameter]
+		render view: 'auth', model: [postUrl: postUrl,
+		                             rememberMeParameter: config.rememberMe.parameter,
+		                             usernameParameter: config.apf.usernameParameter,
+		                             passwordParameter: config.apf.passwordParameter]
 	}
 
 	/** The redirect action for Ajax requests. */

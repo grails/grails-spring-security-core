@@ -16,9 +16,7 @@ There is not much to implement other than your application-specific lookup code:
 package com.mycompany.myapp
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
-
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.User
 
 class MyUserDetails extends GrailsUser {
 
@@ -42,10 +40,10 @@ class MyUserDetails extends GrailsUser {
 package com.mycompany.myapp
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.plugin.springsecurity.userdetails.GrailsUserDetailsService
+import grails.plugin.springsecurity.userdetails.NoStackUsernameNotFoundException
 import grails.transaction.Transactional
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
@@ -56,10 +54,10 @@ class MyUserDetailsService implements GrailsUserDetailsService {
     * one role, so we give a user with no granted roles this one which gets
     * past that restriction but doesn't grant anything.
     */
-   static final List NO_ROLES = [new GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)]
+   static final List NO_ROLES = [new SimpleGrantedAuthority(SpringSecurityUtils.NO_ROLE)]
 
    UserDetails loadUserByUsername(String username, boolean loadRoles)
-            throws UsernameNotFoundException {
+         throws UsernameNotFoundException {
       return loadUserByUsername(username)
    }
 
@@ -67,16 +65,16 @@ class MyUserDetailsService implements GrailsUserDetailsService {
    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
       User user = User.findByUsername(username)
-      if (!user) throw new UsernameNotFoundException('User not found', username)
+      if (!user) throw new NoStackUsernameNotFoundException()
 
       def authorities = user.authorities.collect {
-         new GrantedAuthorityImpl(it.authority)
+         new SimpleGrantedAuthority(it.authority)
       }
 
       return new MyUserDetails(user.username, user.password, user.enabled,
-         !user.accountExpired, !user.passwordExpired,
-         !user.accountLocked, authorities ?: NO_ROLES, user.id,
-         user.firstName + " " + user.lastName)
+            !user.accountExpired, !user.passwordExpired,
+            !user.accountLocked, authorities ?: NO_ROLES, user.id,
+            user.firstName + " " + user.lastName)
    }
 }
 ----

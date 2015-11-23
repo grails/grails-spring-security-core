@@ -91,9 +91,9 @@ security {
 
 	/** authenticationProcessingFilter */
 	apf {
-		filterProcessesUrl = '/j_spring_security_check'
-		usernameParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY // 'j_username'
-		passwordParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY // 'j_password'
+		filterProcessesUrl = '/login/authenticate'
+		usernameParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_USERNAME_KEY // 'username'
+		passwordParameter = UsernamePasswordAuthenticationFilter.SPRING_SECURITY_FORM_PASSWORD_KEY // 'password'
 		continueChainBeforeSuccessfulAuthentication = false
 		allowSessionCreation = true
 		postOnly = true
@@ -157,7 +157,7 @@ security {
 	/** logoutFilter */
 	logout {
 		afterLogoutUrl = '/'
-		filterProcessesUrl = '/j_spring_security_logout'
+		filterProcessesUrl = '/logoff'
 		handlerNames = [] // 'rememberMeServices', 'securityContextLogoutHandler'
 		clearAuthentication = true
 		invalidateHttpSession = true
@@ -195,7 +195,7 @@ security {
 		cookieName = 'grails_remember_me'
 		alwaysRemember = false
 		tokenValiditySeconds = AbstractRememberMeServices.TWO_WEEKS_S // 1209600 -> 14 days
-		parameter = AbstractRememberMeServices.DEFAULT_PARAMETER // '_spring_security_remember_me'
+		parameter = AbstractRememberMeServices.DEFAULT_PARAMETER // 'remember-me'
 		key = 'grailsRocks'
 		persistent = false
 		persistentToken {
@@ -253,11 +253,11 @@ security {
 	/** use switchUserProcessingFilter */
 	useSwitchUserFilter = false
 	switchUser {
-		switchUserUrl = '/j_spring_security_switch_user'
-		exitUserUrl = '/j_spring_security_exit_user'
+		switchUserUrl = '/login/impersonate'
+		exitUserUrl = '/logout/impersonate'
 		targetUrl = null // use the authenticationSuccessHandler
 		switchFailureUrl = null // use the authenticationFailureHandler
-		usernameParameter = SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY // j_username
+		usernameParameter = SwitchUserFilter.SPRING_SECURITY_SWITCH_USERNAME_KEY // username
 	}
 
 	// port mappings

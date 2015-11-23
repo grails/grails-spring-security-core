@@ -10,14 +10,14 @@ This feature is very powerful; it allows full access to everything the switched-
 
 === Switching to Another User
 
-To switch to another user, typically you create a form that submits to `/j_spring_security_switch_user`:
+To switch to another user, typically you create a form that submits to `/login/impersonate`:
 
 [source,html]
 ----
 <sec:ifAllGranted roles='ROLE_SWITCH_USER'>
 
-   <form action='/j_spring_security_switch_user' method='POST'>
-      Switch to user: <input type='text' name='j_username'/> <br/>
+   <form action='/login/impersonate' method='POST'>
+      Switch to user: <input type='text' name='username'/> <br/>
       <input type='submit' value='Switch'/>
    </form>
 
@@ -30,7 +30,7 @@ Here the form is guarded by a check that the logged-in user has `ROLE_SWITCH_USE
 ----
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    ...
-   [pattern: '/j_spring_security_switch_user', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
+   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]
 ----
 
@@ -38,7 +38,7 @@ If you use ``Requestmap``s, create a rule like this (for example, in `BootStrap`
 
 [source,java]
 ----
-new Requestmap(url: '/j_spring_security_switch_user',
+new Requestmap(url: '/login/impersonate',
                configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save(flush: true)
 ----
 
@@ -48,17 +48,17 @@ If you use the static `application.groovy` map, add the rule there:
 ----
 grails.plugin.springsecurity.interceptUrlMap = [
    ...
-   [pattern: '/j_spring_security_switch_user', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
+   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]
 ----
 
 === Switching Back to Original User
-To resume as the original user, navigate to `/j_spring_security_exit_user`.
+To resume as the original user, navigate to `/logout/impersonate`.
 
 [source,html]
 ----
 <sec:ifSwitched>
-<a href='${request.contextPath}/j_spring_security_exit_user'>
+<a href='${request.contextPath}/logout/impersonate'>
    Resume as <sec:switchedUserOriginalUsername/>
 </a>
 </sec:ifSwitched>
@@ -79,8 +79,8 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...
 |====================
 | *Property* | *Default* | *Meaning*
 | useSwitchUserFilter | `false` | Whether to use the switch user filter.
-| switchUser. switchUserUrl | '/j_spring_security_switch_user' | URL to access (via GET or POST) to switch to another user.
-| switchUser. exitUserUrl | '/j_spring_security_exit_user' | URL to access to switch to another user.
+| switchUser. switchUserUrl | '/login/impersonate' | URL to access (via GET or POST) to switch to another user.
+| switchUser. exitUserUrl | '/logout/impersonate' | URL to access to switch to another user.
 | switchUser. targetUrl | Same as `successHandler.defaultTargetUrl` | URL for redirect after switching.
 | switchUser. switchFailureUrl | Same as `failureHandler. defaultFailureUrl` | URL for redirect after an error during an attempt to switch.
 | switchUser. usernameParameter | `SwitchUserFilter. SPRING_SECURITY_SWITCH_USERNAME_KEY` | The username request parameter name
@@ -97,7 +97,7 @@ Logged in as <sec:username/>
 </sec:ifLoggedIn>
 
 <sec:ifSwitched>
-<a href='${request.contextPath}/j_spring_security_exit_user'>
+<a href='${request.contextPath}/logout/impersonate'>
    Resume as <sec:switchedUserOriginalUsername/>
 </a>
 </sec:ifSwitched>
@@ -105,8 +105,8 @@ Logged in as <sec:username/>
 <sec:ifNotSwitched>
    <sec:ifAllGranted roles='ROLE_SWITCH_USER'>
 
-   <form action='${request.contextPath}/j_spring_security_switch_user' method='POST'>
-      Switch to user: <input type='text' name='j_username'/><br/>
+   <form action='${request.contextPath}/login/impersonate' method='POST'>
+      Switch to user: <input type='text' name='username'/><br/>
       <input type='submit' value='Switch'/>
    </form>
 

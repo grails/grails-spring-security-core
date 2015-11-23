@@ -26,14 +26,13 @@ import grails.plugin.springsecurity.web.SecurityRequestHolder
  */
 class AjaxAwareAuthenticationEntryPointSpec extends AbstractUnitSpec {
 
-	private final AjaxAwareAuthenticationEntryPoint entryPoint = new AjaxAwareAuthenticationEntryPoint()
+	private static final String loginFormUrl = '/loginFormUrl'
+	private static final String ajaxLoginFormUrl = '/ajaxLoginFormUrl'
 
-	private String loginFormUrl = '/loginFormUrl'
-	private String ajaxLoginFormUrl = '/ajaxLoginFormUrl'
+	private final AjaxAwareAuthenticationEntryPoint entryPoint = new AjaxAwareAuthenticationEntryPoint(loginFormUrl)
 
 	void setup() {
 		entryPoint.useForward = true
-		entryPoint.loginFormUrl = loginFormUrl
 		entryPoint.ajaxLoginFormUrl = ajaxLoginFormUrl
 		ReflectionUtils.setConfigProperty 'ajaxHeader', SpringSecurityUtils.AJAX_HEADER
 		SecurityRequestHolder.set request, response

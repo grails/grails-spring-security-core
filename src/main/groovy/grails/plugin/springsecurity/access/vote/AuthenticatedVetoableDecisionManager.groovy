@@ -34,6 +34,10 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager {
 
+	AuthenticatedVetoableDecisionManager(List<AccessDecisionVoter> decisionVoters) {
+		super(decisionVoters)
+	}
+
 	void decide(Authentication authentication, object, Collection<ConfigAttribute> configAttributes)
 			throws AccessDeniedException, InsufficientAuthenticationException {
 
