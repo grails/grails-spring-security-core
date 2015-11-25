@@ -21,13 +21,12 @@ import javax.servlet.ServletResponse
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.web.DefaultSecurityFilterChain
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
-import org.springframework.security.web.util.matcher.AnyRequestMatcher
 import org.springframework.web.filter.GenericFilterBean
 
+import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
 import grails.plugin.springsecurity.web.SecurityRequestHolder
 
 /**
@@ -44,7 +43,7 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 			springSecurityFilterChain(FilterChainProxy, ref('securityFilterChains'))
 		}
 
-		applicationContext.securityFilterChains << new DefaultSecurityFilterChain(AnyRequestMatcher.INSTANCE, [])
+		applicationContext.securityFilterChains << new GrailsSecurityFilterChain('/**', [])
 	}
 
 	void setup() {

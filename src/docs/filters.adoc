@@ -72,15 +72,23 @@ An alternative to setting the `filterNames` property is `grails.plugin.springsec
 [source,java]
 ----
 import com.mycompany.myapp.MyFilter
+import org.springframework.boot.context.embedded.FilterRegistrationBean
 
 beans = {
    myFilter(MyFilter) {
       // properties
    }
+
+   myFilterDeregistrationBean(FilterRegistrationBean) {
+      filter = ref('myFilter')
+      enabled = false
+   }
 }
 ----
 
-and then register it in `grails-app/init/BootStrap.groovy`:
+Note that in addition to the filter bean, there is also a disabled `FilterRegistrationBean` registered. This is needed because Spring Boot automatically registers filter beans in the `ApplicationContext`, so you must register your own `FilterRegistrationBean` and set its `enabled` property to `false` to prevent this.
+
+Then register the filter in `grails-app/init/BootStrap.groovy`:
 
 [source,java]
 ----

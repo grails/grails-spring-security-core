@@ -32,17 +32,15 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.core.userdetails.UserCache
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.web.DefaultSecurityFilterChain
-import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 import org.springframework.security.web.authentication.switchuser.SwitchUserGrantedAuthority
 import org.springframework.security.web.savedrequest.SavedRequest
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
 import grails.core.GrailsApplication
+import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
 import grails.plugin.springsecurity.web.SecurityRequestHolder
 import grails.util.Environment
 import groovy.transform.CompileStatic
@@ -423,19 +421,26 @@ final class SpringSecurityUtils {
 		Filter filter = getBean(beanName)
 		configuredOrderedFilters[order] = filter
 
-		List<SecurityFilterChain> filterChains = getBean('securityFilterChains', List)
-		mergeFilterChains configuredOrderedFilters, filter, order, filterChains
+		List<GrailsSecurityFilterChain> filterChains = getBean('securityFilterChains', List)
+		mergeFilterChains configuredOrderedFilters, filter, beanName, order, filterChains
 
 		log.trace 'Client registered bean "{}" as a filter at order {}', beanName, order
+		log.trace 'Updated filter chain: {}', filterChains
 	}
 
-	private static void mergeFilterChains(Map<Integer, Filter> orderedFilters, Filter filter,
-	                                      int order, List<SecurityFilterChain> filterChains) {
+	private static void mergeFilterChains(Map<Integer, Filter> orderedFilters, Filter filter, String beanName,
+	                                      int order, List<GrailsSecurityFilterChain> filterChains) {
 
 		Map<Filter, Integer> filterToPosition = new HashMap<Filter, Integer>()
 		orderedFilters.each { Integer position, Filter f -> filterToPosition[f] = position }
 
-		for (SecurityFilterChain filterChain in filterChains) {
+		List<Map<String, ?>> chainMap = (List)(ReflectionUtils.getConfigProperty('filterChain.chainMap') ?: [])
+		for (GrailsSecurityFilterChain filterChain in filterChains) {
+
+			if (filterIsExcluded(chainMap, filterChain.matcherPattern, beanName)) {
+				continue
+			}
+
 			List<Filter> filters = [] + filterChain.filters // copy
 			int index = 0
 			while (index < filters.size() && filterToPosition[filters[index]] < order) {
@@ -446,6 +451,25 @@ final class SpringSecurityUtils {
 			filterChain.filters.clear()
 			filterChain.filters.addAll filters
 		}
+	}
+
+	private static boolean filterIsExcluded(List<Map<String, ?>> chainMap, String pattern, String filterName) {
+		for (Map<String, ?> entry in chainMap) {
+			if (entry.pattern != pattern) {
+				continue
+			}
+
+			String filters = entry.filters
+			for (item in filters.split(',')) {
+				item = item.toString().trim()
+				if (item.startsWith('-') && item.substring(1) == filterName) {
+					return true
+				}
+			}
+			return false
+		}
+
+		return false
 	}
 
 	/**
@@ -728,7 +752,7 @@ final class SpringSecurityUtils {
 	}
 
 	static void buildFilterChains(SortedMap<Integer, String> filterNames, List<Map<String, ?>> chainMap,
-	                              List<SecurityFilterChain> filterChains, ApplicationContext applicationContext) {
+	                              List<GrailsSecurityFilterChain> filterChains, ApplicationContext applicationContext) {
 
 		filterChains.clear()
 
@@ -768,11 +792,11 @@ final class SpringSecurityUtils {
 					// explicit filter names
 					filters = value.toString().split(',').collect { String name -> applicationContext.getBean(name, Filter) }
 				}
-				filterChains << new DefaultSecurityFilterChain(new AntPathRequestMatcher(entry.pattern as String), filters)
+				filterChains << new GrailsSecurityFilterChain(entry.pattern as String, filters)
 			}
 		}
 		else {
-			filterChains << new DefaultSecurityFilterChain(new AntPathRequestMatcher('/**'), allConfiguredFilters.values() as List)
+			filterChains << new GrailsSecurityFilterChain('/**', allConfiguredFilters.values() as List)
 		}
 	}
 }
