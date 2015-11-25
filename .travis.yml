@@ -1,12 +1,15 @@
 language: groovy
-
 sudo: false
-
+cache:
+  directories:
+  - "$HOME/.gradle/caches"
+  - "$HOME/.gradle/wrapper"
+before_cache:
+  - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
 jdk:
 - oraclejdk8
-
+install: true
 script: "./travis-build.sh"
-
 env:
   global:
   - GIT_NAME="Graeme Rocher"
@@ -14,14 +17,3 @@ env:
   - secure: VI543AeqcYzijvWuB+c6mdb615LiM/N78PQJs1va0bPpXu8Xs0oIS7oUC/Un4BKx/g6gDee6jwPBcSJxWg6YBTyjm1TQnxcLrVsbiBab7BVvizKM7jeNwiv6DfEW+n0SJRiQXQuYd/LKC6g98tisGHBNn8ARSenOckHGroAG4lU=
   - secure: nScXgpO/7z1OTF9jNscWIS2ufLdOfshkHvHL//H1n1LdB2Sqfm5r64dMBGYWMcRzV+1F6jiGVZheKaBiDZmrmWS6bkMJrejgGU2SYPqPR8JGZGv/z1NLzJ3Ekt7lju2MGk/Io3o6DtvAr/k+G6PTrysWSQI/+aswZFIFl9B9Rg8=
   - secure: dfnrq1gwF4ihKaRY1r2OqOvuo357JQ/QMWOiSMdG8VHrTB+brraUd98TWj6Q/ZYEV6OWm0r83E27OsXwrhi51VT0IdYYYd5bvG7msInzxxc+qGPzWEpmgeqSGnNqhYCBoVMHBt5/xIn+t9zSoiBAFEZDXNZ9NTHYihaQe2mMHns=
-
-before_deploy: "./publish-plugin.sh"
-deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key:
-    secure: FUAEkM0Lknf4eO8Vb+eoL4RCZVe++YL4KorZppGxdBpYPuA0Rpc5HMiwnWMLHcESfTI6Y5eWMVFnCIyjBcKUpKdZlDjXLbsAc99oneLPD9LNE6H2TvRQdj9XvqBmtnXaFmsVS++NU+5j9c6I/Pf1Yr57T6i/t5HyB9VzeHCnifM=
-  file: build/distributions/spring-security-core-${TRAVIS_TAG}.zip
-  on:
-    repo: grails-plugins/grails-spring-security-core
-    tags: true
