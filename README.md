@@ -3,4 +3,4 @@
 Grails Spring Security Core Plugin
 ==================================
 
-See [documentation](http://grails.org/plugin/spring-security-core) for further information.
+See [documentation](https://grails-plugins.github.io/grails-spring-security-core/) for further information.
