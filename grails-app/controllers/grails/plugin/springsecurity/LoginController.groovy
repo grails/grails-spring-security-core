@@ -60,7 +60,8 @@ class LoginController {
 		render view: 'auth', model: [postUrl: postUrl,
 		                             rememberMeParameter: config.rememberMe.parameter,
 		                             usernameParameter: config.apf.usernameParameter,
-		                             passwordParameter: config.apf.passwordParameter]
+		                             passwordParameter: config.apf.passwordParameter,
+		                             gspLayout: config.gsp.layoutAuth]
 	}
 
 	/** The redirect action for Ajax requests. */
@@ -74,7 +75,10 @@ class LoginController {
 		if (springSecurityService.isLoggedIn() && authenticationTrustResolver.isRememberMe(authentication)) {
 			// have cookie but the page is guarded with IS_AUTHENTICATED_FULLY (or the equivalent expression)
 			redirect action: 'full', params: params
+			return
 		}
+
+		[gspLayout: SpringSecurityUtils.securityConfig.gsp.layoutDenied]
 	}
 
 	/** Login page for users with a remember-me cookie but accessing a IS_AUTHENTICATED_FULLY page. */
@@ -82,7 +86,11 @@ class LoginController {
 		def config = SpringSecurityUtils.securityConfig
 		render view: 'auth', params: params,
 		       model: [hasCookie: authenticationTrustResolver.isRememberMe(authentication),
-		               postUrl: request.contextPath + config.apf.filterProcessesUrl]
+		               postUrl: request.contextPath + config.apf.filterProcessesUrl,
+		               rememberMeParameter: config.rememberMe.parameter,
+		               usernameParameter: config.apf.usernameParameter,
+		               passwordParameter: config.apf.passwordParameter,
+		               gspLayout: config.gsp.layoutAuth]
 	}
 
 	/** Callback after a failed login. Redirects to the auth page with a warning message. */

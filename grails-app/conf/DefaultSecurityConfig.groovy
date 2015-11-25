@@ -329,4 +329,9 @@ security {
 		// or the name of a class implementing org.springframework.security.core.context.SecurityContextHolderStrategy
 		strategyName = SecurityContextHolder.MODE_THREADLOCAL
 	}
+
+	gsp {
+		layoutAuth = 'main'
+		layoutDenied = 'main'
+	}
 }

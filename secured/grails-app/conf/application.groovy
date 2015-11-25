@@ -2,6 +2,10 @@ grails {
 	plugin {
 		springsecurity {
 			authority.className = 'test.Role'
+			gsp {
+				layoutAuth = 'application'
+				layoutDenied = 'application'
+			}
 			logout.postOnly = false
 			roleHierarchy = 'ROLE_ADMIN > ROLE_USER'
 			userLookup {

@@ -1,5 +1,5 @@
 <head>
-<meta name='layout' content='main' />
+<meta name='layout' content='${gspLayout ?: 'main'}'/>
 <title><g:message code="springSecurity.denied.title" /></title>
 </head>
 
