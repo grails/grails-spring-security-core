@@ -11,10 +11,11 @@ $ cd bookstore
 
 ==== 2. "`Install`" the plugin by adding it to build.gradle
 [source,java]
+[subs="attributes"]
 ----
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
+   compile 'org.grails.plugins:spring-security-core:{project-version}'
    ...
 }
 ----

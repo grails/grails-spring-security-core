@@ -24,8 +24,6 @@ version = file('version.txt').text.trim()
 group 'org.grails.plugins'
 
 apply plugin: 'maven-publish'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
 apply plugin: 'spring-boot'
 apply plugin: 'org.grails.grails-plugin'
 apply plugin: 'org.grails.grails-gsp'
@@ -93,9 +91,9 @@ asciidoctor {
 	separateOutputDirs = false
 	sourceDir = file('src/docs')
 	sources {
-		include 'book.adoc'
+		include 'index.adoc'
 	}
-	outputDir file('docs/manual')
+	outputDir file('build/docs')
 	backends 'html5', 'pdf', 'epub3'
 	attributes 'source-highlighter': 'prettify',
 			  icons:               'font',
@@ -107,17 +105,17 @@ asciidoctor {
 			  revnumber:           project.version
 }
 
-task docs(dependsOn: 'asciidoctor') << {
-	File dir = new File('docs/manual')
-	File f = new File(dir, 'book.html')
-	if (f.exists()) f.renameTo(new File(dir, 'index.html'))
+task docs(dependsOn: asciidoctor) << {
+	File dir = file('build/docs')
 
 	['pdf', 'epub'].each { String ext ->
-		f = new File(dir, 'book.' + ext)
+		File f = new File(dir, 'index.' + ext)
 		if (f.exists()) {
 			f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
 		}
 	}
+
+	file('build/docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
 }
 
 task wrapper(type: Wrapper) {
