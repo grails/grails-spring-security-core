@@ -3,7 +3,7 @@
 set -e
 
 rm -rf build
-./gradlew clean check assemble install --stacktrace
+./gradlew clean check install --stacktrace
 
 integration-test-app/run_integration_tests.sh
 
