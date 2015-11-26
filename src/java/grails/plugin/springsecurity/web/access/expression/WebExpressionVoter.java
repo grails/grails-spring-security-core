@@ -16,6 +16,8 @@ package grails.plugin.springsecurity.web.access.expression;
 
 import java.util.Collection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -34,6 +36,8 @@ import org.springframework.util.Assert;
  */
 public class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation> {
 
+	private final Logger log = LoggerFactory.getLogger(getClass());
+
 	protected SecurityExpressionHandler<FilterInvocation> expressionHandler;
 
 	public int vote(Authentication authentication, FilterInvocation fi, Collection<ConfigAttribute> attributes) {
@@ -41,8 +45,11 @@ public class WebExpressionVoter implements AccessDecisionVoter<FilterInvocation>
 		Assert.notNull(fi, "object cannot be null");
 		Assert.notNull(attributes, "attributes cannot be null");
 
+		log.trace("vote() Authentication {}, FilterInvocation {} ConfigAttributes {}", authentication, fi, attributes);
+
 		WebExpressionConfigAttribute weca = findConfigAttribute(attributes);
 		if (weca == null) {
+			log.trace("No WebExpressionConfigAttribute found");
 			return ACCESS_ABSTAIN;
 		}
 

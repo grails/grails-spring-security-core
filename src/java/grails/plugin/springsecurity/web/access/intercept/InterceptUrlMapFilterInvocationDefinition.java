@@ -55,5 +55,9 @@ public class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInv
 		}
 
 		initialized = true;
+
+		if (log.isTraceEnabled()) {
+			log.trace("configs: {}", getConfigAttributeMap());
+		}
 	}
 }

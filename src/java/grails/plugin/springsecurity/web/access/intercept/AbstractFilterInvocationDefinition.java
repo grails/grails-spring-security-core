@@ -76,6 +76,7 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 		FilterInvocation filterInvocation = (FilterInvocation)object;
 
 		String url = determineUrl(filterInvocation);
+		log.trace("getAttributes(): url is {} for FilterInvocation {}", url, filterInvocation);
 
 		Collection<ConfigAttribute> configAttributes;
 		try {
@@ -89,10 +90,12 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 		}
 
 		if ((configAttributes == null || configAttributes.isEmpty()) && rejectIfNoRule) {
+			log.trace("Returning DENY, rejectIfNoRule is true and no ConfigAttributes");
 			// return something that cannot be valid; this will cause the voters to abstain or deny
 			return DENY;
 		}
 
+		log.trace("ConfigAttributes are {}", configAttributes);
 		return configAttributes;
 	}
 
@@ -260,10 +263,14 @@ public abstract class AbstractFilterInvocationDefinition implements FilterInvoca
 		}
 
 		if (existing != null) {
+			log.trace("Replacing existing mapping {}", existing);
 			compiled.remove(existing);
 		}
 
-		compiled.add(new InterceptedUrl(pattern, method, configAttributes));
+		InterceptedUrl mapping = new InterceptedUrl(pattern, method, configAttributes);
+		compiled.add(mapping);
+		log.trace("Stored mapping {} for pattern '{}', HttpMethod {}, ConfigAttributes {}",
+				new Object[] { mapping, pattern, method, configAttributes });
 
 		return existing;
 	}

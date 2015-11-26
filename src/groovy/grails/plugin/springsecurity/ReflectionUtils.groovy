@@ -193,6 +193,7 @@ class ReflectionUtils {
 			}
 		}
 
+		log.trace 'Built ConfigAttributes {} for tokens {}', configAttributes, tokens
 		configAttributes
 	}
 

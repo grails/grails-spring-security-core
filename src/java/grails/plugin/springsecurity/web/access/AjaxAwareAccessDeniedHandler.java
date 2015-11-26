@@ -23,6 +23,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
@@ -38,6 +40,8 @@ import org.springframework.util.Assert;
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, InitializingBean {
+
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	protected String errorPage;
 	protected String ajaxErrorPage;
@@ -56,16 +60,19 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 		}
 
 		if (response.isCommitted()) {
+			log.trace("response is committed");
 			return;
 		}
 
 		boolean ajaxError = ajaxErrorPage != null && SpringSecurityUtils.isAjax(request);
 		if (errorPage == null && !ajaxError) {
+			log.trace("Sending 403 for non-Ajax request without errorPage specified");
 			response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
 			return;
 		}
 
 		if (useForward && (errorPage != null || ajaxError)) {
+			log.trace("Forwarding to error page");
 			// Put exception into request scope (perhaps of use to a view)
 			request.setAttribute(WebAttributes.ACCESS_DENIED_403, e);
 			response.setStatus(HttpServletResponse.SC_FORBIDDEN);
@@ -102,7 +109,10 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, Initia
 		else if (errorPage != null) {
 			redirectUrl += errorPage;
 		}
-		response.sendRedirect(response.encodeRedirectURL(redirectUrl));
+
+		String encodedRedirectUrl = response.encodeRedirectURL(redirectUrl);
+		log.trace("Redirecting to {}", encodedRedirectUrl);
+		response.sendRedirect(encodedRedirectUrl);
 	}
 
 	protected Authentication getAuthentication() {

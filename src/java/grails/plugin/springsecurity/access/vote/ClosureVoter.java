@@ -43,6 +43,8 @@ public class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, Appl
 		Assert.notNull(fi, "object cannot be null");
 		Assert.notNull(attributes, "attributes cannot be null");
 
+		log.trace("vote() Authentication {}, FilterInvocation {} ConfigAttributes {}", new Object[] { authentication, fi, attributes });
+
 		ClosureConfigAttribute attribute = null;
 		for (ConfigAttribute a : attributes) {
 			if (a instanceof ClosureConfigAttribute) {
@@ -52,6 +54,7 @@ public class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, Appl
 		}
 
 		if (attribute == null) {
+			log.trace("No ClosureConfigAttribute found");
 			return ACCESS_ABSTAIN;
 		}
 
@@ -59,6 +62,7 @@ public class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, Appl
 		closure.setDelegate(new SecuredClosureDelegate(authentication, fi, ctx));
 		Object result = closure.call();
 		if (result instanceof Boolean) {
+			log.trace("Closure result: {}", result);
 			return ((Boolean)result) ? ACCESS_GRANTED : ACCESS_DENIED;
 		}
 

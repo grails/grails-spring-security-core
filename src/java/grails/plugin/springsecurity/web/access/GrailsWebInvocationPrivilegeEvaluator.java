@@ -81,18 +81,23 @@ public class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationP
 		}
 
 		FilterInvocation fi = createFilterInvocation(contextPath, uri, method);
+		log.trace("isAllowed: contextPath '{}' uri '{}' method '{}' Authentication {} FilterInvocation {}",
+				contextPath, uri, method, authentication, fi);
 
 		Collection<ConfigAttribute> attrs = interceptor.obtainSecurityMetadataSource().getAttributes(fi);
 		if (attrs == null) {
+			log.trace("No ConfigAttributes found");
 			return !interceptor.isRejectPublicInvocations();
 		}
 
 		if (authentication == null) {
+			log.trace("Not authenticated");
 			return false;
 		}
 
 		try {
 			interceptor.getAccessDecisionManager().decide(authentication, fi, attrs);
+			log.trace("{} allowed for {}", fi, authentication);
 			return true;
 		}
 		catch (AccessDeniedException unauthorized) {
