@@ -492,7 +492,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			passwordEncoder(PBKDF2PasswordEncoder)
 		}
 		else {
-			log.trace "Using password algorithm '{}'", algorithm
+			log.trace "Using password algorithm '{}'", conf.password.algorithm
 			passwordEncoder(MessageDigestPasswordEncoder, conf.password.algorithm) {
 				encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
 				iterations = conf.password.hash.iterations // 10000
