@@ -5,17 +5,15 @@
 
 Creates a persistent role hierarchy entry domain class for storing role hierarchy information in the database. The general format is:
 
-[source,java]
-----
+....
 grails s2-create-role-hierarchy-entry <classname>
-----
+....
 
 .Example
 
-[source,java]
-----
+....
 grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry
-----
+....
 
 .Description
 

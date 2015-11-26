@@ -9,32 +9,27 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 
 The general format is:
 
-[source,java]
-----
+....
 grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME [REQUESTMAP_CLASS_NAME] [--groupClassName=GROUP_CLASS_NAME]
-----
+....
 
 .Examples
 
-[source,java]
-----
+....
 grails s2-quickstart com.yourapp User Role
-----
+....
 
-[source,java]
-----
+....
 grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup
-----
+....
 
-[source,java]
-----
+....
 grails s2-quickstart com.yourapp Person Authority Requestmap
-----
+....
 
-[source,java]
-----
+....
 grails s2-quickstart --uiOnly
-----
+....
 
 .Description
 

@@ -3,11 +3,10 @@
 
 ==== 1. Create your Grails application.
 
-[source,java]
-----
+....
 $ grails create-app bookstore
 $ cd bookstore
-----
+....
 
 ==== 2. "`Install`" the plugin by adding it to build.gradle
 [source,java]
@@ -22,16 +21,15 @@ dependencies {
 
 Run the compile command to resolve dependencies and ensure everything is correct:
 
-[source,java]
-----
+....
 $ grails compile
-----
+....
 
 ==== 3. Create the User and Role domain classes.
-[source,java]
-----
+
+....
 $ grails s2-quickstart com.testapp User Role
-----
+....
 
 You can choose your names for your domain classes and package; these are just examples.
 
@@ -276,10 +274,10 @@ By default only POST requests can be used to logout; this is a very sensible def
 The plugin has no support for CRUD actions or GSPs for your domain classes; the `spring-security-ui` plugin supplies a UI for those. So for now you will create roles and users in `grails-app/init/BootStrap.groovy`. (See step 7.)
 
 ==== 4. Create a controller that will be restricted by role.
-[source,java]
-----
+
+....
 $ grails create-controller com.testapp.Secure
-----
+....
 
 This command creates `grails-app/controllers/com/testapp/SecureController.groovy`. Add some output so you can verify that things are working:
 
@@ -326,17 +324,16 @@ Some things to note about the preceding `BootStrap.groovy`:
 * We explicitly flush (using the 3-arg `UserRole.create()` call) because `BootStrap` does not run in a transaction or OpenSessionInView.
 
 ==== 6. Start the server.
-[source,java]
-----
+
+....
 $ grails run-app
-----
+....
 
 ==== 7. Before you secure the page, navigate to http://localhost:8080/secure[http://localhost:8080/secure] to verify that you cannot access see the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:
 
-[source,java]
-----
+....
 Sorry, you're not authorized to view this page.
-----
+....
 
 This is because with the default configuration, all URLs are denied unless there is an access rule specified.
 
@@ -361,7 +358,6 @@ or
 
 [source,java]
 ----
-
 @Secured('ROLE_ADMIN')
 class SecureController {
    def index() {
@@ -383,15 +379,13 @@ Check the checkbox, and once you've tested the secure page, close your browser a
 
 ===== Run grails generate-all for the domain classes:
 
-[source,java]
-----
+....
 $ grails generate-all com.testapp.User
-----
+....
 
-[source,java]
-----
+....
 $ grails generate-all com.testapp.Role
-----
+....
 
 Since the User domain class handles password hashing, there are no changes required in the generated controllers.
 
