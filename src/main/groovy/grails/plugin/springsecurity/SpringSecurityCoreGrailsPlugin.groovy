@@ -174,7 +174,9 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 
 		if (log.traceEnabled) {
 			def sb = new StringBuilder('Spring Security configuration:\n')
-			conf.flatten().each { key, value ->
+			def flatConf = conf.flatten()
+			for (key in flatConf.keySet().sort()) {
+				def value = flatConf[key]
 				sb << '\t' << key << ': '
 				if (value instanceof Closure) {
 					sb << '(closure)'
