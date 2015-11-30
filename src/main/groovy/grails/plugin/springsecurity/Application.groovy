@@ -16,10 +16,12 @@ package grails.plugin.springsecurity
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
+import groovy.transform.CompileStatic
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@CompileStatic
 class Application extends GrailsAutoConfiguration {
 	static void main(String[] args) {
 		GrailsApp.run Application

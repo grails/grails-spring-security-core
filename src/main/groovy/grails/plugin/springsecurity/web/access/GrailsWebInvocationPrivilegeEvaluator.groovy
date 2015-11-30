@@ -76,7 +76,8 @@ class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationPrivileg
 		}
 
 		FilterInvocation fi = createFilterInvocation(contextPath, uri, method)
-		log.trace "isAllowed: contextPath '$contextPath' uri '$uri' method '$method' Authentication $authentication FilterInvocation $fi"
+		log.trace "isAllowed: contextPath '{}' uri '{}' method '{}' Authentication {} FilterInvocation {}",
+				contextPath, uri, method, authentication, fi
 
 		Collection<ConfigAttribute> attrs = interceptor.obtainSecurityMetadataSource().getAttributes(fi)
 		if (attrs == null) {
@@ -91,7 +92,7 @@ class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationPrivileg
 
 		try {
 			interceptor.accessDecisionManager.decide authentication, fi, attrs
-			log.trace "$fi allowed for $authentication"
+			log.trace "{} allowed for {}", fi, authentication
 			true
 		}
 		catch (AccessDeniedException unauthorized) {

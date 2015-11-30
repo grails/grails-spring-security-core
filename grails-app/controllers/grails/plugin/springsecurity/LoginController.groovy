@@ -14,10 +14,10 @@
  */
 package grails.plugin.springsecurity
 
-import javax.servlet.http.HttpServletResponse
-
+import grails.converters.JSON
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
+import org.springframework.security.authentication.AuthenticationTrustResolver
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
@@ -25,13 +25,13 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.WebAttributes
 
-import grails.converters.JSON
+import javax.servlet.http.HttpServletResponse
 
 @Secured('permitAll')
 class LoginController {
 
 	/** Dependency injection for the authenticationTrustResolver. */
-	def authenticationTrustResolver
+	AuthenticationTrustResolver authenticationTrustResolver
 
 	/** Dependency injection for the springSecurityService. */
 	def springSecurityService
@@ -39,7 +39,7 @@ class LoginController {
 	/** Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise. */
 	def index() {
 		if (springSecurityService.isLoggedIn()) {
-			redirect uri: SpringSecurityUtils.securityConfig.successHandler.defaultTargetUrl
+			redirect uri: conf.successHandler.defaultTargetUrl
 		}
 		else {
 			redirect action: 'auth', params: params
@@ -49,24 +49,24 @@ class LoginController {
 	/** Show the login page. */
 	def auth() {
 
-		def config = SpringSecurityUtils.securityConfig
+		def conf = getConf()
 
 		if (springSecurityService.isLoggedIn()) {
-			redirect uri: config.successHandler.defaultTargetUrl
+			redirect uri: conf.successHandler.defaultTargetUrl
 			return
 		}
 
-		String postUrl = request.contextPath + config.apf.filterProcessesUrl
+		String postUrl = request.contextPath + conf.apf.filterProcessesUrl
 		render view: 'auth', model: [postUrl: postUrl,
-		                             rememberMeParameter: config.rememberMe.parameter,
-		                             usernameParameter: config.apf.usernameParameter,
-		                             passwordParameter: config.apf.passwordParameter,
-		                             gspLayout: config.gsp.layoutAuth]
+		                             rememberMeParameter: conf.rememberMe.parameter,
+		                             usernameParameter: conf.apf.usernameParameter,
+		                             passwordParameter: conf.apf.passwordParameter,
+		                             gspLayout: conf.gsp.layoutAuth]
 	}
 
 	/** The redirect action for Ajax requests. */
 	def authAjax() {
-		response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
+		response.setHeader 'Location', conf.auth.ajaxLoginFormUrl
 		render(status: HttpServletResponse.SC_UNAUTHORIZED, text: 'Unauthorized')
 	}
 
@@ -78,19 +78,19 @@ class LoginController {
 			return
 		}
 
-		[gspLayout: SpringSecurityUtils.securityConfig.gsp.layoutDenied]
+		[gspLayout: conf.gsp.layoutDenied]
 	}
 
 	/** Login page for users with a remember-me cookie but accessing a IS_AUTHENTICATED_FULLY page. */
 	def full() {
-		def config = SpringSecurityUtils.securityConfig
+		def conf = getConf()
 		render view: 'auth', params: params,
 		       model: [hasCookie: authenticationTrustResolver.isRememberMe(authentication),
-		               postUrl: request.contextPath + config.apf.filterProcessesUrl,
-		               rememberMeParameter: config.rememberMe.parameter,
-		               usernameParameter: config.apf.usernameParameter,
-		               passwordParameter: config.apf.passwordParameter,
-		               gspLayout: config.gsp.layoutAuth]
+		               postUrl: request.contextPath + conf.apf.filterProcessesUrl,
+		               rememberMeParameter: conf.rememberMe.parameter,
+		               usernameParameter: conf.apf.usernameParameter,
+		               passwordParameter: conf.apf.passwordParameter,
+		               gspLayout: conf.gsp.layoutAuth]
 	}
 
 	/** Callback after a failed login. Redirects to the auth page with a warning message. */
@@ -137,5 +137,9 @@ class LoginController {
 
 	protected Authentication getAuthentication() {
 		SecurityContextHolder.context?.authentication
+	}
+
+	protected ConfigObject getConf() {
+		SpringSecurityUtils.securityConfig
 	}
 }

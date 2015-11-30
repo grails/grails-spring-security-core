@@ -1,9 +1,5 @@
 grails:
    profile: web-plugin
-   doc:
-      authors: 'Burt Beckwith'
-      license: 'Apache License 2.0'
-      title:   'Spring Security Core Plugin'
 info:
    app:
       name: '@info.app.name@'

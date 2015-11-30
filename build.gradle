@@ -96,13 +96,13 @@ asciidoctor {
 	outputDir file('build/docs')
 	backends 'html5', 'pdf', 'epub3'
 	attributes 'source-highlighter': 'prettify',
-			  icons:               'font',
-			  setanchors:          'true',
-			  idprefix:            '',
-			  idseparator:         '-',
-			  toc2:                '',
-			  numbered:            '',
-			  revnumber:           project.version
+	            icons:               'font',
+	            setanchors:          'true',
+	            idprefix:            '',
+	            idseparator:         '-',
+	            toc2:                '',
+	            numbered:            '',
+	            revnumber:           project.version
 }
 
 task docs(dependsOn: asciidoctor) << {
