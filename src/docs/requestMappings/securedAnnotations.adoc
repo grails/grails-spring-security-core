@@ -20,7 +20,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SecureAnnotatedController {
 
-   @Secured(['ROLE_ADMIN'])
+   @Secured('ROLE_ADMIN')
    def index() {
       render 'you have ROLE_ADMIN'
    }
@@ -60,7 +60,7 @@ package com.mycompany.myapp
 
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(['ROLE_ADMIN'])
+@Secured('ROLE_ADMIN')
 class SecureClassAnnotatedController {
 
    def index() {
@@ -71,7 +71,7 @@ class SecureClassAnnotatedController {
       render 'otherAction: you have ROLE_ADMIN'
    }
 
-   @Secured(['ROLE_SUPERUSER'])
+   @Secured('ROLE_SUPERUSER')
    def super() {
       render 'super: you have ROLE_SUPERUSER'
    }

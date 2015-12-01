@@ -43,7 +43,7 @@ abstract class AbstractUnitSpec extends Specification {
 	}
 
 	void cleanup() {
-		SecurityContextHolder.context.authentication = null
+		SecurityContextHolder.clearContext()
 		SecurityRequestHolder.reset()
 		SecurityTestUtils.logout()
 		SpringSecurityUtils.resetSecurityConfig()

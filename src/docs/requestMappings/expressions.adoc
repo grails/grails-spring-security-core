@@ -13,12 +13,12 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SecureController {
 
-   @Secured(["hasRole('ROLE_ADMIN')"])
+   @Secured("hasRole('ROLE_ADMIN')")
    def someAction() {
       ...
    }
 
-   @Secured(["authentication.name == 'ralph'"])
+   @Secured("authentication.name == 'ralph'")
    def someOtherAction() {
       ...
    }

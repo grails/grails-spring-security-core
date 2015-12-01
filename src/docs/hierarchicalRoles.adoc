@@ -47,7 +47,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SomeController {
 
-   @Secured(['ROLE_ADMIN'])
+   @Secured('ROLE_ADMIN')
    def someAction() {
       ...
    }

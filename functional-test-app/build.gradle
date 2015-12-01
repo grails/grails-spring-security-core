@@ -73,10 +73,6 @@ dependencies {
 	console 'org.grails:grails-console'
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = gradleWrapperVersion
-}
-
 integrationTest {
 	def file = new File('testconfig')
 	String testconfig = file.exists() ? file.text.trim().toLowerCase() : 'annotation'

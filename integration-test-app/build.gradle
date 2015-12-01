@@ -54,6 +54,6 @@ dependencies {
 	testCompile 'org.grails:grails-plugin-testing'
 }
 
-task wrapper(type: Wrapper) {
-	gradleVersion = gradleWrapperVersion
+integrationTest {
+	beforeTest { descriptor -> logger.lifecycle " -- $descriptor" }
 }

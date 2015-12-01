@@ -7,7 +7,6 @@
 .gradle
 .idea
 .nb-gradle
-.settings
 bin
 build
 cobertura.ser

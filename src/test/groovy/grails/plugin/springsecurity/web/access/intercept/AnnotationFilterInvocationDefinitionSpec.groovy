@@ -280,7 +280,7 @@ class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocatio
 	protected String findGrailsUrl(UrlMappingInfo mapping) { url }
 }
 
-@Secured(['ROLE_ADMIN'])
+@Secured('ROLE_ADMIN')
 class ClassAnnotatedController {
 
 	def index() {}
@@ -293,7 +293,7 @@ class MethodAnnotatedController {
 
 	def index() {}
 
-	@Secured(['ROLE_ADMIN'])
+	@Secured('ROLE_ADMIN')
 	def list() { [results: []] }
 
 	@Secured(closure = {

@@ -14,14 +14,15 @@
  */
 package grails.plugin.springsecurity
 
-import javax.servlet.http.HttpServletRequest
-
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.context.SecurityContextHolder as SCH
-
+import grails.core.GrailsApplication
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.transaction.Transactional
 import groovy.util.logging.Slf4j
+import org.springframework.security.authentication.AuthenticationTrustResolver
+import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder as SCH
+
+import javax.servlet.http.HttpServletRequest
 
 /**
  * Utility methods.
@@ -34,22 +35,16 @@ class SpringSecurityService {
 	protected static final List<String> NO_SALT = ['bcrypt', 'pbkdf2']
 
 	/** dependency injection for authenticationTrustResolver */
-	def authenticationTrustResolver
+	AuthenticationTrustResolver authenticationTrustResolver
 
 	/** dependency injection for grailsApplication */
-	def grailsApplication
+	GrailsApplication grailsApplication
 
 	/** dependency injection for {@link org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource} */
 	def objectDefinitionSource
 
 	/** dependency injection for the password encoder */
 	def passwordEncoder
-
-	/** dependency injection for userCache */
-	def userCache
-
-	/** dependency injection for userDetailsService */
-	def userDetailsService
 
 	/**
 	 * Get the currently logged in user's principal. If not authenticated and the

@@ -14,11 +14,15 @@
  */
 package grails.plugin.springsecurity
 
-import javax.servlet.FilterChain
-
+import org.springframework.expression.EvaluationContext
 import org.springframework.expression.Expression
 import org.springframework.security.access.expression.ExpressionUtils
+import org.springframework.security.access.expression.SecurityExpressionHandler
+import org.springframework.security.core.Authentication
 import org.springframework.security.web.FilterInvocation
+import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator
+
+import javax.servlet.FilterChain
 
 /**
  * Security tags.
@@ -33,10 +37,10 @@ class SecurityTagLib {
 	def springSecurityService
 
 	/** Dependency injection for webExpressionHandler. */
-	def webExpressionHandler
+	SecurityExpressionHandler webExpressionHandler
 
 	/** Dependency injection for webInvocationPrivilegeEvaluator. */
-	def webInvocationPrivilegeEvaluator
+	WebInvocationPrivilegeEvaluator webInvocationPrivilegeEvaluator
 
 	protected static final FilterChain DUMMY_CHAIN = [
 		doFilter: { req, res -> throw new UnsupportedOperationException() }
@@ -220,12 +224,12 @@ class SecurityTagLib {
 			return false
 		}
 
-		def auth = springSecurityService.authentication
+		Authentication auth = springSecurityService.authentication
 		String expressionText = attrs.remove('expression')
 		if (expressionText) {
 			Expression expression = findOrCreateExpression(expressionText)
 			FilterInvocation fi = new FilterInvocation(request, response, DUMMY_CHAIN)
-			def ctx = webExpressionHandler.createEvaluationContext(auth, fi)
+			EvaluationContext ctx = webExpressionHandler.createEvaluationContext(auth, fi)
 			return ExpressionUtils.evaluateAsBoolean(expression, ctx)
 		}
 
@@ -270,11 +274,10 @@ class SecurityTagLib {
 	}
 
 	protected synchronized Expression findOrCreateExpression(String text) {
-		Expression expression = expressionCache.get(text)
+		Expression expression = expressionCache[text]
 		if (!expression) {
-			expression = webExpressionHandler.expressionParser.parseExpression(text)
-			expressionCache[text] = expression
+			expressionCache[text] = expression = webExpressionHandler.expressionParser.parseExpression(text)
 		}
-		return expression
+		expression
 	}
 }

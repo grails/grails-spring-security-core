@@ -329,7 +329,7 @@ Some things to note about the preceding `BootStrap.groovy`:
 $ grails run-app
 ....
 
-==== 7. Before you secure the page, navigate to http://localhost:8080/secure[http://localhost:8080/secure] to verify that you cannot access see the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:
+==== 7. Before you secure the page, navigate to http://localhost:8080/secure to verify that you cannot access see the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:
 
 ....
 Sorry, you're not authorized to view this page.
@@ -368,12 +368,12 @@ class SecureController {
 
 You can annotate the entire controller or individual actions. In this case you have only one action, so you can do either.
 
-==== 9. Shut down the app and run `grails run-app` again, and navigate again to http://localhost:8080/secure[http://localhost:8080/secure].
+==== 9. Shut down the app and run `grails run-app` again, and navigate again to http://localhost:8080/secure.
 
 This time you should again be able to see the secure page after successfully authenticating.
 
 ==== 10. Test the Remember Me functionality.
-Check the checkbox, and once you've tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a cookie is stored, you should not need to log in again. Logout at any time by navigating to http://localhost:8080/logout[http://localhost:8080/logout].
+Check the checkbox, and once you've tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a cookie is stored, you should not need to log in again. Logout at any time by navigating to http://localhost:8080/logout.
 
 ==== 11. Optionally, create a CRUD UI to work with users and roles.
 

@@ -14,12 +14,12 @@
  */
 package grails.plugin.springsecurity
 
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
-
-import javax.servlet.Filter
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
-
+import grails.core.GrailsApplication
+import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
+import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.util.Environment
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringEscapeUtils
 import org.springframework.context.ApplicationContext
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
@@ -39,12 +39,11 @@ import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
-import grails.core.GrailsApplication
-import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
-import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.util.Environment
-import groovy.transform.CompileStatic
-import groovy.util.logging.Slf4j
+import javax.servlet.Filter
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpSession
+
+import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 
 /**
  * Helper methods.
@@ -527,13 +526,13 @@ final class SpringSecurityUtils {
 	 * @param closure the code to run
 	 * @return the closure's return value
 	 */
-	static doWithAuth(@SuppressWarnings('rawtypes') Closure closure) {
+	static doWithAuth(Closure<?> closure) {
 		boolean set = false
 		if (!authentication && SecurityRequestHolder.request) {
 			HttpSession httpSession = SecurityRequestHolder.request.getSession(false)
 			if (httpSession) {
 				def securityContext = httpSession.getAttribute(SPRING_SECURITY_CONTEXT_KEY)
-				if (securityContext) {
+				if (securityContext instanceof SecurityContext) {
 					SecurityContextHolder.context = (SecurityContext)securityContext
 					set = true
 				}
@@ -560,7 +559,7 @@ final class SpringSecurityUtils {
 	 * @param closure the code to run
 	 * @return the closure's return value
 	 */
-	static doWithAuth(String username, @SuppressWarnings('rawtypes') Closure closure) {
+	static doWithAuth(String username, Closure<?> closure) {
 		Authentication previousAuth = authentication
 		reauthenticate username, null
 
