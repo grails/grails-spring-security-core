@@ -5,6 +5,8 @@ cobertura.ser
 /*.log
 /*.sublime-workspace
 /.idea
+/.classpath
+/.project
 /.settings
 /docs
 /grails-spring-security-core-*.zip

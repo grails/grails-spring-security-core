@@ -579,9 +579,6 @@ public class AnnotationFilterInvocationDefinition extends AbstractFilterInvocati
 		responseMimeTypesApi = api;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.springframework.web.context.ServletContextAware#setServletContext(javax.servlet.ServletContext)
-	 */
 	public void setServletContext(ServletContext sc) {
 		servletContext = sc;
 	}
