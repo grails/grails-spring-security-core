@@ -37,6 +37,12 @@ public class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuth
 	@Override
 	public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response,
 			final Authentication authentication) throws ServletException, IOException {
+
+		// GPSPRINGSECURITYCORE-240
+		if (SpringSecurityUtils.isAjax(request)) {
+			requestCache.removeRequest(request, response);
+		}
+
 		try {
 			if (SpringSecurityUtils.isAjax(request)) {
 				clearAuthenticationAttributes(request);
