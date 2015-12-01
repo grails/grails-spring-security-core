@@ -131,7 +131,7 @@ class AjaxAwareAccessDeniedHandlerTests extends GroovyTestCase {
 	@Override
 	protected void tearDown() {
 		super.tearDown()
-		SCH.context.authentication = null
+		SCH.clearContext()
 		ReflectionUtils.application = null
 		SecurityRequestHolder.reset()
 	}
