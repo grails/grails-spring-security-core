@@ -161,7 +161,16 @@ private void updateConfig(String userClassName, String roleClassName, String req
 		writer.writeLine "\t[pattern: '/**/css/**',      access: ['permitAll']],"
 		writer.writeLine "\t[pattern: '/**/images/**',   access: ['permitAll']],"
 		writer.writeLine "\t[pattern: '/**/favicon.ico', access: ['permitAll']]"
+		writer.writeLine ']'
+		writer.newLine()
 
+		writer.writeLine 'grails.plugin.springsecurity.filterChain.chainMap = ['
+		writer.writeLine "\t[pattern: '/assets/**',      filters: 'none'],"
+		writer.writeLine "\t[pattern: '/**/js/**',       filters: 'none'],"
+		writer.writeLine "\t[pattern: '/**/css/**',      filters: 'none'],"
+		writer.writeLine "\t[pattern: '/**/images/**',   filters: 'none'],"
+		writer.writeLine "\t[pattern: '/**/favicon.ico', filters: 'none'],"
+		writer.writeLine "\t[pattern: '/**',             filters: 'JOINED_FILTERS']"
 		writer.writeLine ']'
 		writer.newLine()
 	}
