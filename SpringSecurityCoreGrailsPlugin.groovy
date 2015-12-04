@@ -29,6 +29,7 @@ import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncode
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
+import grails.plugin.springsecurity.web.GrailsRedirectStrategy
 import grails.plugin.springsecurity.web.NullFilterChainValidator
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
 import grails.plugin.springsecurity.web.access.DefaultThrowableAnalyzer
@@ -54,11 +55,11 @@ import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilt
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.IpAddressFilter
 import grails.plugin.webxml.FilterManager
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.codehaus.groovy.grails.commons.spring.GrailsApplicationContext
 
 import javax.servlet.Filter
 
+import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.codehaus.groovy.grails.commons.spring.GrailsApplicationContext
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.ehcache.EhCacheFactoryBean
@@ -85,7 +86,6 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
-import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
@@ -1204,8 +1204,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 			redirectStrategy = ref('redirectStrategy')
 		}
 
-		redirectStrategy(DefaultRedirectStrategy) {
+		redirectStrategy(GrailsRedirectStrategy) {
 			contextRelative = conf.redirectStrategy.contextRelative // false
+			secureHeaderName = conf.secureChannel.secureHeaderName // 'X-Forwarded-Proto'
+			secureHeaderValue = conf.secureChannel.secureHeaderValue // 'http'
+			insecureHeaderName = conf.secureChannel.insecureHeaderName // 'X-Forwarded-Proto'
+			insecureHeaderValue = conf.secureChannel.insecureHeaderValue // 'https'
 		}
 	}
 
