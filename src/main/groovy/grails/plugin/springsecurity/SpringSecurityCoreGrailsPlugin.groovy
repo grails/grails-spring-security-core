@@ -147,12 +147,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 	Closure doWithSpring() {{ ->
 		ReflectionUtils.application = SpringSecurityUtils.application = grailsApplication
 
-		if (grailsApplication.warDeployed) {
-			// need to reset here since web.xml was already built, so doWithWebDescriptor isn't called when deployed as war
-			// TODO see if this is necessary with 3.0+
-			SpringSecurityUtils.resetSecurityConfig()
-		}
-
+		SpringSecurityUtils.resetSecurityConfig()
 		def conf = SpringSecurityUtils.securityConfig
 		boolean printStatusMessages = (conf.printStatusMessages instanceof Boolean) ? conf.printStatusMessages : true
 		if (!conf || !conf.active) {
