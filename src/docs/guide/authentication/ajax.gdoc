@@ -246,7 +246,7 @@ We'll need some GSP code to define the HTML, so create @grails-app/views/include
 <div id="ajaxLogin" class="jqmWindow" style="z-index: 3000;">
    <div class="inner">
       <div class="fheader">Please Login..</div>
-      <form action="${request.contextPath}j_spring_security_check" method="POST"
+      <form action="${request.contextPath}/j_spring_security_check" method="POST"
             id="ajaxLoginForm" name="ajaxLoginForm" class="cssform" autocomplete="off">
          <p>
             <label for="username">Username:</label>
@@ -290,7 +290,7 @@ And finally, update the @grails-app/views/layouts/main.gsp@ layout to include @_
 The important aspects of this code are:
 
 * There is a <span> positioned in the top-right that shows the username and a logout link when logged in, and a login link otherwise.
-* The form posts to the same URL as the regular form, @j_spring_security_check@, and is mostly the same except for the addition of a "Cancel" button (you can also dismiss the dialog by clicking outside of it or with the escape key).
+* The form posts to the same URL as the regular form, @/j_spring_security_check@, and is mostly the same except for the addition of a "Cancel" button (you can also dismiss the dialog by clicking outside of it or with the escape key).
 * Error messages are displayed within the popup <div>.
 * Because there is no page redirect after successful login, the Javascript replaces the login link to give a visual indication that the user is logged in.
 * The Logout link also uses Ajax to submit a POST request to the standard logout url and redirect you to the index page after the request finishes.
