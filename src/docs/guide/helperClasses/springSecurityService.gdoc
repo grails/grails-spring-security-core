@@ -36,9 +36,12 @@ class SomeController {
    def springSecurityService
 
    def someAction() {
-      def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
+      def user = springSecurityService.isLoggedIn() ?
+         springSecurityService.loadCurrentUser() :
+         null
       if (user) {
-         CreditCard card = CreditCard.findByIdAndUser(params.id as Long, user)
+         CreditCard card = CreditCard.findByIdAndUser(
+            params.id as Long, user)
          ...
       }
       ...
@@ -83,7 +86,8 @@ class SomeController {
    def someAction() {
       def auth = springSecurityService.authentication
       String username = auth.username
-      def authorities = auth.authorities // a Collection of GrantedAuthority
+      // a Collection of GrantedAuthority
+      def authorities = auth.authorities
       boolean authenticated = auth.authenticated
       ...
    }
@@ -106,7 +110,8 @@ class SomeController {
    def someAction() {
       def principal = springSecurityService.principal
       String username = principal.username
-      def authorities = principal.authorities // a Collection of GrantedAuthority
+      // a Collection of GrantedAuthority
+      def authorities = principal.authorities
       boolean enabled = principal.enabled
       ...
    }
@@ -131,8 +136,9 @@ class PersonController {
 
       params.salt = person.salt
       if (person.password != params.password) {
-         params.password = springSecurityService.encodePassword(password, salt)
-         def salt = ... // e.g. randomly generated using some utility method
+         params.password = springSecurityService.encodePassword(
+            password, salt)
+         def salt = ... // e.g. randomly generated using a utility method
          params.salt = salt
       }
       person.properties = params
@@ -210,7 +216,8 @@ class RequestmapController {
    def save() {
       def requestmapInstance = new Requestmap(params)
       if (!requestmapInstance.save(flush: true)) {
-         render view: 'create', model: [requestmapInstance: requestmapInstance]
+         render view: 'create',
+                model: [requestmapInstance: requestmapInstance]
          return
       }
 
@@ -236,8 +243,9 @@ class UserController {
 
       params.salt = person.salt
       if (params.password) {
-         params.password = springSecurityService.encodePassword(params.password, salt)
-         def salt = ... // e.g. randomly generated using some utility method
+         params.password = springSecurityService.encodePassword(
+            params.password, salt)
+         def salt = ... // e.g. randomly generated using a utility method
          params.salt = salt
       }
       userInstance.properties = params
@@ -247,7 +255,8 @@ class UserController {
       }
 
       if (springSecurityService.loggedIn &&
-             springSecurityService.principal.username == userInstance.username) {
+             springSecurityService.principal.username ==
+                userInstance.username) {
          springSecurityService.reauthenticate userInstance.username
       }
 

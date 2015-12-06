@@ -58,5 +58,5 @@ The plugin assumes the attribute @authorities@ will provide the 'authority' coll
 {table}
 *Property* | *Default Value* | *Assigned Value Using s2QuickstartGroups* | *Meaning*
 useRoleGroups | false | true | Use 'authority group' implementation when loading user authorities
-authority.groupAuthorityNameField | null | 'authorities' | AuthorityGroup class role collection field
+authority. groupAuthorityNameField | null | 'authorities' | AuthorityGroup class role collection field
 {table}

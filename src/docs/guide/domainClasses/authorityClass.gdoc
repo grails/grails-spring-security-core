@@ -53,7 +53,7 @@ authority.nameField | 'authority' | Role class role name field
 {table}
 
 {note}
-Role names must start with "ROLE_". This is configurable in Spring Security, but not in the plugin. It would be possible to allow different prefixes, but it's important that the prefix not be blank as the prefix is used to differentiate between role names and tokens such as IS_AUTHENTICATED_FULLY/IS_AUTHENTICATED_ANONYMOUSLY/etc., and SpEL expressions.
+Role names must start with "ROLE_". This is configurable in Spring Security, but not in the plugin. It would be possible to allow different prefixes, but it's important that the prefix not be blank as the prefix is used to differentiate between role names and tokens such as IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY, etc., and SpEL expressions.
 
 The role names should be primarily an internal implementation detail; if you want to display friendlier names in a UI, it's simple to remove the prefix first.
 {note}

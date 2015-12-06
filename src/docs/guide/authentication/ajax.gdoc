@@ -79,7 +79,8 @@ function authAjax() {
             }
          }
          else if (json.error) {
-            $("#loginMessage").html('<span class="errorMessage">' + json.error + "</error>");
+            $("#loginMessage").html('<span class="errorMessage">' +
+                                    json.error + "</error>");
          }
          else {
             $("#loginMessage").html(jqXHR.responseText);
@@ -96,7 +97,8 @@ function authAjax() {
             var responseText = jqXHR.responseText || "[]";
             var json = responseText.evalJSON();
             if (json.error) {
-               $("#loginMessage").html('<span class="errorMessage">' + json.error + "</error>");
+               $("#loginMessage").html('<span class="errorMessage">' +
+                                       json.error + "</error>");
             }
             else {
                $("#loginMessage").html(responseText);
@@ -246,15 +248,18 @@ We'll need some GSP code to define the HTML, so create @grails-app/views/include
 <div id="ajaxLogin" class="jqmWindow" style="z-index: 3000;">
    <div class="inner">
       <div class="fheader">Please Login..</div>
-      <form action="${request.contextPath}/j_spring_security_check" method="POST"
-            id="ajaxLoginForm" name="ajaxLoginForm" class="cssform" autocomplete="off">
+      <form action="${request.contextPath}/j_spring_security_check"
+            method="POST" id="ajaxLoginForm" name="ajaxLoginForm"
+            class="cssform" autocomplete="off">
          <p>
             <label for="username">Username:</label>
-            <input type="text" class="text_" name="j_username" id="username" />
+            <input type="text" class="text_"
+                   name="j_username" id="username" />
          </p>
          <p>
             <label for="password">Password</label>
-            <input type="password" class="text_" name="j_password" id="password" />
+            <input type="password" class="text_"
+                   name="j_password" id="password" />
          </p>
          <p>
             <label for="remember_me">Remember me</label>
@@ -262,8 +267,10 @@ We'll need some GSP code to define the HTML, so create @grails-app/views/include
                    name="_spring_security_remember_me"/>
          </p>
          <p>
-            <input type="submit" id="authAjax" name="authAjax" value="Login" class="ajaxLoginButton" />
-            <input type="button" id="cancelLogin" value="Cancel" class="ajaxLoginButton" />
+            <input type="submit" id="authAjax" name="authAjax"
+                   value="Login" class="ajaxLoginButton" />
+            <input type="button" id="cancelLogin" value="Cancel"
+                   class="ajaxLoginButton" />
          </p>
       </form>
       <div style="display: none; text-align: left;" id="loginMessage"></div>

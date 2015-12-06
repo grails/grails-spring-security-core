@@ -79,7 +79,8 @@ class UserController {
       }
 
       if (springSecurityService.loggedIn &&
-               springSecurityService.principal.username == userInstance.username) {
+               springSecurityService.principal.username ==
+                  userInstance.username) {
          springSecurityService.reauthenticate userInstance.username
       }
 

@@ -47,13 +47,15 @@ class RoleGroupRole implements Serializable {
       }.count() > 0
    }
 
-   static RoleGroupRole create(RoleGroup roleGroup, Role role, boolean flush = false) {
+   static RoleGroupRole create(RoleGroup roleGroup, Role role,
+                               boolean flush = false) {
       def instance = new RoleGroupRole(roleGroup: roleGroup, role: role)
       instance.save(flush: flush, insert: true)
       instance
    }
 
-   static boolean remove(RoleGroup rg, Role r, boolean flush = false) {
+   static boolean remove(RoleGroup rg, Role r,
+                         boolean flush = false) {
       if (rg == null || r == null) return false
 
       int rowCount = RoleGroupRole.where {

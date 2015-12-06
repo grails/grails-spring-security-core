@@ -21,10 +21,14 @@ You can configure an exception mapping in @Config.groovy@ to associate a URL to 
 
 {code}
 grails.plugin.springsecurity.failureHandler.exceptionMappings = [
-   'org.springframework.security.authentication.LockedException':             '/user/accountLocked',
-   'org.springframework.security.authentication.DisabledException':           '/user/accountDisabled',
-   'org.springframework.security.authentication.AccountExpiredException':     '/user/accountExpired',
-   'org.springframework.security.authentication.CredentialsExpiredException': '/user/passwordExpired'
+   'org.springframework.security.authentication.LockedException':
+      '/user/accountLocked',
+   'org.springframework.security.authentication.DisabledException':
+      '/user/accountDisabled',
+   'org.springframework.security.authentication.AccountExpiredException':
+      '/user/accountExpired',
+   'org.springframework.security.authentication.CredentialsExpiredException':
+      '/user/passwordExpired'
 ]
 {code}
 
@@ -64,7 +68,8 @@ and the form would look something like this:
       <div class='login_message'>${flash.message}</div>
       </g:if>
       <div class='fheader'>Please update your password..</div>
-      <g:form action='updatePassword' id='passwordResetForm' class='cssform' autocomplete='off'>
+      <g:form action='updatePassword' id='passwordResetForm'
+              class='cssform' autocomplete='off'>
          <p>
             <label for='username'>Username</label>
             <span class='text_'>${username}</span>
@@ -105,22 +110,30 @@ def updatePassword() {
    String password = params.password
    String newPassword = params.password_new
    String newPassword2 = params.password_new_2
-   if (!password || !newPassword || !newPassword2 || newPassword != newPassword2) {
-      flash.message = 'Please enter your current password and a valid new password'
-      render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
+   if (!password || !newPassword || !newPassword2 ||
+   	  newPassword != newPassword2) {
+      flash.message =
+         'Please enter your current password and a valid new password'
+      render view: 'passwordExpired',
+             model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
    }
 
    User user = User.findByUsername(username)
-   if (!passwordEncoder.isPasswordValid(user.password, password, null /*salt*/)) {
+   if (!passwordEncoder.isPasswordValid(user.password,
+         password, null /*salt*/)) {
       flash.message = 'Current password is incorrect'
-      render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
+      render view: 'passwordExpired',
+             model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
    }
 
-   if (passwordEncoder.isPasswordValid(user.password, newPassword, null /*salt*/)) {
-      flash.message = 'Please choose a different password from your current one'
-      render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
+   if (passwordEncoder.isPasswordValid(user.password, newPassword,
+         null /*salt*/)) {
+      flash.message =
+         'Please choose a different password from your current one'
+      render view: 'passwordExpired',
+             model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
    }
 
@@ -157,7 +170,8 @@ class ExpirePasswordsJob {
             [cutoffDate: new Date() - 180])
 
       for (user in users) {
-         // flush each separately so one failure doesn't rollback all of the others
+         // flush each separately so one failure
+         // doesn't rollback all of the others
          try {
             user.passwordExpired = true
             user.save(flush: true)

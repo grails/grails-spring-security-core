@@ -3,26 +3,32 @@ Alternatively, enable events with @grails.plugin.springsecurity.useSecurityEvent
 Implement the event handlers that you need, for example:
 
 {code}
-grails.plugin.springsecurity.useSecurityEventListener = true
+grails {
+  plugin {
+    springsecurity {
+      useSecurityEventListener = true
 
-grails.plugin.springsecurity. onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
-   // handle InteractiveAuthenticationSuccessEvent
-}
+      onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
+         // handle InteractiveAuthenticationSuccessEvent
+      }
 
-grails.plugin.springsecurity. onAbstractAuthenticationFailureEvent = { e, appCtx ->
-   // handle AbstractAuthenticationFailureEvent
-}
+      onAbstractAuthenticationFailureEvent = { e, appCtx ->
+         // handle AbstractAuthenticationFailureEvent
+      }
 
-grails.plugin.springsecurity. onAuthenticationSuccessEvent = { e, appCtx ->
-   // handle AuthenticationSuccessEvent
-}
+      onAuthenticationSuccessEvent = { e, appCtx ->
+         // handle AuthenticationSuccessEvent
+      }
 
-grails.plugin.springsecurity. onAuthenticationSwitchUserEvent = { e, appCtx ->
-   // handle AuthenticationSwitchUserEvent
-}
+      onAuthenticationSwitchUserEvent = { e, appCtx ->
+         // handle AuthenticationSwitchUserEvent
+      }
 
-grails.plugin.springsecurity. onAuthorizationEvent = { e, appCtx ->
-   // handle AuthorizationEvent
+      onAuthorizationEvent = { e, appCtx ->
+         // handle AuthorizationEvent
+      }
+    }
+  }
 }
 {code}
 

@@ -47,7 +47,8 @@ class UserRoleGroup implements Serializable {
       }.count() > 0
    }
 
-   static UserRoleGroup create(User user, RoleGroup roleGroup, boolean flush = false) {
+   static UserRoleGroup create(User user, RoleGroup roleGroup,
+                               boolean flush = false) {
       def instance = new UserRoleGroup(user: user, roleGroup: roleGroup)
       instance.save(flush: flush, insert: true)
       instance
