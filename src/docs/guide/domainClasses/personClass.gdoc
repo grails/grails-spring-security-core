@@ -7,6 +7,11 @@ Assuming you choose @com.mycompany.myapp@ as your package, and @User@ as your cl
 {code}
 package com.mycompany.myapp
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
    private static final long serialVersionUID = 1
@@ -26,32 +31,6 @@ class User implements Serializable {
       this.password = password
    }
 
-   @Override
-   int hashCode() {
-      username?.hashCode() ?: 0
-   }
-
-   @Override
-   boolean equals(other) {
-      is(other) || (other instanceof User && other.username == username)
-   }
-
-   @Override
-   String toString() {
-      username
-   }
-
-   static transients = ['springSecurityService']
-
-   static constraints = {
-      username blank: false, unique: true
-      password blank: false
-   }
-
-   static mapping = {
-      password column: '`password`'
-   }
-
    Set<Role> getAuthorities() {
       UserRole.findAllByUser(this)*.role
    }
@@ -67,7 +46,20 @@ class User implements Serializable {
    }
 
    protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+      password = springSecurityService?.passwordEncoder ?
+         springSecurityService.encodePassword(password) :
+         password
+   }
+
+   static transients = ['springSecurityService']
+
+   static constraints = {
+      username blank: false, unique: true
+      password blank: false
+   }
+
+   static mapping = {
+      password column: '`password`'
    }
 }
 {code}
@@ -77,6 +69,11 @@ Optionally, add other properties such as @email@, @firstName@, @lastName@, and c
 {code}
 package com.mycompany.myapp
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
    private static final long serialVersionUID = 1
@@ -99,38 +96,12 @@ class User implements Serializable {
       this.password = password
    }
 
-   @Override
-   int hashCode() {
-      username?.hashCode() ?: 0
-   }
-
-   @Override
-   boolean equals(other) {
-      is(other) || (other instanceof User && other.username == username)
-   }
-
-   @Override
-   String toString() {
-      username
-   }
-
-   static transients = ['springSecurityService']
-
-   static constraints = {
-      username blank: false, unique: true
-      password blank: false
-   }
-
-   static mapping = {
-      password column: '`password`'
+   def someMethod {
+      ...
    }
 
    Set<Role> getAuthorities() {
       UserRole.findAllByUser(this)*.role
-   }
-
-   def someMethod {
-      ...
    }
 
    def beforeInsert() {
@@ -147,6 +118,17 @@ class User implements Serializable {
       password = springSecurityService?.passwordEncoder ?
          springSecurityService.encodePassword(password) :
          password
+   }
+
+   static transients = ['springSecurityService']
+
+   static constraints = {
+      username blank: false, unique: true
+      password blank: false
+   }
+
+   static mapping = {
+      password column: '`password`'
    }
 }
 {code}

@@ -5,6 +5,7 @@ If you run the [s2-quickstart|Scripts] script with the group name specified, thi
 {code}
 package com.mycompany.myapp
 
+import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
@@ -17,6 +18,13 @@ class RoleGroupRole implements Serializable {
    RoleGroup roleGroup
    Role role
 
+   RoleGroupRole(RoleGroup g, Role r) {
+      this()
+      roleGroup = g
+      role = r
+   }
+
+   @Override
    boolean equals(other) {
       if (!(other instanceof RoleGroupRole)) {
          return false
@@ -26,6 +34,7 @@ class RoleGroupRole implements Serializable {
       other.roleGroup?.id == roleGroup?.id
    }
 
+   @Override
    int hashCode() {
       def builder = new HashCodeBuilder()
       if (roleGroup) builder.append(roleGroup.id)
@@ -34,17 +43,18 @@ class RoleGroupRole implements Serializable {
    }
 
    static RoleGroupRole get(long roleGroupId, long roleId) {
-      RoleGroupRole.where {
-         roleGroup == RoleGroup.load(roleGroupId) &&
-         role == Role.load(roleId)
-      }.get()
+      criteriaFor(roleGroupId, roleId).get()
    }
 
    static boolean exists(long roleGroupId, long roleId) {
+      criteriaFor(roleGroupId, roleId).count()
+   }
+
+   private static DetachedCriteria criteriaFor(long roleGroupId, long roleId) {
       RoleGroupRole.where {
          roleGroup == RoleGroup.load(roleGroupId) &&
          role == Role.load(roleId)
-      }.count() > 0
+      }
    }
 
    static RoleGroupRole create(RoleGroup roleGroup, Role role,
@@ -54,26 +64,20 @@ class RoleGroupRole implements Serializable {
       instance
    }
 
-   static boolean remove(RoleGroup rg, Role r,
-                         boolean flush = false) {
+   static boolean remove(RoleGroup rg, Role r, boolean flush = false) {
       if (rg == null || r == null) return false
 
-      int rowCount = RoleGroupRole.where {
-         roleGroup == RoleGroup.load(rg.id) &&
-         role == Role.load(r.id)
-      }.deleteAll()
+      int rowCount = RoleGroupRole.where { roleGroup == rg && role == r }.deleteAll()
 
       if (flush) { RoleGroupRole.withSession { it.flush() } }
 
-      rowCount > 0
+      rowCount
    }
 
    static void removeAll(Role r, boolean flush = false) {
       if (r == null) return
 
-      RoleGroupRole.where {
-         role == Role.load(r.id)
-      }.deleteAll()
+      RoleGroupRole.where { role == r }.deleteAll()
 
       if (flush) { RoleGroupRole.withSession { it.flush() } }
    }
@@ -81,9 +85,7 @@ class RoleGroupRole implements Serializable {
    static void removeAll(RoleGroup rg, boolean flush = false) {
       if (rg == null) return
 
-      RoleGroupRole.where {
-         roleGroup == RoleGroup.load(rg.id)
-      }.deleteAll()
+      RoleGroupRole.where { roleGroup == rg }.deleteAll()
 
       if (flush) { RoleGroupRole.withSession { it.flush() } }
    }

@@ -1,5 +1,10 @@
 ${packageDeclaration}
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='entry')
+@ToString(includes='entry', includeNames=true, includePackage=false)
 class ${className} implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -9,21 +14,6 @@ class ${className} implements Serializable {
 	${className}(String entry) {
 		this()
 		this.entry = entry
-	}
-
-	@Override
-	int hashCode() {
-		entry?.hashCode() ?: 0
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (other instanceof ${className} && other.entry == entry)
-	}
-
-	@Override
-	String toString() {
-		entry
 	}
 
 	static constraints = {

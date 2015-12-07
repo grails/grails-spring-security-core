@@ -1,5 +1,10 @@
 package ${packageName}
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
 class ${userClassName} implements Serializable {
 
 	private static final long serialVersionUID = 1
@@ -17,21 +22,6 @@ class ${userClassName} implements Serializable {
 		this()
 		this.username = username
 		this.password = password
-	}
-
-	@Override
-	int hashCode() {
-		username?.hashCode() ?: 0
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (other instanceof ${userClassName} && other.username == username)
-	}
-
-	@Override
-	String toString() {
-		username
 	}
 
 	Set<${groupClassName ?: roleClassName}> getAuthorities() {

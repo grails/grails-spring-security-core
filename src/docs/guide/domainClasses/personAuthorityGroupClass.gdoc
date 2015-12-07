@@ -5,6 +5,7 @@ If you run the [s2-quickstart|Scripts] script with the group name specified, thi
 {code}
 package com.mycompany.myapp
 
+import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.apache.commons.lang.builder.HashCodeBuilder
@@ -17,6 +18,13 @@ class UserRoleGroup implements Serializable {
    User user
    RoleGroup roleGroup
 
+   UserRoleGroup(User u, RoleGroup rg) {
+      this()
+      user = u
+      roleGroup = rg
+   }
+
+   @Override
    boolean equals(other) {
       if (!(other instanceof UserRoleGroup)) {
          return false
@@ -26,6 +34,7 @@ class UserRoleGroup implements Serializable {
       other.roleGroup?.id == roleGroup?.id
    }
 
+   @Override
    int hashCode() {
       def builder = new HashCodeBuilder()
       if (user) builder.append(user.id)
@@ -34,17 +43,18 @@ class UserRoleGroup implements Serializable {
    }
 
    static UserRoleGroup get(long userId, long roleGroupId) {
-      UserRoleGroup.where {
-         user == User.load(userId) &&
-         roleGroup == RoleGroup.load(roleGroupId)
-      }.get()
+      criteriaFor(userId, roleGroupId).get()
    }
 
    static boolean exists(long userId, long roleGroupId) {
+      criteriaFor(userId, roleGroupId).count()
+   }
+
+   private static DetachedCriteria criteriaFor(long userId, long roleGroupId) {
       UserRoleGroup.where {
          user == User.load(userId) &&
          roleGroup == RoleGroup.load(roleGroupId)
-      }.count() > 0
+      }
    }
 
    static UserRoleGroup create(User user, RoleGroup roleGroup,
@@ -54,35 +64,28 @@ class UserRoleGroup implements Serializable {
       instance
    }
 
-   static boolean remove(User u, RoleGroup g, boolean flush = false) {
-      if (u == null || g == null) return false
+   static boolean remove(User u, RoleGroup rg, boolean flush = false) {
+      if (u == null || rg == null) return false
 
-      int rowCount = UserRoleGroup.where {
-         user == User.load(u.id) &&
-         roleGroup == RoleGroup.load(g.id)
-      }.deleteAll()
+      int rowCount = UserRoleGroup.where { user == u && roleGroup == rg }.deleteAll()
 
       if (flush) { UserRoleGroup.withSession { it.flush() } }
 
-      rowCount > 0
+      rowCount
    }
 
    static void removeAll(User u, boolean flush = false) {
       if (u == null) return
 
-      UserRoleGroup.where {
-         user == User.load(u.id)
-      }.deleteAll()
+      UserRoleGroup.where { user == u }.deleteAll()
 
       if (flush) { UserRoleGroup.withSession { it.flush() } }
    }
 
-   static void removeAll(RoleGroup g, boolean flush = false) {
-      if (g == null) return
+   static void removeAll(RoleGroup rg, boolean flush = false) {
+      if (rg == null) return
 
-      UserRoleGroup.where {
-         roleGroup == RoleGroup.load(g.id)
-      }.deleteAll()
+      UserRoleGroup.where { roleGroup == rg }.deleteAll()
 
       if (flush) { UserRoleGroup.withSession { it.flush() } }
    }

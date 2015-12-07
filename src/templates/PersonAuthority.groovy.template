@@ -52,7 +52,7 @@ class ${userClassName}${roleClassName} implements Serializable {
 	}
 
 	static ${userClassName}${roleClassName} create(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
-		def instance = new ${userClassName}${roleClassName}(${userClassProperty}, ${roleClassProperty})
+		def instance = new ${userClassName}${roleClassName}(${userClassProperty}: ${userClassProperty}, ${roleClassProperty}: ${roleClassProperty})
 		instance.save(flush: flush, insert: true)
 		instance
 	}

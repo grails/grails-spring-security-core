@@ -41,6 +41,11 @@ The script creates this User class:
 {code}
 package com.testapp
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
    private static final long serialVersionUID = 1
@@ -60,21 +65,6 @@ class User implements Serializable {
       this.password = password
    }
 
-   @Override
-   int hashCode() {
-      username?.hashCode() ?: 0
-   }
-
-   @Override
-   boolean equals(other) {
-      is(other) || (other instanceof User && other.username == username)
-   }
-
-   @Override
-   String toString() {
-      username
-   }
-
    Set<Role> getAuthorities() {
       UserRole.findAllByUser(this)*.role
    }
@@ -90,7 +80,9 @@ class User implements Serializable {
    }
 
    protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+      password = springSecurityService?.passwordEncoder ?
+         springSecurityService.encodePassword(password) :
+         password
    }
 
    static transients = ['springSecurityService']
@@ -115,6 +107,11 @@ and this Role class:
 {code}
 package com.testapp
 
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='authority')
+@ToString(includes='authority', includeNames=true, includePackage=false)
 class Role implements Serializable {
 
    private static final long serialVersionUID = 1
@@ -124,21 +121,6 @@ class Role implements Serializable {
    Role(String authority) {
       this()
       this.authority = authority
-   }
-
-   @Override
-   int hashCode() {
-      authority?.hashCode() ?: 0
-   }
-
-   @Override
-   boolean equals(other) {
-      is(other) || (other instanceof Role && other.authority == authority)
-   }
-
-   @Override
-   String toString() {
-      authority
    }
 
    static constraints = {
@@ -208,7 +190,7 @@ class UserRole implements Serializable {
    }
 
    static UserRole create(User user, Role role, boolean flush = false) {
-      def instance = new UserRole(user, role)
+      def instance = new UserRole(user: user, role: role)
       instance.save(flush: flush, insert: true)
       instance
    }
