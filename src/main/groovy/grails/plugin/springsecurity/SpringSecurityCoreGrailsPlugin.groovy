@@ -44,7 +44,6 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
-import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
@@ -97,6 +96,7 @@ import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncode
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
+import grails.plugin.springsecurity.web.GrailsRedirectStrategy
 import grails.plugin.springsecurity.web.NullFilterChainValidator
 import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
@@ -335,6 +335,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			useForward = conf.auth.useForward // false
 			portMapper = ref('portMapper')
 			portResolver = ref('portResolver')
+			redirectStrategy = ref('redirectStrategy')
 		}
 
 		/** filterInvocationInterceptor */
@@ -1068,8 +1069,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 			redirectStrategy = ref('redirectStrategy')
 		}
 
-		redirectStrategy(DefaultRedirectStrategy) {
-			contextRelative = conf.redirectStrategy.contextRelative // false
+		redirectStrategy(GrailsRedirectStrategy) {
+			useHeaderCheckChannelSecurity = conf.secureChannel.useHeaderCheckChannelSecurity // false
+			portResolver = ref('portResolver')
 		}
 	}
 

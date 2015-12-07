@@ -19,18 +19,24 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 import org.springframework.security.core.AuthenticationException
+import org.springframework.security.web.RedirectStrategy
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint
 
 import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
 @CompileStatic
+@Slf4j
 class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
 	protected String ajaxLoginFormUrl
+
+	/** Dependency injection for the RedirectStrategy. */
+	RedirectStrategy redirectStrategy
 
 	/**
 	 * @param loginFormUrl URL where the login page can be found. Should either be relative to the web-app context path
@@ -40,19 +46,40 @@ class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint
 		super(loginFormUrl)
 	}
 
-	@Override
-	protected String determineUrlToUseForThisRequest(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) {
-		ajaxLoginFormUrl && SpringSecurityUtils.isAjax(req) ? ajaxLoginFormUrl : loginFormUrl
-	}
+	void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
 
-	@Override
-	void commence(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) throws IOException, ServletException {
-		if ('true'.equalsIgnoreCase(req.getHeader('nopage'))) {
-			res.sendError HttpServletResponse.SC_UNAUTHORIZED
+		if ('true'.equalsIgnoreCase(request.getHeader('nopage'))) {
+			response.sendError HttpServletResponse.SC_UNAUTHORIZED
 			return
 		}
 
-		super.commence req, res, e
+		String redirectUrl
+
+		if (useForward) {
+			if (forceHttps && 'http' == request.scheme) {
+				// First redirect the current request to HTTPS.
+				// When that request is received, the forward to the login page will be used.
+				redirectUrl = buildHttpsRedirectUrlForRequest(request)
+			}
+
+			if (redirectUrl == null) {
+				String loginForm = determineUrlToUseForThisRequest(request, response, e)
+				log.debug 'Server side forward to: {}', loginForm
+				request.getRequestDispatcher(loginForm).forward request, response
+				return
+			}
+		}
+		else {
+			// redirect to login page. Use https if forceHttps true
+			redirectUrl = buildRedirectUrlToLoginPage(request, response, e)
+		}
+
+		redirectStrategy.sendRedirect request, response, redirectUrl
+	}
+
+	@Override
+	protected String determineUrlToUseForThisRequest(HttpServletRequest req, HttpServletResponse res, AuthenticationException e) {
+		ajaxLoginFormUrl && SpringSecurityUtils.isAjax(req) ? ajaxLoginFormUrl : loginFormUrl
 	}
 
 	/**
