@@ -21,34 +21,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.web.PortResolver;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.util.UrlUtils;
-import org.springframework.util.StringUtils;
 
 /**
- * Based on org.springframework.security.web.DefaultRedirectStrategy.
- *
- * @author Burt Beckwith
- */
+* Builds absolute urls when using header check channel security to prevent the
+* container from generating urls with an incorrect scheme.
+*
+* @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+*/
 public class GrailsRedirectStrategy implements RedirectStrategy {
 
-	private final Logger log = LoggerFactory.getLogger(getClass());
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
-	protected boolean contextRelative;
-	protected String insecureHeaderName;
-	protected String insecureHeaderValue;
-	protected String secureHeaderName;
-	protected String secureHeaderValue;
+	protected PortResolver portResolver;
+	protected boolean useHeaderCheckChannelSecurity;
 
-	/**
-	 * Redirects the response to the supplied URL.
-	 * <p>
-	 * If <tt>contextRelative</tt> is set, the redirect value will be the value after the request context path. Note
-	 * that this will result in the loss of protocol information (HTTP or HTTPS), so will cause problems if a
-	 * redirect is being performed to change to HTTPS, for example.
-	 */
 	public void sendRedirect(HttpServletRequest request, HttpServletResponse response, String url) throws IOException {
-		String redirectUrl = calculateRedirectUrl(request.getContextPath(), url);
+		String redirectUrl = calculateRedirectUrl(request, url);
 		redirectUrl = response.encodeRedirectURL(redirectUrl);
 
 		log.debug("Redirecting to '{}'", redirectUrl);
@@ -56,66 +47,34 @@ public class GrailsRedirectStrategy implements RedirectStrategy {
 		response.sendRedirect(redirectUrl);
 	}
 
-	protected String calculateRedirectUrl(String contextPath, String url) {
-		if (!UrlUtils.isAbsoluteUrl(url)) {
-			return contextRelative ? url : contextPath + url;
-		}
-
-		// Full URL, including http(s)://
-
-		if (!contextRelative) {
+	protected String calculateRedirectUrl(HttpServletRequest request, String url) {
+		if (UrlUtils.isAbsoluteUrl(url)) {
 			return url;
 		}
 
-		// Calculate the relative URL from the fully qualified URL, minus the last
-		// occurrence of the scheme and base context.
-		url = url.substring(url.lastIndexOf("://") + 3); // strip off scheme
-		url = url.substring(url.indexOf(contextPath) + contextPath.length());
+		url = request.getContextPath() + url;
 
-		if (url.length() > 1 && url.charAt(0) == '/') {
-			url = url.substring(1);
+		if (!useHeaderCheckChannelSecurity) {
+			return url;
 		}
 
-		return url;
+		return UrlUtils.buildFullRequestUrl(request.getScheme(), request.getServerName(),
+				portResolver.getServerPort(request), url, null);
 	}
 
 	/**
-	 * If <tt>true</tt>, causes any redirection URLs to be calculated minus the protocol
-	 * and context path (defaults to <tt>false</tt>).
+	 * Dependency injection for useHeaderCheckChannelSecurity.
+	 * @param use
 	 */
-	public void setContextRelative(boolean useRelativeContext) {
-		contextRelative = useRelativeContext;
+	public void setUseHeaderCheckChannelSecurity(boolean use) {
+		useHeaderCheckChannelSecurity = use;
 	}
 
 	/**
-	 * Set the name of the secure header to check.
-	 * @param name the name
+	 * Dependency injection for the port resolver.
+	 * @param portResolver the port resolver
 	 */
-	public void setSecureHeaderName(String name) {
-		secureHeaderName = name;
-	}
-
-	/**
-	 * Set the secure header value to use for redirects.
-	 * @param value the value
-	 */
-	public void setSecureHeaderValue(String value) {
-		secureHeaderValue = value;
-	}
-
-	/**
-	 * Set the name of the insecure header to check.
-	 * @param name the name
-	 */
-	public void setInsecureHeaderName(String name) {
-		insecureHeaderName = name;
-	}
-
-	/**
-	 * Set the insecure header value to use for redirects.
-	 * @param value the value
-	 */
-	public void setInsecureHeaderValue(String value) {
-		insecureHeaderValue = value;
+	public void setPortResolver(PortResolver portResolver) {
+		this.portResolver = portResolver;
 	}
 }

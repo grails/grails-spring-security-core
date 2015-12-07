@@ -22,7 +22,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.util.Assert;
 
@@ -31,7 +34,10 @@ import org.springframework.util.Assert;
  */
 public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEntryPoint {
 
+	protected final Logger log = LoggerFactory.getLogger(getClass());
+
 	protected String ajaxLoginFormUrl;
+	protected RedirectStrategy redirectStrategy;
 
 	/**
 	 * @param loginFormUrl URL where the login page can be found. Should either be relative to the web-app context path
@@ -53,13 +59,37 @@ public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEnt
 	}
 
 	@Override
-	public void commence(final HttpServletRequest req, final HttpServletResponse res, final AuthenticationException e) throws IOException, ServletException {
-		if ("true".equalsIgnoreCase(req.getHeader("nopage"))) {
-			res.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+	public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
+			throws IOException, ServletException {
+
+		if ("true".equalsIgnoreCase(request.getHeader("nopage"))) {
+			response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
 			return;
 		}
 
-		super.commence(req, res, e);
+		String redirectUrl = null;
+
+		if (isUseForward()) {
+
+			if (isForceHttps() && "http".equals(request.getScheme())) {
+				// First redirect the current request to HTTPS.
+				// When that request is received, the forward to the login page will be used.
+				redirectUrl = buildHttpsRedirectUrlForRequest(request);
+			}
+
+			if (redirectUrl == null) {
+				String loginForm = determineUrlToUseForThisRequest(request, response, e);
+				log.debug("Server side forward to: {}", loginForm);
+				request.getRequestDispatcher(loginForm).forward(request, response);
+				return;
+			}
+		}
+		else {
+			// redirect to login page. Use https if forceHttps true
+			redirectUrl = buildRedirectUrlToLoginPage(request, response, e);
+		}
+
+		redirectStrategy.sendRedirect(request, response, redirectUrl);
 	}
 
 	/**
@@ -69,5 +99,13 @@ public class AjaxAwareAuthenticationEntryPoint extends LoginUrlAuthenticationEnt
 	public void setAjaxLoginFormUrl(final String url) {
 		Assert.isTrue(url == null || url.startsWith("/"), "ajaxLoginFormUrl must begin with '/'");
 		ajaxLoginFormUrl = url;
+	}
+
+	/**
+	 * Dependency injection for the RedirectStrategy.
+	 * @param redirectStrategy redirectStrategy
+	 */
+	public void setRedirectStrategy(RedirectStrategy strategy) {
+		redirectStrategy = strategy;
 	}
 }

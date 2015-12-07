@@ -383,6 +383,7 @@ class SpringSecurityCoreGrailsPlugin {
 			useForward = conf.auth.useForward // false
 			portMapper = ref('portMapper')
 			portResolver = ref('portResolver')
+			redirectStrategy = ref('redirectStrategy')
 		}
 
 		/** filterInvocationInterceptor */
@@ -1219,11 +1220,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		redirectStrategy(GrailsRedirectStrategy) {
-			contextRelative = conf.redirectStrategy.contextRelative // false
-			secureHeaderName = conf.secureChannel.secureHeaderName // 'X-Forwarded-Proto'
-			secureHeaderValue = conf.secureChannel.secureHeaderValue // 'http'
-			insecureHeaderName = conf.secureChannel.insecureHeaderName // 'X-Forwarded-Proto'
-			insecureHeaderValue = conf.secureChannel.insecureHeaderValue // 'https'
+			useHeaderCheckChannelSecurity = conf.secureChannel.useHeaderCheckChannelSecurity // false
+			portResolver = ref('portResolver')
 		}
 	}
 
