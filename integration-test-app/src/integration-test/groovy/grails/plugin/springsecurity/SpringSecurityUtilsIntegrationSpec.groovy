@@ -26,15 +26,16 @@ import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
-import org.springframework.security.web.authentication.logout.LogoutFilter
-import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
-import grails.plugin.springsecurity.web.authentication.RequestHolderAuthenticationFilter
+import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
+import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import test.TestRole
 import test.TestUser
 import test.TestUserRole
@@ -83,12 +84,13 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		def map = SpringSecurityUtils.configuredOrderedFilters
 
 		expect:
-		8 == map.size()
+		9 == map.size()
+		map[Integer.MIN_VALUE + 10] instanceof SecurityRequestHolderFilter
 		map[300] instanceof SecurityContextPersistenceFilter
-		map[400] instanceof LogoutFilter
-		map[800] instanceof RequestHolderAuthenticationFilter
+		map[400] instanceof MutableLogoutFilter
+		map[800] instanceof GrailsUsernamePasswordAuthenticationFilter
 		map[1400] instanceof SecurityContextHolderAwareRequestFilter
-		map[1500] instanceof RememberMeAuthenticationFilter
+		map[1500] instanceof GrailsRememberMeAuthenticationFilter
 		map[1600] instanceof GrailsAnonymousAuthenticationFilter
 		map[1800] instanceof ExceptionTranslationFilter
 		map[1900] instanceof FilterSecurityInterceptor
@@ -118,22 +120,23 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', SecurityFilterPosition.LOGOUT_FILTER.order + 10
 
 		then:
-		9 == map.size()
+		10 == map.size()
 		map[410] instanceof DummyFilter
 
 		when:
 		def filters = securityFilterChains[0].filters
 
 		then:
-		filters[0] instanceof SecurityContextPersistenceFilter
-		filters[1] instanceof LogoutFilter
-		filters[2] instanceof DummyFilter
-		filters[3] instanceof RequestHolderAuthenticationFilter
-		filters[4] instanceof SecurityContextHolderAwareRequestFilter
-		filters[5] instanceof RememberMeAuthenticationFilter
-		filters[6] instanceof GrailsAnonymousAuthenticationFilter
-		filters[7] instanceof ExceptionTranslationFilter
-		filters[8] instanceof FilterSecurityInterceptor
+		filters[0] instanceof SecurityRequestHolderFilter
+		filters[1] instanceof SecurityContextPersistenceFilter
+		filters[2] instanceof MutableLogoutFilter
+		filters[3] instanceof DummyFilter
+		filters[4] instanceof GrailsUsernamePasswordAuthenticationFilter
+		filters[5] instanceof SecurityContextHolderAwareRequestFilter
+		filters[6] instanceof GrailsRememberMeAuthenticationFilter
+		filters[7] instanceof GrailsAnonymousAuthenticationFilter
+		filters[8] instanceof ExceptionTranslationFilter
+		filters[9] instanceof FilterSecurityInterceptor
 	}
 
 	void 'reauthenticate'() {

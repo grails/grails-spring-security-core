@@ -14,18 +14,18 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import javax.servlet.FilterChain
-
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+
+import javax.servlet.FilterChain
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class RequestHolderAuthenticationFilterSpec extends AbstractUnitSpec {
+class SecurityRequestHolderFilterSpec extends AbstractUnitSpec {
 
-	@SuppressWarnings('deprecation')
-	private RequestHolderAuthenticationFilter filter = new RequestHolderAuthenticationFilter()
+	private SecurityRequestHolderFilter filter = new SecurityRequestHolderFilter()
 
 	void 'doFilter'() {
 		expect:

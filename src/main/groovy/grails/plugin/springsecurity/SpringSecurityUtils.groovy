@@ -687,6 +687,8 @@ final class SpringSecurityUtils {
 		}
 		else {
 
+			orderedNames[SecurityFilterPosition.FIRST.order + 10] = 'securityRequestHolderFilter'
+
 			if (useSecureChannel) {
 				orderedNames[SecurityFilterPosition.CHANNEL_FILTER.order] = 'channelProcessingFilter'
 			}

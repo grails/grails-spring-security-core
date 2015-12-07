@@ -98,6 +98,7 @@ import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
 import grails.plugin.springsecurity.web.NullFilterChainValidator
+import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
 import grails.plugin.springsecurity.web.access.DefaultThrowableAnalyzer
 import grails.plugin.springsecurity.web.access.GrailsWebInvocationPrivilegeEvaluator
@@ -112,7 +113,7 @@ import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationEn
 import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationFailureHandler
 import grails.plugin.springsecurity.web.authentication.AjaxAwareAuthenticationSuccessHandler
 import grails.plugin.springsecurity.web.authentication.FilterProcessUrlRequestMatcher
-import grails.plugin.springsecurity.web.authentication.RequestHolderAuthenticationFilter
+import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
 import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.authentication.preauth.x509.ClosureX509PrincipalExtractor
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
@@ -208,6 +209,17 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 		/** springSecurityFilterChain */
 		configureFilterChain.delegate = delegate
 		configureFilterChain conf
+
+		// securityRequestHolderFilter
+		securityRequestHolderFilter(SecurityRequestHolderFilter) {
+			useHeaderCheckChannelSecurity = conf.secureChannel.useHeaderCheckChannelSecurity
+			secureHeaderName = conf.secureChannel.secureHeaderName // 'X-Forwarded-Proto'
+			secureHeaderValue = conf.secureChannel.secureHeaderValue // 'http'
+			insecureHeaderName = conf.secureChannel.insecureHeaderName // 'X-Forwarded-Proto'
+			insecureHeaderValue = conf.secureChannel.insecureHeaderValue // 'https'
+			portMapper = ref('portMapper')
+			portResolver = ref('portResolver')
+		}
 
 		// logout
 		configureLogout.delegate = delegate
@@ -1020,7 +1032,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		filterProcessUrlRequestMatcher(FilterProcessUrlRequestMatcher, conf.apf.filterProcessesUrl) // '/login/authenticate'
 
-		authenticationProcessingFilter(RequestHolderAuthenticationFilter) {
+		authenticationProcessingFilter(GrailsUsernamePasswordAuthenticationFilter) {
 			authenticationManager = ref('authenticationManager')
 			sessionAuthenticationStrategy = ref('sessionAuthenticationStrategy')
 			authenticationSuccessHandler = ref('authenticationSuccessHandler')
