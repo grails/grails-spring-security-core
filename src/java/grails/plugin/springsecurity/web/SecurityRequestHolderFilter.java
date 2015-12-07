@@ -77,7 +77,7 @@ public class SecurityRequestHolderFilter extends GenericFilterBean {
 			return request;
 		}
 
-		if (request.getHeader(secureHeaderName).equals(insecureHeaderValue) && request.getScheme().equals("http")) {
+		if (insecureHeaderValue.equals(request.getHeader(secureHeaderName)) && "http".equals(request.getScheme())) {
 			return new HttpServletRequestWrapper(request) {
 				@Override public boolean isSecure() { return true; }
 				@Override public String getScheme() { return "https"; }
@@ -93,7 +93,7 @@ public class SecurityRequestHolderFilter extends GenericFilterBean {
 			};
 		}
 
-		if (request.getHeader(insecureHeaderName).equals(secureHeaderValue) && request.getScheme().equals("https")) {
+		if (secureHeaderValue.equals(request.getHeader(insecureHeaderName)) && "https".equals(request.getScheme())) {
 			return new HttpServletRequestWrapper(request) {
 				@Override public boolean isSecure() { return false; }
 				@Override public String getScheme() { return "http"; }
