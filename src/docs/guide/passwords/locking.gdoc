@@ -111,7 +111,7 @@ def updatePassword() {
    String newPassword = params.password_new
    String newPassword2 = params.password_new_2
    if (!password || !newPassword || !newPassword2 ||
-   	  newPassword != newPassword2) {
+        newPassword != newPassword2) {
       flash.message =
          'Please enter your current password and a valid new password'
       render view: 'passwordExpired',

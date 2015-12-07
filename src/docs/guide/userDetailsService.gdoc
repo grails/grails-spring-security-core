@@ -60,7 +60,7 @@ class MyUserDetailsService implements GrailsUserDetailsService {
    }
 
    @Transactional(readOnly=true,
-   	  noRollbackFor=[IllegalArgumentException, UsernameNotFoundException])
+        noRollbackFor=[IllegalArgumentException, UsernameNotFoundException])
    UserDetails loadUserByUsername(String username)
          throws UsernameNotFoundException {
 
