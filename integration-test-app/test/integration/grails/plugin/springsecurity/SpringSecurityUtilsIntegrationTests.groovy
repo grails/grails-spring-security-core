@@ -15,8 +15,11 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
-import grails.plugin.springsecurity.web.authentication.RequestHolderAuthenticationFilter
+import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
+import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.test.mixin.TestMixin
 import grails.test.mixin.integration.IntegrationTestMixin
 
@@ -33,8 +36,6 @@ import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
-import org.springframework.security.web.authentication.logout.LogoutFilter
-import org.springframework.security.web.authentication.rememberme.RememberMeAuthenticationFilter
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
@@ -92,12 +93,13 @@ class SpringSecurityUtilsIntegrationTests {
 	void testClientRegisterFilter() {
 
 		def map = SpringSecurityUtils.configuredOrderedFilters
-		assert 8 == map.size()
+		assert 9 == map.size()
+		assert map[Integer.MIN_VALUE + 10] instanceof SecurityRequestHolderFilter
 		assert map[300] instanceof SecurityContextPersistenceFilter
-		assert map[400] instanceof LogoutFilter
-		assert map[800] instanceof RequestHolderAuthenticationFilter
+		assert map[400] instanceof MutableLogoutFilter
+		assert map[800] instanceof GrailsUsernamePasswordAuthenticationFilter
 		assert map[1400] instanceof SecurityContextHolderAwareRequestFilter
-		assert map[1500] instanceof RememberMeAuthenticationFilter
+		assert map[1500] instanceof GrailsRememberMeAuthenticationFilter
 		assert map[1600] instanceof GrailsAnonymousAuthenticationFilter
 		assert map[1800] instanceof ExceptionTranslationFilter
 		assert map[1900] instanceof FilterSecurityInterceptor
@@ -125,21 +127,22 @@ class SpringSecurityUtilsIntegrationTests {
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter',
 				SecurityFilterPosition.LOGOUT_FILTER.order + 10
 
-		assert 9 == map.size()
+		assert 10 == map.size()
 		assert map[410] instanceof DummyFilter
 
 		def filterChainMap = springSecurityFilterChain.filterChainMap
 		def filters = filterChainMap.values()[0]
 
-		assert filters[0] instanceof SecurityContextPersistenceFilter
-		assert filters[1] instanceof LogoutFilter
-		assert filters[2] instanceof DummyFilter
-		assert filters[3] instanceof RequestHolderAuthenticationFilter
-		assert filters[4] instanceof SecurityContextHolderAwareRequestFilter
-		assert filters[5] instanceof RememberMeAuthenticationFilter
-		assert filters[6] instanceof GrailsAnonymousAuthenticationFilter
-		assert filters[7] instanceof ExceptionTranslationFilter
-		assert filters[8] instanceof FilterSecurityInterceptor
+		assert filters[0] instanceof SecurityRequestHolderFilter
+		assert filters[1] instanceof SecurityContextPersistenceFilter
+		assert filters[2] instanceof MutableLogoutFilter
+		assert filters[3] instanceof DummyFilter
+		assert filters[4] instanceof GrailsUsernamePasswordAuthenticationFilter
+		assert filters[5] instanceof SecurityContextHolderAwareRequestFilter
+		assert filters[6] instanceof GrailsRememberMeAuthenticationFilter
+		assert filters[7] instanceof GrailsAnonymousAuthenticationFilter
+		assert filters[8] instanceof ExceptionTranslationFilter
+		assert filters[9] instanceof FilterSecurityInterceptor
 	}
 
 	void testReauthenticate() {

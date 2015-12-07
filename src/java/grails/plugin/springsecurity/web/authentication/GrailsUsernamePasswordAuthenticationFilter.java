@@ -15,14 +15,7 @@
 package grails.plugin.springsecurity.web.authentication;
 
 import grails.plugin.springsecurity.SpringSecurityUtils;
-import grails.plugin.springsecurity.web.SecurityRequestHolder;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -34,28 +27,14 @@ import org.springframework.util.Assert;
 
 /**
  * Extends the default {@link UsernamePasswordAuthenticationFilter} to store the
- * request and response in the {@link SecurityRequestHolder}.
+ * last attempted login username in the session under the 'SPRING_SECURITY_LAST_USERNAME'
+ * key if storeLastUsername is true.
  *
- * @deprecated will be removed and replaced with
- *             grails.plugin.springsecurity.web.SecurityRequestHolderFilter at
- *             the beginning of the filter chain
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@Deprecated
-public class RequestHolderAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class GrailsUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
 	protected Boolean storeLastUsername;
-
-	@Override
-	public void doFilter(final ServletRequest request, final ServletResponse response, final FilterChain chain) throws IOException, ServletException {
-		SecurityRequestHolder.set((HttpServletRequest)request, (HttpServletResponse)response);
-		try {
-			super.doFilter(request, response, chain);
-		}
-		finally {
-			SecurityRequestHolder.reset();
-		}
-	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
