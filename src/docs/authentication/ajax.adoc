@@ -45,9 +45,8 @@ function showLogin() {
 function logout(event) {
    event.preventDefault();
    $.ajax({
-      url: $(this).attr("href"),
+      url: $("#logout").attr("href"),
       method: "POST",
-      timeout: 1000,
       success: function(data, textStatus, jqXHR) {
          window.location = "/";
       },
@@ -67,7 +66,6 @@ function authAjax() {
       method:   "POST",
       data:      form.serialize(),
       dataType: "JSON",
-      timeout:   1000,
       success: function(json, textStatus, jqXHR) {
          if (json.success) {
             form[0].reset();
@@ -75,7 +73,7 @@ function authAjax() {
             $("#ajaxLogin").jqmHide();
             $("#loginLink").html(
                'Logged in as ' + json.username +
-               ' (<a href="' + $("#logoutLink").attr("href") +
+               ' (<a href="' + $("#logout").attr("href") +
                '" id="logout">Logout</a>)');
             if (onLogin) {
                // execute the saved event.success function
@@ -98,15 +96,21 @@ function authAjax() {
                'Sorry, there was a problem with the login request</error>');
          }
          else {
-            var responseText = jqXHR.responseText || "[]";
-            var json = responseText.evalJSON();
-            if (json.error) {
-               $("#loginMessage").html('<span class="errorMessage">' +
-                                       json.error + "</error>");
+            var responseText = jqXHR.responseText;
+            if (responseText) {
+               var json = $.parseJSON(responseText);
+               if (json.error) {
+                  $("#loginMessage").html('<span class="errorMessage">' +
+                                          json.error + "</error>");
+                  return;
+               }
             }
             else {
-               $("#loginMessage").html(responseText);
+               responseText = "Sorry, an error occurred (status: " +
+                              textStatus + ", error: " + errorThrown + ")";
             }
+            $("#loginMessage").html('<span class="errorMessage">' +
+                                    responseText + "</error>");
          }
       }
    });
