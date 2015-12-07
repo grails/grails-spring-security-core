@@ -596,6 +596,18 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		permissionEvaluator(DenyAllPermissionEvaluator)
 
+		// need to add a FilterRegistrationBean with enabled set to
+		// false to prevent Boot from registering all of the filters
+		// in the filterchains again as regular filters
+
+		SortedMap<Integer, String> filterNames = findFilterChainNames(conf)
+		for (String name in filterNames.values()) {
+			"${name}FilterDeregistrationBean"(FilterRegistrationBean) {
+				filter = ref(name)
+				enabled = false
+			}
+		}
+
 		if (printStatusMessages) {
 			String message = '... finished configuring Spring Security Core\n'
 			log.warn message
@@ -659,9 +671,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		log.trace 'Using SecurityContextHolder strategy {}', SCH.strategyName
 
 		// build filters here to give dependent plugins a chance to register some
-		SortedMap<Integer, String> filterNames = SpringSecurityUtils.findFilterChainNames(conf.filterChain.filterNames,
-				  conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509,
-				  conf.useDigestAuth, conf.useBasicAuth, conf.useSwitchUserFilter)
+		SortedMap<Integer, String> filterNames = findFilterChainNames(conf)
 		def securityFilterChains = applicationContext.securityFilterChains
 		SpringSecurityUtils.buildFilterChains filterNames, conf.filterChain.chainMap ?: [], securityFilterChains, applicationContext
 		log.trace 'Filter chain: {}', securityFilterChains
@@ -712,6 +722,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 				passwordEncoder.resetInitializing()
 			}
 		}
+	}
+
+	private SortedMap<Integer, String> findFilterChainNames(conf) {
+		SpringSecurityUtils.findFilterChainNames conf.filterChain.filterNames,
+				conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509,
+				conf.useDigestAuth, conf.useBasicAuth, conf.useSwitchUserFilter
 	}
 
 	void onChange(Map<String, Object> event) {
