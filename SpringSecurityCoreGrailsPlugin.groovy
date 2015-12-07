@@ -35,8 +35,6 @@ import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
 import grails.plugin.springsecurity.web.access.DefaultThrowableAnalyzer
 import grails.plugin.springsecurity.web.access.GrailsWebInvocationPrivilegeEvaluator
-import grails.plugin.springsecurity.web.access.channel.HeaderCheckInsecureChannelProcessor
-import grails.plugin.springsecurity.web.access.channel.HeaderCheckSecureChannelProcessor
 import grails.plugin.springsecurity.web.access.expression.WebExpressionVoter
 import grails.plugin.springsecurity.web.access.intercept.AnnotationFilterInvocationDefinition
 import grails.plugin.springsecurity.web.access.intercept.ChannelFilterInvocationSecurityMetadataSourceFactoryBean
@@ -1115,28 +1113,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 			redirectStrategy = ref('redirectStrategy')
 		}
 
-		if (conf.secureChannel.useHeaderCheckChannelSecurity) {
-			log.trace 'Configuring header check channel security ("X-Forwarded-Proto")'
-			secureChannelProcessor(HeaderCheckSecureChannelProcessor) {
-				entryPoint = ref('retryWithHttpsEntryPoint')
-				headerName = conf.secureChannel.secureHeaderName // 'X-Forwarded-Proto'
-				headerValue = conf.secureChannel.secureHeaderValue // 'http'
-			}
-
-			insecureChannelProcessor(HeaderCheckInsecureChannelProcessor) {
-				entryPoint = ref('retryWithHttpEntryPoint')
-				headerName = conf.secureChannel.insecureHeaderName // 'X-Forwarded-Proto'
-				headerValue = conf.secureChannel.insecureHeaderValue // 'https'
-			}
+		secureChannelProcessor(SecureChannelProcessor) {
+			entryPoint = ref('retryWithHttpsEntryPoint')
 		}
-		else {
-			secureChannelProcessor(SecureChannelProcessor) {
-				entryPoint = ref('retryWithHttpsEntryPoint')
-			}
 
-			insecureChannelProcessor(InsecureChannelProcessor) {
-				entryPoint = ref('retryWithHttpEntryPoint')
-			}
+		insecureChannelProcessor(InsecureChannelProcessor) {
+			entryPoint = ref('retryWithHttpEntryPoint')
 		}
 
 		channelDecisionManager(ChannelDecisionManagerImpl) {
