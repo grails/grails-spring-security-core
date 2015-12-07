@@ -45,7 +45,7 @@ function showLogin() {
 function logout(event) {
    event.preventDefault();
    $.ajax({
-      url: $("#logout").attr("href"),
+      url: $("#_logout").attr("href"),
       method: "POST",
       success: function(data, textStatus, jqXHR) {
          window.location = "/";
@@ -73,8 +73,9 @@ function authAjax() {
             $("#ajaxLogin").jqmHide();
             $("#loginLink").html(
                'Logged in as ' + json.username +
-               ' (<a href="' + $("#logout").attr("href") +
+               ' (<a href="' + $("#_logout").attr("href") +
                '" id="logout">Logout</a>)');
+            $("#logout").click(logout);
             if (onLogin) {
                // execute the saved event.success function
                onLogin(json, textStatus, jqXHR);
@@ -245,14 +246,15 @@ We'll need some GSP code to define the HTML, so create `grails-app/views/include
 
 [source,html]
 ----
+<span id="logoutLink" style="display: none;">
+<g:link elementId='_logout' controller='logout'>Logout</g:link>
+</span>
+
 <span id="loginLink" style="position: relative; margin-right: 30px; float: right">
 <sec:ifLoggedIn>
    Logged in as <sec:username/> (<g:link elementId='logout' controller='logout'>Logout</g:link>)
 </sec:ifLoggedIn>
 <sec:ifNotLoggedIn>
-   <span id="logoutLink" style="display: none;">
-   <g:link elementId='logout' controller='logout'>Logout</g:link>
-   </span>
    <a href="#" onclick="showLogin(); return false;">Login</a>
 </sec:ifNotLoggedIn>
 </span>
@@ -310,6 +312,7 @@ The important aspects of this code are:
 * Error messages are displayed within the popup <div>.
 * Because there is no page redirect after successful login, the Javascript replaces the login link to give a visual indication that the user is logged in.
 * The Logout link also uses Ajax to submit a POST request to the standard logout url and redirect you to the index page after the request finishes.
+** Note that in the JavaScript `logout` function, you'll need to change the url in the `success` callback to the correct post-logout value, e.g. `window.location = "/appname";` if you have configured the contextPath to be "/appname"
 
 ==== How Does Ajax login Work?
 
