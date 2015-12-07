@@ -134,7 +134,7 @@ class SpringSecurityCoreGrailsPlugin {
 
 	private final Logger log = LoggerFactory.getLogger('grails.plugin.springsecurity.SpringSecurityCoreGrailsPlugin')
 
-	String version = '2.0-SNAPSHOT'
+	String version = '2.0.0'
 	String grailsVersion = '2.3.0 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'hibernate', 'hibernate4', 'hibernate5', 'services']

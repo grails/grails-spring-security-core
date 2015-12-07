@@ -9,7 +9,7 @@ h4. 2. Install the plugin by adding it to BuildConfig.groovy
 {code}
 plugins {
    ...
-   compile ':spring-security-core:2.0-RC6'
+   compile ':spring-security-core:2.0.0'
 }
 {code}
 
