@@ -2,12 +2,12 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>1.1 Configuration Settings Now in Config.groovy 2.0.0</title>
+    <title>Spring Security Core Plugin 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
-    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
+    <link rel="stylesheet" href="../../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
+    <link rel="stylesheet" href="../../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
     <script type="text/javascript">
-function addJsClass() {
+function addJsClass(el) {
     var classes = document.body.className.split(" ");
     classes.push("js");
     document.body.className = classes.join(" ");
@@ -16,13 +16,14 @@ function addJsClass() {
 </head>
 
 <body class="body" onload="addJsClass();">
+
 <div id="navigation">
     <ul>
         <li>
             <div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)">
                 <a href="../../guide/index.html" class="button">Table of contents</a>
 
-                <div id="nav-summary-childs" style="display:none;">
+                <div id="nav-summary-childs">
                     
                     <div class="toc-item" style="margin-left:0"><a href="../../guide/introduction.html"><strong>1</strong><span>Introduction to the Spring Security Plugin</span></a>
                     </div>
@@ -116,43 +117,14 @@ function addJsClass() {
 <table id="colset" border="0" cellpadding="0" cellspacing="0">
     <tr>
         <td id="col1">
-            <div id="main" class="corner-all">
-
-                
+            <div id="main" class="reference corner-all">
 
                 <span id='toggle-col1' class="toggle">(<a href="#" onclick="localToggle(); return false;">Quick Reference</a>)</span>
 
-                
-                    <div class="toc-item next-right"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span> >></a></div>
-                
+                <h1>s2-create-role-hierarchy-entry</h1><p class="paragraph"/><h2>Purpose</h2><p class="paragraph"/>Creates a persistent role hierarchy entry domain class for storing role hierarchy information in the database. The general format is:<p class="paragraph"/><pre class="bq"><code>
+grails s2-create-role-hierarchy-entry &#60;classname&#62;</code></pre><p class="paragraph"/><h2>Example</h2><p class="paragraph"/><pre class="bq"><code>
+grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry</code></pre><p class="paragraph"/><h2>Description</h2><p class="paragraph"/>This creates the domain class in the specified package, and also registers the name in <code>grails-app/conf/Config.groovy</code>, along with enabling persistent role hierarchy storage and lookup.
 
-
-                <div class="project">
-                    <h1>1.1 Configuration Settings Now in Config.groovy - Reference Documentation</h1>
-
-                    <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
-
-                    <p><strong>Version:</strong> 2.0.0</p>
-
-                    
-                </div>
-
-                
-
-                
-
-<h2 id="configGroovy">1.1 Configuration Settings Now in Config.groovy</h2>
-The Spring Security plugin maintains its configuration in the standard <code>Config.groovy</code> file. Default values are in the plugin's <code>grails-app/conf/DefaultSecurityConfig.groovy</code> file, and you add application-specific values to the <code>grails-app/conf/Config.groovy</code> file. The two configurations will be merged, with application values overriding the defaults.<p class="paragraph"/>This structure enables environment-specific configuration such as, for example, fewer structure-restrictive security rules during development than in production. Like any environment-specific configuration parameters, you wrap them in an <code>environments</code> block.<p class="paragraph"/><blockquote class="note">
-The plugin's configuration values all start with <code>grails.plugin.springsecurity</code> to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the <code>grails.plugin.springsecurity</code> suffix. For example, you specify the attribute <code>password.algorithm</code> as:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.password.algorithm='bcrypt'</pre></div><p class="paragraph"/>in <code>Config.groovy</code>
-</blockquote>
-
-
-
-                <div style="clear:both;margin-top:15px;"></div>
-                
-                    <div class="toc-item next-right"><a href="../../guide/newInV2.html"><strong>2</strong><span>What's New in Version 2.0</span> >></a></div>
-                
-                <div style="clear:both"></div>
             </div>
         </td>
         <td id="col2">
@@ -163,8 +135,10 @@ The plugin's configuration values all start with <code>grails.plugin.springsecur
                 </div>
                 <div class="menu">
                     
-                    <div class="menu-block"><h1 class="menu-title" onclick="toggleRef(this.parentNode.childNodes[1])">Scripts</h1><div class="menu-sub">
-                        
+                    <div class="menu-block">
+                        <h1 class="menu-title" onclick="toggleRef(nextElement(this))">Scripts</h1>
+                        <div class="menu-sub selected">
+                            
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
                             </div>
@@ -175,7 +149,7 @@ The plugin's configuration values all start with <code>grails.plugin.springsecur
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
                             </div>
                             
-                            </div>
+                        </div>
                     </div>
                     
                 </div>
@@ -189,7 +163,8 @@ The plugin's configuration values all start with <code>grails.plugin.springsecur
     
 </div>
 
-<script type="text/javascript" src="../js/docs.js"></script>
+
+<script type="text/javascript" src="../../js/docs.js"></script>
 
 </body>
 </html>

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.1 Person Class 2.0-RC6</title>
+    <title>3.1 Person Class 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -144,7 +144,10 @@ function addJsClass() {
                 
 
 <h2 id="personClass">3.1 Person Class</h2>
-Spring Security uses an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a> object to determine whether the current user has the right to perform a secured action, such as accessing a URL, manipulating a secured domain object, accessing a secured method, and so on. This object is created during login. Typically overlap occurs between the need for authentication data and the need to represent a user in the application in ways that are unrelated to security. The mechanism for populating the authentication is completely pluggable in Spring Security; you only need to provide an implementation of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html" target="blank">UserDetailsService</a> and implement its one method, <code>loadUserByUsername()</code>.<p class="paragraph"/>By default the plugin uses a Grails 'person' domain class to manage this data. <code>username</code>, <code>enabled</code>, <code>password</code> are the default names of the core required properties. You can easily <a href="../guide/single.html#userDetailsService" class="guide">plug in your own implementation</a>, and rename the class, package, and fields. In addition, you should define an <code>authorities</code> property to retrieve roles; this can be a public field or a <code>getAuthorities()</code> method, and it can be defined through a traditional GORM many-to-many or a custom mapping.<p class="paragraph"/>Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> as your class name, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class User <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
+Spring Security uses an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a> object to determine whether the current user has the right to perform a secured action, such as accessing a URL, manipulating a secured domain object, accessing a secured method, and so on. This object is created during login. Typically overlap occurs between the need for authentication data and the need to represent a user in the application in ways that are unrelated to security. The mechanism for populating the authentication is completely pluggable in Spring Security; you only need to provide an implementation of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetailsService.html" target="blank">UserDetailsService</a> and implement its one method, <code>loadUserByUsername()</code>.<p class="paragraph"/>By default the plugin uses a Grails 'person' domain class to manage this data. <code>username</code>, <code>enabled</code>, <code>password</code> are the default names of the core required properties. You can easily <a href="../guide/single.html#userDetailsService" class="guide">plug in your own implementation</a>, and rename the class, package, and fields. In addition, you should define an <code>authorities</code> property to retrieve roles; this can be a public field or a <code>getAuthorities()</code> method, and it can be defined through a traditional GORM many-to-many or a custom mapping.<p class="paragraph"/>Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>User</code> as your class name, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.EqualsAndHashCode
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/>@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class User <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
    <span class="java&#45;object">String</span> password
    <span class="java&#45;object">boolean</span> enabled = <span class="java&#45;keyword">true</span>
    <span class="java&#45;object">boolean</span> accountExpired
@@ -153,20 +156,6 @@ Spring Security uses an <a href="https://docs.spring.io/spring-security/site/doc
       <span class="java&#45;keyword">this</span>()
       <span class="java&#45;keyword">this</span>.username = username
       <span class="java&#45;keyword">this</span>.password = password
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">int</span> hashCode() &#123;
-      username?.hashCode() ?: 0
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">boolean</span> equals(other) &#123;
-      is(other) || (other <span class="java&#45;keyword">instanceof</span> User &#38;&#38; other.username == username)
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">String</span> toString() &#123;
-      username
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> transients = &#91;'springSecurityService'&#93;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
-      username blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
-      password blank: <span class="java&#45;keyword">false</span>
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
-      password column: '`password`'
    &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
       UserRole.findAllByUser(<span class="java&#45;keyword">this</span>)&#42;.role
    &#125;<p class="paragraph"/>   def beforeInsert() &#123;
@@ -176,9 +165,19 @@ Spring Security uses an <a href="https://docs.spring.io/spring-security/site/doc
          encodePassword()
       &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">protected</span> void encodePassword() &#123;
-      password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+      password = springSecurityService?.passwordEncoder ?
+         springSecurityService.encodePassword(password) :
+         password
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> transients = &#91;'springSecurityService'&#93;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
+      username blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
+      password blank: <span class="java&#45;keyword">false</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      password column: '`password`'
    &#125;
-&#125;</pre></div><p class="paragraph"/>Optionally, add other properties such as <code>email</code>, <code>firstName</code>, <code>lastName</code>, and convenience methods, and so on:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class User <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
+&#125;</pre></div><p class="paragraph"/>Optionally, add other properties such as <code>email</code>, <code>firstName</code>, <code>lastName</code>, and convenience methods, and so on:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.EqualsAndHashCode
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/>@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class User <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
    <span class="java&#45;object">String</span> password
    <span class="java&#45;object">boolean</span> enabled = <span class="java&#45;keyword">true</span>
    <span class="java&#45;object">String</span> email
@@ -190,24 +189,10 @@ Spring Security uses an <a href="https://docs.spring.io/spring-security/site/doc
       <span class="java&#45;keyword">this</span>()
       <span class="java&#45;keyword">this</span>.username = username
       <span class="java&#45;keyword">this</span>.password = password
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">int</span> hashCode() &#123;
-      username?.hashCode() ?: 0
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">boolean</span> equals(other) &#123;
-      is(other) || (other <span class="java&#45;keyword">instanceof</span> User &#38;&#38; other.username == username)
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">String</span> toString() &#123;
-      username
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> transients = &#91;'springSecurityService'&#93;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
-      username blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
-      password blank: <span class="java&#45;keyword">false</span>
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
-      password column: '`password`'
-   &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
-      UserRole.findAllByUser(<span class="java&#45;keyword">this</span>)&#42;.role
    &#125;<p class="paragraph"/>   def someMethod &#123;
       &#8230;
+   &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
+      UserRole.findAllByUser(<span class="java&#45;keyword">this</span>)&#42;.role
    &#125;<p class="paragraph"/>   def beforeInsert() &#123;
       encodePassword()
    &#125;<p class="paragraph"/>   def beforeUpdate() &#123;
@@ -215,7 +200,14 @@ Spring Security uses an <a href="https://docs.spring.io/spring-security/site/doc
          encodePassword()
       &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">protected</span> void encodePassword() &#123;
-      password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+      password = springSecurityService?.passwordEncoder ?
+         springSecurityService.encodePassword(password) :
+         password
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> transients = &#91;'springSecurityService'&#93;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
+      username blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
+      password blank: <span class="java&#45;keyword">false</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      password column: '`password`'
    &#125;
 &#125;</pre></div><p class="paragraph"/>The <code>getAuthorities()</code> method is analagous to defining <code>static hasMany = &#91;authorities: Authority&#93;</code> in a traditional many-to-many mapping. This way <code>GormUserDetailsService</code> can call <code>user.authorities</code> during login to retrieve the roles without the overhead of a bidirectional many-to-many mapping.<p class="paragraph"/>The class and property names are configurable using these configuration attributes:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>userLookup.userDomainClassName</td><td>none</td><td>User class name</td></tr><tr class="table-even"><td>userLookup.usernamePropertyName</td><td>'username'</td><td>User class username field</td></tr><tr class="table-odd"><td>userLookup.passwordPropertyName</td><td>'password'</td><td>User class password field</td></tr><tr class="table-even"><td>userLookup.authoritiesPropertyName</td><td>'authorities'</td><td>User class role collection field</td></tr><tr class="table-odd"><td>userLookup.enabledPropertyName</td><td>'enabled'</td><td>User class enabled field</td></tr><tr class="table-even"><td>userLookup.accountExpiredPropertyName</td><td>'accountExpired'</td><td>User class account expired field</td></tr><tr class="table-odd"><td>userLookup.accountLockedPropertyName</td><td>'accountLocked'</td><td>User class account locked field</td></tr><tr class="table-even"><td>userLookup.passwordExpiredPropertyName</td><td>'passwordExpired'</td><td>User class password expired field</td></tr><tr class="table-odd"><td>userLookup.authorityJoinClassName</td><td>'PersonAuthority'</td><td>User/Role many-many join class name</td></tr></table>
 
@@ -242,6 +234,9 @@ Spring Security uses an <a href="https://docs.spring.io/spring-security/site/doc
                         
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

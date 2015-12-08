@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>10 Custom UserDetailsService 2.0-RC6</title>
+    <title>10 Custom UserDetailsService 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -164,16 +164,19 @@ When you authenticate users from a database using <a href="https://docs.spring.i
     &#42; one role, so we give a user with no granted roles <span class="java&#45;keyword">this</span> one which gets
     &#42; past that restriction but doesn't grant anything.
     &#42;/
-   <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> List NO_ROLES = &#91;<span class="java&#45;keyword">new</span> GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)&#93;<p class="paragraph"/>   UserDetails loadUserByUsername(<span class="java&#45;object">String</span> username, <span class="java&#45;object">boolean</span> loadRoles)
+   <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> List NO_ROLES =
+      &#91;<span class="java&#45;keyword">new</span> GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)&#93;<p class="paragraph"/>   UserDetails loadUserByUsername(<span class="java&#45;object">String</span> username, <span class="java&#45;object">boolean</span> loadRoles)
             <span class="java&#45;keyword">throws</span> UsernameNotFoundException &#123;
       <span class="java&#45;keyword">return</span> loadUserByUsername(username)
-   &#125;<p class="paragraph"/>   @Transactional(readOnly=<span class="java&#45;keyword">true</span>, noRollbackFor=&#91;IllegalArgumentException, UsernameNotFoundException&#93;)
-   UserDetails loadUserByUsername(<span class="java&#45;object">String</span> username) <span class="java&#45;keyword">throws</span> UsernameNotFoundException &#123;<p class="paragraph"/>      User user = User.findByUsername(username)
+   &#125;<p class="paragraph"/>   @Transactional(readOnly=<span class="java&#45;keyword">true</span>,
+        noRollbackFor=&#91;IllegalArgumentException, UsernameNotFoundException&#93;)
+   UserDetails loadUserByUsername(<span class="java&#45;object">String</span> username)
+         <span class="java&#45;keyword">throws</span> UsernameNotFoundException &#123;<p class="paragraph"/>      User user = User.findByUsername(username)
       <span class="java&#45;keyword">if</span> (!user) <span class="java&#45;keyword">throw</span> <span class="java&#45;keyword">new</span> UsernameNotFoundException(
                    'User not found', username)<p class="paragraph"/>      def authorities = user.authorities.collect &#123;
          <span class="java&#45;keyword">new</span> GrantedAuthorityImpl(it.authority)
-      &#125;<p class="paragraph"/>      <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">new</span> MyUserDetails(user.username, user.password, user.enabled,
-         !user.accountExpired, !user.passwordExpired,
+      &#125;<p class="paragraph"/>      <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">new</span> MyUserDetails(user.username, user.password,
+         user.enabled, !user.accountExpired, !user.passwordExpired,
          !user.accountLocked, authorities ?: NO_ROLES, user.id,
          user.firstName + <span class="java&#45;quote">" "</span> + user.lastName)
    &#125;
@@ -212,6 +215,9 @@ If you store mutable data in your custom <code>UserDetails</code> implementation
                         
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

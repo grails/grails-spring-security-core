@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.2 Authority Class 2.0-RC6</title>
+    <title>3.2 Authority Class 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -145,25 +145,19 @@ function addJsClass() {
 
 <h2 id="authorityClass">3.2 Authority Class</h2>
 The Spring Security plugin also requires an 'authority' class to represent a user's role(s) in the application. In general this class restricts URLs to users who have been assigned the required access rights. A user can have multiple roles to indicate various access rights in the application, and should have at least one. A basic user who can access only non-restricted resources but can still authenticate is a bit unusual. Spring Security usually functions fine if a user has no granted authorities, but fails in a few places that assume one or more. So if a user authenticates successfully but has no granted roles, the plugin grants the user a 'virtual' role, <code>ROLE_NO_ROLES</code>. Thus the user satisfies Spring Security's requirements but cannot access secure resources, as you would not associate any secure resources with this role.<p class="paragraph"/>Like the 'person' class, the 'authority' class has a default name, <code>Authority</code>, and a default name for its one required property, <code>authority</code>.
-If you want to use another existing domain class, it simply has to have a property for name. As with the name of the class, the names of the properties can be whatever you want - they're specified in <code>grails-app/conf/Config.groovy</code>.<p class="paragraph"/>Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>Role</code> as your class name, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class Role <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> authority<p class="paragraph"/>   Role(<span class="java&#45;object">String</span> authority) &#123;
+If you want to use another existing domain class, it simply has to have a property for name. As with the name of the class, the names of the properties can be whatever you want - they're specified in <code>grails-app/conf/Config.groovy</code>.<p class="paragraph"/>Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>Role</code> as your class name, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.EqualsAndHashCode
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/>@EqualsAndHashCode(includes='authority')
+@ToString(includes='authority', includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class Role <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> authority<p class="paragraph"/>   Role(<span class="java&#45;object">String</span> authority) &#123;
       <span class="java&#45;keyword">this</span>()
       <span class="java&#45;keyword">this</span>.authority = authority
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">int</span> hashCode() &#123;
-      authority?.hashCode() ?: 0
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">boolean</span> equals(other) &#123;
-      is(other) || (other <span class="java&#45;keyword">instanceof</span> Role &#38;&#38; other.authority == authority)
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">String</span> toString() &#123;
-      authority
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
-      cache <span class="java&#45;keyword">true</span>
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       authority blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      cache <span class="java&#45;keyword">true</span>
    &#125;
 &#125;</pre></div><p class="paragraph"/>The class and property names are configurable using these configuration attributes:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>authority.className</td><td>none</td><td>Role class name</td></tr><tr class="table-even"><td>authority.nameField</td><td>'authority'</td><td>Role class role name field</td></tr></table><p class="paragraph"/><blockquote class="note">
-Role names must start with "ROLE_". This is configurable in Spring Security, but not in the plugin. It would be possible to allow different prefixes, but it's important that the prefix not be blank as the prefix is used to differentiate between role names and tokens such as IS_AUTHENTICATED_FULLY/IS_AUTHENTICATED_ANONYMOUSLY/etc., and SpEL expressions.<p class="paragraph"/>The role names should be primarily an internal implementation detail; if you want to display friendlier names in a UI, it's simple to remove the prefix first.
+Role names must start with "ROLE_". This is configurable in Spring Security, but not in the plugin. It would be possible to allow different prefixes, but it's important that the prefix not be blank as the prefix is used to differentiate between role names and tokens such as IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY, etc., and SpEL expressions.<p class="paragraph"/>The role names should be primarily an internal implementation detail; if you want to display friendlier names in a UI, it's simple to remove the prefix first.
 </blockquote>
 
 
@@ -189,6 +183,9 @@ Role names must start with "ROLE_". This is configurable in Spring Security, but
                         
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

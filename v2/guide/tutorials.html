@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>22 Tutorials 2.0-RC6</title>
+    <title>22 Tutorials 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -160,13 +160,16 @@ function addJsClass() {
 $ cd bookstore</pre></div><p class="paragraph"/><h4>2. Install the plugin by adding it to BuildConfig.groovy</h4>
 <div class="code"><pre>plugins &#123;
    &#8230;
-   compile ':spring&#45;security&#45;core:2.0&#45;RC6'
+   compile ':spring&#45;security&#45;core:2.0.0'
 &#125;</pre></div><p class="paragraph"/>Run the compile script to resolve the dependencies and ensure everything is correct:<p class="paragraph"/><div class="code"><pre>$ grails compile</pre></div><p class="paragraph"/><h4>3. Create the User and Role domain classes.</h4>
 <div class="code"><pre>$ grails s2&#45;quickstart com.testapp User Role</pre></div><p class="paragraph"/>You can choose your names for your domain classes and package; these are just examples.<p class="paragraph"/><blockquote class="note">
 Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "User" or "Group", make sure they are not reserved keywords in your database. or escape the name with backticks in the <code>mapping</code> block, e.g.<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">static</span> mapping = &#123;
    table '`user`'
 &#125;</pre></div>
-</blockquote><p class="paragraph"/>The script creates this User class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/>class User <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
+</blockquote><p class="paragraph"/>The script creates this User class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.EqualsAndHashCode
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/>@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class User <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;keyword">transient</span> springSecurityService<p class="paragraph"/>   <span class="java&#45;object">String</span> username
    <span class="java&#45;object">String</span> password
    <span class="java&#45;object">boolean</span> enabled = <span class="java&#45;keyword">true</span>
    <span class="java&#45;object">boolean</span> accountExpired
@@ -175,15 +178,6 @@ Depending on your database, some domain class names might not be valid, especial
       <span class="java&#45;keyword">this</span>()
       <span class="java&#45;keyword">this</span>.username = username
       <span class="java&#45;keyword">this</span>.password = password
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">int</span> hashCode() &#123;
-      username?.hashCode() ?: 0
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">boolean</span> equals(other) &#123;
-      is(other) || (other <span class="java&#45;keyword">instanceof</span> User &#38;&#38; other.username == username)
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">String</span> toString() &#123;
-      username
    &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
       UserRole.findAllByUser(<span class="java&#45;keyword">this</span>)&#42;.role
    &#125;<p class="paragraph"/>   def beforeInsert() &#123;
@@ -193,7 +187,9 @@ Depending on your database, some domain class names might not be valid, especial
          encodePassword()
       &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">protected</span> void encodePassword() &#123;
-      password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+      password = springSecurityService?.passwordEncoder ?
+         springSecurityService.encodePassword(password) :
+         password
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> transients = &#91;'springSecurityService'&#93;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       username blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
       password blank: <span class="java&#45;keyword">false</span>
@@ -202,18 +198,12 @@ Depending on your database, some domain class names might not be valid, especial
    &#125;
 &#125;</pre></div><p class="paragraph"/><blockquote class="note">
 Earlier versions of the plugin didn't include password hashing logic in the domain class, but it makes the code a lot cleaner.
-</blockquote><p class="paragraph"/>and this Role class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/>class Role <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> authority<p class="paragraph"/>   Role(<span class="java&#45;object">String</span> authority) &#123;
+</blockquote><p class="paragraph"/>and this Role class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.testapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.EqualsAndHashCode
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/>@EqualsAndHashCode(includes='authority')
+@ToString(includes='authority', includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class Role <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> authority<p class="paragraph"/>   Role(<span class="java&#45;object">String</span> authority) &#123;
       <span class="java&#45;keyword">this</span>()
       <span class="java&#45;keyword">this</span>.authority = authority
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">int</span> hashCode() &#123;
-      authority?.hashCode() ?: 0
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">boolean</span> equals(other) &#123;
-      is(other) || (other <span class="java&#45;keyword">instanceof</span> Role &#38;&#38; other.authority == authority)
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">String</span> toString() &#123;
-      authority
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       authority blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
@@ -247,7 +237,7 @@ class UserRole <span class="java&#45;keyword">implements</span> Serializable &#1
          role == Role.load(roleId)
       &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> UserRole create(User user, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
-      def instance = <span class="java&#45;keyword">new</span> UserRole(user, role)
+      def instance = <span class="java&#45;keyword">new</span> UserRole(user: user, role: role)
       instance.save(flush: flush, insert: <span class="java&#45;keyword">true</span>)
       instance
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(User u, Role r, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
@@ -325,6 +315,9 @@ Check the checkbox, and once you've tested the secure page, close your browser a
                         
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

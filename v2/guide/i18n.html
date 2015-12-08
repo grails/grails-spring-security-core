@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>24 Internationalization 2.0-RC6</title>
+    <title>24 Internationalization 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -132,7 +132,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -142,7 +142,7 @@ function addJsClass() {
                 
 
 <h1 id="i18n">24 Internationalization</h1>
-Spring Security Core plugin is provided with English, French and German i18n messages.<p class="paragraph"/>If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Exception</strong></th></tr><tr class="table-odd"><td>springSecurity.errors.login.expired</td><td>"Sorry, your account has expired."</td><td>AccountExpiredException</td></tr><tr class="table-even"><td>springSecurity.errors.login.passwordExpired</td><td>"Sorry, your password has expired."</td><td>CredentialsExpiredException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.disabled</td><td>"Sorry, your account is disabled."</td><td>DisabledException</td></tr><tr class="table-even"><td>springSecurity.errors.login.locked</td><td>"Sorry, your account is locked."</td><td>LockedException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.fail</td><td>"Sorry, we were not able to find a user with that username and password."</td><td>Other exceptions</td></tr></table><p class="paragraph"/>You can customize all messages in auth.gsp and denied.gsp:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th></tr><tr class="table-odd"><td>springSecurity.login.title</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.header</td><td>Please Login</td></tr><tr class="table-odd"><td>springSecurity.login.button</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.username.label</td><td>Username</td></tr><tr class="table-odd"><td>springSecurity.login.password.label</td><td>Password</td></tr><tr class="table-even"><td>springSecurity.login.remember.me.label</td><td>Remember me</td></tr><tr class="table-odd"><td>springSecurity.denied.title</td><td>Denied</td></tr><tr class="table-even"><td>springSecurity.denied.message</td><td>Sorry, you're not authorized to view this page.</td></tr></table>
+Spring Security Core plugin is provided with i18n messages in several languages.<p class="paragraph"/>If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Exception</strong></th></tr><tr class="table-odd"><td>springSecurity.errors.login.expired</td><td>"Sorry, your account has expired."</td><td>AccountExpiredException</td></tr><tr class="table-even"><td>springSecurity.errors.login.passwordExpired</td><td>"Sorry, your password has expired."</td><td>CredentialsExpiredException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.disabled</td><td>"Sorry, your account is disabled."</td><td>DisabledException</td></tr><tr class="table-even"><td>springSecurity.errors.login.locked</td><td>"Sorry, your account is locked."</td><td>LockedException</td></tr><tr class="table-odd"><td>springSecurity.errors.login.fail</td><td>"Sorry, we were not able to find a user with that username and password."</td><td>Other exceptions</td></tr></table><p class="paragraph"/>You can customize all messages in auth.gsp and denied.gsp:<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Message</strong></th><th><strong class="bold">Default Value</strong></th></tr><tr class="table-odd"><td>springSecurity.login.title</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.header</td><td>Please Login</td></tr><tr class="table-odd"><td>springSecurity.login.button</td><td>Login</td></tr><tr class="table-even"><td>springSecurity.login.username.label</td><td>Username</td></tr><tr class="table-odd"><td>springSecurity.login.password.label</td><td>Password</td></tr><tr class="table-even"><td>springSecurity.login.remember.me.label</td><td>Remember me</td></tr><tr class="table-odd"><td>springSecurity.denied.title</td><td>Denied</td></tr><tr class="table-even"><td>springSecurity.denied.message</td><td>Sorry, you're not authorized to view this page.</td></tr></table>
 
 
 
@@ -165,6 +165,9 @@ Spring Security Core plugin is provided with English, French and German i18n mes
                         
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>5.2 SpringSecurityService 2.0-RC6</title>
+    <title>5.2 SpringSecurityService 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -151,9 +151,12 @@ Retrieves a domain class instance for the currently authenticated user. During a
    &#125;
 &#125;</pre></div><p class="paragraph"/><h4>loadCurrentUser()</h4>
 Often it is not necessary to retrieve the entire domain class instance, for example when using it in a query where only the id is needed as a foreign key. This method uses the GORM <code>load</code> method to create a proxy instance. This will never be null, but can be invalid if the id doesn't correspond to a row in the database, although this is very unlikely in this scenario because the instance would have been there during authentication.<p class="paragraph"/>If you need other data than just the id, use the <code>getCurrentUser</code> method instead.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
-      def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : <span class="java&#45;keyword">null</span>
+      def user = springSecurityService.isLoggedIn() ?
+         springSecurityService.loadCurrentUser() :
+         <span class="java&#45;keyword">null</span>
       <span class="java&#45;keyword">if</span> (user) &#123;
-         CreditCard card = CreditCard.findByIdAndUser(params.id as <span class="java&#45;object">Long</span>, user)
+         CreditCard card = CreditCard.findByIdAndUser(
+            params.id as <span class="java&#45;object">Long</span>, user)
          &#8230;
       &#125;
       &#8230;
@@ -170,26 +173,29 @@ Checks whether there is a currently logged-in user.<p class="paragraph"/>Example
 &#125;</pre></div><p class="paragraph"/><h4>getAuthentication()</h4><p class="paragraph"/>Retrieves the current user's <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a>. If authenticated, this will typically be a <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html" target="blank">UsernamePasswordAuthenticationToken</a>.<p class="paragraph"/>If not authenticated and the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of <code>grails.plugin.springsecurity.authentication. GrailsAnonymousAuthenticationToken</code> with a standard <code>org.springframework.security.core.userdetails.User</code> instance as its Principal. The authentication will have a single granted role, <code>ROLE_ANONYMOUS</code>.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
       def auth = springSecurityService.authentication
       <span class="java&#45;object">String</span> username = auth.username
-      def authorities = auth.authorities // a Collection of GrantedAuthority
+      // a Collection of GrantedAuthority
+      def authorities = auth.authorities
       <span class="java&#45;object">boolean</span> authenticated = auth.authenticated
       &#8230;
    &#125;
 &#125;</pre></div><p class="paragraph"/><h4>getPrincipal()</h4><p class="paragraph"/>Retrieves the currently logged in user's <code>Principal</code>. If authenticated, the principal will be a <code>grails.plugin.springsecurity.userdetails.GrailsUser</code>, unless you have created a custom <code>UserDetailsService</code>, in which case it will be whatever implementation of <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html" target="blank">UserDetails</a> you use there.<p class="paragraph"/>If not authenticated and the <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html" target="blank">AnonymousAuthenticationFilter</a> is active (true by default) then a standard <code>org.springframework.security.core.userdetails.User</code> is used.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class SomeController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def someAction() &#123;
       def principal = springSecurityService.principal
       <span class="java&#45;object">String</span> username = principal.username
-      def authorities = principal.authorities // a Collection of GrantedAuthority
+      // a Collection of GrantedAuthority
+      def authorities = principal.authorities
       <span class="java&#45;object">boolean</span> enabled = principal.enabled
       &#8230;
    &#125;
 &#125;</pre></div><p class="paragraph"/><h4>encodePassword()</h4>
 Hashes a password with the configured hashing scheme. By default the plugin uses bcrypt, but you can configure the scheme with the <code>grails.plugin.springsecurity.password.algorithm</code> attribute in <code>Config.groovy</code>. The supported values are 'bcrypt' to use bcrypt, 'pbkdf2' to use <a href="https://en.wikipedia.org/wiki/PBKDF2" target="blank">PBKDF2</a>, or any message digest algorithm that is supported in your JDK; see <a href="https://docs.oracle.com/javase/8/docs/technotes/guides/security/StandardNames.html" target="blank">this Java page</a> for the available algorithms.
 <blockquote class="warning">
-You are <strong class="bold">strongly</strong> discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See <a href="../guide/single.html#salt" class="guide">Salted Passwords</a>.
+You are <strong class="bold">strongly</strong> discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of computing passwords if your database gets compromised. See <a href="../guide/single.html#salt" class="guide">Salted Passwords</a>.
 </blockquote><p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class PersonController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def updateAction() &#123;
       def person = Person.get(params.id)<p class="paragraph"/>      params.salt = person.salt
       <span class="java&#45;keyword">if</span> (person.password != params.password) &#123;
-         params.password = springSecurityService.encodePassword(password, salt)
-         def salt = &#8230; // e.g. randomly generated using some utility method
+         params.password = springSecurityService.encodePassword(
+            password, salt)
+         def salt = &#8230; // e.g. randomly generated using a utility method
          params.salt = salt
       &#125;
       person.properties = params
@@ -227,7 +233,8 @@ Deletes a role and, if you use <code>Requestmap</code> instances to secure URLs,
 Flushes the Requestmaps cache and triggers a complete reload. If you use <code>Requestmap</code> instances to secure URLs, the plugin loads and caches all <code>Requestmap</code> instances as a performance optimization. This action saves database activity because the requestmaps are checked for each request. Do not allow the cache to become stale. When you create, edit or delete a <code>Requestmap</code>, flush the cache. Both <code>updateRole()</code> and <code>deleteRole()</code> call clearCachedRequestmaps()for you. Call this method when you create a new <code>Requestmap</code> or do other <code>Requestmap</code> work that affects the cache.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class RequestmapController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def save() &#123;
       def requestmapInstance = <span class="java&#45;keyword">new</span> Requestmap(params)
       <span class="java&#45;keyword">if</span> (!requestmapInstance.save(flush: <span class="java&#45;keyword">true</span>)) &#123;
-         render view: 'create', model: &#91;requestmapInstance: requestmapInstance&#93;
+         render view: 'create',
+                model: &#91;requestmapInstance: requestmapInstance&#93;
          <span class="java&#45;keyword">return</span>
       &#125;<p class="paragraph"/>      springSecurityService.clearCachedRequestmaps()
       flash.message = <span class="java&#45;quote">"Requestmap created"</span>
@@ -237,8 +244,9 @@ Flushes the Requestmaps cache and triggers a complete reload. If you use <code>R
 Rebuilds an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html" target="blank">Authentication</a> for the given username and registers it in the security context. You typically use this method after updating a user's authorities or other data that is cached in the <code>Authentication</code> or <code>Principal</code>. It also removes the user from the user cache to force a refresh at next login.<p class="paragraph"/>Example:<p class="paragraph"/><div class="code"><pre>class UserController &#123;<p class="paragraph"/>   def springSecurityService<p class="paragraph"/>   def update() &#123;
       def userInstance = User.get(params.id)<p class="paragraph"/>      params.salt = person.salt
       <span class="java&#45;keyword">if</span> (params.password) &#123;
-         params.password = springSecurityService.encodePassword(params.password, salt)
-         def salt = &#8230; // e.g. randomly generated using some utility method
+         params.password = springSecurityService.encodePassword(
+            params.password, salt)
+         def salt = &#8230; // e.g. randomly generated using a utility method
          params.salt = salt
       &#125;
       userInstance.properties = params
@@ -246,7 +254,8 @@ Rebuilds an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apid
          render view: 'edit', model: &#91;userInstance: userInstance&#93;
          <span class="java&#45;keyword">return</span>
       &#125;<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (springSecurityService.loggedIn &#38;&#38;
-             springSecurityService.principal.username == userInstance.username) &#123;
+             springSecurityService.principal.username ==
+                userInstance.username) &#123;
          springSecurityService.reauthenticate userInstance.username
       &#125;<p class="paragraph"/>      flash.message = <span class="java&#45;quote">"The user was updated"</span>
       redirect action: show, id: userInstance.id
@@ -276,6 +285,9 @@ Rebuilds an <a href="https://docs.spring.io/spring-security/site/docs/3.2.x/apid
                         
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

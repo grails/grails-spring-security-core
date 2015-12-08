@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.4 Group Class 2.0-RC6</title>
+    <title>3.4 Group Class 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -144,28 +144,22 @@ function addJsClass() {
                 
 
 <h2 id="authorityGroupClass">3.4 Group Class</h2>
-This Spring Security plugin provides you the option of creating an access inheritance level between 'person' and 'authority': the 'group'. The next three classes you will read about (including this one) are only used in a 'person'/'group'/'authority' implementation. Rather than giving a 'person' authorities directly, you can create a 'group', map authorities to it, and then map a 'person' to that 'group'. For applications that have a one or more groups of users who need the same level of access, having one or more 'group' instances makes managing changes to access levels easier because the authorities that make up that access level are encapsulated in the 'group', and a single change will affect all of the users.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified and use <code>com.mycompany.myapp</code> as your package and <code>RoleGroup</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/>class RoleGroup <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> name<p class="paragraph"/>   RoleGroup(<span class="java&#45;object">String</span> name) &#123;
+This Spring Security plugin provides you the option of creating an access inheritance level between 'person' and 'authority': the 'group'. The next three classes you will read about (including this one) are only used in a 'person'/'group'/'authority' implementation. Rather than giving a 'person' authorities directly, you can create a 'group', map authorities to it, and then map a 'person' to that 'group'. For applications that have a one or more groups of users who need the same level of access, having one or more 'group' instances makes managing changes to access levels easier because the authorities that make up that access level are encapsulated in the 'group', and a single change will affect all of the users.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified and use <code>com.mycompany.myapp</code> as your package and <code>RoleGroup</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.EqualsAndHashCode
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/>@EqualsAndHashCode(includes='name')
+@ToString(includes='name', includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+class RoleGroup <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   <span class="java&#45;object">String</span> name<p class="paragraph"/>   RoleGroup(<span class="java&#45;object">String</span> name) &#123;
       <span class="java&#45;keyword">this</span>()
       <span class="java&#45;keyword">this</span>.name = name
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">int</span> hashCode() &#123;
-      name?.hashCode() ?: 0
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">boolean</span> equals(other) &#123;
-      is(other) || (other <span class="java&#45;keyword">instanceof</span> RoleGroup &#38;&#38; other.name == name)
-   &#125;<p class="paragraph"/>   @Override
-   <span class="java&#45;object">String</span> toString() &#123;
-      name
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
-      cache <span class="java&#45;keyword">true</span>
    &#125;<p class="paragraph"/>   Set&#60;Role&#62; getAuthorities() &#123;
-      RoleGroupRole.findAllByRoleGroup(<span class="java&#45;keyword">this</span>).collect &#123; it.role &#125;
+      RoleGroupRole.findAllByRoleGroup(<span class="java&#45;keyword">this</span>)&#42;.role
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       name blank: <span class="java&#45;keyword">false</span>, unique: <span class="java&#45;keyword">true</span>
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> mapping = &#123;
+      cache <span class="java&#45;keyword">true</span>
    &#125;
 &#125;</pre></div><p class="paragraph"/>When running the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified, the 'person' class will be generated differently to accommodate the use of groups. Assuming you use <code>com.mycompany.myapp</code> as your package and <code>User</code> and <code>RoleGroup</code> as your class names, the <code>getAuthorities()</code> method will be generated like so:<p class="paragraph"/><div class="code"><pre>Set&#60;RoleGroup&#62; getAuthorities() &#123;
    UserRoleGroup.findAllByUser(<span class="java&#45;keyword">this</span>).collect &#123; it.roleGroup &#125;
-&#125;</pre></div><p class="paragraph"/>The plugin assumes the attribute <code>authorities</code> will provide the 'authority' collection for each class, but you can change the field names in <code>grails-app/conf/Config.groovy</code>. You also must ensure that the property <code>useRoleGroups</code> is set to <code>true</code> in order for <code>GormUserDetailsService</code> to properly attain the <code>authorities</code>.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Assigned Value Using s2QuickstartGroups</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>useRoleGroups</td><td>false</td><td>true</td><td>Use 'authority group' implementation when loading user authorities</td></tr><tr class="table-even"><td>authority.groupAuthorityNameField</td><td>null</td><td>'authorities'</td><td>AuthorityGroup class role collection field</td></tr></table>
+&#125;</pre></div><p class="paragraph"/>The plugin assumes the attribute <code>authorities</code> will provide the 'authority' collection for each class, but you can change the field names in <code>grails-app/conf/Config.groovy</code>. You also must ensure that the property <code>useRoleGroups</code> is set to <code>true</code> in order for <code>GormUserDetailsService</code> to properly attain the <code>authorities</code>.<p class="paragraph"/><table class="wiki-table" cellpadding="0" cellspacing="0" border="0"><tr><th><strong class="bold">Property</strong></th><th><strong class="bold">Default Value</strong></th><th><strong class="bold">Assigned Value Using s2QuickstartGroups</strong></th><th><strong class="bold">Meaning</strong></th></tr><tr class="table-odd"><td>useRoleGroups</td><td>false</td><td>true</td><td>Use 'authority group' implementation when loading user authorities</td></tr><tr class="table-even"><td>authority. groupAuthorityNameField</td><td>null</td><td>'authorities'</td><td>AuthorityGroup class role collection field</td></tr></table>
 
 
 
@@ -190,6 +184,9 @@ This Spring Security plugin provides you the option of creating an access inheri
                         
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

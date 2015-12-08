@@ -1,3 +1,10 @@
 .gradle
 .idea
 build
+cobertura.ser
+*.log
+grails-spring-security-core-*.zip
+grails-spring-security-core-*.zip.sha1
+plugin.xml
+target
+web-app

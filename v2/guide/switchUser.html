@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>14 Switch User 2.0-RC6</title>
+    <title>14 Switch User 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -151,11 +151,14 @@ This feature is very powerful; it allows full access to everything the switched-
       &#60;input type='submit' value='Switch'/&#62;
    &#60;/form&#62;<p class="paragraph"/>&#60;/sec:ifAllGranted&#62;</pre></div><p class="paragraph"/>Here the form is guarded by a check that the logged-in user has <code>ROLE_SWITCH_USER</code> and is not shown otherwise. You also need to guard the user switch URL, and the approach depends on your mapping scheme. If you use annotations, add a rule to the <code>controllerAnnotations.staticRules</code> attribute:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.controllerAnnotations.staticRules = &#91;
    &#8230;
-   '/j_spring_security_switch_user': &#91;'ROLE_SWITCH_USER', 'isFullyAuthenticated()'&#93;
+   '/j_spring_security_switch_user':
+      &#91;'ROLE_SWITCH_USER', 'isFullyAuthenticated()'&#93;
 &#93;</pre></div><p class="paragraph"/>If you use <code>Requestmap</code>s, create a rule like this (for example, in <code>BootStrap</code>):<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">new</span> Requestmap(url: '/j_spring_security_switch_user',
-               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save(flush: <span class="java&#45;keyword">true</span>)</pre></div><p class="paragraph"/>If you use the <code>Config.groovy</code> map, add the rule there:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
+               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()'
+               ).save(flush: <span class="java&#45;keyword">true</span>)</pre></div><p class="paragraph"/>If you use the <code>Config.groovy</code> map, add the rule there:<p class="paragraph"/><div class="code"><pre>grails.plugin.springsecurity.interceptUrlMap = &#91;
    &#8230;
-   '/j_spring_security_switch_user': &#91;'ROLE_SWITCH_USER', 'isFullyAuthenticated()'&#93;
+   '/j_spring_security_switch_user':
+      &#91;'ROLE_SWITCH_USER', 'isFullyAuthenticated()'&#93;
 &#93;</pre></div><p class="paragraph"/><h4>Switching Back to Original User</h4>
 To resume as the original user, navigate to <code>/j_spring_security_exit_user</code>.<p class="paragraph"/><div class="code"><pre>&#60;sec:ifSwitched&#62;
 &#60;a href='$&#123;request.contextPath&#125;/j_spring_security_exit_user'&#62;
@@ -172,7 +175,8 @@ Logged in as &#60;sec:username/&#62;
    Resume as &#60;sec:switchedUserOriginalUsername/&#62;
 &#60;/a&#62;
 &#60;/sec:ifSwitched&#62;<p class="paragraph"/>&#60;sec:ifNotSwitched&#62;
-   &#60;sec:ifAllGranted roles='ROLE_SWITCH_USER'&#62;<p class="paragraph"/>   &#60;form action='$&#123;request.contextPath&#125;/j_spring_security_switch_user' method='POST'&#62;
+   &#60;sec:ifAllGranted roles='ROLE_SWITCH_USER'&#62;<p class="paragraph"/>   &#60;form action='$&#123;request.contextPath&#125;/j_spring_security_switch_user'
+         method='POST'&#62;
       Switch to user: &#60;input type='text' name='j_username'/&#62;&#60;br/&#62;
       &#60;input type='submit' value='Switch'/&#62;
    &#60;/form&#62;<p class="paragraph"/>   &#60;/sec:ifAllGranted&#62;
@@ -201,6 +205,9 @@ Logged in as &#60;sec:username/&#62;
                         
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

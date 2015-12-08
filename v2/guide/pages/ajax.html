@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>8.4 Ajax Authentication 2.0-RC6</title>
+    <title>8.4 Ajax Authentication 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -144,170 +144,237 @@ function addJsClass() {
                 
 
 <h2 id="ajax">8.4 Ajax Authentication</h2>
-The typical pattern of using web site authentication to access restricted pages involves intercepting access requests for secure pages, redirecting to a login page (possibly off-site, for example when using <a href="http://grails.org/plugin/spring-security-openid" target="blank">OpenID</a> or a Single Sign-on implementation such as <a href="http://grails.org/plugin/spring-security-cas" target="blank">CAS</a>), and redirecting back to the originally-requested page after a successful login. Each page can also have a login link to allow explicit logins at any time.<p class="paragraph"/>Another option is to also have a login link on each page and to use Ajax and DHTML to present a login form within the current page in a popup. The form submits the authentication request through Ajax and displays success or error messages as appropriate.<p class="paragraph"/>The plugin supports Ajax logins, but you need to create your own GSP code. There are only a few necessary changes, and of course the sample code here is pretty basic so you should enhance it for your needs.<p class="paragraph"/>The approach here involves editing your template page(s) to show "You're logged in as ..." text if logged in and a login link if not, along with a hidden login form that is shown using DHTML.<p class="paragraph"/>Here's the updated <code>grails-app/views/layouts/main.gsp</code>:<p class="paragraph"/><div class="code"><pre>&#60;html&#62;<p class="paragraph"/>&#60;head&#62;
-   &#60;title&#62;&#60;g:layoutTitle <span class="java&#45;keyword">default</span>=<span class="java&#45;quote">"Grails"</span> /&#62;&#60;/title&#62;
-   &#60;link rel=<span class="java&#45;quote">"stylesheet"</span> href=<span class="java&#45;quote">"$&#123;resource(dir:'css',file:'main.css')&#125;"</span> /&#62;
-   &#60;link rel=<span class="java&#45;quote">"shortcut icon"</span> type=<span class="java&#45;quote">"image/x&#45;icon"</span>
-         href=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'favicon.ico')&#125;"</span> /&#62;
-   &#60;g:layoutHead /&#62;
-   &#60;r:layoutResources /&#62;
-&#60;/head&#62;<p class="paragraph"/>&#60;body&#62;<p class="paragraph"/>   &#60;div id=<span class="java&#45;quote">"spinner"</span> class=<span class="java&#45;quote">"spinner"</span> style=<span class="java&#45;quote">"display:none;"</span>&#62;
-      &#60;img src=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'spinner.gif')&#125;"</span> alt=<span class="java&#45;quote">"Spinner"</span> /&#62;
-   &#60;/div&#62;<p class="paragraph"/>   &#60;div id=<span class="java&#45;quote">"grailsLogo"</span> class=<span class="java&#45;quote">"logo"</span>&#62;
-      &#60;a href=<span class="java&#45;quote">"http://grails.org"</span>&#62;
-         &#60;img src=<span class="java&#45;quote">"$&#123;resource(dir:'images',file:'grails_logo.png')&#125;"</span> alt=<span class="java&#45;quote">"Grails"</span> border=<span class="java&#45;quote">"0"</span> /&#62;
-      &#60;/a&#62;<p class="paragraph"/>      &#60;span id='loginLink' style='position: relative; margin&#45;right: 30px; <span class="java&#45;object">float</span>: right'&#62;
-      &#60;sec:ifLoggedIn&#62;
-         Logged in as &#60;sec:username/&#62; (&#60;g:link controller='logout'&#62;Logout&#60;/g:link&#62;)
-      &#60;/sec:ifLoggedIn&#62;
-      &#60;sec:ifNotLoggedIn&#62;
-         &#60;a href='&#35;' onclick='showLogin(); <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>;'&#62;Login&#60;/a&#62;
-      &#60;/sec:ifNotLoggedIn&#62;
-      &#60;/span&#62;<p class="paragraph"/>   &#60;/div&#62;
-   &#60;!&#45;&#45; http://dev.iceburg.net/jquery/jqModal/ &#45;&#45;&#62;
-   &#60;g:javascript src='jqModal.js' /&#62;<p class="paragraph"/>   &#60;g:render template='/includes/ajaxLogin'/&#62;<p class="paragraph"/>   &#60;g:layoutBody /&#62;
-   &#60;r:layoutResources /&#62;
-   &#60;/body&#62;
-&#60;/html&#62;</pre></div><p class="paragraph"/>Note these changes:
-<ul class="star">
-<li>The jqModal (jQuery) library is included for Ajax support and to hide and show the login form.</li>
-<li>There is an include of the template <code>/includes/ajaxLogin</code> (see the code below).</li>
-<li>There is a &#60;span&#62; positioned in the top-right that shows the username and a logout link when logged in, and a login link otherwise.</li>
-</ul><p class="paragraph"/>Here is the content of the login form template (<code>grails-app/views/includes/_ajaxLogin.gsp</code>). The CSS and Javascript are shown inline, but you should extract them to their own static files.<p class="paragraph"/><div class="code"><pre>&#60;style&#62;
-&#35;ajaxLogin &#123;
-   background&#45;color: &#35;EEEEFF
-   display: none;
-&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> &#123;
-   width: 260px;
-   margin:0px auto;
-   text&#45;align:left;
-   padding:10px;
-   border&#45;top:1px dashed &#35;499ede;
-   border&#45;bottom:1px dashed &#35;499ede;
-   background&#45;color:&#35;EEF;
-&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .fheader &#123;
-   padding:4px;margin:3px 0px 3px 0;color:&#35;2e3741;font&#45;size:14px;font&#45;weight:bold;
-&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform p &#123;
-   clear: left;
-   margin: 0;
-   padding: 5px 0 8px 0;
-   padding&#45;left: 105px;
-   border&#45;top: 1px dashed gray;
-   margin&#45;bottom: 10px;
-   height: 1%;
-&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform input&#91;type='text'&#93; &#123;
-   width: 120px;
-&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform label&#123;
-   font&#45;weight: bold;
-   <span class="java&#45;object">float</span>: left;
-   margin&#45;left: &#45;105px;
-   width: 100px;
-&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .login_message &#123;color:red;&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .text_ &#123;width:120px;&#125;
-&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .chk &#123;height:12px;&#125;
-.errorMessage &#123; color: red; &#125;
-&#60;/style&#62;<p class="paragraph"/>&#60;div id='ajaxLogin' class=<span class="java&#45;quote">"jqmWindow"</span> style=<span class="java&#45;quote">"z&#45;index: 3000;"</span>&#62;
-   &#60;div class='<span class="java&#45;keyword">inner</span>'&#62;
-      &#60;div class='fheader'&#62;Please Login..&#60;/div&#62;
-      &#60;form action='$&#123;request.contextPath&#125;/j_spring_security_check' method='POST'
-            id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'&#62;
-         &#60;p&#62;
-            &#60;label <span class="java&#45;keyword">for</span>='username'&#62;Login ID&#60;/label&#62;
-            &#60;input type='text' class='text_' name='j_username' id='username' /&#62;
-         &#60;/p&#62;
-         &#60;p&#62;
-            &#60;label <span class="java&#45;keyword">for</span>='password'&#62;Password&#60;/label&#62;
-            &#60;input type='password' class='text_' name='j_password' id='password' /&#62;
-         &#60;/p&#62;
-         &#60;p&#62;
-            &#60;label <span class="java&#45;keyword">for</span>='remember_me'&#62;Remember me&#60;/label&#62;
-            &#60;input type='checkbox' class='chk' id='remember_me'
-                   name='_spring_security_remember_me'/&#62;
-         &#60;/p&#62;
-         &#60;p&#62;
-            &#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"authAjax"</span>&#62;Login&#60;/span&#62;
-            &#60;span class=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"cancelLogin"</span>&#62;Cancel&#60;/span&#62;
-         &#60;/p&#62;
-      &#60;/form&#62;
-      &#60;div style='display: none; text&#45;align: left;' id='loginMessage'&#62;&#60;/div&#62;
-   &#60;/div&#62;
-&#60;/div&#62;<p class="paragraph"/>&#60;script type='text/javascript'&#62;
-<span class="java&#45;keyword">var</span> onLogin;
-$.ajaxSetup(&#123;
-   beforeSend: function(xhr, event) &#123;
-      // save the 'success' function <span class="java&#45;keyword">for</span> later use
-      onLogin = event.success;
+The typical pattern of using web site authentication to access restricted pages involves intercepting access requests for secure pages, redirecting to a login page (possibly off-site, for example when using a Single Sign-on implementation such as <a href="http://grails.org/plugin/spring-security-cas" target="blank">CAS</a>), and redirecting back to the originally-requested page after a successful login. Each page can also have a login link to allow explicit logins at any time.<p class="paragraph"/>Another option is to also have a login link on each page and to use JavaScript to present a login form within the current page in a popup. The JavaScript code submits the authentication request and displays success or error messages as appropriate.<p class="paragraph"/>The plugin supports Ajax logins, but you need to create your own client-side code. There are only a few necessary changes, and of course the sample code here is pretty basic so you should enhance it for your needs.<p class="paragraph"/>The approach here involves editing your template page(s) to show "You're logged in as ..." text if logged in and a login link if not, along with a hidden login form that is shown using JavaScript.<p class="paragraph"/>This example uses <a href="https://jquery.com/" target="blank">jQuery</a> and <a href="http://jquery.iceburg.net/jqModal/" target="blank">jqModal</a>, a jQuery plugin that creates and manages dialogs and popups. Download <code>jqModal.js</code> and copy it to <code>grails-app/assets/javascripts</code>, and download <code>jqModal.css</code> and copy it to <code>grails-app/assets/stylesheets</code>.<p class="paragraph"/>Create <code>grails-app/assets/javascripts/ajaxLogin.js</code> and add this JavaScript code:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">var</span> onLogin;<p class="paragraph"/>$.ajaxSetup(&#123;
+   beforeSend: function(jqXHR, event) &#123;
+      <span class="java&#45;keyword">if</span> (event.url != $(<span class="java&#45;quote">"&#35;ajaxLoginForm"</span>).attr(<span class="java&#45;quote">"action"</span>)) &#123;
+         // save the 'success' function <span class="java&#45;keyword">for</span> later use <span class="java&#45;keyword">if</span>
+         // it wasn't triggered by an explicit login click
+         onLogin = event.success;
+      &#125;
    &#125;,
    statusCode: &#123;
-      // Set up a global AJAX error handler to handle the 401
-      // unauthorized responses. If a 401 status code comes back,
-      // the user is no longer logged&#45;into the system and can not
-      // use it properly.
+      // Set up a global Ajax error handler to handle 401
+      // unauthorized responses. If a 401 status code is
+      // returned the user is no longer logged in (e.g. when
+      // the session times out), so re&#45;display the login form.
       401: function() &#123;
          showLogin();
       &#125;
    &#125;
 &#125;);<p class="paragraph"/>function showLogin() &#123;
-   <span class="java&#45;keyword">var</span> ajaxLogin = $('&#35;ajaxLogin');
-   ajaxLogin.css('text&#45;align','center');
-   // use jqModal to show and align login panel
+   <span class="java&#45;keyword">var</span> ajaxLogin = $(<span class="java&#45;quote">"&#35;ajaxLogin"</span>);
+   ajaxLogin.css(<span class="java&#45;quote">"text&#45;align"</span>, <span class="java&#45;quote">"center"</span>);
    ajaxLogin.jqmShow();
-&#125;<p class="paragraph"/>function cancelLogin() &#123;
-   $('&#35;ajaxLogin').jqmHide();
-&#125;<p class="paragraph"/>function authAjax() &#123;
-   $('&#35;loginMessage').html('Sending request ...').show();<p class="paragraph"/>   <span class="java&#45;keyword">var</span> form = $('&#35;ajaxLoginForm');
-   <span class="java&#45;keyword">var</span> config = &#123;
-      type: 'post',
-      url: form.attr('action'),
-      data: form.serialize(),
-      async: <span class="java&#45;keyword">false</span>,
-      dataType: 'JSON',
-      success: function(response) &#123;
-         form&#91;0&#93;.reset();
-         $('&#35;loginMessage').empty();
-         $('&#35;ajaxLogin').jqmHide();
-         <span class="java&#45;keyword">if</span> (onLogin) &#123;
-            // execute the saved event.success function
-            onLogin(response);
-         &#125;
+&#125;<p class="paragraph"/>function logout(event) &#123;
+   event.preventDefault();
+   $.ajax(&#123;
+      url: $(<span class="java&#45;quote">"&#35;_logout"</span>).attr(<span class="java&#45;quote">"href"</span>),
+      method: <span class="java&#45;quote">"POST"</span>,
+      success: function(data, textStatus, jqXHR) &#123;
+         window.location = <span class="java&#45;quote">"/"</span>;
       &#125;,
-      error: function (response) &#123;
-         <span class="java&#45;keyword">var</span> responseText = response.responseText || '&#91;&#93;';
-         <span class="java&#45;keyword">var</span> json = responseText.evalJSON();
-         <span class="java&#45;keyword">if</span> (json.error) &#123;
-            $('&#35;loginMessage').html(<span class="java&#45;quote">"&#60;span class='errorMessage'&#62;"</span> + json.error + '&#60;/error&#62;');
+      error: function(jqXHR, textStatus, errorThrown) &#123;
+         console.log(<span class="java&#45;quote">"Logout error, textStatus: "</span> + textStatus +
+                     <span class="java&#45;quote">", errorThrown: "</span> + errorThrown);
+      &#125;
+   &#125;);
+&#125;<p class="paragraph"/>function authAjax() &#123;
+   $(<span class="java&#45;quote">"&#35;loginMessage"</span>).html(<span class="java&#45;quote">"Sending request ..."</span>).show();<p class="paragraph"/>   <span class="java&#45;keyword">var</span> form = $(<span class="java&#45;quote">"&#35;ajaxLoginForm"</span>);
+   $.ajax(&#123;
+      url:       form.attr(<span class="java&#45;quote">"action"</span>),
+      method:   <span class="java&#45;quote">"POST"</span>,
+      data:      form.serialize(),
+      dataType: <span class="java&#45;quote">"JSON"</span>,
+      success: function(json, textStatus, jqXHR) &#123;
+         <span class="java&#45;keyword">if</span> (json.success) &#123;
+            form&#91;0&#93;.reset();
+            $(<span class="java&#45;quote">"&#35;loginMessage"</span>).empty();
+            $(<span class="java&#45;quote">"&#35;ajaxLogin"</span>).jqmHide();
+            $(<span class="java&#45;quote">"&#35;loginLink"</span>).html(
+               'Logged in as ' + json.username +
+               ' (&#60;a href=<span class="java&#45;quote">"' + $("</span>&#35;_logout<span class="java&#45;quote">").attr("</span>href<span class="java&#45;quote">") +
+               '"</span> id=<span class="java&#45;quote">"logout"</span>&#62;Logout&#60;/a&#62;)');
+            $(<span class="java&#45;quote">"&#35;logout"</span>).click(logout);
+            <span class="java&#45;keyword">if</span> (onLogin) &#123;
+               // execute the saved event.success function
+               onLogin(json, textStatus, jqXHR);
+            &#125;
+         &#125;
+         <span class="java&#45;keyword">else</span> <span class="java&#45;keyword">if</span> (json.error) &#123;
+            $(<span class="java&#45;quote">"&#35;loginMessage"</span>).html('&#60;span class=<span class="java&#45;quote">"errorMessage"</span>&#62;' +
+                                    json.error + <span class="java&#45;quote">"&#60;/error&#62;"</span>);
          &#125;
          <span class="java&#45;keyword">else</span> &#123;
-            $('&#35;loginMessage').html(responseText);
+            $(<span class="java&#45;quote">"&#35;loginMessage"</span>).html(jqXHR.responseText);
          &#125;
       &#125;,
-      beforeSend: function(xhr, event) &#123;
-         //console.log(<span class="java&#45;quote">"overriding <span class="java&#45;keyword">default</span> behaviour"</span>);
+      error: function(jqXHR, textStatus, errorThrown) &#123;
+         <span class="java&#45;keyword">if</span> (jqXHR.status == 401 &#38;&#38; jqXHR.getResponseHeader(<span class="java&#45;quote">"Location"</span>)) &#123;
+            // the login request itself wasn't allowed, possibly because the
+            // post url is incorrect and access was denied to it
+            $(<span class="java&#45;quote">"&#35;loginMessage"</span>).html('&#60;span class=<span class="java&#45;quote">"errorMessage"</span>&#62;' +
+               'Sorry, there was a problem with the login request&#60;/error&#62;');
+         &#125;
+         <span class="java&#45;keyword">else</span> &#123;
+            <span class="java&#45;keyword">var</span> responseText = jqXHR.responseText;
+            <span class="java&#45;keyword">if</span> (responseText) &#123;
+               <span class="java&#45;keyword">var</span> json = $.parseJSON(responseText);
+               <span class="java&#45;keyword">if</span> (json.error) &#123;
+                  $(<span class="java&#45;quote">"&#35;loginMessage"</span>).html('&#60;span class=<span class="java&#45;quote">"errorMessage"</span>&#62;' +
+                                          json.error + <span class="java&#45;quote">"&#60;/error&#62;"</span>);
+                  <span class="java&#45;keyword">return</span>;
+               &#125;
+            &#125;
+            <span class="java&#45;keyword">else</span> &#123;
+               responseText = <span class="java&#45;quote">"Sorry, an error occurred (status: "</span> +
+                              textStatus + <span class="java&#45;quote">", error: "</span> + errorThrown + <span class="java&#45;quote">")"</span>;
+            &#125;
+            $(<span class="java&#45;quote">"&#35;loginMessage"</span>).html('&#60;span class=<span class="java&#45;quote">"errorMessage"</span>&#62;' +
+                                    responseText + <span class="java&#45;quote">"&#60;/error&#62;"</span>);
+         &#125;
       &#125;
-   &#125;
-   $.ajax(config);
+   &#125;);
 &#125;<p class="paragraph"/>$(function() &#123;
-   $('&#35;ajaxLogin').jqm(&#123;modal: <span class="java&#45;keyword">true</span>, trigger: 'span.jqmTrigger'&#125;);
-   $('&#35;authAjax').click(authAjax);
-   $('&#35;cancelLogin').click(cancelLogin);
-&#125;);
-&#60;/script&#62;</pre></div><p class="paragraph"/>The important aspects of this code are:
+   $(<span class="java&#45;quote">"&#35;ajaxLogin"</span>).jqm(&#123; closeOnEsc: <span class="java&#45;keyword">true</span> &#125;);
+   $(<span class="java&#45;quote">"&#35;ajaxLogin"</span>).jqmAddClose(<span class="java&#45;quote">"&#35;cancelLogin"</span>);
+   $(<span class="java&#45;quote">"&#35;ajaxLoginForm"</span>).submit(function(event) &#123;
+      event.preventDefault();
+      authAjax();
+   &#125;);
+   $(<span class="java&#45;quote">"&#35;authAjax"</span>).click(authAjax);
+   $(<span class="java&#45;quote">"&#35;logout"</span>).click(logout);
+&#125;);</pre></div><p class="paragraph"/>and create <code>grails-app/assets/stylesheets/ajaxLogin.css</code> and add this CSS:<p class="paragraph"/><div class="code"><pre>&#35;ajaxLogin &#123;
+   padding:    0px;
+   text&#45;align: center;
+   display:    none;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> &#123;
+   width:              400px;
+   padding&#45;bottom:     6px;
+   margin:             60px auto;
+   text&#45;align:         left;
+   border:             1px solid &#35;aab;
+   background&#45;color:   &#35;f0f0fa;
+   &#45;moz&#45;box&#45;shadow:    2px 2px 2px &#35;eee;
+   &#45;webkit&#45;box&#45;shadow: 2px 2px 2px &#35;eee;
+   &#45;khtml&#45;box&#45;shadow:  2px 2px 2px &#35;eee;
+   box&#45;shadow:         2px 2px 2px &#35;eee;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .fheader &#123;
+   padding:          18px 26px 14px 26px;
+   background&#45;color: &#35;f7f7ff;
+   margin:           0px 0 14px 0;
+   color:            &#35;2e3741;
+   font&#45;size:        18px;
+   font&#45;weight:      bold;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform p &#123;
+   clear:         left;
+   margin:        0;
+   padding:       4px 0 3px 0;
+   padding&#45;left:  105px;
+   margin&#45;bottom: 20px;
+   height:        1%;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform input&#91;type=<span class="java&#45;quote">"text"</span>&#93;,
+&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform input&#91;type=<span class="java&#45;quote">"password"</span>&#93; &#123;
+   width: 150px;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .cssform label &#123;
+   font&#45;weight:   bold;
+   <span class="java&#45;object">float</span>:         left;
+   text&#45;align:    right;
+   margin&#45;left:  &#45;105px;
+   width:         150px;
+   padding&#45;top:   3px;
+   padding&#45;right: 10px;
+&#125;<p class="paragraph"/>.ajaxLoginButton &#123;
+   background&#45;color: &#35;efefef;
+   font&#45;weight: bold;
+   padding: 0.5em 1em;
+   display: &#45;moz&#45;inline&#45;stack;
+   display: inline&#45;block;
+   vertical&#45;align: middle;
+   white&#45;space: nowrap;
+   overflow: visible;
+   text&#45;decoration: none;
+      &#45;moz&#45;border&#45;radius: 0.3em;
+   &#45;webkit&#45;border&#45;radius: 0.3em;
+           border&#45;radius: 0.3em;
+&#125;<p class="paragraph"/>.ajaxLoginButton:hover, .ajaxLoginButton:focus &#123;
+   background&#45;color: &#35;999999;
+   color: &#35;ffffff;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .login_message &#123;
+   padding: 6px 25px 20px 25px;
+   color:   &#35;c33;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .text_ &#123;
+   width: 120px;
+&#125;<p class="paragraph"/>&#35;ajaxLogin .<span class="java&#45;keyword">inner</span> .chk &#123;
+   height: 12px;
+&#125;<p class="paragraph"/>.errorMessage &#123;
+   color: red;
+&#125;</pre></div><p class="paragraph"/>There's no need to register the JavaScript files in <code>grails-app/assets/javascripts/application.js</code> if you have this <code>require_tree</code> directive:<p class="paragraph"/><div class="code"><pre>//= require_tree .</pre></div><p class="paragraph"/>but you can explicitly include them if you want. Register the two CSS files in <code>/grails-app/assets/stylesheets/application.css</code>:<p class="paragraph"/><div class="code"><pre>/&#42;
+ &#8230;
+ &#42;= require ajaxLogin
+ &#42;= require jqModal
+ &#8230;
+ &#42;/</pre></div><p class="paragraph"/>We'll need some GSP code to define the HTML, so create <code>grails-app/views/includes/_ajaxLogin.gsp</code> and add this:<p class="paragraph"/><div class="code"><pre>&#60;span id=<span class="java&#45;quote">"logoutLink"</span> style=<span class="java&#45;quote">"display: none;"</span>&#62;
+&#60;g:link elementId='_logout' controller='logout'&#62;Logout&#60;/g:link&#62;
+&#60;/span&#62;<p class="paragraph"/>&#60;span id=<span class="java&#45;quote">"loginLink"</span> style=<span class="java&#45;quote">"position: relative; margin&#45;right: 30px; <span class="java&#45;object">float</span>: right"</span>&#62;
+&#60;sec:ifLoggedIn&#62;
+   Logged in as &#60;sec:username/&#62; (&#60;g:link elementId='logout' controller='logout'&#62;Logout&#60;/g:link&#62;)
+&#60;/sec:ifLoggedIn&#62;
+&#60;sec:ifNotLoggedIn&#62;
+   &#60;a href=<span class="java&#45;quote">"&#35;"</span> onclick=<span class="java&#45;quote">"showLogin(); <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>;"</span>&#62;Login&#60;/a&#62;
+&#60;/sec:ifNotLoggedIn&#62;
+&#60;/span&#62;<p class="paragraph"/>&#60;div id=<span class="java&#45;quote">"ajaxLogin"</span> class=<span class="java&#45;quote">"jqmWindow"</span> style=<span class="java&#45;quote">"z&#45;index: 3000;"</span>&#62;
+   &#60;div class=<span class="java&#45;quote">"<span class="java&#45;keyword">inner</span>"</span>&#62;
+      &#60;div class=<span class="java&#45;quote">"fheader"</span>&#62;Please Login..&#60;/div&#62;
+      &#60;form action=<span class="java&#45;quote">"$&#123;request.contextPath&#125;/j_spring_security_check"</span>
+            method=<span class="java&#45;quote">"POST"</span> id=<span class="java&#45;quote">"ajaxLoginForm"</span> name=<span class="java&#45;quote">"ajaxLoginForm"</span>
+            class=<span class="java&#45;quote">"cssform"</span> autocomplete=<span class="java&#45;quote">"off"</span>&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>=<span class="java&#45;quote">"username"</span>&#62;Username:&#60;/label&#62;
+            &#60;input type=<span class="java&#45;quote">"text"</span> class=<span class="java&#45;quote">"text_"</span>
+                   name=<span class="java&#45;quote">"j_username"</span> id=<span class="java&#45;quote">"username"</span> /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>=<span class="java&#45;quote">"password"</span>&#62;Password&#60;/label&#62;
+            &#60;input type=<span class="java&#45;quote">"password"</span> class=<span class="java&#45;quote">"text_"</span>
+                   name=<span class="java&#45;quote">"j_password"</span> id=<span class="java&#45;quote">"password"</span> /&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;label <span class="java&#45;keyword">for</span>=<span class="java&#45;quote">"remember_me"</span>&#62;Remember me&#60;/label&#62;
+            &#60;input type=<span class="java&#45;quote">"checkbox"</span> class=<span class="java&#45;quote">"chk"</span> id=<span class="java&#45;quote">"remember_me"</span>
+                   name=<span class="java&#45;quote">"_spring_security_remember_me"</span>/&#62;
+         &#60;/p&#62;
+         &#60;p&#62;
+            &#60;input type=<span class="java&#45;quote">"submit"</span> id=<span class="java&#45;quote">"authAjax"</span> name=<span class="java&#45;quote">"authAjax"</span>
+                   value=<span class="java&#45;quote">"Login"</span> class=<span class="java&#45;quote">"ajaxLoginButton"</span> /&#62;
+            &#60;input type=<span class="java&#45;quote">"button"</span> id=<span class="java&#45;quote">"cancelLogin"</span> value=<span class="java&#45;quote">"Cancel"</span>
+                   class=<span class="java&#45;quote">"ajaxLoginButton"</span> /&#62;
+         &#60;/p&#62;
+      &#60;/form&#62;
+      &#60;div style=<span class="java&#45;quote">"display: none; text&#45;align: left;"</span> id=<span class="java&#45;quote">"loginMessage"</span>&#62;&#60;/div&#62;
+   &#60;/div&#62;
+&#60;/div&#62;</pre></div><p class="paragraph"/>And finally, update the <code>grails-app/views/layouts/main.gsp</code> layout to include <code>_ajaxLogin.gsp</code>, adding it after the <code>&#60;body&#62;</code> tag:<p class="paragraph"/><div class="code"><pre>&#60;html lang=<span class="java&#45;quote">"en"</span> class=<span class="java&#45;quote">"no&#45;js"</span>&#62;
+   &#60;head&#62;
+      &#8230;
+      &#60;g:layoutHead/&#62;
+   &#60;/head&#62;
+   &#60;body&#62;
+      &#60;g:render template='/includes/ajaxLogin'/&#62;
+      &#8230;
+      &#60;g:layoutBody/&#62;
+   &#60;/body&#62;
+&#60;/html&#62;</pre></div><p class="paragraph"/>The important aspects of this code are:
 <ul class="star">
-<li>The form posts to the same URL as the regular form, <code>j_spring_security_check</code>. In fact, the form is identical, including the remember-me checkbox, except that the submit button is replaced with a hyperlink.</li>
+<li>There is a &#60;span&#62; positioned in the top-right that shows the username and a logout link when logged in, and a login link otherwise.</li>
+<li>The form posts to the same URL as the regular form, <code>/j_spring_security_check</code>, and is mostly the same except for the addition of a "Cancel" button (you can also dismiss the dialog by clicking outside of it or with the escape key).</li>
 <li>Error messages are displayed within the popup &#60;div&#62;.</li>
 <li>Because there is no page redirect after successful login, the Javascript replaces the login link to give a visual indication that the user is logged in.</li>
-<li>The original jQuery "success" function is retried with the results from the original request.</li>
-<li>Details of logout are not shown; you do this by redirecting the user to <code>/j_spring_security_logout</code>.</li>
-</ul><p class="paragraph"/><h4>How Does Ajax login Work?</h4><p class="paragraph"/>Most Ajax libraries (Prototype, JQuery, and Dojo as of v2.1) include an <code>X-Requested-With</code> header that indicates that the request was made by <code>XMLHttpRequest</code> instead of being triggered by clicking a regular hyperlink or form submit button. The plugin uses this header to detect Ajax login requests, and uses subclasses of some of Spring Security's classes to use different redirect urls for Ajax requests than regular requests. Instead of showing full pages, <code>LoginController</code> has JSON-generating methods <code>ajaxSuccess()</code>, <code>ajaxDenied()</code>, and <code>authfail()</code> that generate JSON that the login Javascript code can use to appropriately display success or error messages.<p class="paragraph"/>You can see the Ajax-aware actions in <code>LoginController</code>, specifically <code>ajaxSuccess</code> and <code>ajaxDenied</code>, which send JSON responses that can be used by client JavaScript code. Also <code>authfail</code> will check whether the authentication request used Ajax and will render a JSON error response if it did.<p class="paragraph"/>To summarize, the typical flow would be
+<li>The Logout link also uses Ajax to submit a POST request to the standard logout url and redirect you to the index page after the request finishes.</li>
+<ul class="star">
+<li>Note that in the JavaScript <code>logout</code> function, you'll need to change the url in the <code>success</code> callback to the correct post-logout value, e.g. <code>window.location = "/appname";</code></li>
+</ul></ul><p class="paragraph"/><h4>How Does Ajax login Work?</h4><p class="paragraph"/>Most Ajax libraries include an <code>X-Requested-With</code> header that indicates that the request was made by <code>XMLHttpRequest</code> instead of being triggered by clicking a regular hyperlink or form submit button. The plugin uses this header to detect Ajax login requests, and uses subclasses of some of Spring Security's classes to use different redirect urls for Ajax requests than regular requests. Instead of showing full pages, <code>LoginController</code> has JSON-generating methods <code>ajaxSuccess()</code>, <code>ajaxDenied()</code>, and <code>authfail()</code> that generate JSON that the login Javascript code can use to appropriately display success or error messages.<p class="paragraph"/>To summarize, the typical flow would be
 <ul class="star">
 <li>click the link to display the login form</li>
-<li>enter authentication details and click login</li>
+<li>enter authentication details and click Login</li>
 <li>the form is submitted using an Ajax request</li>
 <li>if the authentication succeeds:</li>
 <ul class="star">
@@ -322,36 +389,7 @@ $.ajaxSetup(&#123;
 <li>the client determines that the login was not successful and displays the error message</li>
 </ul>
 <li>note that both a successful and an unsuccessful login will trigger the <code>onSuccess</code> Ajax callback; the <code>onError</code> callback will only be triggered if there's an exception or network issue</li>
-</ul><p class="paragraph"/><h4>Triggering an Ajax login</h4><p class="paragraph"/>So far we've discussed explicit Ajax logins where the user can view some of the site's pages but you've added a link to an in-page login form. An attempt to load a secure page will trigger a redirect to the standard login page. But if you're using Ajax in your pages you should handle the case where the request is secure and requires being logged in. This will also handle session timeouts where the user doesn't have a remember-me cookie; you can pop up a login dialog in the page.<p class="paragraph"/>For example consider this Ajax form:<p class="paragraph"/><div class="code"><pre>&#60;g:form action=<span class="java&#45;quote">"ajaxAdd"</span>&#62;
-   &#60;g:textArea id='postContent' name=<span class="java&#45;quote">"content"</span>
-               rows=<span class="java&#45;quote">"3"</span> cols=<span class="java&#45;quote">"50"</span> onkeydown=<span class="java&#45;quote">"updateCounter()"</span> /&#62;
-   &#60;br/&#62;
-   &#60;g:submitToRemote value=<span class="java&#45;quote">"Post"</span>
-      url=<span class="java&#45;quote">"&#91;controller: 'post', action: 'addPostAjax'&#93;"</span>
-      update=<span class="java&#45;quote">"&#91;success: 'firstPost'&#93;"</span>
-      onSuccess=<span class="java&#45;quote">"clearPost(e)"</span>
-      onLoading=<span class="java&#45;quote">"showSpinner(<span class="java&#45;keyword">true</span>)"</span>
-      onComplete=<span class="java&#45;quote">"showSpinner(<span class="java&#45;keyword">false</span>)"</span>
-      on401=<span class="java&#45;quote">"showLogin();"</span>/&#62;
-      &#60;img id=<span class="java&#45;quote">"spinner"</span> style=<span class="java&#45;quote">"display: none"</span>
-           src=<span class="java&#45;quote">"&#60;g:createLinkTo dir='/images' file='spinner.gif'/&#62;"</span>
-   /&#62;
-&#60;/g:form&#62;</pre></div><p class="paragraph"/>or<p class="paragraph"/><div class="code"><pre>&#60;script&#62;
-<span class="java&#45;keyword">var</span> detailConfig = &#123;
-   type: 'post',
-   async: <span class="java&#45;keyword">false</span>,
-   returnType: 'html',
-   url: '/post/addPostAjax',
-   success: function(data) &#123;
-      $('&#35;firstPost').html(data);
-      clearPost(e);
-   &#125;
-&#125;;<p class="paragraph"/>$.ajax(detailConfig);
-&#60;/script&#62;</pre></div><p class="paragraph"/>Most of the attributes are typical, but the <code>on401</code> attribute is the key to making Ajax logins work. As long as the <code>LoginController</code> sends a 401 error code the need to authenticate can be easily handled.<p class="paragraph"/>Note that depending on the version of the plugin that you're using, you may need to add the <code>authAjax</code> method to your <code>LoginController</code>:<p class="paragraph"/><div class="code"><pre>def authAjax() &#123;
-   response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
-   response.sendError HttpServletResponse.SC_UNAUTHORIZED
-&#125;</pre></div><p class="paragraph"/>and this requires an import for <code>javax.servlet.http.HttpServletResponse</code>.
-
+</ul><p class="paragraph"/>
 
 
                 <div style="clear:both;margin-top:15px;"></div>
@@ -375,6 +413,9 @@ $.ajaxSetup(&#123;
                         
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>

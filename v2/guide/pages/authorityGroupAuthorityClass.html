@@ -2,7 +2,7 @@
                       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-    <title>3.6 GroupAuthority Class 2.0-RC6</title>
+    <title>3.6 GroupAuthority Class 2.0.0</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8"/>
     <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8"/>
@@ -134,7 +134,7 @@ function addJsClass() {
 
                     <p><strong>Authors:</strong> Burt Beckwith, Beverley Talbott</p>
 
-                    <p><strong>Version:</strong> 2.0-RC6</p>
+                    <p><strong>Version:</strong> 2.0.0</p>
 
                     
                 </div>
@@ -144,45 +144,45 @@ function addJsClass() {
                 
 
 <h2 id="authorityGroupAuthorityClass">3.6 GroupAuthority Class</h2>
-The typical approach to mapping the relationship between 'group' and 'authority' is a many-to-many. In a standard implementation, users have multiple roles, and roles are shared by multiple users. In a group implementation, groups have multiple roles and roles are shared by multiple groups. For the same reason we would use a join class between 'person' and 'authority', we should use one between 'group' and 'authority'.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified, this class will be generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>RoleGroup</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>@ToString(cache=<span class="java&#45;keyword">true</span>, includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
+The typical approach to mapping the relationship between 'group' and 'authority' is a many-to-many. In a standard implementation, users have multiple roles, and roles are shared by multiple users. In a group implementation, groups have multiple roles and roles are shared by multiple groups. For the same reason we would use a join class between 'person' and 'authority', we should use one between 'group' and 'authority'.<p class="paragraph"/>If you run the <a href="../ref/Scripts/s2-quickstart.html" class="Scripts">s2-quickstart</a> script with the group name specified, this class will be generated for you, so you don't need to deal with the details of mapping it. Assuming you choose <code>com.mycompany.myapp</code> as your package, and <code>RoleGroup</code> and <code>Role</code> as your class names, you'll generate this class:<p class="paragraph"/><div class="code"><pre><span class="java&#45;keyword">package</span> com.mycompany.myapp<p class="paragraph"/><span class="java&#45;keyword">import</span> grails.gorm.DetachedCriteria
+<span class="java&#45;keyword">import</span> groovy.transform.ToString<p class="paragraph"/><span class="java&#45;keyword">import</span> org.apache.commons.lang.builder.HashCodeBuilder<p class="paragraph"/>@ToString(cache=<span class="java&#45;keyword">true</span>, includeNames=<span class="java&#45;keyword">true</span>, includePackage=<span class="java&#45;keyword">false</span>)
 class RoleGroupRole <span class="java&#45;keyword">implements</span> Serializable &#123;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> <span class="java&#45;keyword">final</span> <span class="java&#45;object">long</span> serialVersionUID = 1<p class="paragraph"/>   RoleGroup roleGroup
-   Role role<p class="paragraph"/>   <span class="java&#45;object">boolean</span> equals(other) &#123;
+   Role role<p class="paragraph"/>   RoleGroupRole(RoleGroup g, Role r) &#123;
+      <span class="java&#45;keyword">this</span>()
+      roleGroup = g
+      role = r
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">boolean</span> equals(other) &#123;
       <span class="java&#45;keyword">if</span> (!(other <span class="java&#45;keyword">instanceof</span> RoleGroupRole)) &#123;
          <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span>
       &#125;<p class="paragraph"/>      other.role?.id == role?.id &#38;&#38;
       other.roleGroup?.id == roleGroup?.id
-   &#125;<p class="paragraph"/>   <span class="java&#45;object">int</span> hashCode() &#123;
+   &#125;<p class="paragraph"/>   @Override
+   <span class="java&#45;object">int</span> hashCode() &#123;
       def builder = <span class="java&#45;keyword">new</span> HashCodeBuilder()
       <span class="java&#45;keyword">if</span> (roleGroup) builder.append(roleGroup.id)
       <span class="java&#45;keyword">if</span> (role) builder.append(role.id)
       builder.toHashCode()
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> RoleGroupRole get(<span class="java&#45;object">long</span> roleGroupId, <span class="java&#45;object">long</span> roleId) &#123;
-      RoleGroupRole.where &#123;
-         roleGroup == RoleGroup.load(roleGroupId) &#38;&#38;
-         role == Role.load(roleId)
-      &#125;.get()
+      criteriaFor(roleGroupId, roleId).get()
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> exists(<span class="java&#45;object">long</span> roleGroupId, <span class="java&#45;object">long</span> roleId) &#123;
+      criteriaFor(roleGroupId, roleId).count()
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">private</span> <span class="java&#45;keyword">static</span> DetachedCriteria criteriaFor(<span class="java&#45;object">long</span> roleGroupId, <span class="java&#45;object">long</span> roleId) &#123;
       RoleGroupRole.where &#123;
          roleGroup == RoleGroup.load(roleGroupId) &#38;&#38;
          role == Role.load(roleId)
-      &#125;.count() &#62; 0
-   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> RoleGroupRole create(RoleGroup roleGroup, Role role, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
+      &#125;
+   &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> RoleGroupRole create(RoleGroup roleGroup, Role role,
+                               <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
       def instance = <span class="java&#45;keyword">new</span> RoleGroupRole(roleGroup: roleGroup, role: role)
       instance.save(flush: flush, insert: <span class="java&#45;keyword">true</span>)
       instance
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> <span class="java&#45;object">boolean</span> remove(RoleGroup rg, Role r, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
-      <span class="java&#45;keyword">if</span> (rg == <span class="java&#45;keyword">null</span> || r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span><p class="paragraph"/>      <span class="java&#45;object">int</span> rowCount = RoleGroupRole.where &#123;
-         roleGroup == RoleGroup.load(rg.id) &#38;&#38;
-         role == Role.load(r.id)
-      &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; RoleGroupRole.withSession &#123; it.flush() &#125; &#125;<p class="paragraph"/>      rowCount &#62; 0
+      <span class="java&#45;keyword">if</span> (rg == <span class="java&#45;keyword">null</span> || r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span> <span class="java&#45;keyword">false</span><p class="paragraph"/>      <span class="java&#45;object">int</span> rowCount = RoleGroupRole.where &#123; roleGroup == rg &#38;&#38; role == r &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; RoleGroupRole.withSession &#123; it.flush() &#125; &#125;<p class="paragraph"/>      rowCount
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(Role r, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
-      <span class="java&#45;keyword">if</span> (r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      RoleGroupRole.where &#123;
-         role == Role.load(r.id)
-      &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; RoleGroupRole.withSession &#123; it.flush() &#125; &#125;
+      <span class="java&#45;keyword">if</span> (r == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      RoleGroupRole.where &#123; role == r &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; RoleGroupRole.withSession &#123; it.flush() &#125; &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> void removeAll(RoleGroup rg, <span class="java&#45;object">boolean</span> flush = <span class="java&#45;keyword">false</span>) &#123;
-      <span class="java&#45;keyword">if</span> (rg == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      RoleGroupRole.where &#123;
-         roleGroup == RoleGroup.load(rg.id)
-      &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; RoleGroupRole.withSession &#123; it.flush() &#125; &#125;
+      <span class="java&#45;keyword">if</span> (rg == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span><p class="paragraph"/>      RoleGroupRole.where &#123; roleGroup == rg &#125;.deleteAll()<p class="paragraph"/>      <span class="java&#45;keyword">if</span> (flush) &#123; RoleGroupRole.withSession &#123; it.flush() &#125; &#125;
    &#125;<p class="paragraph"/>   <span class="java&#45;keyword">static</span> constraints = &#123;
       role validator: &#123; Role r, RoleGroupRole rg &#45;&#62;
          <span class="java&#45;keyword">if</span> (rg.roleGroup == <span class="java&#45;keyword">null</span> || rg.roleGroup.id == <span class="java&#45;keyword">null</span>) <span class="java&#45;keyword">return</span>
@@ -223,6 +223,9 @@ class RoleGroupRole <span class="java&#45;keyword">implements</span> Serializabl
                         
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-create-persistent-token.html">s2-create-persistent-token</a>
+                            </div>
+                            
+                            <div class="menu-item"><a href="../../ref/Scripts/s2-create-role-hierarchy-entry.html">s2-create-role-hierarchy-entry</a>
                             </div>
                             
                             <div class="menu-item"><a href="../../ref/Scripts/s2-quickstart.html">s2-quickstart</a>
