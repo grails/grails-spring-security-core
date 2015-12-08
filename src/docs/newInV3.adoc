@@ -5,6 +5,17 @@ Version 3.x of the plugin requires Grails 3.x or higher; to use the plugin in Gr
 
 In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using `web.xml`. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 4 (currently 4.0.3.RELEASE), but the changes required were primarily internal and don't affect usage. There are new features in Spring Security 4 however, and the plugin will be updated in future releases to take advantage of those.
 
+Spring Security 4 changed the default URLs and parameter names for login, logout, switch-user, etc. This is handled by the plugin for you and is usually transparent, but you should be aware of the changes if you want to customize the filters or GSPs:
+
+* `/j_spring_security_check` (the `apf.filterProcessesUrl` config setting) changed to `/login/authenticate`
+* `/j_username` (the `apf.usernameParameter` and `switchUser.usernameParameter` config settings) changed to `username`
+* `/j_password` (the `apf.passwordParameter` config setting) changed to `password`
+* `/j_spring_security_logout` (the `logout.filterProcessesUrl` config setting) changed to `/logoff`
+** In Spring Security 4 the value is actually `/logout`, but that conflicts with the standard `LogoutController` url, so the plugin uses `/logoff` instead
+* `_spring_security_remember_me` (the `rememberMe.parameter` config setting) changed to `remember-me`
+* `/j_spring_security_switch_user` (the `switchUser.switchUserUrl` config setting) changed to `/login/impersonate`
+* `/j_spring_security_exit_user` (the `switchUser.exitUserUrl` config setting) changed to `/logout/impersonate`
+
 Note that the 2.x plugin was written primarily in Java, with Groovy used only for dynamic calls, but in 3.x all Java classes were converted to Groovy with the `@CompileStatic` annotation. Java was used because Spring Security is configured as a chain of servlet filters that fire for every request (including static resources) and the cumulative cost of many small Groovy performance hits can be non-trivial. But with `@CompileStatic` we get the best of both worlds - Java performance, and Groovy compactness. If you're curious you can see these changes https://github.com/grails-plugins/grails-spring-security-core/commit/da06fa44d8bbea0ff374dd31b1c6b28426bdf7b4[in this GitHub commit].
 
 Also, since Grails 3 no longer supports Gant scripts, the plugin's scripts were converted to the newer approach. This should have no effect on usage as the calling syntax and results are the same as before, although the console output looks somewhat different. You can see these changes https://github.com/grails-plugins/grails-spring-security-core/commit/16484f44fe25a6f1c8687b8e27db6f08ed871436[in this GitHub commit].
