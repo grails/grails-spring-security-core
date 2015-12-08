@@ -419,7 +419,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.0.0.M2</span>
+<span id="revnumber">version 3.0.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -580,6 +580,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>December 8, 2015</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.0.0 release</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>November 23, 2015</p>
 <div class="ulist">
@@ -999,7 +1009,42 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Version 3.x of the plugin requires Grails 3.x or higher; to use the plugin in Grails 2.x applications use the 2.x version of the plugin.</p>
 </div>
 <div class="paragraph">
-<p>In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin still uses Spring Security 3.2 (currently 3.2.9.RELEASE) although an upgrade to Spring Security 4 will happen in a future release.</p>
+<p>In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 4 (currently 4.0.3.RELEASE), but the changes required were primarily internal and don&#8217;t affect usage. There are new features in Spring Security 4 however, and the plugin will be updated in future releases to take advantage of those.</p>
+</div>
+<div class="paragraph">
+<p>Spring Security 4 changed the default URLs and parameter names for login, logout, switch-user, etc. This is handled by the plugin for you and is usually transparent, but you should be aware of the changes if you want to customize the filters or GSPs:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>/j_spring_security_check</code> (the <code>apf.filterProcessesUrl</code> config setting) changed to <code>/login/authenticate</code></p>
+</li>
+<li>
+<p><code>/j_username</code> (the <code>apf.usernameParameter</code> and <code>switchUser.usernameParameter</code> config settings) changed to <code>username</code></p>
+</li>
+<li>
+<p><code>/j_password</code> (the <code>apf.passwordParameter</code> config setting) changed to <code>password</code></p>
+</li>
+<li>
+<p><code>/j_spring_security_logout</code> (the <code>logout.filterProcessesUrl</code> config setting) changed to <code>/logoff</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>In Spring Security 4 the value is actually <code>/logout</code>, but that conflicts with the standard <code>LogoutController</code> url, so the plugin uses <code>/logoff</code> instead</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>_spring_security_remember_me</code> (the <code>rememberMe.parameter</code> config setting) changed to <code>remember-me</code></p>
+</li>
+<li>
+<p><code>/j_spring_security_switch_user</code> (the <code>switchUser.switchUserUrl</code> config setting) changed to <code>/login/impersonate</code></p>
+</li>
+<li>
+<p><code>/j_spring_security_exit_user</code> (the <code>switchUser.exitUserUrl</code> config setting) changed to <code>/logout/impersonate</code></p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
 <p>Note that the 2.x plugin was written primarily in Java, with Groovy used only for dynamic calls, but in 3.x all Java classes were converted to Groovy with the <code>@CompileStatic</code> annotation. Java was used because Spring Security is configured as a chain of servlet filters that fire for every request (including static resources) and the cumulative cost of many small Groovy performance hits can be non-trivial. But with <code>@CompileStatic</code> we get the best of both worlds - Java performance, and Groovy compactness. If you&#8217;re curious you can see these changes <a href="https://github.com/grails-plugins/grails-spring-security-core/commit/da06fa44d8bbea0ff374dd31b1c6b28426bdf7b4">in this GitHub commit</a>.</p>
@@ -1030,7 +1075,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
+   compile 'org.grails.plugins:spring-security-core:3.0.0'
    ...</code></pre>
 </div>
 </div>
@@ -1045,7 +1090,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </td>
 <td class="content">
 <div class="paragraph">
-<p>There is a dependency resolution bug in Grails 3.1.x where instead of using the version of jars that&#8217;s specified by the plugin, it&#8217;s using the latest available. This plugin uses a deprecated method that was removed in Spring Security 4 (this will be addressed when the plugin is upgraded to use Spring Security 4) and that will cause your application to fail to start. As a workaround until this is fixed in a newer version of Grails 3.1, add the plugin&#8217;s dependencies in <code>build.gradle</code> in addition to the dependency for the plugin:</p>
+<p>There is an issue when using Grails 3.1.x with version 3.0.0.M2 (or 3.0.0.M1) of the plugin. Grails 3.1 uses a newer version of Spring Boot, which has dependencies for Spring Security 4 that override the plugin&#8217;s dependency on Spring Security 3.2. This is not a problem for Grails 3.0.x or when using plugin releases after 3.0.0.M2 because the plugin now uses Spring Security 4. If you are using 3.0.0.M1 or 3.0.0.M2 with Grails 3.1, the workaround is to add the plugin&#8217;s Spring Security 3.2 dependencies in <code>build.gradle</code> in addition to the dependency for the plugin:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2359,8 +2404,8 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = true</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">[pattern: '/j_spring_security_switch_user', access: ['ROLE_ADMIN']],
-[pattern: '/j_spring_security_exit_user', access: ['permitAll']]</code></pre>
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">[pattern: '/login/impersonate', access: ['ROLE_ADMIN']],
+[pattern: '/logout/impersonate', access: ['permitAll']]</code></pre>
 </div>
 </div>
 </div>
@@ -2478,7 +2523,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SecureAnnotatedController {
 
-   @Secured(['ROLE_ADMIN'])
+   @Secured('ROLE_ADMIN')
    def index() {
       render 'you have ROLE_ADMIN'
    }
@@ -2521,7 +2566,7 @@ def someMethod() {
 
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(['ROLE_ADMIN'])
+@Secured('ROLE_ADMIN')
 class SecureClassAnnotatedController {
 
    def index() {
@@ -2532,7 +2577,7 @@ class SecureClassAnnotatedController {
       render 'otherAction: you have ROLE_ADMIN'
    }
 
-   @Secured(['ROLE_SUPERUSER'])
+   @Secured('ROLE_SUPERUSER')
    def super() {
       render 'super: you have ROLE_SUPERUSER'
    }
@@ -2715,12 +2760,12 @@ new Requestmap(url: '/admin/**',      configAttribute: 'ROLE_ADMIN').save()
 new Requestmap(url: '/admin/role/**', configAttribute: 'ROLE_SUPERVISOR').save()
 new Requestmap(url: '/admin/user/**',
                configAttribute: 'ROLE_ADMIN,ROLE_SUPERVISOR').save()
-new Requestmap(url: '/j_spring_security_switch_user',
+new Requestmap(url: '/login/impersonate',
                configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>configAttribute</code> value can have a single value or have multiple comma-delimited values. In this example only users with <code>ROLE_ADMIN</code> or <code>ROLE_SUPERVISOR</code> can access <code>/admin/user/**</code> urls, and only users with <code>ROLE_SWITCH_USER</code> can access the switch-user url (<code>/j_spring_security_switch_user</code>) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, or <code>IS_AUTHENTICATED_ANONYMOUSLY</code> (or their corresponding SpEL expressions) with one or more roles means the user must have one of the roles and satisty the <code>IS_AUTHENTICATED</code> rule.</p>
+<p>The <code>configAttribute</code> value can have a single value or have multiple comma-delimited values. In this example only users with <code>ROLE_ADMIN</code> or <code>ROLE_SUPERVISOR</code> can access <code>/admin/user/**</code> urls, and only users with <code>ROLE_SWITCH_USER</code> can access the switch-user url (<code>/login/impersonate</code>) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, or <code>IS_AUTHENTICATED_ANONYMOUSLY</code> (or their corresponding SpEL expressions) with one or more roles means the user must have one of the roles and satisty the <code>IS_AUTHENTICATED</code> rule.</p>
 </div>
 <div class="paragraph">
 <p>Unlike the <code>application.groovy</code> Map approach (<a href="#configGroovyMap">Static Map</a>), you do not need to revise the <code>Requestmap</code> entry order because the plugin calculates the most specific rule that applies to the current request.</p>
@@ -2770,12 +2815,12 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SecureController {
 
-   @Secured(["hasRole('ROLE_ADMIN')"])
+   @Secured("hasRole('ROLE_ADMIN')")
    def someAction() {
       ...
    }
 
-   @Secured(["authentication.name == 'ralph'"])
+   @Secured("authentication.name == 'ralph'")
    def someOtherAction() {
       ...
    }
@@ -3060,7 +3105,7 @@ Logged in as &lt;sec:username/&gt;
 &lt;/sec:ifLoggedIn&gt;
 
 &lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/j_spring_security_exit_user'&gt;
+&lt;a href='${request.contextPath}/logout/impersonate'&gt;
    Resume as &lt;sec:switchedUserOriginalUsername/&gt;
 &lt;/a&gt;
 &lt;/sec:ifSwitched&gt;
@@ -3069,10 +3114,10 @@ Logged in as &lt;sec:username/&gt;
 
    &lt;sec:ifAllGranted roles='ROLE_SWITCH_USER'&gt;
 
-   &lt;form action='${request.contextPath}/j_spring_security_switch_user'
+   &lt;form action='${request.contextPath}/login/impersonate'
          method='POST'&gt;
 
-      Switch to user: &lt;input type='text' name='j_username'/&gt;&lt;br/&gt;
+      Switch to user: &lt;input type='text' name='username'/&gt;&lt;br/&gt;
 
       &lt;input type='submit' value='Switch'/&gt; &lt;/form&gt;
 
@@ -3096,7 +3141,7 @@ Logged in as &lt;sec:username/&gt;
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/j_spring_security_exit_user'&gt;
+&lt;a href='${request.contextPath}/logout/impersonate'&gt;
    Resume as &lt;sec:switchedUserOriginalUsername/&gt;
 &lt;/a&gt;
 &lt;/sec:ifSwitched&gt;</code></pre>
@@ -3363,7 +3408,7 @@ You're not a user
 </td>
 <td class="content">
 <div class="paragraph">
-<p>You are <strong>strongly</strong> discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of decrypting passwords if your database gets compromised. See <a href="#salt">Salted Passwords</a>.</p>
+<p>You are <strong>strongly</strong> discouraged from using MD5 or SHA-1 algorithms because of their well-known vulnerabilities. You should also use a salt for your passwords, which greatly increases the computational complexity of computing passwords if your database gets compromised. See <a href="#salt">Salted Passwords</a>.</p>
 </div>
 </td>
 </tr>
@@ -4198,7 +4243,7 @@ use the generated code in the User class to encode your password, change the dep
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rememberMe. parameter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">&#8216;_spring_security_remember_me&#8217;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8216;remember-me&#8217;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Login form remember-me checkbox name.</p></td>
 </tr>
 <tr>
@@ -4252,7 +4297,7 @@ use the generated code in the User class to encode your password, change the dep
 <p><code>rememberMe.cookieName</code>. Purely aesthetic as most users will not look at their cookies, but you probably want the display name to be application-specific rather than &#8220;grails_remember_me&#8221;.</p>
 </li>
 <li>
-<p><code>rememberMe.key</code>. Part of a salt when the cookie is encrypted. Changing the default makes it harder to execute brute-force attacks.</p>
+<p><code>rememberMe.key</code>. Part of a salt when the cookie is hashed. Changing the default makes it harder to execute brute-force attacks.</p>
 </li>
 <li>
 <p><code>rememberMe.tokenValiditySeconds</code>. Default is two weeks; set it to what makes sense for your application.</p>
@@ -4275,166 +4320,40 @@ use the generated code in the User class to encode your password, change the dep
 <div class="sect2">
 <h3 id="ajax">9.4. Ajax Authentication</h3>
 <div class="paragraph">
-<p>The typical pattern of using web site authentication to access restricted pages involves intercepting access requests for secure pages, redirecting to a login page (possibly off-site, for example when using <a href="http://grails.org/plugin/spring-security-openid">OpenID</a> or a Single Sign-on implementation such as <a href="http://grails.org/plugin/spring-security-cas">CAS</a>), and redirecting back to the originally-requested page after a successful login. Each page can also have a login link to allow explicit logins at any time.</p>
+<p>The typical pattern of using web site authentication to access restricted pages involves intercepting access requests for secure pages, redirecting to a login page (possibly off-site, for example when using a Single Sign-on implementation such as <a href="http://grails.org/plugin/spring-security-cas">CAS</a>), and redirecting back to the originally-requested page after a successful login. Each page can also have a login link to allow explicit logins at any time.</p>
 </div>
 <div class="paragraph">
-<p>Another option is to also have a login link on each page and to use Ajax and DHTML to present a login form within the current page in a popup. The form submits the authentication request through Ajax and displays success or error messages as appropriate.</p>
+<p>Another option is to also have a login link on each page and to use JavaScript to present a login form within the current page in a popup. The JavaScript code submits the authentication request and displays success or error messages as appropriate.</p>
 </div>
 <div class="paragraph">
-<p>The plugin supports Ajax logins, but you need to create your own GSP code. There are only a few necessary changes, and of course the sample code here is pretty basic so you should enhance it for your needs.</p>
+<p>The plugin supports Ajax logins, but you need to create your own client-side code. There are only a few necessary changes, and of course the sample code here is pretty basic so you should enhance it for your needs.</p>
 </div>
 <div class="paragraph">
-<p>The approach here involves editing your template page(s) to show &#8220;You&#8217;re logged in as &#8230;&#8203;&#8221; text if logged in and a login link if not, along with a hidden login form that is shown using DHTML.</p>
+<p>The approach here involves editing your template page(s) to show &#8220;You&#8217;re logged in as &#8230;&#8203;&#8221; text if logged in and a login link if not, along with a hidden login form that is shown using JavaScript.</p>
 </div>
 <div class="paragraph">
-<p>Here&#8217;s the updated <code>grails-app/views/layouts/main.gsp</code>:</p>
+<p>This example uses <a href="https://jquery.com/">jQuery</a> and <a href="http://jquery.iceburg.net/jqModal/">jqModal</a>, a jQuery plugin that creates and manages dialogs and popups. Download <code>jqModal.js</code> and copy it to <code>grails-app/assets/javascripts</code>, and download <code>jqModal.css</code> and copy it to <code>grails-app/assets/stylesheets</code>.</p>
+</div>
+<div class="paragraph">
+<p>Create <code>grails-app/assets/javascripts/ajaxLogin.js</code> and add this JavaScript code:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;html&gt;
+<pre class="prettyprint highlight"><code class="language-javascript" data-lang="javascript">var onLogin;
 
-&lt;head&gt;
-   &lt;title&gt;&lt;g:layoutTitle default="Grails" /&gt;&lt;/title&gt;
-   &lt;link rel="stylesheet" href="${resource(dir:'css',file:'main.css')}" /&gt;
-   &lt;link rel="shortcut icon" type="image/x-icon"
-         href="${resource(dir:'images',file:'favicon.ico')}" /&gt;
-   &lt;g:layoutHead /&gt;
-   &lt;r:layoutResources /&gt;
-&lt;/head&gt;
-
-&lt;body&gt;
-
-   &lt;div id="spinner" class="spinner" style="display:none;"&gt;
-      &lt;img src="${resource(dir:'images',file:'spinner.gif')}" alt="Spinner" /&gt;
-   &lt;/div&gt;
-
-   &lt;div id="grailsLogo" class="logo"&gt;
-      &lt;a href="http://grails.org"&gt;
-         &lt;img src="${resource(dir:'images',file:'grails_logo.png')}" alt="Grails" border="0" /&gt;
-      &lt;/a&gt;
-
-      &lt;span id='loginLink' style='position: relative; margin-right: 30px; float: right'&gt;
-      &lt;sec:ifLoggedIn&gt;
-         Logged in as &lt;sec:username/&gt; (&lt;g:link controller='logout'&gt;Logout&lt;/g:link&gt;)
-      &lt;/sec:ifLoggedIn&gt;
-      &lt;sec:ifNotLoggedIn&gt;
-         &lt;a href='#' onclick='showLogin(); return false;'&gt;Login&lt;/a&gt;
-      &lt;/sec:ifNotLoggedIn&gt;
-      &lt;/span&gt;
-
-   &lt;/div&gt;
-   &lt;!-- http://dev.iceburg.net/jquery/jqModal/ --&gt;
-   &lt;g:javascript src='jqModal.js' /&gt;
-
-   &lt;g:render template='/includes/ajaxLogin'/&gt;
-
-   &lt;g:layoutBody /&gt;
-   &lt;r:layoutResources /&gt;
-   &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Note these changes:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>The jqModal (jQuery) library is included for Ajax support and to hide and show the login form.</p>
-</li>
-<li>
-<p>There is an include of the template <code>/includes/ajaxLogin</code> (see the code below).</p>
-</li>
-<li>
-<p>There is a &lt;span&gt; positioned in the top-right that shows the username and a logout link when logged in, and a login link otherwise.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Here is the content of the login form template (<code>grails-app/views/includes/_ajaxLogin.gsp</code>). The CSS and Javascript are shown inline, but you should extract them to their own static files.</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;style&gt;
-#ajaxLogin {
-   background-color: #EEEEFF
-   display: none;
-}
-#ajaxLogin .inner {
-   width: 260px;
-   margin:0px auto;
-   text-align:left;
-   padding:10px;
-   border-top:1px dashed #499ede;
-   border-bottom:1px dashed #499ede;
-   background-color:#EEF;
-}
-#ajaxLogin .inner .fheader {
-   padding:4px;margin:3px 0px 3px 0;color:#2e3741;font-size:14px;font-weight:bold;
-}
-#ajaxLogin .inner .cssform p {
-   clear: left;
-   margin: 0;
-   padding: 5px 0 8px 0;
-   padding-left: 105px;
-   border-top: 1px dashed gray;
-   margin-bottom: 10px;
-   height: 1%;
-}
-#ajaxLogin .inner .cssform input[type='text'] {
-   width: 120px;
-}
-#ajaxLogin .inner .cssform label{
-   font-weight: bold;
-   float: left;
-   margin-left: -105px;
-   width: 100px;
-}
-#ajaxLogin .inner .login_message {color:red;}
-#ajaxLogin .inner .text_ {width:120px;}
-#ajaxLogin .inner .chk {height:12px;}
-.errorMessage { color: red; }
-&lt;/style&gt;
-
-&lt;div id='ajaxLogin' class="jqmWindow" style="z-index: 3000;"&gt;
-   &lt;div class='inner'&gt;
-      &lt;div class='fheader'&gt;Please Login..&lt;/div&gt;
-      &lt;form action='${request.contextPath}/j_spring_security_check' method='POST'
-            id='ajaxLoginForm' name='ajaxLoginForm' class='cssform'&gt;
-         &lt;p&gt;
-            &lt;label for='username'&gt;Login ID&lt;/label&gt;
-            &lt;input type='text' class='text_' name='j_username' id='username' /&gt;
-         &lt;/p&gt;
-         &lt;p&gt;
-            &lt;label for='password'&gt;Password&lt;/label&gt;
-            &lt;input type='password' class='text_' name='j_password' id='password' /&gt;
-         &lt;/p&gt;
-         &lt;p&gt;
-            &lt;label for='remember_me'&gt;Remember me&lt;/label&gt;
-            &lt;input type='checkbox' class='chk' id='remember_me'
-                   name='_spring_security_remember_me'/&gt;
-         &lt;/p&gt;
-         &lt;p&gt;
-            &lt;span class="button" id="authAjax"&gt;Login&lt;/span&gt;
-            &lt;span class="button" id="cancelLogin"&gt;Cancel&lt;/span&gt;
-         &lt;/p&gt;
-      &lt;/form&gt;
-      &lt;div style='display: none; text-align: left;' id='loginMessage'&gt;&lt;/div&gt;
-   &lt;/div&gt;
-&lt;/div&gt;
-
-&lt;script type='text/javascript'&gt;
-var onLogin;
 $.ajaxSetup({
-   beforeSend: function(xhr, event) {
-      // save the 'success' function for later use
-      onLogin = event.success;
+   beforeSend: function(jqXHR, event) {
+      if (event.url != $("#ajaxLoginForm").attr("action")) {
+         // save the 'success' function for later use if
+         // it wasn't triggered by an explicit login click
+         onLogin = event.success;
+      }
    },
    statusCode: {
-      // Set up a global AJAX error handler to handle the 401
-      // unauthorized responses. If a 401 status code comes back,
-      // the user is no longer logged-into the system and can not
-      // use it properly.
+      // Set up a global Ajax error handler to handle 401
+      // unauthorized responses. If a 401 status code is
+      // returned the user is no longer logged in (e.g. when
+      // the session times out), so re-display the login form.
       401: function() {
          showLogin();
       }
@@ -4442,58 +4361,277 @@ $.ajaxSetup({
 });
 
 function showLogin() {
-   var ajaxLogin = $('#ajaxLogin');
-   ajaxLogin.css('text-align','center');
-   // use jqModal to show and align login panel
+   var ajaxLogin = $("#ajaxLogin");
+   ajaxLogin.css("text-align", "center");
    ajaxLogin.jqmShow();
 }
 
-function cancelLogin() {
-   $('#ajaxLogin').jqmHide();
+function logout(event) {
+   event.preventDefault();
+   $.ajax({
+      url: $("#_logout").attr("href"),
+      method: "POST",
+      success: function(data, textStatus, jqXHR) {
+         window.location = "/";
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+         console.log("Logout error, textStatus: " + textStatus +
+                     ", errorThrown: " + errorThrown);
+      }
+   });
 }
 
 function authAjax() {
-   $('#loginMessage').html('Sending request ...').show();
+   $("#loginMessage").html("Sending request ...").show();
 
-   var form = $('#ajaxLoginForm');
-   var config = {
-      type: 'post',
-      url: form.attr('action'),
-      data: form.serialize(),
-      async: false,
-      dataType: 'JSON',
-      success: function(response) {
-         form[0].reset();
-         $('#loginMessage').empty();
-         $('#ajaxLogin').jqmHide();
-         if (onLogin) {
-            // execute the saved event.success function
-            onLogin(response);
+   var form = $("#ajaxLoginForm");
+   $.ajax({
+      url:       form.attr("action"),
+      method:   "POST",
+      data:      form.serialize(),
+      dataType: "JSON",
+      success: function(json, textStatus, jqXHR) {
+         if (json.success) {
+            form[0].reset();
+            $("#loginMessage").empty();
+            $("#ajaxLogin").jqmHide();
+            $("#loginLink").html(
+               'Logged in as ' + json.username +
+               ' (&lt;a href="' + $("#_logout").attr("href") +
+               '" id="logout"&gt;Logout&lt;/a&gt;)');
+            $("#logout").click(logout);
+            if (onLogin) {
+               // execute the saved event.success function
+               onLogin(json, textStatus, jqXHR);
+            }
          }
-      },
-      error: function (response) {
-         var responseText = response.responseText || '[]';
-         var json = responseText.evalJSON();
-         if (json.error) {
-            $('#loginMessage').html("&lt;span class='errorMessage'&gt;" + json.error + '&lt;/error&gt;');
+         else if (json.error) {
+            $("#loginMessage").html('&lt;span class="errorMessage"&gt;' +
+                                    json.error + "&lt;/error&gt;");
          }
          else {
-            $('#loginMessage').html(responseText);
+            $("#loginMessage").html(jqXHR.responseText);
          }
       },
-      beforeSend: function(xhr, event) {
-         //console.log("overriding default behaviour");
+      error: function(jqXHR, textStatus, errorThrown) {
+         if (jqXHR.status == 401 &amp;&amp; jqXHR.getResponseHeader("Location")) {
+            // the login request itself wasn't allowed, possibly because the
+            // post url is incorrect and access was denied to it
+            $("#loginMessage").html('&lt;span class="errorMessage"&gt;' +
+               'Sorry, there was a problem with the login request&lt;/error&gt;');
+         }
+         else {
+            var responseText = jqXHR.responseText;
+            if (responseText) {
+               var json = $.parseJSON(responseText);
+               if (json.error) {
+                  $("#loginMessage").html('&lt;span class="errorMessage"&gt;' +
+                                          json.error + "&lt;/error&gt;");
+                  return;
+               }
+            }
+            else {
+               responseText = "Sorry, an error occurred (status: " +
+                              textStatus + ", error: " + errorThrown + ")";
+            }
+            $("#loginMessage").html('&lt;span class="errorMessage"&gt;' +
+                                    responseText + "&lt;/error&gt;");
+         }
       }
-   }
-   $.ajax(config);
+   });
 }
 
 $(function() {
-   $('#ajaxLogin').jqm({modal: true, trigger: 'span.jqmTrigger'});
-   $('#authAjax').click(authAjax);
-   $('#cancelLogin').click(cancelLogin);
-});
-&lt;/script&gt;</code></pre>
+   $("#ajaxLogin").jqm({ closeOnEsc: true });
+   $("#ajaxLogin").jqmAddClose("#cancelLogin");
+   $("#ajaxLoginForm").submit(function(event) {
+      event.preventDefault();
+      authAjax();
+   });
+   $("#authAjax").click(authAjax);
+   $("#logout").click(logout);
+});</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and create <code>grails-app/assets/stylesheets/ajaxLogin.css</code> and add this CSS:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-css" data-lang="css">#ajaxLogin {
+   padding:    0px;
+   text-align: center;
+   display:    none;
+}
+
+#ajaxLogin .inner {
+   width:              400px;
+   padding-bottom:     6px;
+   margin:             60px auto;
+   text-align:         left;
+   border:             1px solid #aab;
+   background-color:   #f0f0fa;
+   -moz-box-shadow:    2px 2px 2px #eee;
+   -webkit-box-shadow: 2px 2px 2px #eee;
+   -khtml-box-shadow:  2px 2px 2px #eee;
+   box-shadow:         2px 2px 2px #eee;
+}
+
+#ajaxLogin .inner .fheader {
+   padding:          18px 26px 14px 26px;
+   background-color: #f7f7ff;
+   margin:           0px 0 14px 0;
+   color:            #2e3741;
+   font-size:        18px;
+   font-weight:      bold;
+}
+
+#ajaxLogin .inner .cssform p {
+   clear:         left;
+   margin:        0;
+   padding:       4px 0 3px 0;
+   padding-left:  105px;
+   margin-bottom: 20px;
+   height:        1%;
+}
+
+#ajaxLogin .inner .cssform input[type="text"],
+#ajaxLogin .inner .cssform input[type="password"] {
+   width: 150px;
+}
+
+#ajaxLogin .inner .cssform label {
+   font-weight:   bold;
+   float:         left;
+   text-align:    right;
+   margin-left:  -105px;
+   width:         150px;
+   padding-top:   3px;
+   padding-right: 10px;
+}
+
+.ajaxLoginButton {
+   background-color: #efefef;
+   font-weight: bold;
+   padding: 0.5em 1em;
+   display: -moz-inline-stack;
+   display: inline-block;
+   vertical-align: middle;
+   white-space: nowrap;
+   overflow: visible;
+   text-decoration: none;
+      -moz-border-radius: 0.3em;
+   -webkit-border-radius: 0.3em;
+           border-radius: 0.3em;
+}
+
+.ajaxLoginButton:hover, .ajaxLoginButton:focus {
+   background-color: #999999;
+   color: #ffffff;
+}
+
+#ajaxLogin .inner .login_message {
+   padding: 6px 25px 20px 25px;
+   color:   #c33;
+}
+
+#ajaxLogin .inner .text_ {
+   width: 120px;
+}
+
+#ajaxLogin .inner .chk {
+   height: 12px;
+}
+
+.errorMessage {
+   color: red;
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There&#8217;s no need to register the JavaScript files in <code>grails-app/assets/javascripts/application.js</code> if you have this <code>require_tree</code> directive:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-javascript" data-lang="javascript">//= require_tree .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>but you can explicitly include them if you want. Register the two CSS files in <code>/grails-app/assets/stylesheets/application.css</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-css" data-lang="css">/*
+ ...
+ *= require ajaxLogin
+ *= require jqModal
+ ...
+ */</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>We&#8217;ll need some GSP code to define the HTML, so create <code>grails-app/views/includes/_ajaxLogin.gsp</code> and add this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;span id="logoutLink" style="display: none;"&gt;
+&lt;g:link elementId='_logout' controller='logout'&gt;Logout&lt;/g:link&gt;
+&lt;/span&gt;
+
+&lt;span id="loginLink" style="position: relative; margin-right: 30px; float: right"&gt;
+&lt;sec:ifLoggedIn&gt;
+   Logged in as &lt;sec:username/&gt; (&lt;g:link elementId='logout' controller='logout'&gt;Logout&lt;/g:link&gt;)
+&lt;/sec:ifLoggedIn&gt;
+&lt;sec:ifNotLoggedIn&gt;
+   &lt;a href="#" onclick="showLogin(); return false;"&gt;Login&lt;/a&gt;
+&lt;/sec:ifNotLoggedIn&gt;
+&lt;/span&gt;
+
+&lt;div id="ajaxLogin" class="jqmWindow" style="z-index: 3000;"&gt;
+   &lt;div class="inner"&gt;
+      &lt;div class="fheader"&gt;Please Login..&lt;/div&gt;
+      &lt;form action="${request.contextPath}/login/authenticate" method="POST"
+            id="ajaxLoginForm" name="ajaxLoginForm" class="cssform" autocomplete="off"&gt;
+         &lt;p&gt;
+            &lt;label for="username"&gt;Username:&lt;/label&gt;
+            &lt;input type="text" class="text_" name="username" id="username" /&gt;
+         &lt;/p&gt;
+         &lt;p&gt;
+            &lt;label for="password"&gt;Password&lt;/label&gt;
+            &lt;input type="password" class="text_" name="password" id="password" /&gt;
+         &lt;/p&gt;
+         &lt;p&gt;
+            &lt;label for="remember_me"&gt;Remember me&lt;/label&gt;
+            &lt;input type="checkbox" class="chk" id="remember_me" name="remember-me"/&gt;
+         &lt;/p&gt;
+         &lt;p&gt;
+            &lt;input type="submit" id="authAjax" name="authAjax"
+                   value="Login" class="ajaxLoginButton" /&gt;
+            &lt;input type="button" id="cancelLogin" value="Cancel"
+                   class="ajaxLoginButton" /&gt;
+         &lt;/p&gt;
+      &lt;/form&gt;
+      &lt;div style="display: none; text-align: left;" id="loginMessage"&gt;&lt;/div&gt;
+   &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>And finally, update the <code>grails-app/views/layouts/main.gsp</code> layout to include <code>_ajaxLogin.gsp</code>, adding it after the <code>&lt;body&gt;</code> tag:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;html lang="en" class="no-js"&gt;
+   &lt;head&gt;
+      ...
+      &lt;g:layoutHead/&gt;
+   &lt;/head&gt;
+   &lt;body&gt;
+      &lt;g:render template='/includes/ajaxLogin'/&gt;
+      ...
+      &lt;g:layoutBody/&gt;
+   &lt;/body&gt;
+&lt;/html&gt;</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -4502,7 +4640,10 @@ $(function() {
 <div class="ulist">
 <ul>
 <li>
-<p>The form posts to the same URL as the regular form, <code>j_spring_security_check</code>. In fact, the form is identical, including the remember-me checkbox, except that the submit button is replaced with a hyperlink.</p>
+<p>There is a &lt;span&gt; positioned in the top-right that shows the username and a logout link when logged in, and a login link otherwise.</p>
+</li>
+<li>
+<p>The form posts to the same URL as the regular form, <code>/login/authenticate</code>, and is mostly the same except for the addition of a &#8220;Cancel&#8221; button (you can also dismiss the dialog by clicking outside of it or with the escape key).</p>
 </li>
 <li>
 <p>Error messages are displayed within the popup &lt;div&gt;.</p>
@@ -4511,20 +4652,21 @@ $(function() {
 <p>Because there is no page redirect after successful login, the Javascript replaces the login link to give a visual indication that the user is logged in.</p>
 </li>
 <li>
-<p>The original jQuery &#8220;success&#8221; function is retried with the results from the original request.</p>
-</li>
+<p>The Logout link also uses Ajax to submit a POST request to the standard logout url and redirect you to the index page after the request finishes.</p>
+<div class="ulist">
+<ul>
 <li>
-<p>Details of logout are not shown; you do this by redirecting the user to <code>/j_spring_security_logout</code>.</p>
+<p>Note that in the JavaScript <code>logout</code> function, you&#8217;ll need to change the url in the <code>success</code> callback to the correct post-logout value, e.g. <code>window.location = "/appname";</code> if you have configured the contextPath to be "/appname"</p>
+</li>
+</ul>
+</div>
 </li>
 </ul>
 </div>
 <div class="sect3">
 <h4 id="how-does-ajax-login-work">9.4.1. How Does Ajax login Work?</h4>
 <div class="paragraph">
-<p>Most Ajax libraries (Prototype, JQuery, and Dojo as of v2.1) include an <code>X-Requested-With</code> header that indicates that the request was made by <code>XMLHttpRequest</code> instead of being triggered by clicking a regular hyperlink or form submit button. The plugin uses this header to detect Ajax login requests, and uses subclasses of some of Spring Security&#8217;s classes to use different redirect urls for Ajax requests than regular requests. Instead of showing full pages, <code>LoginController</code> has JSON-generating methods <code>ajaxSuccess()</code>, <code>ajaxDenied()</code>, and <code>authfail()</code> that generate JSON that the login Javascript code can use to appropriately display success or error messages.</p>
-</div>
-<div class="paragraph">
-<p>You can see the Ajax-aware actions in <code>LoginController</code>, specifically <code>ajaxSuccess</code> and <code>ajaxDenied</code>, which send JSON responses that can be used by client JavaScript code. Also <code>authfail</code> will check whether the authentication request used Ajax and will render a JSON error response if it did.</p>
+<p>Most Ajax libraries include an <code>X-Requested-With</code> header that indicates that the request was made by <code>XMLHttpRequest</code> instead of being triggered by clicking a regular hyperlink or form submit button. The plugin uses this header to detect Ajax login requests, and uses subclasses of some of Spring Security&#8217;s classes to use different redirect urls for Ajax requests than regular requests. Instead of showing full pages, <code>LoginController</code> has JSON-generating methods <code>ajaxSuccess()</code>, <code>ajaxDenied()</code>, and <code>authfail()</code> that generate JSON that the login Javascript code can use to appropriately display success or error messages.</p>
 </div>
 <div class="paragraph">
 <p>To summarize, the typical flow would be</p>
@@ -4535,7 +4677,7 @@ $(function() {
 <p>click the link to display the login form</p>
 </li>
 <li>
-<p>enter authentication details and click login</p>
+<p>enter authentication details and click Login</p>
 </li>
 <li>
 <p>the form is submitted using an Ajax request</p>
@@ -4576,72 +4718,6 @@ $(function() {
 <p>note that both a successful and an unsuccessful login will trigger the <code>onSuccess</code> Ajax callback; the <code>onError</code> callback will only be triggered if there&#8217;s an exception or network issue</p>
 </li>
 </ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="triggering-an-ajax-login">9.4.2. Triggering an Ajax login</h4>
-<div class="paragraph">
-<p>So far we&#8217;ve discussed explicit Ajax logins where the user can view some of the site&#8217;s pages but you&#8217;ve added a link to an in-page login form. An attempt to load a secure page will trigger a redirect to the standard login page. But if you&#8217;re using Ajax in your pages you should handle the case where the request is secure and requires being logged in. This will also handle session timeouts where the user doesn&#8217;t have a remember-me cookie; you can pop up a login dialog in the page.</p>
-</div>
-<div class="paragraph">
-<p>For example consider this Ajax form:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;g:form action="ajaxAdd"&gt;
-   &lt;g:textArea id='postContent' name="content"
-               rows="3" cols="50" onkeydown="updateCounter()" /&gt;
-   &lt;br/&gt;
-   &lt;g:submitToRemote value="Post"
-      url="[controller: 'post', action: 'addPostAjax']"
-      update="[success: 'firstPost']"
-      onSuccess="clearPost(e)"
-      onLoading="showSpinner(true)"
-      onComplete="showSpinner(false)"
-      on401="showLogin();"/&gt;
-      &lt;img id="spinner" style="display: none"
-           src="&lt;g:createLinkTo dir='/images' file='spinner.gif'/&gt;"
-   /&gt;
-&lt;/g:form&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>or</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;script&gt;
-var detailConfig = {
-   type: 'post',
-   async: false,
-   returnType: 'html',
-   url: '/post/addPostAjax',
-   success: function(data) {
-      $('#firstPost').html(data);
-      clearPost(e);
-   }
-};
-
-$.ajax(detailConfig);
-&lt;/script&gt;</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Most of the attributes are typical, but the <code>on401</code> attribute is the key to making Ajax logins work. As long as the <code>LoginController</code> sends a 401 error code the need to authenticate can be easily handled.</p>
-</div>
-<div class="paragraph">
-<p>Note that depending on the version of the plugin that you&#8217;re using, you may need to add the <code>authAjax</code> method to your <code>LoginController</code>:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">def authAjax() {
-   response.setHeader 'Location', SpringSecurityUtils.securityConfig.auth.ajaxLoginFormUrl
-   response.sendError HttpServletResponse.SC_UNAUTHORIZED
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>and this requires an import for <code>javax.servlet.http.HttpServletResponse</code>.</p>
 </div>
 </div>
 </div>
@@ -4727,9 +4803,7 @@ beans = {
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">package com.mycompany.myapp
 
 import grails.plugin.springsecurity.userdetails.GrailsUser
-
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.User
 
 class MyUserDetails extends GrailsUser {
 
@@ -4753,10 +4827,10 @@ class MyUserDetails extends GrailsUser {
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">package com.mycompany.myapp
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.plugin.springsecurity.userdetails.GrailsUserDetailsService
+import grails.plugin.springsecurity.userdetails.NoStackUsernameNotFoundException
 import grails.transaction.Transactional
-import org.springframework.security.core.authority.GrantedAuthorityImpl
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 
@@ -4767,10 +4841,10 @@ class MyUserDetailsService implements GrailsUserDetailsService {
     * one role, so we give a user with no granted roles this one which gets
     * past that restriction but doesn't grant anything.
     */
-   static final List NO_ROLES = [new GrantedAuthorityImpl(SpringSecurityUtils.NO_ROLE)]
+   static final List NO_ROLES = [new SimpleGrantedAuthority(SpringSecurityUtils.NO_ROLE)]
 
    UserDetails loadUserByUsername(String username, boolean loadRoles)
-            throws UsernameNotFoundException {
+         throws UsernameNotFoundException {
       return loadUserByUsername(username)
    }
 
@@ -4778,16 +4852,16 @@ class MyUserDetailsService implements GrailsUserDetailsService {
    UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
       User user = User.findByUsername(username)
-      if (!user) throw new UsernameNotFoundException('User not found', username)
+      if (!user) throw new NoStackUsernameNotFoundException()
 
       def authorities = user.authorities.collect {
-         new GrantedAuthorityImpl(it.authority)
+         new SimpleGrantedAuthority(it.authority)
       }
 
       return new MyUserDetails(user.username, user.password, user.enabled,
-         !user.accountExpired, !user.passwordExpired,
-         !user.accountLocked, authorities ?: NO_ROLES, user.id,
-         user.firstName + " " + user.lastName)
+            !user.accountExpired, !user.passwordExpired,
+            !user.accountLocked, authorities ?: NO_ROLES, user.id,
+            user.firstName + " " + user.lastName)
    }
 }</code></pre>
 </div>
@@ -5339,17 +5413,17 @@ class ExpirePasswordsJob {
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">apf.filterProcessesUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">'/j_spring_security_check'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'/login/authenticate'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Login form post URL, intercepted by Spring Security filter.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">apf.usernameParameter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">'j_username'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'username'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Login form username parameter.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">apf.passwordParameter</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">'j_password'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'password'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Login form password parameter.</p></td>
 </tr>
 <tr>
@@ -5449,7 +5523,7 @@ class ExpirePasswordsJob {
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">logout.filterProcessesUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">'/j_spring_security_logout'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'/logoff'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Logout URL, intercepted by Spring Security filter.</p></td>
 </tr>
 <tr>
@@ -5623,7 +5697,7 @@ import grails.plugin.springsecurity.annotation.Secured
 
 class SomeController {
 
-   @Secured(['ROLE_ADMIN'])
+   @Secured('ROLE_ADMIN')
    def someAction() {
       ...
    }
@@ -5641,9 +5715,9 @@ class SomeController {
 <div class="paragraph">
 <p>For example, running</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry</code></pre>
+<pre>$ grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -5716,14 +5790,14 @@ class RoleHierarchyEntry implements Serializable {
 <div class="sect2">
 <h3 id="switching-to-another-user">15.1. Switching to Another User</h3>
 <div class="paragraph">
-<p>To switch to another user, typically you create a form that submits to <code>/j_spring_security_switch_user</code>:</p>
+<p>To switch to another user, typically you create a form that submits to <code>/login/impersonate</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;sec:ifAllGranted roles='ROLE_SWITCH_USER'&gt;
 
-   &lt;form action='/j_spring_security_switch_user' method='POST'&gt;
-      Switch to user: &lt;input type='text' name='j_username'/&gt; &lt;br/&gt;
+   &lt;form action='/login/impersonate' method='POST'&gt;
+      Switch to user: &lt;input type='text' name='username'/&gt; &lt;br/&gt;
       &lt;input type='submit' value='Switch'/&gt;
    &lt;/form&gt;
 
@@ -5737,7 +5811,7 @@ class RoleHierarchyEntry implements Serializable {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    ...
-   [pattern: '/j_spring_security_switch_user', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
+   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]</code></pre>
 </div>
 </div>
@@ -5746,7 +5820,7 @@ class RoleHierarchyEntry implements Serializable {
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">new Requestmap(url: '/j_spring_security_switch_user',
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">new Requestmap(url: '/login/impersonate',
                configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save(flush: true)</code></pre>
 </div>
 </div>
@@ -5757,7 +5831,7 @@ class RoleHierarchyEntry implements Serializable {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails.plugin.springsecurity.interceptUrlMap = [
    ...
-   [pattern: '/j_spring_security_switch_user', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
+   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]</code></pre>
 </div>
 </div>
@@ -5765,12 +5839,12 @@ class RoleHierarchyEntry implements Serializable {
 <div class="sect2">
 <h3 id="switching-back-to-original-user">15.2. Switching Back to Original User</h3>
 <div class="paragraph">
-<p>To resume as the original user, navigate to <code>/j_spring_security_exit_user</code>.</p>
+<p>To resume as the original user, navigate to <code>/logout/impersonate</code>.</p>
 </div>
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/j_spring_security_exit_user'&gt;
+&lt;a href='${request.contextPath}/logout/impersonate'&gt;
    Resume as &lt;sec:switchedUserOriginalUsername/&gt;
 &lt;/a&gt;
 &lt;/sec:ifSwitched&gt;</code></pre>
@@ -5811,12 +5885,12 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...</code></pre>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">switchUser. switchUserUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">'/j_spring_security_switch_user'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'/login/impersonate'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL to access (via GET or POST) to switch to another user.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">switchUser. exitUserUrl</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">'/j_spring_security_exit_user'</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">'/logout/impersonate'</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">URL to access to switch to another user.</p></td>
 </tr>
 <tr>
@@ -5849,7 +5923,7 @@ Logged in as &lt;sec:username/&gt;
 &lt;/sec:ifLoggedIn&gt;
 
 &lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/j_spring_security_exit_user'&gt;
+&lt;a href='${request.contextPath}/logout/impersonate'&gt;
    Resume as &lt;sec:switchedUserOriginalUsername/&gt;
 &lt;/a&gt;
 &lt;/sec:ifSwitched&gt;
@@ -5857,8 +5931,8 @@ Logged in as &lt;sec:username/&gt;
 &lt;sec:ifNotSwitched&gt;
    &lt;sec:ifAllGranted roles='ROLE_SWITCH_USER'&gt;
 
-   &lt;form action='${request.contextPath}/j_spring_security_switch_user' method='POST'&gt;
-      Switch to user: &lt;input type='text' name='j_username'/&gt;&lt;br/&gt;
+   &lt;form action='${request.contextPath}/login/impersonate' method='POST'&gt;
+      Switch to user: &lt;input type='text' name='username'/&gt;&lt;br/&gt;
       &lt;input type='submit' value='Switch'/&gt;
    &lt;/form&gt;
 
@@ -5971,16 +6045,25 @@ Logged in as &lt;sec:username/&gt;
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">import com.mycompany.myapp.MyFilter
+import org.springframework.boot.context.embedded.FilterRegistrationBean
 
 beans = {
    myFilter(MyFilter) {
       // properties
    }
+
+   myFilterDeregistrationBean(FilterRegistrationBean) {
+      filter = ref('myFilter')
+      enabled = false
+   }
 }</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>and then register it in <code>grails-app/init/BootStrap.groovy</code>:</p>
+<p>Note that in addition to the filter bean, there is also a disabled <code>FilterRegistrationBean</code> registered. This is needed because Spring Boot automatically registers filter beans in the <code>ApplicationContext</code>, so you must register your own <code>FilterRegistrationBean</code> and set its <code>enabled</code> property to <code>false</code> to prevent this.</p>
+</div>
+<div class="paragraph">
+<p>Then register the filter in <code>grails-app/init/BootStrap.groovy</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -6507,10 +6590,10 @@ beans = {
 <h3 id="usingControllerAnnotations">23.1. Using Controller Annotations to Secure URLs</h3>
 <div class="sect3">
 <h4 id="1-create-your-grails-application">23.1.1. 1. Create your Grails application.</h4>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails create-app bookstore
-$ cd bookstore</code></pre>
+<pre>$ grails create-app bookstore
+$ cd bookstore</pre>
 </div>
 </div>
 </div>
@@ -6520,7 +6603,7 @@ $ cd bookstore</code></pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
+   compile 'org.grails.plugins:spring-security-core:3.0.0'
    ...
 }</code></pre>
 </div>
@@ -6528,17 +6611,17 @@ $ cd bookstore</code></pre>
 <div class="paragraph">
 <p>Run the compile command to resolve dependencies and ensure everything is correct:</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails compile</code></pre>
+<pre>$ grails compile</pre>
 </div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="3-create-the-user-and-role-domain-classes">23.1.3. 3. Create the User and Role domain classes.</h4>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails s2-quickstart com.testapp User Role</code></pre>
+<pre>$ grails s2-quickstart com.testapp User Role</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6829,9 +6912,9 @@ class UserRole implements Serializable {
 </div>
 <div class="sect3">
 <h4 id="4-create-a-controller-that-will-be-restricted-by-role">23.1.4. 4. Create a controller that will be restricted by role.</h4>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails create-controller com.testapp.Secure</code></pre>
+<pre>$ grails create-controller com.testapp.Secure</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6891,17 +6974,17 @@ class BootStrap {
 </div>
 <div class="sect3">
 <h4 id="6-start-the-server">23.1.6. 6. Start the server.</h4>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails run-app</code></pre>
+<pre>$ grails run-app</pre>
 </div>
 </div>
 </div>
 <div class="sect3">
-<h4 id="7-before-you-secure-the-page-navigate-to-a-href-http-localhost-8080-secure-http-localhost-8080-secure-a-to-verify-that-you-cannot-access-see-the-page-yet-you-will-be-redirected-to-the-login-page-but-after-a-successful-authentication-log-in-with-the-username-and-password-you-used-for-the-test-user-in-bootstrap-groovy-you-will-see-an-error-page">23.1.7. 7. Before you secure the page, navigate to <a href="http://localhost:8080/secure">http://localhost:8080/secure</a> to verify that you cannot access see the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:</h4>
-<div class="listingblock">
+<h4 id="7-before-you-secure-the-page-navigate-to-a-href-http-localhost-8080-secure-class-bare-http-localhost-8080-secure-a-to-verify-that-you-cannot-access-see-the-page-yet-you-will-be-redirected-to-the-login-page-but-after-a-successful-authentication-log-in-with-the-username-and-password-you-used-for-the-test-user-in-bootstrap-groovy-you-will-see-an-error-page">23.1.7. 7. Before you secure the page, navigate to <a href="http://localhost:8080/secure" class="bare">http://localhost:8080/secure</a> to verify that you cannot access see the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:</h4>
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">Sorry, you're not authorized to view this page.</code></pre>
+<pre>Sorry, you're not authorized to view this page.</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6943,7 +7026,7 @@ class SecureController {
 </div>
 </div>
 <div class="sect3">
-<h4 id="9-shut-down-the-app-and-run-code-grails-run-app-code-again-and-navigate-again-to-a-href-http-localhost-8080-secure-http-localhost-8080-secure-a">23.1.9. 9. Shut down the app and run <code>grails run-app</code> again, and navigate again to <a href="http://localhost:8080/secure">http://localhost:8080/secure</a>.</h4>
+<h4 id="9-shut-down-the-app-and-run-code-grails-run-app-code-again-and-navigate-again-to-a-href-http-localhost-8080-secure-class-bare-http-localhost-8080-secure-a">23.1.9. 9. Shut down the app and run <code>grails run-app</code> again, and navigate again to <a href="http://localhost:8080/secure" class="bare">http://localhost:8080/secure</a>.</h4>
 <div class="paragraph">
 <p>This time you should again be able to see the secure page after successfully authenticating.</p>
 </div>
@@ -6951,21 +7034,21 @@ class SecureController {
 <div class="sect3">
 <h4 id="10-test-the-remember-me-functionality">23.1.10. 10. Test the Remember Me functionality.</h4>
 <div class="paragraph">
-<p>Check the checkbox, and once you&#8217;ve tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a cookie is stored, you should not need to log in again. Logout at any time by navigating to <a href="http://localhost:8080/logout">http://localhost:8080/logout</a>.</p>
+<p>Check the checkbox, and once you&#8217;ve tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a cookie is stored, you should not need to log in again. Logout at any time by navigating to <a href="http://localhost:8080/logout" class="bare">http://localhost:8080/logout</a>.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="11-optionally-create-a-crud-ui-to-work-with-users-and-roles">23.1.11. 11. Optionally, create a CRUD UI to work with users and roles.</h4>
 <div class="sect4">
 <h5 id="run-grails-generate-all-for-the-domain-classes">Run grails generate-all for the domain classes:</h5>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails generate-all com.testapp.User</code></pre>
+<pre>$ grails generate-all com.testapp.User</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">$ grails generate-all com.testapp.Role</code></pre>
+<pre>$ grails generate-all com.testapp.Role</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7188,30 +7271,30 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 <div class="paragraph">
 <p>The general format is:</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME [REQUESTMAP_CLASS_NAME] [--groupClassName=GROUP_CLASS_NAME]</code></pre>
+<pre>grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME [REQUESTMAP_CLASS_NAME] [--groupClassName=GROUP_CLASS_NAME]</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="title">Examples</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-quickstart com.yourapp User Role</code></pre>
+<pre>grails s2-quickstart com.yourapp User Role</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup</code></pre>
+<pre>grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-quickstart com.yourapp Person Authority Requestmap</code></pre>
+<pre>grails s2-quickstart com.yourapp Person Authority Requestmap</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-quickstart --uiOnly</code></pre>
+<pre>grails s2-quickstart --uiOnly</pre>
 </div>
 </div>
 <div class="ulist">
@@ -7229,15 +7312,15 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 <div class="title">Purpose</div>
 <p>Creates a persistent token domain class for storing remember-me cookie information in the database. The general format is:</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-create-persistent-token &lt;classname&gt;</code></pre>
+<pre>grails s2-create-persistent-token &lt;classname&gt;</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="title">Example</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-create-persistent-token com.yourapp.PersistentLogin</code></pre>
+<pre>grails s2-create-persistent-token com.yourapp.PersistentLogin</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7251,15 +7334,15 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 <div class="title">Purpose</div>
 <p>Creates a persistent role hierarchy entry domain class for storing role hierarchy information in the database. The general format is:</p>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-create-role-hierarchy-entry &lt;classname&gt;</code></pre>
+<pre>grails s2-create-role-hierarchy-entry &lt;classname&gt;</pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="literalblock">
 <div class="title">Example</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry</code></pre>
+<pre>grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7272,8 +7355,8 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.0.M2<br>
-Last updated 2015-11-23 13:40:39 -05:00
+Version 3.0.0<br>
+Last updated 2015-12-08 05:16:48 -05:00
 </div>
 </div>
 </body>
