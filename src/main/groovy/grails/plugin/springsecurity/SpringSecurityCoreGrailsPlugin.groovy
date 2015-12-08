@@ -121,6 +121,7 @@ import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilt
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.IpAddressFilter
 import grails.plugins.Plugin
+import grails.util.Metadata
 import groovy.util.logging.Slf4j
 
 /**
@@ -194,7 +195,17 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			filter = ref('springSecurityFilterChain')
 			urlPatterns = ['/*']
 			dispatcherTypes = EnumSet.of(DispatcherType.ERROR, DispatcherType.REQUEST)
-			order = Ordered.HIGHEST_PRECEDENCE + 100 // after grailsWebRequestFilter
+
+			// The filter chain has to be after grailsWebRequestFilter, but its order changed
+			// in 3.1 (from Ordered.HIGHEST_PRECEDENCE + 30 (-2147483618) to
+			// FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER + 30 (30))
+			String grailsVersion = Metadata.current.getGrailsVersion()
+			if (grailsVersion.startsWith('3.0')) {
+				order = Ordered.HIGHEST_PRECEDENCE + 100
+			}
+			else {
+				order = 100 // FilterRegistrationBean.REQUEST_WRAPPER_FILTER_MAX_ORDER + 100
+			}
 		}
 
 		if (conf.useHttpSessionEventPublisher) {
