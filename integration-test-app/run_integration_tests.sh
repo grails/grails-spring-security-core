@@ -6,4 +6,4 @@ cd "$DIR"
 set -e
 
 rm -rf build
-./gradlew clean check --stacktrace
+./gradlew -q clean check --stacktrace

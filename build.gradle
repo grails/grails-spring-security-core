@@ -124,5 +124,5 @@ test {
 		events 'failed', 'standardOut', 'standardError'
 	}
 
-	beforeTest { descriptor -> logger.lifecycle " -- $descriptor" }
+	beforeTest { descriptor -> logger.quiet " -- $descriptor" }
 }
