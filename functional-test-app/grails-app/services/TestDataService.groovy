@@ -10,15 +10,13 @@ import rest.Movie
 
 class TestDataService {
 
-	def grailsApplication
 	def dataSource
+	def grailsApplication
 
 	private static final List<String> URIS_FOR_REQUESTMAPS = [
-		'/', '/error', '/index', '/index.gsp', '/shutdown', '/assets/**', '/**/js/**', '/**/css/**', '/**/images/**', '/**/favicon.ico',
-		'/login', '/login/**', '/logout', '/logout/**',
-		'/hack', '/hack/**', '/tagLibTest', '/tagLibTest/**',
-		'/testRequestmap', '/testRequestmap/**',
-		'/testUser', '/testUser/**', '/testRole', '/testRole/**', '/testData/**', '/dbconsole/**', '/dbconsole', '/assets/**']
+		'/', '/**/css/**', '/**/favicon.ico', '/**/images/**', '/**/js/**', '/assets/**', '/dbconsole', '/dbconsole/**',
+		'/error', '/hack/**', '/index', '/index.gsp', '/login', '/login/**', '/logout', '/shutdown', '/tagLibTest/**',
+		'/testData/**', '/testRequestmap', '/testRequestmap/**', '/testRole', '/testRole/**', '/testUser', '/testUser/**']
 
 	void returnToInitialState() {
 		truncateTablesAndRetry 3, false

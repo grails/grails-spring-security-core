@@ -39,9 +39,11 @@ class BootStrap {
 			grailsUrlMappingsHolder.registerController cc
 		}
 
-		// redo annotation parsing so the correct urls are used
-		AnnotationFilterInvocationDefinition afid = objectDefinitionSource
-		afid.initialize SpringSecurityUtils.securityConfig.controllerAnnotations.staticRules, grailsUrlMappingsHolder,
-				grailsApplication.controllerClasses, grailsApplication.domainClasses
+		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
+			// redo annotation parsing so the correct urls are used
+			AnnotationFilterInvocationDefinition afid = objectDefinitionSource
+			afid.initialize SpringSecurityUtils.securityConfig.controllerAnnotations.staticRules, grailsUrlMappingsHolder,
+					grailsApplication.controllerClasses, grailsApplication.domainClasses
+		}
 	}
 }

@@ -1,43 +1,43 @@
 grails {
 	plugin {
 		springsecurity {
-			debug {
-				useFilter = true
-			}
-			authority {
-				className = 'com.testapp.TestRole'
-			}
-			password {
-				algorithm = 'SHA-256'
-			}
+			authority.className = 'com.testapp.TestRole'
+			debug.useFilter = true
+			password.algorithm = 'SHA-256'
 			rejectIfNoRule = false
-			requestMap {
-				className = 'com.testapp.TestRequestmap'
-			}
+			requestMap.className = 'com.testapp.TestRequestmap'
 			userLookup {
 				authorityJoinClassName = 'com.testapp.TestUserTestRole'
 				userDomainClassName = 'com.testapp.TestUser'
 			}
-			controllerAnnotations {
-				staticRules = [
-					[pattern: '/login/impersonate',  access: 'ROLE_ADMIN'],
-					[pattern: '/logout/impersonate', access: 'permitAll'],
-					[pattern: '/',                   access: 'permitAll'],
-					[pattern: '/error',              access: 'permitAll'],
-					[pattern: '/index',              access: 'permitAll'],
-					[pattern: '/index.gsp',          access: 'permitAll'],
-					[pattern: '/shutdown',           access: 'permitAll'],
-					[pattern: '/**/js/**',           access: 'permitAll'],
-					[pattern: '/**/css/**',          access: 'permitAll'],
-					[pattern: '/**/images/**',       access: 'permitAll'],
-					[pattern: '/**/favicon.ico',     access: 'permitAll'],
-					[pattern: '/dbconsole/**',       access: 'permitAll'],
-					[pattern: '/dbconsole',          access: 'permitAll'],
-					[pattern: '/assets/**',          access: 'permitAll'],
-					[pattern: '/securityinfo',       access: 'permitAll'],
-					[pattern: '/securityinfo/**',    access: 'permitAll']
-				]
-			}
+
+			controllerAnnotations.staticRules = [
+				[pattern: '/login/impersonate',  access: 'ROLE_ADMIN'],
+				[pattern: '/logout/impersonate', access: 'permitAll'],
+				[pattern: '/',                   access: 'permitAll'],
+				[pattern: '/error',              access: 'permitAll'],
+				[pattern: '/index',              access: 'permitAll'],
+				[pattern: '/index.gsp',          access: 'permitAll'],
+				[pattern: '/shutdown',           access: 'permitAll'],
+				[pattern: '/**/js/**',           access: 'permitAll'],
+				[pattern: '/**/css/**',          access: 'permitAll'],
+				[pattern: '/**/images/**',       access: 'permitAll'],
+				[pattern: '/**/favicon.ico',     access: 'permitAll'],
+				[pattern: '/dbconsole/**',       access: 'permitAll'],
+				[pattern: '/dbconsole',          access: 'permitAll'],
+				[pattern: '/assets/**',          access: 'permitAll'],
+				[pattern: '/securityinfo',       access: 'permitAll'],
+				[pattern: '/securityinfo/**',    access: 'permitAll']
+			]
+
+			filterChain.chainMap = [
+				[pattern: '/assets/**',      filters: 'none'],
+				[pattern: '/**/js/**',       filters: 'none'],
+				[pattern: '/**/css/**',      filters: 'none'],
+				[pattern: '/**/images/**',   filters: 'none'],
+				[pattern: '/**/favicon.ico', filters: 'none'],
+				[pattern: '/**',             filters: 'JOINED_FILTERS']
+			]
 		}
 	}
 }

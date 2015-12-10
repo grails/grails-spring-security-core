@@ -7,7 +7,7 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
 	protected void resetDatabase() {
 		super.resetDatabase()
-		go browser.baseUrl + 'testData/addTestUsers'
+		go 'testData/addTestUsers'
 	}
 
 	void 'should redirect to login page for anonymous'() {

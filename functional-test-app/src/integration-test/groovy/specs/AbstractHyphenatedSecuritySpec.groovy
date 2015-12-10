@@ -3,8 +3,8 @@ package specs
 abstract class AbstractHyphenatedSecuritySpec extends AbstractSecuritySpec {
 
 	protected void resetDatabase() {
-		go browser.baseUrl + 'test-data/reset'
-		go browser.baseUrl + 'test-data/add-test-users'
+		go 'test-data/reset'
+		go 'test-data/add-test-users'
 	}
 
 	protected String getSessionValue(String name) {

@@ -36,11 +36,11 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	}
 
 	protected void resetDatabase() {
-		go browser.baseUrl + 'testData/reset'
+		go 'testData/reset'
 	}
 
 	protected String getContent(String url) {
-		go browser.baseUrl + url
+		go url
 		$().text()
 	}
 
