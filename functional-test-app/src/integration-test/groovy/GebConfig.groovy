@@ -17,7 +17,7 @@ driver = { new PhantomJSDriver(new DesiredCapabilities()) }
 
 reportsDir = new File('build/geb-reports')
 baseUrl = 'http://localhost:8238/'
-quitCachedDriverOnShutdown = false
+quitCachedDriverOnShutdown = true
 
 environments {
 
