@@ -117,13 +117,13 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		go 'secure'
 
 		then:
-		assertContentContains 'was denied as public invocations are not allowed via this interceptor'
+		at LoginPage
 
 		when:
 		go 'secure/expression'
 
 		then:
-		assertContentContains 'was denied as public invocations are not allowed via this interceptor'
+		at LoginPage
 	}
 
 	void 'create requestMaps'() {
@@ -134,7 +134,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		then:
 		at ListRequestmapPage
 		def initialSize = requestmapRows.size()
-		initialSize == 28
+		initialSize == 20
 
 		when:
 		newRequestmapButton.click()

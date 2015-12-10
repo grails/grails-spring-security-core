@@ -7,13 +7,13 @@ import pages.requestmap.ShowRequestmapPage
 
 class RequestmapSpec extends AbstractSecuritySpec {
 
-	void 'there are 28 initially'() {
+	void 'there are 20 initially'() {
 		when:
 		go 'testRequestmap/list?max=100'
 
 		then:
 		at ListRequestmapPage
-		requestmapRows.size() == 28
+		requestmapRows.size() == 20
 	}
 
 	void 'add a requestmap'() {
@@ -39,7 +39,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 
 		then:
 		at ListRequestmapPage
-		requestmapRows.size() == 29
+		requestmapRows.size() == 21
 	}
 
 	void 'edit the details'() {
@@ -50,7 +50,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		at ListRequestmapPage
 
 		when:
-		requestmapRow(26).showLink.click()
+		requestmapRow(19).showLink.click()
 
 		then:
 		at ShowRequestmapPage
@@ -80,7 +80,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		at ListRequestmapPage
 
 		when:
-		requestmapRow(26).showLink.click()
+		requestmapRow(19).showLink.click()
 
 		then:
 		at ShowRequestmapPage
@@ -97,6 +97,6 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		go 'testRequestmap/list?max=100'
 
 		then:
-		requestmapRows.size() == 28
+		requestmapRows.size() == 20
 	}
 }

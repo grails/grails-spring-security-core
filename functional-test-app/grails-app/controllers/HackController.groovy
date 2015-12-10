@@ -22,4 +22,8 @@ class HackController {
 		userCache.removeUserFromCache user.username
 		render 'setUserProperty: OK'
 	}
+
+	def blankPage() {
+		render ''
+	}
 }

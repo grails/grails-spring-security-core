@@ -3,8 +3,8 @@ grails {
 		springsecurity {
 			authority.className = 'com.testapp.TestRole'
 			debug.useFilter = true
+			logout.afterLogoutUrl = '/hack/blankPage'
 			password.algorithm = 'SHA-256'
-			rejectIfNoRule = false
 			requestMap.className = 'com.testapp.TestRequestmap'
 			userLookup {
 				authorityJoinClassName = 'com.testapp.TestUserTestRole'

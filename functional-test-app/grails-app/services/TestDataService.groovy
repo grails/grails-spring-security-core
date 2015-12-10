@@ -12,15 +12,18 @@ class TestDataService {
 
 	def dataSource
 	def grailsApplication
+	def objectDefinitionSource
 
+	//	'/error', '/hack/**', and '/testData/**' are handled in TestRequestmapFilterInvocationDefinition
 	private static final List<String> URIS_FOR_REQUESTMAPS = [
-		'/', '/**/css/**', '/**/favicon.ico', '/**/images/**', '/**/js/**', '/assets/**', '/dbconsole', '/dbconsole/**',
-		'/error', '/hack/**', '/index', '/index.gsp', '/login', '/login/**', '/logout', '/shutdown', '/tagLibTest/**',
-		'/testData/**', '/testRequestmap', '/testRequestmap/**', '/testRole', '/testRole/**', '/testUser', '/testUser/**']
+		'/', '/**/css/**', '/**/favicon.ico', '/**/images/**', '/**/js/**', '/assets/**', '/dbconsole',
+		'/dbconsole/**', '/index', '/index.gsp', '/login', '/login/**', '/shutdown', '/taglibtest/**',
+		'/testrequestmap', '/testrequestmap/**', '/testrole', '/testrole/**', '/testuser', '/testuser/**']
 
 	void returnToInitialState() {
 		truncateTablesAndRetry 3, false
 		enterInitialData()
+		objectDefinitionSource.reset()
 	}
 
 	boolean truncateTablesAndRetry(int retryCount, boolean ignoreExceptions) {

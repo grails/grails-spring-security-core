@@ -8,14 +8,11 @@ import test.HackUrlConverter
 class BootStrap {
 
 	GrailsApplication grailsApplication
-	TestDataService testDataService
 	HackUrlConverter grailsUrlConverter
 	def grailsUrlMappingsHolder
 	def objectDefinitionSource
 
 	def init = {
-		testDataService.enterInitialData()
-
 		if (grailsApplication.config.grails.web.url.converter == 'hyphenated') {
 			fixHyphenation()
 		}

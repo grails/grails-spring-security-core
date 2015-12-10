@@ -1,12 +1,11 @@
 package specs
 
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
-
 import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.test.mixin.integration.Integration
+import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import pages.LoginPage
-import pages.LogoutPage
 import spock.lang.Shared
 import spock.lang.Stepwise
 
@@ -63,8 +62,7 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	}
 
 	protected void logout() {
-		to LogoutPage
-		logoutButton.click()
+		go SpringSecurityUtils.securityConfig.logout.filterProcessesUrl
 		browser.clearCookies()
 	}
 
