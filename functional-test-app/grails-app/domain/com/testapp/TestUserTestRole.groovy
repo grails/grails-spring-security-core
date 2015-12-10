@@ -60,17 +60,19 @@ class TestUserTestRole implements Serializable {
 	static boolean remove(TestUser u, TestRole r, boolean flush = false) {
 		if (u == null || r == null) return false
 
-		int rowCount = TestUserTestRole.where { testUser == u && testRole == r }.deleteAll()
+//		int rowCount = TestUserTestRole.where { testUser == u && testRole == r }.deleteAll()
+		TestUserTestRole.where { testUser == u && testRole == r }.list()*.delete()
 
 		if (flush) { TestUserTestRole.withSession { it.flush() } }
 
-		rowCount
+//		rowCount
 	}
 
 	static void removeAll(TestUser u, boolean flush = false) {
 		if (u == null) return
 
-		TestUserTestRole.where { testUser == u }.deleteAll()
+//		TestUserTestRole.where { testUser == u }.deleteAll()
+		TestUserTestRole.where { testUser == u }.list()*.delete()
 
 		if (flush) { TestUserTestRole.withSession { it.flush() } }
 	}
@@ -78,7 +80,8 @@ class TestUserTestRole implements Serializable {
 	static void removeAll(TestRole r, boolean flush = false) {
 		if (r == null) return
 
-		TestUserTestRole.where { testRole == r }.deleteAll()
+//		TestUserTestRole.where { testRole == r }.deleteAll()
+		TestUserTestRole.where { testRole == r }.list()*.delete()
 
 		if (flush) { TestUserTestRole.withSession { it.flush() } }
 	}
