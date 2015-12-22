@@ -82,8 +82,6 @@ dependencies {
 
 	compile 'net.sf.ehcache:ehcache:2.9.0'
 
-	console 'org.grails:grails-console'
-
 	testCompile 'org.grails:grails-plugin-testing'
 }
 

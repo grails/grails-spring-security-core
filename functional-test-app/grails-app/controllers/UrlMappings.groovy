@@ -13,7 +13,7 @@ class UrlMappings {
 
 		"401"(view: '/error401')
 		"403"(view: '/error403')
-		"403"(view: '/error404')
+		"404"(view: '/error404')
 		"500"(view: '/error')
 	}
 }

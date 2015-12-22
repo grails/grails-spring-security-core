@@ -115,7 +115,7 @@
 		</form>
 	</div>
 </div>
-<script type="text/javascript">
+<script>
 (function() {
 	document.forms['loginForm'].elements['${usernameParameter ?: 'username'}'].focus();
 })();

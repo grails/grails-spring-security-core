@@ -4,7 +4,7 @@ class UrlMappings {
 		"/$controller/$action?/$id?(.$format)?"{}
 
 		"/"(view:   '/index')
-		"500"(view: '/error')
 		"404"(view: '/notFound')
+		"500"(view: '/error')
 	}
 }
