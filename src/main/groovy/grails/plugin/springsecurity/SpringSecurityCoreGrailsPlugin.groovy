@@ -189,6 +189,8 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			log.trace sb.toString()
 		}
 
+		springSecurityBeanFactoryPostProcessor(SpringSecurityBeanFactoryPostProcessor)
+
 		// configure the filter and optionally the listener
 
 		springSecurityFilterChainRegistrationBean(FilterRegistrationBean) {
