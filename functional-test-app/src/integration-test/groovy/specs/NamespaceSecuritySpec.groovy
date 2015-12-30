@@ -1,5 +1,6 @@
 package specs
 
+import groovy.json.JsonSlurper
 import pages.IndexPage
 import pages.LoginPage
 
@@ -29,13 +30,13 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		at IndexPage
 
 		when:
-		go('api/v1/books' + format)
+		go 'api/v1/books' + format
 
 		then:
 		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-		go('api/v1/movies' + format)
+		go 'api/v1/movies' + format
 
 		then:
 		$('.errors').text() == "Sorry, you're not authorized to view this page."
@@ -52,16 +53,17 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		at IndexPage
 
 		when:
-		go('api/v1/books' + format)
+		go 'api/v1/books' + format
 
 		then:
-		pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
+		jsonResultTitle == 'TestBook'
 
 		when:
-		go('api/v1/movies' + format)
+		go 'api/v1/movies' + format
 
 		then:
 		$('.errors').text() == "Sorry, you're not authorized to view this page."
+
 		where:
 		format << ['', '.json']
 	}
@@ -74,16 +76,16 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		at IndexPage
 
 		when:
-		go('api/v1/books' + format)
+		go 'api/v1/books' + format
 
 		then:
 		$('.errors').text() == "Sorry, you're not authorized to view this page."
 
 		when:
-		go('api/v1/movies' + format)
+		go 'api/v1/movies' + format
 
 		then:
-		pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
+		jsonResultTitle == 'TestMovie'
 
 		where:
 		format << ['', '.json']
@@ -97,16 +99,17 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		at IndexPage
 
 		when:
-		go('api/v1/books' + format)
+		go 'api/v1/books' + format
 
 		then:
-		pageSource =~ /\{"class":"rest.Book","id":\d+,"title":"TestBook"\}/
+		jsonResultTitle == 'TestBook'
 
 		when:
-		go('api/v1/movies' + format)
+		go 'api/v1/movies' + format
 
 		then:
-		pageSource =~ /\{"class":"rest.Movie","id":\d+,"title":"TestMovie"\}/
+		jsonResultTitle == 'TestMovie'
+
 		where:
 		format << ['', '.json']
 	}
@@ -125,5 +128,19 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
 		then:
 		at LoginPage
+	}
+
+	private String getJsonResultTitle() {
+
+		def matcher = pageSource =~ /.*(\[\{.+\}\]).*/
+		assert matcher.hasGroup()
+		assert matcher.count == 1
+
+		def results = new JsonSlurper().parseText(matcher[0][1])
+		assert results instanceof List
+		assert results.size() == 1
+		assert results[0].id instanceof Number
+
+		results[0].title
 	}
 }
