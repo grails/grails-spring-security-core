@@ -3,13 +3,9 @@
 *.iws
 *.log
 *.sublime-workspace
+.asscache
 .DS_Store
 .gradle
 .idea
-.nb-gradle
-bin
 build
 cobertura.ser
-out
-target
-target-eclipse

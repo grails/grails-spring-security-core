@@ -5,7 +5,7 @@ cd "$DIR"
 
 set -e
 
-GRAILS_VERSIONS="3.0.10 3.1.0.M3"
+GRAILS_VERSIONS="3.0.11 3.1.0.RC1"
 TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 
 rm -rf build
@@ -19,21 +19,24 @@ function generateBuildGradle {
 	if [[ $grailsVersion =~ 3\.0\..+ ]]; then
 		echo "$(<gradle/spring_dependency_management.inc)" >> build.gradle
 
-		echo -e "\napply plugin: 'spring-boot'" >> build.gradle
+		echo -e "\napply plugin: 'spring-boot'\n" >> build.gradle
 	fi
 
-	echo "$(<gradle/middle.inc)" >> build.gradle
+	echo -e "apply from: '../gradle/testapp.gradle'" >> build.gradle
 
+	echo -e "\ndependencies {" >> build.gradle
 	if [[ $grailsVersion =~ 3\.0\..+ ]]; then
 		echo -e "\tcompile 'org.grails.plugins:hibernate'" >> build.gradle
 	else
-		echo -e "\tcompile 'org.grails.plugins:hibernate4'\n" >> build.gradle
-		echo -e "\tcompile 'org.grails:grails-core'\n" >> build.gradle
-		echo -e "\tprofile \"org.grails.profiles:web:$grailsVersion\"\n" >> build.gradle
-		echo -e "\ttestCompile 'net.sourceforge.htmlunit:htmlunit:2.18'\n" >> build.gradle
+		echo -e "\tcompile 'org.grails.plugins:hibernate4'" >> build.gradle
+		echo -e "\tcompile 'org.grails:grails-core'" >> build.gradle
+		echo -e "\tprofile 'org.grails.profiles:web:$grailsVersion'" >> build.gradle
 	fi
+	echo -e "\tcompile 'org.grails.plugins:cache'" >> build.gradle
+	echo -e "\tcompile 'org.grails:grails-web-boot'" >> build.gradle
+	echo -e "\tcompile 'org.hibernate:hibernate-ehcache'" >> build.gradle
+	echo "}" >> build.gradle
 
-	echo "$(<gradle/common_deps.inc)" >> build.gradle
 	echo "$(<gradle/integrationTest.inc)" >> build.gradle
 }
 

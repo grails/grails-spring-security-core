@@ -1,0 +1,56 @@
+apply from: 'gradle/common.gradle'
+
+apply plugin: 'maven-publish'
+apply plugin: 'spring-boot'
+apply plugin: 'org.grails.grails-plugin'
+apply plugin: 'org.asciidoctor.convert'
+
+apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
+apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
+
+setIfNotSet 'issueTrackerUrl', project.vcsUrl + '/issues'
+setIfNotSet 'websiteUrl', project.vcsUrl
+
+dependencies {
+	provided 'javax.servlet:javax.servlet-api:3.1.0'
+	provided 'org.grails:grails-dependencies'
+	provided 'org.grails:grails-web-boot'
+	provided 'org.springframework.boot:spring-boot-starter-logging'
+}
+
+asciidoctor {
+	separateOutputDirs = false
+	sourceDir = file('src/docs')
+	sources {
+		include 'index.adoc'
+	}
+	outputDir new File(buildDir, 'docs')
+	backends 'html5', 'pdf', 'epub3'
+	attributes 'source-highlighter': 'prettify',
+	            icons:               'font',
+	            setanchors:          'true',
+	            idprefix:            '',
+	            idseparator:         '-',
+	            toc2:                '',
+	            numbered:            '',
+	            revnumber:           project.version
+}
+
+task docs(dependsOn: asciidoctor) << {
+	File dir = new File(buildDir, 'docs')
+
+	['pdf', 'epub'].each { String ext ->
+		File f = new File(dir, 'index.' + ext)
+		if (f.exists()) {
+			f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
+		}
+	}
+
+	new File(buildDir, 'docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
+
+	copy {
+		from 'src/docs'
+		into new File(buildDir, 'docs').path
+		include '**/*.png'
+	}
+}

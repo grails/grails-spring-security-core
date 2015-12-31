@@ -21,18 +21,3 @@ integrationTest {
 
 	beforeTest { descriptor -> logger.quiet " -- $descriptor" }
 }
-
-// deletes everything from the build directory except for test reports
-task cleanBuild {
-	File build = file('build')
-	if (!build.exists()) return
-
-	build.eachFile {
-		if (it.file) {
-			it.delete()
-		}
-		else if (it.name != 'reports' && !it.name.startsWith('geb-reports') && !it.name.startsWith('test-results')) {
-			it.deleteDir()
-		}
-	}
-}

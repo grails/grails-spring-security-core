@@ -16,111 +16,15 @@ buildscript {
 }
 
 plugins {
-	id 'io.spring.dependency-management' version '0.5.2.RELEASE'
+	id 'io.spring.dependency-management' version '0.5.4.RELEASE'
 	id 'com.jfrog.bintray' version '1.2'
 }
 
-version = file('version.txt').text.trim()
-group 'org.grails.plugins'
-
-apply plugin: 'maven-publish'
-apply plugin: 'spring-boot'
-apply plugin: 'org.grails.grails-plugin'
-apply plugin: 'org.grails.grails-gsp'
-apply plugin: 'org.asciidoctor.convert'
-
-apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
-apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
-
-ext {
-	grailsVersion = project.grailsVersion
-	gradleWrapperVersion = project.gradleWrapperVersion
-}
-
-sourceCompatibility = targetCompatibility = 1.7
-
-repositories {
-	mavenLocal()
-	mavenCentral()
-	maven { url 'https://repo.grails.org/grails/core' }
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.grails:grails-bom:$grailsVersion"
-	}
-	applyMavenExclusions false
-}
+apply from: 'gradle/plugin.gradle'
 
 dependencies {
-
-	provided 'javax.servlet:javax.servlet-api:3.1.0'
-	provided 'org.grails:grails-dependencies'
-	provided 'org.grails:grails-web-boot'
-
-	String springSecurityVersion = '4.0.3.RELEASE'
-
-	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
-		['aopalliance', 'aspectjrt', 'commons-collections', 'commons-logging', 'ehcache',
-		 'fest-assert', 'hsqldb', 'jcl-over-slf4j', 'jsr250-api', 'junit', 'logback-classic',
-		 'mockito-core', 'powermock-api-mockito', 'powermock-api-support', 'powermock-core',
-		 'powermock-module-junit4', 'powermock-module-junit4-common', 'powermock-reflect',
-		 'spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression',
-		 'spring-jdbc', 'spring-test', 'spring-tx'].each { exclude module: it }
-	}
-
-	compile "org.springframework.security:spring-security-web:$springSecurityVersion", {
-		['aopalliance', 'commons-codec', 'commons-logging', 'fest-assert', 'groovy-all',
-		 'hsqldb', 'javax.servlet-api', 'jcl-over-slf4j', 'junit', 'logback-classic',
-		 'mockito-core', 'powermock-api-mockito', 'powermock-api-support',
-		 'powermock-core', 'powermock-module-junit4', 'powermock-module-junit4-common',
-		 'powermock-reflect', 'spock-core', 'spock-spring', 'spring-beans',
-		 'spring-context', 'spring-core', 'spring-expression', 'spring-jdbc',
-		 'spring-security-core', 'spring-test', 'spring-tx', 'spring-web',
-		 'spring-webmvc'].each { exclude module: it }
-	}
-
 	compile 'net.sf.ehcache:ehcache:2.9.0'
-
-	testCompile 'org.grails:grails-plugin-testing'
-}
-
-asciidoctor {
-	separateOutputDirs = false
-	sourceDir = file('src/docs')
-	sources {
-		include 'index.adoc'
-	}
-	outputDir file('build/docs')
-	backends 'html5', 'pdf', 'epub3'
-	attributes 'source-highlighter': 'prettify',
-	            icons:               'font',
-	            setanchors:          'true',
-	            idprefix:            '',
-	            idseparator:         '-',
-	            toc2:                '',
-	            numbered:            '',
-	            revnumber:           project.version
-}
-
-task docs(dependsOn: asciidoctor) << {
-	File dir = file('build/docs')
-
-	['pdf', 'epub'].each { String ext ->
-		File f = new File(dir, 'index.' + ext)
-		if (f.exists()) {
-			f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
-		}
-	}
-
-	file('build/docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
-}
-
-test {
-	testLogging {
-		exceptionFormat = 'full'
-		events 'failed', 'standardOut', 'standardError'
-	}
-
-	beforeTest { descriptor -> logger.quiet " -- $descriptor" }
+	String springSecurityVersion = '4.0.3.RELEASE'
+	compile "org.springframework.security:spring-security-core:$springSecurityVersion"
+	compile "org.springframework.security:spring-security-web:$springSecurityVersion"
 }

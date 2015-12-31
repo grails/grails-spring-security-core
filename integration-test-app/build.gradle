@@ -12,46 +12,14 @@ buildscript {
 }
 
 plugins {
-	id 'io.spring.dependency-management' version '0.5.2.RELEASE'
+	id 'io.spring.dependency-management' version '0.5.4.RELEASE'
 }
 
-version '0.1'
-group 'integration.test.app'
-
+apply from: '../gradle/testapp.gradle'
 apply plugin: 'spring-boot'
-apply plugin: 'org.grails.grails-web'
-
-ext {
-	grailsVersion = project.grailsVersion
-	gradleWrapperVersion = project.gradleWrapperVersion
-}
-
-repositories {
-	mavenLocal()
-	maven { url 'https://repo.grails.org/grails/core' }
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.grails:grails-bom:$grailsVersion"
-	}
-	applyMavenExclusions false
-}
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-logging'
-	compile 'org.springframework.boot:spring-boot-autoconfigure'
-	compile 'org.springframework.boot:spring-boot-starter-tomcat'
-	compile 'org.grails:grails-dependencies'
-
 	compile 'org.grails.plugins:hibernate'
-	compile 'org.grails.plugins:cache'
-	compile 'org.hibernate:hibernate-ehcache'
-
-	String pluginVersion = file('../version.txt').text.trim()
-	compile 'org.grails.plugins:spring-security-core:' + pluginVersion
-
-	testCompile 'org.grails:grails-plugin-testing'
 }
 
 integrationTest {

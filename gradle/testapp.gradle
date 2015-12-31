@@ -1,0 +1,42 @@
+File pluginDir = file('.').parentFile
+File versionTxt
+while (true) {
+	versionTxt = new File(pluginDir, 'version.txt')
+	if (versionTxt.exists()) {
+		break
+	}
+}
+
+apply plugin: 'org.grails.grails-web'
+
+apply from: new File(pluginDir, 'gradle/common.gradle').path
+
+project.ext.pluginVersion = versionTxt.text.trim()
+project.ext.pluginName = pluginDir.name - 'grails-'
+
+dependencies {
+	compile "org.grails.plugins:$pluginName:$pluginVersion"
+	compile 'com.h2database:h2:1.4.190'
+	compile 'org.grails:grails-dependencies'
+	compile 'org.springframework.boot:spring-boot-autoconfigure'
+	compile 'org.springframework.boot:spring-boot-starter-logging'
+	compile 'org.springframework.boot:spring-boot-starter-tomcat'
+	console 'org.grails:grails-console'
+	runtime 'org.grails.plugins:asset-pipeline'
+	testCompile 'org.gebish:geb-core:0.12.2'
+	testCompile 'org.grails.plugins:geb'
+
+	String seleniumVersion = '2.48.2'
+	// testCompile 'com.github.detro:phantomjsdriver:1.2.0'
+	testCompile 'com.codeborne:phantomjsdriver:1.2.1' // TODO switch back to com.github.detro:phantomjsdriver when this
+	                                                  // issue is resolved: https://github.com/detro/ghostdriver/issues/397
+
+	testCompile "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+	['chrome', 'firefox'].each { String name ->
+		testCompile "org.seleniumhq.selenium:selenium-${name}-driver:$seleniumVersion"
+	}
+}
+
+integrationTest {
+	beforeTest { descriptor -> logger.quiet " -- $descriptor" }
+}
