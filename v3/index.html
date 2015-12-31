@@ -419,7 +419,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.0.0</span>
+<span id="revnumber">version 3.0.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -580,6 +580,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>December 31, 2015</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.0.1 release</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>December 8, 2015</p>
 <div class="ulist">
@@ -1075,36 +1085,12 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0'
+   compile 'org.grails.plugins:spring-security-core:3.0.1'
    ...</code></pre>
 </div>
 </div>
 <div class="paragraph">
 <p>Run <code>grails compile</code> or another script that triggers dependency resolution, and then the <a href="#s2-quickstart">s2-quickstart</a> script to generate the domain classes and add the initial configuration settings.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>There is an issue when using Grails 3.1.x with version 3.0.0.M2 (or 3.0.0.M1) of the plugin. Grails 3.1 uses a newer version of Spring Boot, which has dependencies for Spring Security 4 that override the plugin&#8217;s dependency on Spring Security 3.2. This is not a problem for Grails 3.0.x or when using plugin releases after 3.0.0.M2 because the plugin now uses Spring Security 4. If you are using 3.0.0.M1 or 3.0.0.M2 with Grails 3.1, the workaround is to add the plugin&#8217;s Spring Security 3.2 dependencies in <code>build.gradle</code> in addition to the dependency for the plugin:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-java" data-lang="java">dependencies {
-   ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0.M2'
-   compile 'org.springframework.security:spring-security-core:3.2.9.RELEASE'
-   compile 'org.springframework.security:spring-security-web:3.2.9.RELEASE'
-   ...</code></pre>
-</div>
-</div>
-</td>
-</tr>
-</table>
 </div>
 </div>
 <div class="sect2">
@@ -5387,6 +5373,27 @@ class ExpirePasswordsJob {
 }</code></pre>
 </div>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>If your application includes a dependency for <code>org.hibernate:hibernate-ehcache</code> (to provide an Ehcache-based 2nd-level cache implementation) you might have a conflict with the Ehcache dependency. <code>hibernate-ehcache</code> has a dependency for <code>ehcache-core</code>, but this plugin has a dependency for <code>ehcache</code>, so you will end up with both jars in your classpath. <code>hibernate-ehcache</code> works fine with the full <code>ehcache</code> jar, so you can avoid this problem by excluding <code>ehcache-core</code> in <code>build.gradle</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-java" data-lang="java">compile 'org.hibernate:hibernate-ehcache', {
+   exclude module: 'ehcache-core'
+}</code></pre>
+</div>
+</div>
+</td>
+</tr>
+</table>
+</div>
 </div>
 </div>
 </div>
@@ -6603,7 +6610,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-java" data-lang="java">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.0'
+   compile 'org.grails.plugins:spring-security-core:3.0.1'
    ...
 }</code></pre>
 </div>
@@ -7355,8 +7362,8 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.0<br>
-Last updated 2015-12-08 05:16:48 -05:00
+Version 3.0.1<br>
+Last updated 2015-12-31 02:36:51 -05:00
 </div>
 </div>
 </body>
