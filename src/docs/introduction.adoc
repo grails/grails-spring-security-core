@@ -7,6 +7,8 @@ This guide documents configuration defaults and describes how to configure and e
 
 === Release History and Acknowledgment
 
+* December 31, 2015
+** 3.0.1 release
 * December 8, 2015
 ** 3.0.0 release
 * November 23, 2015
