@@ -181,3 +181,15 @@ class ExpirePasswordsJob {
    }
 }
 ----
+
+[NOTE]
+====
+If your application includes a dependency for `org.hibernate:hibernate-ehcache` (to provide an Ehcache-based 2nd-level cache implementation) you might have a conflict with the Ehcache dependency. `hibernate-ehcache` has a dependency for `ehcache-core`, but this plugin has a dependency for `ehcache`, so you will end up with both jars in your classpath. `hibernate-ehcache` works fine with the full `ehcache` jar, so you can avoid this problem by excluding `ehcache-core` in `build.gradle`:
+
+[source,java]
+----
+compile 'org.hibernate:hibernate-ehcache', {
+   exclude module: 'ehcache-core'
+}
+----
+====
