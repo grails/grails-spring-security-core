@@ -8,6 +8,14 @@ apply plugin: 'org.asciidoctor.convert'
 apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
 apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
 
+group = 'org.grails.plugins'
+sourceCompatibility = targetCompatibility = 1.7
+
+def setIfNotSet = { String name, value ->
+	if (!project.ext.has(name)) {
+		project.ext[name] = value
+	}
+}
 setIfNotSet 'issueTrackerUrl', project.vcsUrl + '/issues'
 setIfNotSet 'websiteUrl', project.vcsUrl
 

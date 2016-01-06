@@ -5,6 +5,7 @@ while (true) {
 	if (versionTxt.exists()) {
 		break
 	}
+	pluginDir = pluginDir.parentFile
 }
 
 apply plugin: 'org.grails.grails-web'
@@ -35,8 +36,4 @@ dependencies {
 	['chrome', 'firefox'].each { String name ->
 		testCompile "org.seleniumhq.selenium:selenium-${name}-driver:$seleniumVersion"
 	}
-}
-
-integrationTest {
-	beforeTest { descriptor -> logger.quiet " -- $descriptor" }
 }

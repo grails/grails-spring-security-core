@@ -1,20 +1,12 @@
-def versionTxt = file('version.txt')
-version = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
-
-project.ext.setIfNotSet = { String name, value, boolean ext = true ->
-	if (!project.ext.has(name) || !project[name]) {
-		(ext ? project.ext : project)[name] = value
-	}
-}
-
-setIfNotSet 'gradleWrapperVersion', '2.10'
-setIfNotSet 'group', 'org.grails.plugins', false
-setIfNotSet 'sourceCompatibility', 1.7
-setIfNotSet 'targetCompatibility', 1.7
-
 apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'org.grails.grails-gsp'
+
+def versionTxt = file('version.txt')
+version = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
+ext {
+	gradleWrapperVersion = '2.10'
+}
 
 repositories {
 	mavenLocal()
