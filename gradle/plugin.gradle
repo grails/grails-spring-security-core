@@ -1,3 +1,14 @@
+buildscript {
+	repositories {
+		maven { url 'https://repo.grails.org/grails/core' }
+	}
+	dependencies {
+		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
+		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
+	}
+}
+
 apply from: 'gradle/common.gradle'
 
 apply plugin: 'maven-publish'
@@ -26,28 +37,65 @@ dependencies {
 	provided 'org.springframework.boot:spring-boot-starter-logging'
 }
 
-asciidoctor {
+def asciidoctorAttributes = [
+	 copyright           : 'Apache License, Version 2.0',
+	 docinfo1            : 'true',
+	 doctype             : 'book',
+	 encoding            : 'utf-8',
+	'front-cover-image'  : 'image:cover.png[Front Cover,800,600]',
+	 icons               : 'font',
+	 id                  : project.name + ':' + project.version,
+	 idprefix            : '',
+	 idseparator         : '-',
+	 lang                : 'en',
+	 linkattrs           : true,
+	 numbered            : '',
+	 producer            : 'Asciidoctor',
+	 revnumber           : project.version,
+	 setanchors          : true,
+	'source-highlighter' : 'prettify',
+	 toc                 : 'left',
+	 toc2                : '',
+	 toclevels           : '2'
+]
+
+import org.asciidoctor.gradle.AsciidoctorTask
+
+tasks.withType(AsciidoctorTask) {
+	attributes asciidoctorAttributes
+	outputDir new File(buildDir, 'docs')
 	separateOutputDirs = false
 	sourceDir = file('src/docs')
 	sources {
 		include 'index.adoc'
 	}
-	outputDir new File(buildDir, 'docs')
-	backends 'html5', 'pdf', 'epub3'
-	attributes 'source-highlighter': 'prettify',
-	            icons:               'font',
-	            setanchors:          'true',
-	            idprefix:            '',
-	            idseparator:         '-',
-	            toc2:                '',
-	            numbered:            '',
-	            revnumber:           project.version
 }
 
-task docs(dependsOn: asciidoctor) << {
-	File dir = new File(buildDir, 'docs')
+task getKindlegen {
+	File tgz = file('kindlegen/kindlegen.tar.gz')
+	if (!tgz.exists()) {
+		tgz.parentFile.mkdirs()
+		String url = 'http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz'
+		println "Downloading Kindlegen from $url"
+		ant.get(src: url, dest: tgz)
+		ant.untar(src: tgz, dest: file('kindlegen'), compression: 'gzip')
+		ant.chmod(file: file('kindlegen/kindlegen'), perm: '+x')
+	}
+}
 
-	['pdf', 'epub'].each { String ext ->
+task asciidoc(type: AsciidoctorTask, description: 'Generates single-page HTML, PDF, and EPUB3') {
+	backends 'html5', 'pdf', 'epub3'
+}
+
+task asciidocMobi(type: AsciidoctorTask, description: 'Generates MOBI for Kindle', dependsOn: getKindlegen) {
+	backends 'epub3'
+	attributes(['ebook-format': 'kf8'] + asciidoctorAttributes)
+}
+
+task docs(dependsOn: [asciidoc, asciidocMobi]) << {
+
+	File dir = new File(buildDir, 'docs')
+	['epub', 'mobi', 'pdf'].each { String ext ->
 		File f = new File(dir, 'index.' + ext)
 		if (f.exists()) {
 			f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)

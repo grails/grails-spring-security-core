@@ -1,13 +1,6 @@
 = Spring Security Core Plugin - Reference Documentation
 Burt Beckwith
 
-:doctype: book
-:encoding: utf-8
-:lang: en
-:toc: left
-:toclevels: 2
-:numbered:
-
 include::introduction.adoc[]
 
 include::newInV3.adoc[]
