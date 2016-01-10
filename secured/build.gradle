@@ -1,7 +1,4 @@
 buildscript {
-	ext {
-		grailsVersion = project.grailsVersion
-	}
 	repositories {
 		mavenLocal()
 		maven { url 'https://repo.grails.org/grails/core' }
@@ -28,14 +25,8 @@ apply plugin: 'idea'
 apply plugin: 'org.grails.grails-web'
 apply plugin: 'org.grails.grails-gsp'
 
-ext {
-	grailsVersion = project.grailsVersion
-	gradleWrapperVersion = project.gradleWrapperVersion
-}
-
 assets {
-	minifyJs = true
-	minifyCss = true
+	minifyJs = minifyCss = true
 }
 
 repositories {

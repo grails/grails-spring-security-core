@@ -81,7 +81,7 @@ endpoints:
       unique-names: true
 
 dataSource:
-   dbCreate: create-drop
+   dbCreate: create
    driverClassName: org.h2.Driver
    jmxExport: true
    password:
