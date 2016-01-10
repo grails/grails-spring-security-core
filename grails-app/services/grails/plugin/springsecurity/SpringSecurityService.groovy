@@ -130,7 +130,7 @@ class SpringSecurityService {
 
 	/**
 	 * Quick check to see if the current user is logged in.
-	 * @return <code>true</code> if the authenticated and not anonymous
+	 * @return <code>true</code> if the user is authenticated and not anonymous
 	 */
 	boolean isLoggedIn() {
 		def authentication = SCH.context.authentication
