@@ -3,16 +3,23 @@
 
 Hierarchical roles are a convenient way to reduce clutter in your request mappings.
 
-[width="100%",options="header"]
+.Hierarchical Roles configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value*  | *Meaning*
-| roleHierarchy | none | Hierarchical role definition.
-| roleHierarchyEntryClassName | none | Domain class used to manage persistent role hierarchy entries
+
+|roleHierarchy
+|_none_
+|Hierarchical role definition
+
+|roleHierarchyEntryClassName
+|_none_
+|Domain class used to manage persistent role hierarchy entries
 |====================
 
 For example, if you have several types of "`admin`" roles that can be used to access a URL pattern and you do not use hierarchical roles, you need to specify all the admin roles:
 
-[source,java]
+[source,groovy]
 ----
 package com.mycompany.myapp
 
@@ -29,7 +36,7 @@ class SomeController {
 
 However, if you have a business rule that says `ROLE_FINANCE_ADMIN` implies being granted `ROLE_ADMIN`, and that `ROLE_SUPERADMIN` implies being granted `ROLE_FINANCE_ADMIN`, you can express that hierarchy as:
 
-[source,java]
+[source,groovy]
 ----
 grails.plugin.springsecurity.roleHierarchy = '''
    ROLE_SUPERADMIN > ROLE_FINANCE_ADMIN
@@ -39,7 +46,7 @@ grails.plugin.springsecurity.roleHierarchy = '''
 
 Then you can simplify your mappings by specifying only the roles that are required:
 
-[source,java]
+[source,groovy]
 ----
 package com.mycompany.myapp
 
@@ -68,7 +75,8 @@ $ grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry
 
 will generate this class in `grails-app/domain/com/yourapp/RoleHierarchyEntry.groovy`:
 
-[source,java]
+[source,groovy]
+.`RoleHierarchyEntry.groovy`
 ----
 package com.yourapp
 
@@ -100,7 +108,8 @@ class RoleHierarchyEntry implements Serializable {
 
 To store the equivalent entries for the ROLE_SUPERADMIN / ROLE_FINANCE_ADMIN / ROLE_ADMIN hierarchy, add code like this to a method in a transactional service:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Persisting `RoleHierarchyEntry` instances
 ----
 if (!RoleHierarchyEntry.count()) {
    new RoleHierarchyEntry('ROLE_SUPERADMIN > ROLE_FINANCE_ADMIN').save()

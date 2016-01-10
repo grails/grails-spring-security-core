@@ -3,7 +3,7 @@
 
 To guard against https://en.wikipedia.org/wiki/Session_fixation[session-fixation attacks] set the `useSessionFixationPrevention` attribute to `true`:
 
-[source,java]
+[source,groovy]
 ----
 grails.plugin.springsecurity.useSessionFixationPrevention = true
 ----
@@ -16,10 +16,20 @@ Note that there is an issue when using the https://grails.org/plugin/cookie-sess
 
 The table shows configuration options for session fixation.
 
-[width="100%",options="header"]
+.Session Fixation Prevention configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| useSessionFixationPrevention | `true` | Whether to use session fixation prevention.
-| sessionFixationPrevention.migrate | `true` | Whether to copy the session attributes of the existing session to the new session after login.
-| sessionFixationPrevention.alwaysCreateSession | `false` | Whether to always create a session even if one did not exist at the start of the request.
+
+|useSessionFixationPrevention
+|`true`
+|Whether to use session fixation prevention
+
+|sessionFixationPrevention.migrate
+|`true`
+|Whether to copy the session attributes of the existing session to the new session after login
+
+|sessionFixationPrevention.alwaysCreateSession
+|`false`
+|Whether to always create a session even if one did not exist at the start of the request
 |====================

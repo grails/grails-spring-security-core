@@ -5,7 +5,8 @@ The typical approach to mapping the relationship between "`person`" and "`group`
 
 If you run the <<s2-quickstart>> script with the group name specified, this class will be generated for you, so you don't need to deal with the details of mapping it. Assuming you choose `com.mycompany.myapp` as your package, and `User` and `RoleGroup` as your class names, you'll generate this class:
 
-[source,java]
+[source,groovy]
+.`UserRoleGroup.groovy`
 ----
 package com.mycompany.myapp
 

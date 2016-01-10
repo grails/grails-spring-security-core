@@ -1,6 +1,11 @@
 = Spring Security Core Plugin - Reference Documentation
 Burt Beckwith
 
+:apidocs: https://docs.spring.io/spring-security/site/docs/4.0.x/apidocs/
+:apidocs_spring: https://docs.spring.io/spring/docs/4.1.x/javadoc-api/
+:htmlsingle: docs.spring.io/spring-security/site/docs/4.0.x/reference/htmlsingle/
+:spring_framework_reference: https://docs.spring.io/spring/docs/4.1.x/spring-framework-reference/html/
+
 include::introduction.adoc[]
 
 include::newInV3.adoc[]

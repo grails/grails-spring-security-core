@@ -1,7 +1,7 @@
 [[events]]
 == Events
 
-Spring Security fires application events after various security-related actions such as successful login, unsuccessful login, and so on. Spring Security uses two main event classes, https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/event/AbstractAuthenticationEvent.html[AbstractAuthenticationEvent] and https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/access/event/AbstractAuthorizationEvent.html[AbstractAuthorizationEvent].
+Spring Security fires application events after various security-related actions such as successful login, unsuccessful login, and so on. Spring Security uses two main event classes, {apidocs}org/springframework/security/authentication/event/AbstractAuthenticationEvent.html[AbstractAuthenticationEvent] and {apidocs}org/springframework/security/access/event/AbstractAuthorizationEvent.html[AbstractAuthorizationEvent].
 
 include::events/eventNotification.adoc[]
 

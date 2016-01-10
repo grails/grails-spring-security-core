@@ -11,7 +11,8 @@ To define custom filters, to remove a core filter from the chain (not recommende
 
 For example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Sample `grails.plugin.springsecurity.filterChain.filterNames` configuration
 ----
 grails.plugin.springsecurity.filterChain.filterNames = [
    'securityContextPersistenceFilter', 'logoutFilter',
@@ -26,7 +27,8 @@ This example creates a filter chain corresponding to the Spring beans with the s
 === chainMap
 Use the `filterChain.chainMap` attribute to define which filters are applied to different URL patterns. You define a Map that specifies one or more lists of filter bean names, each with a corresponding URL pattern.
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Sample `grails.plugin.springsecurity.filterChain.chainMap` configuration
 ----
 grails.plugin.springsecurity.filterChain.chainMap = [
    [pattern: '/urlpattern1/**', filters: 'filter1,filter2,filter3,filter4'],
@@ -46,7 +48,8 @@ The order of the mappings is important. Each URL will be tested in order from to
 
 There's also a filter negation syntax that can be very convenient. Rather than specifying all of the filter names (and risking forgetting one or putting them in the wrong order), you can use the `JOINED_FILTERS` keyword and one or more filter names prefixed with a `-` . This means to use all configured filters except for the excluded ones. For example, if you had a web service that uses Basic Auth for `/webservice/pass:[**]` URLs, you would configure that using:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Using `JOINED_FILTERS` in a `filterChain.chainMap` configuration
 ----
 grails.plugin.springsecurity.filterChain.chainMap = [
    [pattern: '/webservice/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter'],
@@ -58,7 +61,8 @@ For the `/webservice/pass:[**]` URLs, we want all filters except for the standar
 
 Additionally, you can use a `chainMap` configuration to declare one or more URL patterns which should have no filters applied. Use the name `'none'` for these patterns, e.g.
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Using `none` in a `filterChain.chainMap` configuration
 ----
 grails.plugin.springsecurity.filterChain.chainMap = [
    [pattern: '/someurlpattern/**', filters: 'none'],
@@ -69,7 +73,7 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 === clientRegisterFilter
 An alternative to setting the `filterNames` property is `grails.plugin.springsecurity.SpringSecurityUtils.clientRegisterFilter()`. This property allows you to add a custom filter to the chain at a specified position. Each standard filter has a corresponding position in the chain (see `grails.plugin.springsecurity.SecurityFilterPosition` for details). So if you have created an application-specific filter, register it in `grails-app/conf/spring/resources.groovy`:
 
-[source,java]
+[source,groovy]
 ----
 import com.mycompany.myapp.MyFilter
 import org.springframework.boot.context.embedded.FilterRegistrationBean
@@ -90,7 +94,7 @@ Note that in addition to the filter bean, there is also a disabled `FilterRegist
 
 Then register the filter in `grails-app/init/BootStrap.groovy`:
 
-[source,java]
+[source,groovy]
 ----
 import grails.plugin.springsecurity.SecurityFilterPosition
 import grails.plugin.springsecurity.SpringSecurityUtils

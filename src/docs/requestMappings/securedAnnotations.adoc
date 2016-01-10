@@ -3,7 +3,8 @@
 
 You can use an `@Secured` annotation (either the standard `org.springframework.security.access.annotation.Secured` or the plugin's `grails.plugin.springsecurity.annotation.Secured` which has the same attributes and features but also supports defining a closure as the config attribute to make authorization decisions) in your controllers to configure which roles are required for which actions. To use annotations, specify `securityConfigType="Annotation"`, or leave it unspecified because it's the default:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Specifying `securityConfigType` as "`Annotation`"
 ----
 grails.plugin.springsecurity.securityConfigType = "Annotation"
 ----
@@ -12,7 +13,8 @@ You can define the annotation at the class level, meaning that the specified rol
 
 For example, given this controller:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. An annotated controller
 ----
 package com.mycompany.myapp
 
@@ -31,7 +33,8 @@ class SecureAnnotatedController {
    }
 
    def anybody() {
-      render 'anyone can see this' // assuming you're not using "strict" mode, otherwise the action is not viewable by anyone
+      render 'anyone can see this' // assuming you're not using "strict" mode,
+                                   // otherwise the action is not viewable by anyone
    }
 }
 ----
@@ -40,7 +43,8 @@ you must be authenticated and have `ROLE_ADMIN` to see `/myapp/secureAnnotated` 
 
 In addition, you can define a closure in the annotation which will be called during access checking. The closure must return `true` or `false` and has all of the methods and properties that are available when using SpEL expressions, since the closure's `delegate` is set to a subclass of `WebSecurityExpressionRoot`, and also the Spring `ApplicationContext` as the `ctx` property:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. An example of using a Closure in with `@Secured`
 ----
 @Secured(closure = {
    assert request
@@ -54,7 +58,7 @@ def someMethod() {
 
 Often most actions in a controller require similar access rules, so you can also define annotations at the class level:
 
-[source,java]
+[source,groovy]
 ----
 package com.mycompany.myapp
 
@@ -82,7 +86,7 @@ Here you need to be authenticated and have `ROLE_ADMIN` to see `/myapp/secureCla
 
 Additionally, you can specify the HTTP method that is required in each annotation for the access rule, e.g.
 
-[source,java]
+[source,groovy]
 ----
 package com.mycompany.myapp
 
@@ -110,7 +114,7 @@ Since Grails 2.3, domain classes can be annotated with the `grails.rest.Resource
 
 You can also use the `@Secured` annotation on such domain classes:
 
-[source,java]
+[source,groovy]
 ----
 @Resource
 @Secured('ROLE_ADMIN')
@@ -124,7 +128,7 @@ class Thing {
 
 You can also define "`static`" mappings that cannot be expressed in the controllers, such as '/pass:[**]' or for JavaScript, CSS, or image URLs. Use the `controllerAnnotations.staticRules` property, for example:
 
-[source,java]
+[source,groovy]
 ----
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    ...

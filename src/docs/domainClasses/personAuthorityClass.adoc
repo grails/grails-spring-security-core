@@ -5,7 +5,8 @@ The typical approach to mapping the relationship between "`person`" and "`author
 
 Like the other domain classes, this class is generated for you, so you don't need to deal with the details of mapping it. Assuming you choose `com.mycompany.myapp` as your package, and `User` and `Role` as your class names, you'll generate this class:
 
-[source,java]
+[source,groovy]
+.`UserRole.groovy`
 ----
 package com.mycompany.myapp
 
@@ -114,16 +115,18 @@ class UserRole implements Serializable {
 
 The helper methods make it easy to grant or revoke roles. Assuming you have already loaded a user and a role, you grant the role to the user as follows:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Granting a role
 ----
 User user = ...
 Role role = ...
 UserRole.create user, role
 ----
 
-Or by using the 3-parameter version to trigger a flush:
+Or by using the 3-parameter version to trigger a GORM session flush:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Granting a role and flushing the session
 ----
 User user = ...
 Role role = ...
@@ -132,7 +135,8 @@ UserRole.create user, role, true
 
 Revoking a role is similar:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Revoking a role
 ----
 User user = ...
 Role role = ...
@@ -141,7 +145,8 @@ UserRole.remove user, role
 
 Or:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Revoking a role and flushing the session
 ----
 User user = ...
 Role role = ...
@@ -150,8 +155,12 @@ UserRole.remove user, role, true
 
 The class name is the only configurable attribute:
 
-[width="100%",options="header"]
+.UserRole configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| userLookup. authorityJoinClassName | none | User/Role many-many join class name
+
+|userLookup.authorityJoinClassName
+|_none_
+|User/Role many-many join class name
 |====================

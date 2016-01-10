@@ -5,27 +5,28 @@ Alternatively, enable events with `grails.plugin.springsecurity.useSecurityEvent
 
 Implement the event handlers that you need, for example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Adding event handling closures in `application.groovy`
 ----
 grails.plugin.springsecurity.useSecurityEventListener = true
 
-grails.plugin.springsecurity. onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
+grails.plugin.springsecurity.onInteractiveAuthenticationSuccessEvent = { e, appCtx ->
    // handle InteractiveAuthenticationSuccessEvent
 }
 
-grails.plugin.springsecurity. onAbstractAuthenticationFailureEvent = { e, appCtx ->
+grails.plugin.springsecurity.onAbstractAuthenticationFailureEvent = { e, appCtx ->
    // handle AbstractAuthenticationFailureEvent
 }
 
-grails.plugin.springsecurity. onAuthenticationSuccessEvent = { e, appCtx ->
+grails.plugin.springsecurity.onAuthenticationSuccessEvent = { e, appCtx ->
    // handle AuthenticationSuccessEvent
 }
 
-grails.plugin.springsecurity. onAuthenticationSwitchUserEvent = { e, appCtx ->
+grails.plugin.springsecurity.onAuthenticationSwitchUserEvent = { e, appCtx ->
    // handle AuthenticationSwitchUserEvent
 }
 
-grails.plugin.springsecurity. onAuthorizationEvent = { e, appCtx ->
+grails.plugin.springsecurity.onAuthorizationEvent = { e, appCtx ->
    // handle AuthorizationEvent
 }
 ----

@@ -1,23 +1,66 @@
 [[domainClassProperties]]
 == User, Authority (Role), and Requestmap Properties
 
-Properties you are most likely to be override are the `User` and  `Authority` (and `Requestmap` if you use the database to store mappings) class and field names.
+Properties you are most likely to be override are the `User` and  `Authority` (and `Requestmap` if you use the database to store mappings) class and property names.
 
-[width="100%",options="header"]
+.Domain class configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| userLookup.userDomainClassName | none | User class name.
-| userLookup.usernamePropertyName | '`username`' | User class username field.
-| userLookup.passwordPropertyName | '`password`' | User class password field.
-| userLookup.authoritiesPropertyName | '`authorities`' | User class role collection field.
-| userLookup.enabledPropertyName | '`enabled`' | User class enabled field.
-| userLookup.accountExpiredPropertyName | '`accountExpired`' | User class account expired field.
-| userLookup.accountLockedPropertyName | '`accountLocked`' | User class account locked field.
-| userLookup.passwordExpiredPropertyName | '`passwordExpired`' | User class password expired field.
-| userLookup.authorityJoinClassName | none | User/Role many-many join class name.
-| authority.className | none | Role class name.
-| authority.nameField | '`authority`' | Role class role name field.
-| requestMap.className | none | Requestmap class name.
-| requestMap.urlField | '`url`' | Requestmap class URL pattern field.
-| requestMap.configAttributeField | '`configAttribute`' | Requestmap class role/token field.
+
+|userLookup.userDomainClassName
+|_none_
+|User class name
+
+|userLookup.usernamePropertyName
+|"`username`"
+|User class username property
+
+|userLookup.passwordPropertyName
+|"`password`"
+|User class password property
+
+|userLookup.authoritiesPropertyName
+|"`authorities`"
+|User class role collection property
+
+|userLookup.enabledPropertyName
+|"`enabled`"
+|User class enabled property
+
+|userLookup.accountExpiredPropertyName
+|"`accountExpired`"
+|User class account expired property
+
+|userLookup.accountLockedPropertyName
+|"`accountLocked`"
+|User class account locked property
+
+|userLookup.passwordExpiredPropertyName
+|"`passwordExpired`"
+|User class password expired property
+
+|userLookup.authorityJoinClassName
+|_none_
+|User/Role many-many join class name
+
+|authority.className
+|_none_
+|Role class name
+
+|authority.nameField
+|"`authority`"
+|Role class role name property
+
+|requestMap.className
+|_none_
+|Requestmap class name
+
+|requestMap.urlField
+|"`url`"
+|Requestmap class URL pattern property
+
+|requestMap.configAttributeField
+|"`configAttribute`"
+|Requestmap class role/token property
 |====================

@@ -14,6 +14,7 @@ This example uses https://jquery.com/[jQuery] and http://jquery.iceburg.net/jqMo
 Create `grails-app/assets/javascripts/ajaxLogin.js` and add this JavaScript code:
 
 [source,javascript]
+.`ajaxLogin.js`
 ----
 var onLogin;
 
@@ -132,6 +133,7 @@ $(function() {
 and create `grails-app/assets/stylesheets/ajaxLogin.css` and add this CSS:
 
 [source,css]
+.`ajaxLogin.css`
 ----
 #ajaxLogin {
    padding:    0px;
@@ -226,6 +228,7 @@ and create `grails-app/assets/stylesheets/ajaxLogin.css` and add this CSS:
 There's no need to register the JavaScript files in `grails-app/assets/javascripts/application.js` if you have this `require_tree` directive:
 
 [source,javascript]
+.`application.js`
 ----
 //= require_tree .
 ----
@@ -233,6 +236,7 @@ There's no need to register the JavaScript files in `grails-app/assets/javascrip
 but you can explicitly include them if you want. Register the two CSS files in `/grails-app/assets/stylesheets/application.css`:
 
 [source,css]
+.`application.css`
 ----
 /*
  ...
@@ -245,6 +249,7 @@ but you can explicitly include them if you want. Register the two CSS files in `
 We'll need some GSP code to define the HTML, so create `grails-app/views/includes/_ajaxLogin.gsp` and add this:
 
 [source,html]
+.`_ajaxLogin.gsp`
 ----
 <span id="logoutLink" style="display: none;">
 <g:link elementId='_logout' controller='logout'>Logout</g:link>
@@ -291,6 +296,7 @@ We'll need some GSP code to define the HTML, so create `grails-app/views/include
 And finally, update the `grails-app/views/layouts/main.gsp` layout to include `_ajaxLogin.gsp`, adding it after the `<body>` tag:
 
 [source,html]
+.`main.gsp`
 ----
 <html lang="en" class="no-js">
    <head>

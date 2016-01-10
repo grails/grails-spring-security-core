@@ -3,12 +3,13 @@
 
 Enable events with `grails.plugin.springsecurity.useSecurityEventListener = true` and create one or more Groovy or Java classes, for example:
 
-[source,java]
+[source,groovy]
+.`MySecurityEventListener.groovy`
 ----
 package com.foo.bar
 
 import org.springframework.context.ApplicationListener
-import org.springframework.security.authentication.event. AuthenticationSuccessEvent
+import org.springframework.security.authentication.event.AuthenticationSuccessEvent
 
 class MySecurityEventListener
       implements ApplicationListener<AuthenticationSuccessEvent> {
@@ -21,7 +22,8 @@ class MySecurityEventListener
 
 Register the class in `grails-app/conf/spring/resources.groovy`:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Registration of the event listener bean in `resources.groovy`
 ----
 import com.foo.bar.MySecurityEventListener
 

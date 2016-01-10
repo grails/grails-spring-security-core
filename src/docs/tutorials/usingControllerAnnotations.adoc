@@ -9,7 +9,8 @@ $ cd bookstore
 ....
 
 ==== 2. "`Install`" the plugin by adding it to build.gradle
-[source,java]
+
+[source,groovy]
 [subs="attributes"]
 ----
 dependencies {
@@ -35,9 +36,9 @@ You can choose your names for your domain classes and package; these are just ex
 
 [NOTE]
 ====
-Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "`User`" or "`Group`", make sure they are not reserved keywords in your database. or escape the name with backticks in the `mapping` block, e.g.
+Depending on your database, some domain class names might not be valid, especially those relating to security. Before you create names like "`User`" or "`Group`", make sure they are not reserved keywords in your database, or escape the name with backticks in the `mapping` block, e.g.
 
-[source,java]
+[source,groovy]
 ----
 static mapping = {
    table '`user`'
@@ -47,7 +48,8 @@ static mapping = {
 
 The script creates this User class:
 
-[source,java]
+[source,groovy]
+.`User.groovy`
 ----
 package com.testapp
 
@@ -90,7 +92,9 @@ class User implements Serializable {
    }
 
    protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+      password = springSecurityService?.passwordEncoder ?
+            springSecurityService.encodePassword(password) :
+            password
    }
 
    static transients = ['springSecurityService']
@@ -113,7 +117,8 @@ Earlier versions of the plugin didn't include password hashing logic in the doma
 
 and this Role class:
 
-[source,java]
+[source,groovy]
+.`Role.groovy`
 ----
 package com.testapp
 
@@ -145,7 +150,8 @@ class Role implements Serializable {
 
 and a domain class that maps the many-to-many join class, `UserRole`:
 
-[source,java]
+[source,groovy]
+.`UserRole.groovy`
 ----
 package com.testapp
 
@@ -261,7 +267,7 @@ The script has edited `grails-app/conf/application.groovy` and added the configu
 
 While you're looking at `application.groovy`, add this config override to make the sample app easier to work with:
 
-[source,java]
+[source,groovy]
 ----
 grails.plugin.springsecurity.logout.postOnly = false
 ----
@@ -281,7 +287,8 @@ $ grails create-controller com.testapp.Secure
 
 This command creates `grails-app/controllers/com/testapp/SecureController.groovy`. Add some output so you can verify that things are working:
 
-[source,java]
+[source,groovy]
+.`SecureController.groovy`
 ----
 package com.testapp
 
@@ -294,7 +301,8 @@ class SecureController {
 
 ==== 5. Edit grails-app/init/BootStrap.groovy to add a test user.
 
-[source,java]
+[source,groovy]
+.`BootStrap.groovy`
 ----
 import com.testapp.Role
 import com.testapp.User
@@ -309,7 +317,12 @@ class BootStrap {
 
       def testUser = new User('me', 'password').save()
 
-      UserRole.create testUser, adminRole, true
+      UserRole.create testUser, adminRole
+
+      UserRole.withSession {
+         it.flush()
+         it.clear()
+      }
 
       assert User.count() == 1
       assert Role.count() == 2
@@ -320,7 +333,7 @@ class BootStrap {
 
 Some things to note about the preceding `BootStrap.groovy`:
 
-* The example does not use a traditional GORM many-to-many mapping for the User<->Role relationship; instead you are mapping the join table with the `UserRole` class. This performance optimization helps significantly when many users have one or more common roles.
+* The example does not use a traditional GORM many-to-many mapping for the User pass:[&lt;==&gt;] Role relationship; instead you are mapping the join table with the `UserRole` class. This performance optimization helps significantly when many users have one or more common roles.
 * We explicitly flush (using the 3-arg `UserRole.create()` call) because `BootStrap` does not run in a transaction or OpenSessionInView.
 
 ==== 6. Start the server.
@@ -329,7 +342,9 @@ Some things to note about the preceding `BootStrap.groovy`:
 $ grails run-app
 ....
 
-==== 7. Before you secure the page, navigate to http://localhost:8080/secure to verify that you cannot access see the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:
+==== 7. Verify that you cannot access the page yet.
+
+Before you secure the page, navigate to http://localhost:8080/secure to verify that you cannot access the page yet. You will be redirected to the login page, but after a successful authentication (log in with the username and password you used for the test user in BootStrap.groovy) you will see an error page:
 
 ....
 Sorry, you're not authorized to view this page.
@@ -337,9 +352,12 @@ Sorry, you're not authorized to view this page.
 
 This is because with the default configuration, all URLs are denied unless there is an access rule specified.
 
-==== 8. Edit grails-app/controllers/SecureController.groovy to import the annotation class and apply the annotation to restrict (and grant) access.
+==== 8. Apply the annotation.
 
-[source,java]
+Edit grails-app/controllers/SecureController.groovy to import the annotation class and apply the annotation to restrict (and grant) access.
+
+[source,groovy]
+.`SecureController.groovy`
 ----
 package com.testapp
 
@@ -356,7 +374,8 @@ class SecureController {
 
 or
 
-[source,java]
+[source,groovy]
+.`SecureController.groovy`
 ----
 @Secured('ROLE_ADMIN')
 class SecureController {
@@ -368,14 +387,19 @@ class SecureController {
 
 You can annotate the entire controller or individual actions. In this case you have only one action, so you can do either.
 
-==== 9. Shut down the app and run `grails run-app` again, and navigate again to http://localhost:8080/secure.
+==== 9. Restart.
+
+Shut down the app and run `grails run-app` again, and navigate again to http://localhost:8080/secure.
 
 This time you should again be able to see the secure page after successfully authenticating.
 
 ==== 10. Test the Remember Me functionality.
+
 Check the checkbox, and once you've tested the secure page, close your browser and reopen it. Navigate again the the secure page. Because a cookie is stored, you should not need to log in again. Logout at any time by navigating to http://localhost:8080/logout.
 
-==== 11. Optionally, create a CRUD UI to work with users and roles.
+==== 11. Create a CRUD UI.
+
+Optionally, create a CRUD UI to work with users and roles.
 
 ===== Run grails generate-all for the domain classes:
 

@@ -1,19 +1,24 @@
 [[authenticationProviders]]
 == Authentication Providers
 
-The plugin registers authentication providers that perform authentication by implementing the https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/AuthenticationProvider.html[AuthenticationProvider] interface.
+The plugin registers authentication providers that perform authentication by implementing the {apidocs}org/springframework/security/authentication/AuthenticationProvider.html[AuthenticationProvider] interface.
 
-[width="100%",options="header"]
+.Authentication provider configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| providerNames | ['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider'] | Bean names of authentication providers.
+
+|providerNames
+|`['daoAuthenticationProvider', 'anonymousAuthenticationProvider', 'rememberMeAuthenticationProvider']`
+|Bean names of authentication providers
 |====================
 
 Use `daoAuthenticationProvider` to authenticate using the User and Role database tables, `rememberMeAuthenticationProvider` to log in with a rememberMe cookie, and `anonymousAuthenticationProvider` to create an "`anonymous`" authentication if no other provider authenticates.
 
 To customize this list, you define a `providerNames` attribute with a list of bean names. The beans must be declared either by the plugin, or yourself in `resources.groovy`. Suppose you have a custom `MyAuthenticationProvider` in `resources.groovy`:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Registering a custom authentication provider bean in `resources.groovy`
 ----
 import com.foo.MyAuthenticationProvider
 
@@ -26,7 +31,8 @@ beans = {
 
 You register the provider in `grails-app/conf/application.groovy` as:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Registering a custom authentication provider name in `grails.plugin.springsecurity.providerNames`
 ----
 grails.plugin.springsecurity.providerNames = [
    'myAuthenticationProvider',

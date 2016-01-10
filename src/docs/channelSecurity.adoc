@@ -3,17 +3,28 @@
 
 Use channel security to configure which URLs require HTTP and which require HTTPS.
 
-[width="100%",options="header"]
+.Channel Security configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| portMapper.httpPort | 8080 | HTTP port your application uses.
-| portMapper.httpsPort | 8443 | HTTPS port your application uses.
-| secureChannel.definition | none | Map of URL pattern to channel rule
+
+|portMapper.httpPort
+|`8080`
+|HTTP port your application uses
+
+|portMapper.httpsPort
+|`8443`
+|HTTPS port your application uses
+
+|secureChannel.definition
+|_none_
+|Map of URL pattern to channel rule
 |====================
 
 Build a `List` of single-entry ``Map``s under the `secureChannel.definition` key, where URL patterns are stored under the key "`pattern`", and the values are stored under the key "`access`" and are one of the access keywords `REQUIRES_SECURE_CHANNEL`, `REQUIRES_INSECURE_CHANNEL`, or `ANY_CHANNEL`:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Sample `grails.plugin.springsecurity.secureChannel.definition`
 ----
 grails.plugin.springsecurity.secureChannel.definition = [
    [pattern: '/login/**',        access: 'REQUIRES_SECURE_CHANNEL'],
@@ -35,14 +46,14 @@ URLs are checked in order, so be sure to put more specific rules before less spe
 
 The default implementation of channel security is fairly simple; if you're using HTTP but HTTPS is required, you get redirected to the corresponding SSL URL and vice versa. But when using a load balancer such as an F5 BIG-IP it's not possible to just check secure/insecure. In that case you can configure the load balancer to set a request header indicating the current state. To use this approach, set the `useHeaderCheckChannelSecurity` configuration property to `true` and optionally change the header names or values:
 
-[source,java]
+[source,groovy]
 ----
 grails.plugin.springsecurity.secureChannel.useHeaderCheckChannelSecurity = true
 ----
 
 By default the header name is "`X-Forwarded-Proto`" and the secure header value is "`http`" (i.e. if you're not secure, redirect to secure) and the insecure header value is "`https`" (i.e. if you're secure, redirect to insecure). You can change any or all of these default values though:
 
-[source,java]
+[source,groovy]
 ----
 grails.plugin.springsecurity.secureChannel.secureHeaderName = '...'
 grails.plugin.springsecurity.secureChannel.secureHeaderValue = '...'

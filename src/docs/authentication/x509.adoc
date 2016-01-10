@@ -5,16 +5,38 @@ Another authentication mechanism supported by Spring Security is certificate-bas
 
 The table describes available configuration options.
 
-[width="100%",options="header"]
+.X.509 configuration options
+[cols="30,30,40"]
 |====================
 | *Property* | *Default Value* | *Meaning*
-| useX509 | `false` | Whether to support certificate-based logins
-| x509.continueFilterChainOn UnsuccessfulAuthentication | `true` | Whether to proceed when an authentication attempt fails to allow other authentication mechanisms to process the request.
-| x509.subjectDnRegex | '`CN=(.*?)(?:,\|$)`' | Regular expression (regex) for extracting the username from the certificate's subject name.
-| x509.checkForPrincipalChanges | `false` | Whether to re-extract the username from the certificate and check that it's still the current user when a valid `Authentication` already exists.
-| x509.invalidateSessionOn PrincipalChange | `true` | Whether to invalidate the session if the principal changed (based on a `checkForPrincipalChanges` check).
-| x509.subjectDnClosure | none | If set, the plugin's `ClosureX509PrincipalExtractor` class is used to extract information from the X.509 certificate using the specified closure
-| x509. throwException WhenTokenRejected | `false` | If `true` thrown a `BadCredentialsException`
+
+|useX509
+|`false`
+|Whether to support certificate-based logins
+
+|x509.continueFilterChainOnUnsuccessfulAuthentication
+|`true`
+|Whether to proceed when an authentication attempt fails to allow other authentication mechanisms to process the request
+
+|x509.subjectDnRegex
+|"`CN=(.*?)(?:,\|$)`"
+|Regular expression for extracting the username from the certificate's subject name
+
+|x509.checkForPrincipalChanges
+|`false`
+|Whether to re-extract the username from the certificate and check that it's still the current user when a valid `Authentication` already exists
+
+|x509.invalidateSessionOnPrincipalChange
+|`true`
+|Whether to invalidate the session if the principal changed (based on a `checkForPrincipalChanges` check)
+
+|x509.subjectDnClosure
+|_none_
+|If set, the plugin's `ClosureX509PrincipalExtractor` class is used to extract information from the X.509 certificate using the specified closure
+
+|x509.throwExceptionWhenTokenRejected
+|`false`
+|If `true` thrown a `BadCredentialsException`
 |====================
 
-The details of configuring your server for SSL and configuring browser certificates are beyond the scope of this document. If you use Tomcat, see its https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html[SSL documentation]. To get a test environment working, see the instructions in https://stackoverflow.com/questions/1180397/tomcat-server-client-self-signed-ssl-certificate[this discussion at Stack Overflow].
+The details of configuring your server for SSL and configuring browser certificates are beyond the scope of this document. If you use Tomcat, see its https://tomcat.apache.org/tomcat-8.0-doc/ssl-howto.html[SSL documentation]. To get a test environment working, see the instructions in https://stackoverflow.com/q/1180397/160313[this discussion at Stack Overflow].

@@ -1,31 +1,63 @@
 [[i18n]]
 == Internationalization
 
-Spring Security Core plugin is provided with i18n messages in several languages.
+The plugin includes i18n messages in several languages. To customize or translate these, add messages for the following keys to your i18n resource bundle(s) for each exception:
 
-If you want to customize or translate the texts then add messages for the following keys to your i18n resource bundle(s) for each exception:
-
-[width="100%",options="header"]
+.i18n messages for exceptions
+[cols="30,30,40"]
 |====================
 | *Message* | *Default Value* | *Exception*
-| springSecurity.errors.login.expired | "`Sorry, your account has expired.`" | AccountExpiredException
-| springSecurity.errors.login.passwordExpired | "`Sorry, your password has expired.`" | CredentialsExpiredException
-| springSecurity.errors.login.disabled | "`Sorry, your account is disabled.`" | DisabledException
-| springSecurity.errors.login.locked | "`Sorry, your account is locked.`" | LockedException
-| springSecurity.errors.login.fail | "`Sorry, we were not able to find a user with that username and password.`" | Other exceptions
+
+|springSecurity.errors.login.expired
+|"`Sorry, your account has expired.`"
+|`AccountExpiredException`
+
+|springSecurity.errors.login.passwordExpired
+|"`Sorry, your password has expired.`"
+|`CredentialsExpiredException`
+
+|springSecurity.errors.login.disabled
+|"`Sorry, your account is disabled.`"
+|`DisabledException`
+
+|springSecurity.errors.login.locked
+|"`Sorry, your account is locked.`"
+|`LockedException`
+
+|springSecurity.errors.login.fail
+|"`Sorry, we were not able to find a user with that username and password.`"
+|Other exceptions
 |====================
 
 You can customize all messages in auth.gsp and denied.gsp:
 
-[width="100%",options="header"]
+.i18n messages for GSPs
+[cols="50,50"]
 |====================
 | *Message* | *Default Value*
-| springSecurity.login.title | Login
-| springSecurity.login.header | Please Login
-| springSecurity.login.button | Login
-| springSecurity.login.username.label | Username
-| springSecurity.login.password.label | Password
-| springSecurity.login.remember.me.label | Remember me
-| springSecurity.denied.title | Denied
-| springSecurity.denied.message | Sorry, you're not authorized to view this page.
+
+|springSecurity.login.title
+|"`Login`"
+
+|springSecurity.login.header
+|"`Please Login`"
+
+|springSecurity.login.button
+|"`Login`"
+
+|springSecurity.login.username.label
+|"`Username`"
+
+|springSecurity.login.password.label
+|"`Password`"
+
+|springSecurity.login.remember.me.label
+|"`Remember me`"
+
+|springSecurity.denied.title
+|"`Denied`"
+
+|springSecurity.denied.message
+|"`Sorry, you're not authorized to view this page.`"
+
 |====================

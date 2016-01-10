@@ -7,7 +7,8 @@ The plugin registers some convenience methods into all controllers in your appli
 
 Returns `true` if there is an authenticated user.
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example use of `isLoggedIn()`
 ----
 class MyController {
 
@@ -39,7 +40,8 @@ class MyController {
 
 Retrieves the current authenticated user's Principal (a `GrailsUser` instance unless you've customized this) or `null` if not authenticated.
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example use of `getPrincipal()`
 ----
 class MyController {
 
@@ -63,7 +65,8 @@ class MyController {
 
 Loads the user domain class instance from the database that corresponds to the currently authenticated user, or `null` if not authenticated. This is the equivalent of adding a dependency injection for `springSecurityService` and calling `PersonDomainClassName.get(springSecurityService.principal.id)` (the typical way that this is often done).
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example use of `getAuthenticatedUser()`
 ----
 class MyController {
 

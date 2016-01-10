@@ -3,7 +3,7 @@
 
 `grails.plugin.springsecurity.SpringSecurityService` provides security utility functions. It is a regular Grails service, so you use dependency injection to inject it into a controller, service, taglib, and so on:
 
-[source,java]
+[source,groovy]
 ----
 def springSecurityService
 ----
@@ -15,7 +15,8 @@ If you do not need domain class data other than the id, you should use the `load
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `getCurrentUser()`
 ----
 class SomeController {
 
@@ -35,16 +36,19 @@ If you need other data than just the id, use the `getCurrentUser` method instead
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `loadCurrentUser()`
 ----
 class SomeController {
 
    def springSecurityService
 
-   def someAction() {
-      def user = springSecurityService.isLoggedIn() ? springSecurityService.loadCurrentUser() : null
+   def someAction(Long id) {
+      def user = springSecurityService.isLoggedIn() ?
+            springSecurityService.loadCurrentUser() :
+            null
       if (user) {
-         CreditCard card = CreditCard.findByIdAndUser(params.id as Long, user)
+         CreditCard card = CreditCard.findByIdAndUser(id, user)
          ...
       }
       ...
@@ -57,7 +61,8 @@ Checks whether there is a currently logged-in user.
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `isLoggedIn()`
 ----
 class SomeController {
 
@@ -76,13 +81,14 @@ class SomeController {
 
 ==== getAuthentication()
 
-Retrieves the current user's https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html[Authentication]. If authenticated, this will typically be a https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html[UsernamePasswordAuthenticationToken].
+Retrieves the current user's {apidocs}org/springframework/security/core/Authentication.html[Authentication]. If authenticated, this will typically be a {apidocs}org/springframework/security/authentication/UsernamePasswordAuthenticationToken.html[UsernamePasswordAuthenticationToken].
 
-If not authenticated and the https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html[AnonymousAuthenticationFilter] is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of `grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken` with a standard `org.springframework.security.core.userdetails.User` instance as its Principal. The authentication will have a single granted role, `ROLE_ANONYMOUS`.
+If not authenticated and the {apidocs}org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html[AnonymousAuthenticationFilter] is active (true by default) then the anonymous user's authentication will be returned. This will be an instance of `grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken` with a standard `org.springframework.security.core.userdetails.User` instance as its Principal. The authentication will have a single granted role, `ROLE_ANONYMOUS`.
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `getAuthentication()`
 ----
 class SomeController {
 
@@ -100,13 +106,14 @@ class SomeController {
 
 ==== getPrincipal()
 
-Retrieves the currently logged in user's `Principal`. If authenticated, the principal will be a `grails.plugin.springsecurity.userdetails.GrailsUser`, unless you have created a custom `UserDetailsService`, in which case it will be whatever implementation of https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/userdetails/UserDetails.html[UserDetails] you use there.
+Retrieves the currently logged in user's `Principal`. If authenticated, the principal will be a `grails.plugin.springsecurity.userdetails.GrailsUser`, unless you have created a custom `UserDetailsService`, in which case it will be whatever implementation of {apidocs}org/springframework/security/core/userdetails/UserDetails.html[UserDetails] you use there.
 
-If not authenticated and the https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html[AnonymousAuthenticationFilter] is active (true by default) then a standard `org.springframework.security.core.userdetails.User` is used.
+If not authenticated and the {apidocs}org/springframework/security/web/authentication/AnonymousAuthenticationFilter.html[AnonymousAuthenticationFilter] is active (true by default) then a standard `org.springframework.security.core.userdetails.User` is used.
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `getPrincipal()`
 ----
 class SomeController {
 
@@ -132,14 +139,14 @@ You are *strongly* discouraged from using MD5 or SHA-1 algorithms because of the
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `encodePassword()`
 ----
 class PersonController {
 
    def springSecurityService
 
-   def updateAction() {
-      def person = Person.get(params.id)
+   def updateAction(Person person) {
 
       params.salt = person.salt
       if (person.password != params.password) {
@@ -167,7 +174,8 @@ Updates a role and, if you use `Requestmap` instances to secure URLs, updates th
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `updateRole()`
 ----
 class RoleController {
 
@@ -190,7 +198,8 @@ Deletes a role and, if you use `Requestmap` instances to secure URLs, removes th
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `deleteRole()`
 ----
 class RoleController {
 
@@ -215,7 +224,8 @@ Flushes the Requestmaps cache and triggers a complete reload. If you use `Reques
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `clearCachedRequestmaps()`
 ----
 class RequestmapController {
 
@@ -236,20 +246,20 @@ class RequestmapController {
 
 ==== reauthenticate()
 
-Rebuilds an https://docs.spring.io/spring-security/site/docs/3.2.x/apidocs/org/springframework/security/core/Authentication.html[Authentication] for the given username and registers it in the security context. You typically use this method after updating a user's authorities or other data that is cached in the `Authentication` or `Principal`. It also removes the user from the user cache to force a refresh at next login.
+Rebuilds an {apidocs}org/springframework/security/core/Authentication.html[Authentication] for the given username and registers it in the security context. You typically use this method after updating a user's authorities or other data that is cached in the `Authentication` or `Principal`. It also removes the user from the user cache to force a refresh at next login.
 
 Example:
 
-[source,java]
+[source,groovy]
+.Listing {counter:listing}. Example using `reauthenticate()`
 ----
 class UserController {
 
    def springSecurityService
 
-   def update() {
-      def user = User.get(params.id)
+   def update(User user) {
 
-      params.salt = person.salt
+      params.salt = user.salt
       if (params.password) {
          params.password = springSecurityService.encodePassword(params.password, salt)
          def salt = ... // e.g. randomly generated using some utility method
