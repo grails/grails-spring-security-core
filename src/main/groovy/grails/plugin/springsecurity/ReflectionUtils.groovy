@@ -209,4 +209,10 @@ class ReflectionUtils {
 		String version = grailsRequest.getHeader(ACCEPT_VERSION) ?: extension.getMimeTypeForRequest(grailsRequest).version
 		urlMappingsHolder.matchAll requestUrl, method, version == null ? UrlMapping.ANY_VERSION : version
 	}
+
+	static SortedMap<Integer, String> findFilterChainNames(ConfigObject conf) {
+		SpringSecurityUtils.findFilterChainNames conf.filterChain.filterNames,
+				conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509,
+				conf.useDigestAuth, conf.useBasicAuth, conf.useSwitchUserFilter
+	}
 }

@@ -16,9 +16,13 @@ package grails.plugin.springsecurity
 
 import groovy.transform.CompileStatic
 import org.springframework.beans.BeansException
+import org.springframework.beans.MutablePropertyValues
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory
+import org.springframework.beans.factory.config.RuntimeBeanReference
 import org.springframework.beans.factory.support.BeanDefinitionRegistry
+import org.springframework.beans.factory.support.GenericBeanDefinition
+import org.springframework.boot.context.embedded.FilterRegistrationBean
 
 /**
  * Unregisters auto-config beans registered by Boot.
@@ -33,15 +37,35 @@ class SpringSecurityBeanFactoryPostProcessor implements BeanFactoryPostProcessor
 
 	void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
 		if (beanFactory instanceof BeanDefinitionRegistry) {
-			if (beanFactory.containsBeanDefinition(AUTOCONFIG_NAME)) {
-				beanFactory.removeBeanDefinition AUTOCONFIG_NAME
-			}
+			removeAutoconfigBeans beanFactory
+			disableFilterRegistrationBeans beanFactory
+		}
+	}
 
-			if (beanFactory.containsBeanDefinition(SECURITY_PROPERTIES_NAME)) {
-				if (beanFactory.getBeanDefinition(SECURITY_PROPERTIES_NAME).factoryBeanName == AUTOCONFIG_NAME) {
-					beanFactory.removeBeanDefinition SECURITY_PROPERTIES_NAME
-				}
+	protected void removeAutoconfigBeans(BeanDefinitionRegistry beanFactory) {
+		if (beanFactory.containsBeanDefinition(AUTOCONFIG_NAME)) {
+			beanFactory.removeBeanDefinition AUTOCONFIG_NAME
+		}
+
+		if (beanFactory.containsBeanDefinition(SECURITY_PROPERTIES_NAME)) {
+			if (beanFactory.getBeanDefinition(SECURITY_PROPERTIES_NAME).factoryBeanName == AUTOCONFIG_NAME) {
+				beanFactory.removeBeanDefinition SECURITY_PROPERTIES_NAME
 			}
+		}
+	}
+
+	/**
+	 * Need to add a FilterRegistrationBean with enabled set to false to prevent Boot from
+	 * registering all of the filters in the filterchains again as regular filters.
+	 */
+	protected void disableFilterRegistrationBeans(BeanDefinitionRegistry beanFactory) {
+		SortedMap<Integer, String> filterNames = ReflectionUtils.findFilterChainNames(SpringSecurityUtils.securityConfig)
+		for (String name in filterNames.values()) {
+			beanFactory.registerBeanDefinition name + 'DeregistrationBean', new GenericBeanDefinition(
+					beanClassName: FilterRegistrationBean.name,
+					propertyValues: new MutablePropertyValues(
+							enabled: false,
+							filter: new RuntimeBeanReference(name)))
 		}
 	}
 }
