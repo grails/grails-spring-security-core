@@ -890,11 +890,11 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		voterExpressionParser(SpelExpressionParser)
 
-		// TODO set AuthenticationTrustResolver when exposed in 3.2
 		webExpressionHandler(DefaultWebSecurityExpressionHandler) {
-			roleHierarchy = ref('roleHierarchy')
 			expressionParser = ref('voterExpressionParser')
 			permissionEvaluator = ref('permissionEvaluator')
+			roleHierarchy = ref('roleHierarchy')
+			trustResolver = ref('authenticationTrustResolver')
 		}
 
 		webExpressionVoter(WebExpressionVoter) {
