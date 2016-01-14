@@ -125,10 +125,7 @@ class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler, InitializingB
 
 	protected boolean isLoggedIn() {
 		Authentication authentication = getAuthentication()
-		if (!authentication) {
-			return false
-		}
-		!authenticationTrustResolver.isAnonymous(authentication)
+		authentication && !authenticationTrustResolver.isAnonymous(authentication)
 	}
 
 	/**
