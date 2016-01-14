@@ -40,6 +40,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.authentication.dao.ReflectionSaltSource
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder
+import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
@@ -96,6 +97,7 @@ import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncode
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
+import grails.plugin.springsecurity.userdetails.NoStackUsernameNotFoundException
 import grails.plugin.springsecurity.web.GrailsRedirectStrategy
 import grails.plugin.springsecurity.web.NullFilterChainValidator
 import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
@@ -503,7 +505,10 @@ to default to 'Annotation'; setting value to 'Annotation'
 			log.trace 'Configuring SecurityEventListener'
 			securityEventListener(SecurityEventListener)
 
-			authenticationEventPublisher(DefaultAuthenticationEventPublisher)
+			authenticationEventPublisher(DefaultAuthenticationEventPublisher) {
+				additionalExceptionMappings =
+					([(NoStackUsernameNotFoundException.name): AuthenticationFailureBadCredentialsEvent.name] as Properties)
+			}
 		}
 		else {
 			authenticationEventPublisher(NullAuthenticationEventPublisher)
