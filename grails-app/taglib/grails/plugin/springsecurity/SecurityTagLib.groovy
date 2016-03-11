@@ -122,6 +122,15 @@ class SecurityTagLib {
 			out << body()
 		}
 	}
+	
+	/**
+	 * Returns userObject for current user
+	 */
+	def getUserObject = {
+		if (springSecurityService.isLoggedIn()) {
+			return springSecurityService.getCurrentUser()
+		}
+	}
 
 	/**
 	 * Renders the user's username if logged in.
