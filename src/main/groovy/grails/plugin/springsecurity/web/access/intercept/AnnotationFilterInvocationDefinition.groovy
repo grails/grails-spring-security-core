@@ -82,18 +82,20 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		HttpServletRequest request = filterInvocation.httpRequest
 		HttpServletResponse response = filterInvocation.httpResponse
 
+		String requestUrl = calculateUri(request)
+
 		GrailsWebRequest existingRequest
 		try {
 			existingRequest = WebUtils.retrieveGrailsWebRequest()
 		}
 		catch (IllegalStateException e) {
-			throw new IllegalStateException(
-				'There was a problem retrieving the current GrailsWebRequest. This usually indicates a filter ordering ' +
-				"issue (the 'springSecurityFilterChain' filter-mapping element must be positioned after the " +
-				"'grailsWebRequest' element when using @Secured annotations).")
+			if (request.getAttribute('javax.servlet.error.status_code') == 404) {
+				ERROR404
+			}
+			else {
+				requestUrl
+			}
 		}
-
-		String requestUrl = calculateUri(request)
 
 		log.trace 'Requested url: {}', requestUrl
 

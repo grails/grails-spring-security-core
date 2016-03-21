@@ -43,6 +43,8 @@ import groovy.transform.CompileStatic
 abstract class AbstractFilterInvocationDefinition implements FilterInvocationSecurityMetadataSource {
 
 	protected static final Collection<ConfigAttribute> DENY = Collections.singletonList((ConfigAttribute)new SecurityConfig('_DENY_'))
+	protected static final Collection<ConfigAttribute> ALLOW404 = Collections.singletonList((ConfigAttribute)new SecurityConfig('permitAll'))
+	protected static final String ERROR404 = '__ERROR404__'
 
 	protected RoleVoter roleVoter
 	protected AuthenticatedVoter authenticatedVoter
@@ -70,6 +72,10 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		FilterInvocation filterInvocation = (FilterInvocation)object
 
 		String url = determineUrl(filterInvocation)
+		if (url == ERROR404) {
+			return ALLOW404
+		}
+
 		log.trace 'getAttributes(): url is {} for FilterInvocation {}', url, filterInvocation
 
 		Collection<ConfigAttribute> configAttributes = findConfigAttributes(url, filterInvocation.request.method)
