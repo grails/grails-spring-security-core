@@ -242,6 +242,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			allowSessionCreation = conf.scr.allowSessionCreation // true
 			disableUrlRewriting = conf.scr.disableUrlRewriting // true
 			springSecurityContextKey = conf.scr.springSecurityContextKey // SPRING_SECURITY_CONTEXT
+			trustResolver = ref('authenticationTrustResolver')
 		}
 
 		/** securityContextPersistenceFilter */
