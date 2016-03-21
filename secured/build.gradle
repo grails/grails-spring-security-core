@@ -54,16 +54,10 @@ dependencies {
 	compile 'org.hibernate:hibernate-ehcache'
 	compile 'org.grails.plugins:scaffolding'
 
-	compile 'org.grails.plugins:spring-security-core:3.0.0'
+	compile 'org.grails.plugins:spring-security-core:3.0.4'
 	runtime 'org.grails.plugins:spring-security-appinfo:3.0.0'
 
 	runtime 'org.grails.plugins:asset-pipeline'
-
-	testCompile 'org.grails:grails-plugin-testing'
-	testCompile 'org.grails.plugins:geb'
-
-	// Note: It is recommended to update to a more robust driver (Chrome, Firefox etc.)
-	testRuntime 'org.seleniumhq.selenium:selenium-htmlunit-driver:2.44.0'
 
 	console 'org.grails:grails-console'
 }
