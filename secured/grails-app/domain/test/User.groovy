@@ -45,8 +45,8 @@ class User implements Serializable {
 	static transients = ['springSecurityService']
 
 	static constraints = {
+		password blank: false, password: true
 		username blank: false, unique: true
-		password blank: false
 	}
 
 	static mapping = {
