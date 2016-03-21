@@ -115,7 +115,7 @@ class SecurityTagLib {
 			}
 		}
 
-		if (source) {
+		if (source != null) {
 			out << source.encodeAsHTML()
 		}
 		else {
