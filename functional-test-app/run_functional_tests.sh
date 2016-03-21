@@ -5,7 +5,7 @@ cd "$DIR"
 
 set -e
 
-GRAILS_VERSIONS="3.0.11 3.1.0.RC1"
+GRAILS_VERSIONS="3.0.15 3.1.4"
 TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 
 rm -rf build
@@ -13,7 +13,7 @@ rm -rf build
 function generateBuildGradle {
 	grailsVersion=$1
 
-	rm -f build.gradle
+	rm -f build*.gradle
 	echo -e "$(<gradle/buildscript.inc)\n" >> build.gradle
 
 	if [[ $grailsVersion =~ 3\.0\..+ ]]; then
@@ -56,6 +56,8 @@ function runTestGroup {
 for grailsVersion in $GRAILS_VERSIONS; do
 
 	_grailsVersion=${grailsVersion//\./_}
+
+	rm -f gradle*.properties
 
 	echo grailsVersion=$grailsVersion > gradle.properties
 	cp gradle.properties gradle$_grailsVersion.properties

@@ -17,7 +17,7 @@ apply from: 'gradle/plugin.gradle'
 
 dependencies {
 	compile 'net.sf.ehcache:ehcache:2.9.0'
-	String springSecurityVersion = '4.0.3.RELEASE'
+	String springSecurityVersion = '4.0.4.RELEASE'
 	compile "org.springframework.security:spring-security-core:$springSecurityVersion"
 	compile "org.springframework.security:spring-security-web:$springSecurityVersion"
 }
