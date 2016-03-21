@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.0.3</span>
+<span id="revnumber">version 3.0.4</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -586,6 +586,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>March 21, 2016</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.0.4 release</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>January 10, 2016</p>
 <div class="ulist">
@@ -1112,7 +1122,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.3'
+   compile 'org.grails.plugins:spring-security-core:3.0.4'
    ...</code></pre>
 </div>
 </div>
@@ -1447,8 +1457,8 @@ class User implements Serializable {
    static transients = ['springSecurityService']
 
    static constraints = {
+      password blank: false, password: true
       username blank: false, unique: true
-      password blank: false
    }
 
    static mapping = {
@@ -1519,8 +1529,8 @@ class User implements Serializable {
    static transients = ['springSecurityService']
 
    static constraints = {
+      password blank: false, password: true
       username blank: false, unique: true
-      password blank: false
    }
 
    static mapping = {
@@ -4971,7 +4981,12 @@ class MyUserDetailsService implements GrailsUserDetailsService {
       User user = User.findByUsername(username)
       if (!user) throw new NoStackUsernameNotFoundException()
 
-      def authorities = user.authorities.collect {
+      def roles = user.authorities
+
+      // or if you are using role groups:
+      // def roles = user.authorities.collect { it.authorities }.flatten().unique()
+
+      def authorities = roles.collect {
          new SimpleGrantedAuthority(it.authority)
       }
 
@@ -6781,7 +6796,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.3'
+   compile 'org.grails.plugins:spring-security-core:3.0.4'
    ...
 }</code></pre>
 </div>
@@ -6881,8 +6896,8 @@ class User implements Serializable {
    static transients = ['springSecurityService']
 
    static constraints = {
+      password blank: false, password: true
       username blank: false, unique: true
-      password blank: false
    }
 
    static mapping = {
@@ -7561,8 +7576,8 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.3<br>
-Last updated 2016-01-10 20:58:31 -05:00
+Version 3.0.4<br>
+Last updated 2016-03-21 17:03:00 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
