@@ -13,12 +13,6 @@ class ${userClassName}${groupClassName} implements Serializable {
 	${userClassName} ${userClassProperty}
 	${groupClassName} ${groupClassProperty}
 
-	${userClassName}${groupClassName}(${userClassName} u, ${groupClassName} rg) {
-		this()
-		${userClassProperty} = u
-		${groupClassProperty} = rg
-	}
-
 	@Override
 	boolean equals(other) {
 		if (!(other instanceof ${userClassName}${groupClassName})) {

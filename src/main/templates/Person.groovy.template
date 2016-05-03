@@ -18,12 +18,6 @@ class ${userClassName} implements Serializable {
 	boolean accountLocked
 	boolean passwordExpired
 
-	${userClassName}(String username, String password) {
-		this()
-		this.username = username
-		this.password = password
-	}
-
 	Set<${groupClassName ?: roleClassName}> getAuthorities() {
 		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this)*.${groupClassProperty ?: roleClassProperty}
 	}

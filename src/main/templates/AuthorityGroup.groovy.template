@@ -11,11 +11,6 @@ class ${groupClassName} implements Serializable {
 
 	String name
 
-	${groupClassName}(String name) {
-		this()
-		this.name = name
-	}
-
 	Set<${roleClassName}> getAuthorities() {
 		${groupClassName}${roleClassName}.findAllBy${groupClassName}(this)*.${roleClassProperty}
 	}

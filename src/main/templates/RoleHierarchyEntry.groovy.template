@@ -11,11 +11,6 @@ class ${className} implements Serializable {
 
 	String entry
 
-	${className}(String entry) {
-		this()
-		this.entry = entry
-	}
-
 	static constraints = {
 		entry blank: false, unique: true
 	}
