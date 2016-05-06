@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import grails.plugin.springsecurity.BeanTypeResolver
 import grails.plugin.springsecurity.SecurityConfigType
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken
@@ -29,6 +30,8 @@ security {
 	/** misc properties */
 
 	active = true
+
+	beanTypeResolverClass = BeanTypeResolver
 
 	printStatusMessages = true
 
