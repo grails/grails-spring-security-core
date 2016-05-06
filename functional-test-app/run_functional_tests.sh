@@ -5,7 +5,7 @@ cd "$DIR"
 
 set -e
 
-GRAILS_VERSIONS="3.0.15 3.1.4"
+GRAILS_VERSIONS="3.0.17 3.1.6"
 TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 
 rm -rf build
