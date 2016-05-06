@@ -74,7 +74,7 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBean implements Factor
 			assert SUPPORTED.contains(access),
 				"The rule for URL '$access' must be one of REQUIRES_SECURE_CHANNEL, REQUIRES_INSECURE_CHANNEL, or ANY_CHANNEL"
 
-			map[new AntPathRequestMatcher(entry.pattern)] = SecurityConfig.createList(access)
+			map[new AntPathRequestMatcher(entry.pattern, null, false)] = SecurityConfig.createList(access)
 		}
 
 		map

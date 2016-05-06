@@ -82,8 +82,8 @@ class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanSpec extends Abstr
 		def map = object.@requestMap
 
 		then:
-		'REQUIRES_SECURE_CHANNEL'   == map[new AntPathRequestMatcher('/foo1/**')].attribute[0]
-		'REQUIRES_INSECURE_CHANNEL' == map[new AntPathRequestMatcher('/foo2/**')].attribute[0]
-		'ANY_CHANNEL'               == map[new AntPathRequestMatcher('/foo3/**')].attribute[0]
+		'REQUIRES_SECURE_CHANNEL'   == map[new AntPathRequestMatcher('/foo1/**', null, false)].attribute[0]
+		'REQUIRES_INSECURE_CHANNEL' == map[new AntPathRequestMatcher('/foo2/**', null, false)].attribute[0]
+		'ANY_CHANNEL'               == map[new AntPathRequestMatcher('/foo3/**', null, false)].attribute[0]
 	}
 }

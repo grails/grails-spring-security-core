@@ -39,7 +39,7 @@ class GrailsSecurityFilterChain implements SecurityFilterChain {
 	GrailsSecurityFilterChain(String matcherPattern, List<Filter> filters) {
 		this.filters = [] + filters
 		this.matcherPattern = matcherPattern
-		requestMatcher = new AntPathRequestMatcher(matcherPattern)
+		requestMatcher = new AntPathRequestMatcher(matcherPattern, null, false)
 		log.info 'Creating filter chain: {}, {}', requestMatcher, filters
 	}
 
