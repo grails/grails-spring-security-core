@@ -14,10 +14,9 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
-
-import grails.plugin.springsecurity.AbstractUnitSpec
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

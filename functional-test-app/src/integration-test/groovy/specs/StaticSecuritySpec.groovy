@@ -110,7 +110,6 @@ class StaticSecuritySpec extends AbstractSecuritySpec {
 	}
 
 	void 'secured urls not visible without login'() {
-
 		when:
 		go 'secureAnnotated'
 

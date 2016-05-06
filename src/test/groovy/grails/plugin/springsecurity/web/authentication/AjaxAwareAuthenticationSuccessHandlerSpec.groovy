@@ -14,16 +14,15 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
+import grails.plugin.springsecurity.AbstractUnitSpec
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.RedirectStrategy
 import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.savedrequest.RequestCache
 import org.springframework.security.web.savedrequest.SavedRequest
-
-import grails.plugin.springsecurity.AbstractUnitSpec
-import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.plugin.springsecurity.web.SecurityRequestHolder
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>

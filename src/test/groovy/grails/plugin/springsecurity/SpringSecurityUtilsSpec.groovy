@@ -14,10 +14,8 @@
  */
 package grails.plugin.springsecurity
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-
+import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -26,8 +24,9 @@ import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
 import org.springframework.web.filter.GenericFilterBean
 
-import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
-import grails.plugin.springsecurity.web.SecurityRequestHolder
+import javax.servlet.FilterChain
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -69,7 +68,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 	}
 
 	void 'should add as first in existing chainmap'() {
-
 		when:
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', 99
 		def filters = applicationContext.securityFilterChains[0].filters
@@ -80,7 +78,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 	}
 
 	void 'should add as last in existing chainmap'() {
-
 		when:
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', 201
 		def filters = applicationContext.securityFilterChains[0].filters
@@ -91,7 +88,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 	}
 
 	void 'authoritiesToRoles'() {
-
 		when:
 		def roleNames = []
 		def authorities = []
@@ -108,7 +104,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 	}
 
 	void 'authoritiesToRoles() when there is an authority with a null string'() {
-
 		when:
 		def authorities = [new SimpleGrantedAuthority('role1'), new FakeAuthority()]
 		SpringSecurityUtils.authoritiesToRoles(authorities)
@@ -204,7 +199,6 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 	}
 
 	void 'isAjax using SavedRequest, false'() {
-
 		when:
 		def savedRequest = new DefaultSavedRequest(request, new PortResolverImpl())
 		request.session.setAttribute SpringSecurityUtils.SAVED_REQUEST, savedRequest

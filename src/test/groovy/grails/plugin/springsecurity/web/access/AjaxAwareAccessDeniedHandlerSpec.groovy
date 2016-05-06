@@ -14,17 +14,16 @@
  */
 package grails.plugin.springsecurity.web.access
 
+import grails.plugin.springsecurity.AbstractUnitSpec
+import grails.plugin.springsecurity.ReflectionUtils
+import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.plugin.springsecurity.web.SecurityRequestHolder
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl
 import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
-
-import grails.plugin.springsecurity.AbstractUnitSpec
-import grails.plugin.springsecurity.ReflectionUtils
-import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.plugin.springsecurity.web.SecurityRequestHolder
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -44,7 +43,6 @@ class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 	}
 
 	void 'handle authenticated, remember-me, redirect'() {
-
 		when:
 		handler.useForward = false
 
@@ -64,7 +62,6 @@ class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 	}
 
 	void 'handle authenticated, remember-me, forward'() {
-
 		when:
 		handler.useForward = true
 
@@ -84,7 +81,6 @@ class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 	}
 
 	void 'handle authenticated, Ajax, redirect'() {
-
 		when:
 		handler.useForward = false
 

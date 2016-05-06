@@ -85,7 +85,6 @@ class SecurityEventListenerSpec extends AbstractUnitSpec {
 	}
 
 	void 'Test handling AuthenticationSwitchUserEvent'() {
-
 		when:
 		boolean called = false
 		closures.onAuthenticationSwitchUserEvent = { e, appCtx -> called = true }

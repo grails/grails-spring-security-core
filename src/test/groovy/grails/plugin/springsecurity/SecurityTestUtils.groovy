@@ -14,13 +14,13 @@
  */
 package grails.plugin.springsecurity
 
-import java.lang.reflect.Modifier
-
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder as SCH
+
+import java.lang.reflect.Modifier
 
 /**
  * Utility methods for security unit tests.

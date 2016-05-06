@@ -31,10 +31,8 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 	private TestRole role
 
 	SpringSecurityService springSecurityService
-	def servletContext
 
 	void setup() {
-
 		oldConfig = SpringSecurityUtils.securityConfig
 
 		def requestMapConfig = SpringSecurityUtils.securityConfig.requestMap
@@ -50,7 +48,6 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'update role when invalid'() {
-
 		when:
 		TestRole role = TestRole.list()[0]
 
@@ -78,7 +75,6 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'update role'() {
-
 		when:
 		TestRole role = TestRole.list()[0]
 
@@ -109,7 +105,6 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'delete role'() {
-
 		when:
 		springSecurityService.deleteRole role
 		flushAndClear()

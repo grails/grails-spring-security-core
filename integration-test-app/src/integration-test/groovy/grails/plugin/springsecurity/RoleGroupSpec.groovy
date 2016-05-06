@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity
 
+import org.springframework.context.MessageSource
 import test.TestRole
 import test.TestRoleGroup
 import test.TestRoleGroupRoles
@@ -27,10 +28,9 @@ import test.TestUserRoleGroup
  */
 class RoleGroupSpec extends AbstractIntegrationSpec {
 
-	def messageSource
+	MessageSource messageSource
 
 	void 'roleGroup get roles'() {
-
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
@@ -54,7 +54,6 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'UserRoleGroup equals and hashCode'() {
-
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
@@ -100,7 +99,6 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'RoleGroupRole equals and hashCode'() {
-
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
@@ -146,7 +144,6 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'UserRoleGroup create'() {
-
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
@@ -312,6 +309,7 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
+		flushAndClear()
 
 		then:
 		!TestUserRoleGroup.get(u1.id, rg1.id)
@@ -328,6 +326,7 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
+		flushAndClear()
 
 		then:
 		!TestRoleGroupRoles.get(rg1.id, r1.id)
@@ -344,6 +343,7 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
+		flushAndClear()
 
 		then:
 		!TestUserRoleGroup.exists(u1.id, rg1.id)
@@ -360,6 +360,7 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
+		flushAndClear()
 
 		then:
 		!TestRoleGroupRoles.exists(rg1.id, r1.id)
@@ -376,6 +377,7 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
+		flushAndClear()
 
 		then:
 		!TestUserRoleGroup.remove(u1, rg1)
@@ -392,6 +394,7 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
 		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
+		flushAndClear()
 
 		then:
 		!TestRoleGroupRoles.remove(rg1, r1)

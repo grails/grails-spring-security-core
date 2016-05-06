@@ -5,7 +5,6 @@ import pages.IndexPage
 class DisableSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'lock account'() {
-
 		given:
 		String username = 'admin'
 
@@ -48,7 +47,6 @@ class DisableSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'disable account'() {
-
 		given:
 		String username = 'admin'
 
@@ -91,7 +89,6 @@ class DisableSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'expire account'() {
-
 		given:
 		String username = 'admin'
 
@@ -134,7 +131,6 @@ class DisableSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'expire password'() {
-
 		given:
 		String username = 'admin'
 

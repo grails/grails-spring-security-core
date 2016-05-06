@@ -14,13 +14,12 @@
  */
 package grails.plugin.springsecurity
 
-import java.text.SimpleDateFormat
-
-import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
-
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
 import groovy.sql.Sql
+import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 import test.TestPersistentLogin
+
+import java.text.SimpleDateFormat
 
 /**
  * Integration tests for <code>GormPersistentTokenRepository</code>, based on the tests
@@ -43,7 +42,6 @@ class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 	}
 
 	void 'create new token inserts correct data'() {
-
 		when:
 		Date currentDate = new Date()
 		def token = new PersistentRememberMeToken('joeuser', 'joesseries', 'atoken', currentDate)
@@ -65,7 +63,6 @@ class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 	}
 
 	void 'retrieving token returns correct data'() {
-
 		when:
 		insertToken 'joesseries', 'joeuser', 'atoken', DATE
 

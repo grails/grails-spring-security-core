@@ -14,15 +14,13 @@
  */
 package grails.plugin.springsecurity
 
+import com.test.AdditionalLogoutHandler
+import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.mock.web.MockHttpServletRequest
 import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
-
-import com.test.AdditionalLogoutHandler
-
-import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 
 /**
  * @author <a href='mailto:george@georgemcintosh.com'>George McIntosh</a>
@@ -31,7 +29,6 @@ import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilte
 class AdditionalLogoutFiltersConfiguredSpec extends AbstractIntegrationSpec {
 
 	void 'additional handlers exist'() {
-
 		when:
 		MutableLogoutFilter logoutFilter = grailsApplication.mainContext.logoutFilter
 
@@ -47,7 +44,6 @@ class AdditionalLogoutFiltersConfiguredSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'invoke'() {
-
 		when:
 		MutableLogoutFilter logoutFilter = grailsApplication.mainContext.logoutFilter
 		AdditionalLogoutHandler additionalLogoutHandler = grailsApplication.mainContext.additionalLogoutHandler

@@ -14,12 +14,11 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import org.springframework.security.authentication.BadCredentialsException
-import org.springframework.security.web.RedirectStrategy
-
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.web.SecurityRequestHolder
+import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.web.RedirectStrategy
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -33,7 +32,6 @@ class AjaxAwareAuthenticationFailureHandlerSpec extends AbstractUnitSpec {
 	}
 
 	void 'onAuthenticationFailure not Ajax'() {
-
 		when:
 		String defaultFailureUrl = '/defaultFailureUrl'
 		handler.defaultFailureUrl = defaultFailureUrl
@@ -55,7 +53,6 @@ class AjaxAwareAuthenticationFailureHandlerSpec extends AbstractUnitSpec {
 	}
 
 	void 'onAuthenticationFailure Ajax'() {
-
 		when:
 		String ajaxAuthenticationFailureUrl = '/ajaxAuthenticationFailureUrl'
 		handler.defaultFailureUrl = '/defaultFailureUrl'

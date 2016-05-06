@@ -14,14 +14,13 @@
  */
 package grails.plugin.springsecurity
 
+import grails.transaction.Transactional
 import org.grails.core.util.ClassPropertyFetcher
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl
 import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.User
-
-import grails.transaction.Transactional
 
 /**
  * Unit tests for SpringSecurityService.

@@ -14,10 +14,6 @@
  */
 package grails.plugin.springsecurity
 
-import java.security.Principal
-
-import javax.servlet.FilterChain
-
 import org.grails.buffer.GrailsPrintWriter
 import org.grails.gsp.GroovyPagesTemplateEngine
 import org.grails.plugins.testing.GrailsMockHttpServletRequest
@@ -35,8 +31,11 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 import org.springframework.web.context.request.RequestContextHolder
-
 import spock.lang.Ignore
+
+import javax.servlet.FilterChain
+import javax.servlet.ServletContext
+import java.security.Principal
 
 /**
  * Integration tests for <code>SecurityTagLib</code>.
@@ -50,12 +49,13 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	private GrailsMockHttpServletResponse response = new GrailsMockHttpServletResponse()
 
 	GroovyPagesTemplateEngine groovyPagesTemplateEngine
-	def servletContext
+	ServletContext servletContext
 
 	void 'ifAllGranted'() {
+		given:
+		String body = 'the_content'
 
 		when:
-		String body = 'the_content'
 		authenticate 'role1'
 
 		then:
@@ -69,8 +69,10 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'ifNotGranted'() {
-		when:
+		given:
 		String body = 'the_content'
+
+		when:
 		authenticate 'role1'
 
 		then:
@@ -84,8 +86,10 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'ifAnyGranted'() {
-		when:
+		given:
 		String body = 'the_content'
+
+		when:
 		authenticate 'role3'
 
 		then:
@@ -127,8 +131,10 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	}
 
 	void "loggedInUserInfo() for a principal that has a 'domainClass' property"() {
-		when:
+		given:
 		String fullName = 'First Last'
+
+		when:
 		user.fullName = fullName
 
 		then:
@@ -143,8 +149,10 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'loggedInUserInfo() with a nested property'() {
-		when:
+		given:
 		String fullName = 'First Last'
+
+		when:
 		user.foo = [bar: [fullName: fullName]]
 
 		then:
@@ -156,13 +164,14 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 
 		then:
 		assertOutputEquals fullName, "<sec:loggedInUserInfo field='foo.bar.fullName'/>"
-
 		assertOutputEquals '', "<sec:loggedInUserInfo field='foo.fullName'/>"
 	}
 
 	void "Test loggedInUserInfo() for a principal that doesn't have a 'domainClass' property"() {
-		when:
+		given:
 		String fullName = 'First Last'
+
+		when:
 		user.fullName = fullName
 
 		then:
@@ -230,7 +239,6 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 	void '<sec:access>'() {
 		when:
 		String body = 'the_content'
-
 		authenticate ''
 
 		then:

@@ -22,14 +22,12 @@ import test.TestRequestmap
 class ReflectionUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
 	void 'loadAllRequestmaps'() {
-
 		expect:
 		!ReflectionUtils.loadAllRequestmaps()
 
 		when:
 		10.times { save new TestRequestmap(urlPattern: "/url$it", rolePattern: "ROLE_$it") }
-
-		flush()
+		flushAndClear()
 
 		then:
 		10 == ReflectionUtils.loadAllRequestmaps().size()

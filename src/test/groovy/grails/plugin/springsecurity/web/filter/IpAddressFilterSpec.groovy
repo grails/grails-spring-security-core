@@ -14,9 +14,9 @@
  */
 package grails.plugin.springsecurity.web.filter
 
-import javax.servlet.FilterChain
-
 import grails.plugin.springsecurity.AbstractUnitSpec
+
+import javax.servlet.FilterChain
 
 /**
  * Unit tests for <code>IpAddressFilter</code>.
@@ -28,7 +28,6 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	private final IpAddressFilter filter = new IpAddressFilter()
 
 	void 'afterPropertiesSet'() {
-
 		when:
 		filter.afterPropertiesSet()
 
@@ -49,7 +48,6 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	}
 
 	void 'access can be String or Collection/Array of String'() {
-
 		given:
 		filter.ipRestrictions = [
 			[pattern: '/foo/**',   access: '127.0.0.1'],
@@ -81,7 +79,6 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	}
 
 	void 'doFilter HTTP allowed'() {
-
 		when:
 		filter.ipRestrictions = [
 			[pattern: '/foo/**',    access: '127.0.0.1'],
@@ -118,7 +115,6 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	}
 
 	void 'doFilter HTTP denied'() {
-
 		when:
 		filter.ipRestrictions = [
 			[pattern: '/foo/**',    access: '127.0.0.1'],
@@ -167,7 +163,6 @@ class IpAddressFilterSpec extends AbstractUnitSpec {
 	}
 
 	void 'doFilter mix IPv6 and IPv4'() {
-
 		when:
 		filter.ipRestrictions = [
 			[pattern: '/foo/**',    access: '127.0.0.1'],

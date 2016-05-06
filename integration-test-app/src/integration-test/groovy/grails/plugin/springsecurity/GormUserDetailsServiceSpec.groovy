@@ -14,8 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-
 import test.TestRole
 import test.TestRoleGroup
 import test.TestRoleGroupRoles
@@ -41,7 +41,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 	private securityConfigGroupPropertyValues
 
 	def passwordEncoder
-	def userDetailsService
+	UserDetailsService userDetailsService
 
 	void setup() {
 		securityConfigGroupPropertyValues = securityConfigGroupPropertyNames.collectEntries { String name ->
@@ -52,6 +52,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 		adminRole = save(new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin'))
 		superAdminRole = save(new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin'))
+		flushAndClear()
 
 		assert 2 == TestRole.count()
 	}
@@ -63,7 +64,6 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'loadUserByUsername not found'() {
-
 		when:
 		userDetailsService.loadUserByUsername 'not_a_user'
 
@@ -73,7 +73,6 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'loadUserByUsername no roles'() {
-
 		setup:
 		String loginName = 'loginName'
 
@@ -82,6 +81,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 		when:
 		save new TestUser(loginName: loginName, passwrrd: 'password')
+		flushAndClear()
 
 		then:
 		1 == TestUser.count()
@@ -95,7 +95,6 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'loadUserByUsername'() {
-
 		setup:
 		String loginName = 'loginName'
 		String password = 'password123'
@@ -105,13 +104,15 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 		when:
 		def user = save(new TestUser(loginName: loginName, passwrrd: password))
+		flushAndClear()
 
 		then:
-		 1 == TestUser.count()
+		1 == TestUser.count()
 
 		when:
 		TestUserRole.create user, adminRole
 		TestUserRole.create user, superAdminRole
+		flushAndClear()
 
 		then:
 		2 == TestUserRole.count()
@@ -148,14 +149,15 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 		when:
 		def user = save(new TestUser(loginName: loginName, passwrrd: password))
+		flushAndClear()
 
 		then:
 		1 == TestUser.count()
-
 		0 == TestRoleGroup.count()
 
 		when:
 		def roleGroup = save(new TestRoleGroup(name: 'testRoleGroup1'))
+		flushAndClear()
 
 		then:
 		1 == TestRoleGroup.count()
@@ -163,14 +165,15 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		when:
 		TestRoleGroupRoles.create roleGroup, adminRole
 		TestRoleGroupRoles.create roleGroup, superAdminRole
+		flushAndClear()
 
 		then:
 		2 == TestRoleGroupRoles.count()
-
 		!TestUserRoleGroup.count()
 
 		when:
 		TestUserRoleGroup.create user, roleGroup
+		flushAndClear()
 
 		then:
 		1 == TestUserRoleGroup.count()
@@ -185,7 +188,6 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'loadUserByUsername skip roles'() {
-
 		setup:
 		String loginName = 'loginName'
 		String password = 'password123'
@@ -195,6 +197,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 		when:
 		def user = save(new TestUser(loginName: loginName, passwrrd: password))
+		flushAndClear()
 
 		then:
 		1 == TestUser.count()
@@ -202,6 +205,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		when:
 		TestUserRole.create user, adminRole
 		TestUserRole.create user, superAdminRole
+		flushAndClear()
 
 		def details = userDetailsService.loadUserByUsername(loginName, false)
 

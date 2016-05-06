@@ -14,9 +14,9 @@
  */
 package grails.plugin.springsecurity
 
-import static org.springframework.security.authentication.dao.DaoAuthenticationProvider.USER_NOT_FOUND_PASSWORD
-
 import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEncoder
+
+import static org.springframework.security.authentication.dao.DaoAuthenticationProvider.USER_NOT_FOUND_PASSWORD
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
@@ -26,8 +26,7 @@ class DigestAuthPasswordEncoderSpec extends AbstractIntegrationSpec {
 	def daoAuthenticationProvider
 	def passwordEncoder
 
-	void 'initialize'() {
-
+	void 'test initialize'() {
 		when:
 		def providerPasswordEncoder = daoAuthenticationProvider.passwordEncoder
 

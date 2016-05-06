@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.access.vote
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.vote.AuthenticatedVoter
@@ -24,8 +25,6 @@ import org.springframework.security.authentication.TestingAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-
-import grails.plugin.springsecurity.AbstractUnitSpec
 
 /**
  * Unit tests for AuthenticatedVetoableDecisionManager.

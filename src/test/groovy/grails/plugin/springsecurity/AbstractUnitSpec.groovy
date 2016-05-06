@@ -14,14 +14,13 @@
  */
 package grails.plugin.springsecurity
 
+import grails.plugin.springsecurity.web.SecurityRequestHolder
+import grails.test.mixin.TestMixin
+import grails.test.mixin.web.ControllerUnitTestMixin
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler
-
-import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
 import spock.lang.Specification
 
 /**

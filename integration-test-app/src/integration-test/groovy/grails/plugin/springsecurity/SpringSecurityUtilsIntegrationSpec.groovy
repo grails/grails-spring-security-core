@@ -14,13 +14,12 @@
  */
 package grails.plugin.springsecurity
 
-import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE
-import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
-
-import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-
+import grails.plugin.springsecurity.userdetails.GrailsUser
+import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
+import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
+import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.security.core.context.SecurityContextHolder
@@ -29,16 +28,16 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
-
-import grails.plugin.springsecurity.userdetails.GrailsUser
-import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
-import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
-import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
-import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
-import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import test.TestRole
 import test.TestUser
 import test.TestUserRole
+
+import javax.servlet.FilterChain
+import javax.servlet.ServletRequest
+import javax.servlet.ServletResponse
+
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE
+import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
 
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
@@ -48,7 +47,7 @@ import test.TestUserRole
 class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
 	def securityFilterChains
-	def springSecurityService
+	SpringSecurityService springSecurityService
 
 	private static final String username = 'username'
 	private static TestUser testUser
@@ -79,7 +78,6 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'clientRegisterFilter'() {
-
 		given:
 		def map = SpringSecurityUtils.configuredOrderedFilters
 
@@ -140,7 +138,6 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'reauthenticate'() {
-
 		expect:
 		!springSecurityService.loggedIn
 
@@ -160,7 +157,6 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'doWithAuth with a current auth'() {
-
 		expect:
 		!springSecurityService.loggedIn
 
@@ -187,7 +183,6 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'doWithAuth with a new auth'() {
-
 		expect:
 		!springSecurityService.loggedIn
 
@@ -208,7 +203,6 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	void 'doWithAuth with a new auth, existing'() {
-
 		expect:
 		!springSecurityService.loggedIn
 

@@ -5,7 +5,6 @@ import pages.IndexPage
 class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'salted password'() {
-
 		given:
 		String username = 'testuser_books_and_movies'
 		def passwordEncoder = createSha256Encoder()
@@ -21,7 +20,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'switch user'() {
-
 		when:
 		login 'admin'
 
@@ -102,7 +100,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'hierarchical roles'() {
-
 		when:
 		login 'admin'
 
@@ -132,7 +129,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'taglibs unauthenticated'() {
-
 		when:
 		go 'tag-lib-test/test'
 
@@ -167,7 +163,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'taglibs user'() {
-
 		when:
 		login 'testuser'
 
@@ -207,7 +202,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'taglibs admin'() {
-
 		when:
 		login 'admin'
 
@@ -249,7 +243,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'metaclass methods unauthenticated'() {
-
 		when:
 		go 'tag-lib-test/testMetaclassMethods'
 
@@ -264,7 +257,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'metaclass methods authenticated'() {
-
 		when:
 		login 'admin'
 
@@ -285,7 +277,6 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 	}
 
 	void 'test hyphenated'() {
-
 		when:
 		go 'foo-bar'
 

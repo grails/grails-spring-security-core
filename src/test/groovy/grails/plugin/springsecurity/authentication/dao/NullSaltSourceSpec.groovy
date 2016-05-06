@@ -14,10 +14,9 @@
  */
 package grails.plugin.springsecurity.authentication.dao
 
+import grails.plugin.springsecurity.AbstractUnitSpec
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
-
-import grails.plugin.springsecurity.AbstractUnitSpec
 
 /**
  * Unit tests for <code>NullSaltSource</code>.

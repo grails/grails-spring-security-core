@@ -47,7 +47,6 @@ class AjaxAwareAuthenticationEntryPointSpec extends AbstractUnitSpec {
 	}
 
 	void 'commence() with Ajax true'() {
-
 		when:
 		request.addHeader SpringSecurityUtils.AJAX_HEADER, 'XMLHttpRequest'
 

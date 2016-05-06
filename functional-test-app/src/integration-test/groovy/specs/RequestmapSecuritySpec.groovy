@@ -127,13 +127,12 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	}
 
 	void 'create requestMaps'() {
-
 		when:
 		go 'testRequestmap/list?max=100'
 
 		then:
 		at ListRequestmapPage
-		def initialSize = requestmapRows.size()
+		int initialSize = requestmapRows.size()
 		initialSize == 20
 
 		when:
@@ -201,7 +200,6 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	}
 
 	void 'secured urls not visible without login'() {
-
 		when:
 		go 'secure'
 
@@ -228,7 +226,6 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	}
 
 	void 'check allowed for admin1'() {
-
 		when:
 		login 'admin1', 'password1'
 
@@ -251,7 +248,6 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	}
 
 	void 'check allowed for user1'() {
-
 		when:
 		login 'user1', 'p4ssw0rd'
 

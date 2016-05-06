@@ -14,10 +14,10 @@
  */
 package grails.plugin.springsecurity
 
-import org.springframework.transaction.annotation.Transactional
-
+import grails.core.GrailsApplication
 import grails.test.mixin.integration.Integration
 import grails.transaction.Rollback
+import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification
 import test.TestRole
 
@@ -29,16 +29,10 @@ import test.TestRole
 @Transactional
 abstract class AbstractIntegrationSpec extends Specification {
 
-	def grailsApplication
+	GrailsApplication grailsApplication
 
-	protected save(o, boolean flush = false) {
-		o.save(failOnError: true, flush: flush)
-	}
-
-	protected void flush() {
-		TestRole.withSession { session ->
-			session.flush()
-		}
+	protected <T> T save(T t) {
+		t.save(failOnError: true)
 	}
 
 	protected void flushAndClear() {

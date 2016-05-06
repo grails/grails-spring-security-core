@@ -172,7 +172,6 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 
 	void 'initialize'() {
-
 		when:
 		def mappings = {
 
@@ -259,7 +258,6 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 
 	void 'findConfigAttribute'() {
-
 		when:
 		String pattern = '/foo/**'
 		def configAttributes = [new SecurityConfig('ROLE_ADMIN')]

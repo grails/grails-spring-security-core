@@ -14,11 +14,10 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
-import org.springframework.mock.web.MockFilterChain
-import org.springframework.security.web.FilterInvocation
-
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.InterceptedUrl
+import org.springframework.mock.web.MockFilterChain
+import org.springframework.security.web.FilterInvocation
 
 /**
  * Unit tests for RequestmapFilterInvocationDefinition.
@@ -59,7 +58,6 @@ class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 
 	void 'reset'() {
-
 		when:
 		fid.roleVoter = applicationContext.getBean('roleVoter')
 		fid.authenticatedVoter = applicationContext.getBean('authenticatedVoter')
@@ -75,7 +73,6 @@ class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 
 	void 'initialize'() {
-
 		when:
 		fid.roleVoter = applicationContext.getBean('roleVoter')
 		fid.authenticatedVoter = applicationContext.getBean('authenticatedVoter')
@@ -99,7 +96,6 @@ class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 
 	void 'determineUrl'() {
-
 		when:
 		def chain = new MockFilterChain()
 		request.contextPath = '/context'
