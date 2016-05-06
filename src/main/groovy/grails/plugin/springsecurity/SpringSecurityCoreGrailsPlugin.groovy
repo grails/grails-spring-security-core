@@ -627,27 +627,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 	}}
 
-	void doWithDynamicMethods() {
-		ReflectionUtils.application = grailsApplication
-
-		def conf = SpringSecurityUtils.securityConfig
-		if (!conf || !conf.active) {
-			return
-		}
-
-		log.trace 'doWithDynamicMethods'
-
-		for (controllerClass in grailsApplication.controllerClasses) {
-			addControllerMethods controllerClass.metaClass
-		}
-
-		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
-			initializeFromAnnotations conf
-		}
-	}
-
 	void doWithApplicationContext() {
-
 		ReflectionUtils.application = grailsApplication
 
 		def conf = SpringSecurityUtils.securityConfig
@@ -656,6 +636,10 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 
 		log.trace 'doWithApplicationContext'
+
+		if (SpringSecurityUtils.securityConfigType == 'Annotation') {
+			initializeFromAnnotations conf
+		}
 
 		/**
 		 * Specify the field of the role hierarchy bean
@@ -749,8 +733,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 			if (SpringSecurityUtils.securityConfigType == 'Annotation') {
 				initializeFromAnnotations conf
 			}
-
-			addControllerMethods grailsApplication.getControllerClass(event.source.name).metaClass
 		}
 	}
 
@@ -778,21 +760,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 		afid.initialize conf.controllerAnnotations.staticRules,
 			applicationContext.grailsUrlMappingsHolder, grailsApplication.controllerClasses,
 			grailsApplication.domainClasses
-	}
-
-	private void addControllerMethods(MetaClass mc) {
-
-		if (!mc.respondsTo(null, 'getPrincipal')) {
-			mc.getPrincipal = { -> SCH.context?.authentication?.principal }
-		}
-
-		if (!mc.respondsTo(null, 'isLoggedIn')) {
-			mc.isLoggedIn = { -> applicationContext.springSecurityService.isLoggedIn() }
-		}
-
-		if (!mc.respondsTo(null, 'getAuthenticatedUser')) {
-			mc.getAuthenticatedUser = { -> applicationContext.springSecurityService.currentUser }
-		}
 	}
 
 	private createRefList = { names -> names.collect { name -> ref(name) } }
