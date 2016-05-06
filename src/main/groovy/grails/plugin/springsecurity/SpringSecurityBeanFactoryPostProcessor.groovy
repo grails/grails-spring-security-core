@@ -62,7 +62,7 @@ class SpringSecurityBeanFactoryPostProcessor implements BeanFactoryPostProcessor
 		SortedMap<Integer, String> filterNames = ReflectionUtils.findFilterChainNames(SpringSecurityUtils.securityConfig)
 		for (String name in filterNames.values()) {
 			beanFactory.registerBeanDefinition name + 'DeregistrationBean', new GenericBeanDefinition(
-					beanClassName: FilterRegistrationBean.name,
+					beanClass: FilterRegistrationBean,
 					propertyValues: new MutablePropertyValues(
 							enabled: false,
 							filter: new RuntimeBeanReference(name)))
