@@ -31,13 +31,6 @@ class TestRequestmap implements Serializable {
 	String rolePattern
 	HttpMethod httpMethod
 
-	TestRequestmap(String urlPattern, String rolePattern, HttpMethod httpMethod = null) {
-		this()
-		this.rolePattern = rolePattern
-		this.httpMethod = httpMethod
-		this.urlPattern = urlPattern
-	}
-
 	static constraints = {
 		rolePattern blank: false
 		httpMethod nullable: true

@@ -26,6 +26,8 @@ class TestUser implements Serializable {
 
 	private static final long serialVersionUID = 1
 
+	transient springSecurityService
+
 	String loginName
 	String passwrrd
 	boolean enabld = true
@@ -33,18 +35,28 @@ class TestUser implements Serializable {
 	boolean accountLocked
 	boolean passwordExpired
 
-	TestUser(String loginName, String passwrrd) {
-		this()
-		this.loginName = loginName
-		this.passwrrd = passwrrd
-	}
-
 	Set<TestRole> getRoles() { TestUserRole.findAllByUser(this)*.role }
 	Set<TestRoleGroup> getGroups() { TestUserRoleGroup.findAllByUser(this)*.roleGroup }
 	Collection<String> getRoleNames() { roles*.auth }
 
+	def beforeInsert() {
+		encodePassword()
+	}
+
+	def beforeUpdate() {
+		if (isDirty('passwrrd')) {
+			encodePassword()
+		}
+	}
+
+	protected void encodePassword() {
+		passwrrd = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(passwrrd) : passwrrd
+	}
+
+	static transients = ['springSecurityService']
+
 	static constraints = {
 		loginName blank: false, unique: true
-		passwrrd blank: false
+		passwrrd blank: false, password: true
 	}
 }

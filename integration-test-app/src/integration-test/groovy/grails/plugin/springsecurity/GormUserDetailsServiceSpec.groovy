@@ -40,6 +40,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 	                                            'authority.groupAuthorityNameField', 'userLookup.authoritiesPropertyName']
 	private securityConfigGroupPropertyValues
 
+	def passwordEncoder
 	def userDetailsService
 
 	void setup() {
@@ -49,8 +50,8 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 
 		assert !TestRole.count()
 
-		adminRole = save(new TestRole(ADMIN_ROLE_NAME, 'admin'))
-		superAdminRole = save(new TestRole(SUPER_ADMIN_ROLE_NAME, 'super admin'))
+		adminRole = save(new TestRole(auth: ADMIN_ROLE_NAME, description: 'admin'))
+		superAdminRole = save(new TestRole(auth: SUPER_ADMIN_ROLE_NAME, description: 'super admin'))
 
 		assert 2 == TestRole.count()
 	}
@@ -80,7 +81,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		!TestUser.count()
 
 		when:
-		save new TestUser(loginName, 'password')
+		save new TestUser(loginName: loginName, passwrrd: 'password')
 
 		then:
 		1 == TestUser.count()
@@ -103,14 +104,14 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		!TestUser.count()
 
 		when:
-		def user = save(new TestUser(loginName, password))
+		def user = save(new TestUser(loginName: loginName, passwrrd: password))
 
 		then:
 		 1 == TestUser.count()
 
 		when:
 		TestUserRole.create user, adminRole
-		TestUserRole.create user, superAdminRole, true
+		TestUserRole.create user, superAdminRole
 
 		then:
 		2 == TestUserRole.count()
@@ -121,7 +122,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		then:
 		details
 
-		password == details.password
+		passwordEncoder.isPasswordValid details.password, password, null
 		loginName == details.username
 		details.enabled
 		details.accountNonExpired
@@ -146,7 +147,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		!TestUser.count()
 
 		when:
-		def user = save(new TestUser(loginName, password))
+		def user = save(new TestUser(loginName: loginName, passwrrd: password))
 
 		then:
 		1 == TestUser.count()
@@ -154,14 +155,14 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		0 == TestRoleGroup.count()
 
 		when:
-		def roleGroup = save(new TestRoleGroup('testRoleGroup1'))
+		def roleGroup = save(new TestRoleGroup(name: 'testRoleGroup1'))
 
 		then:
 		1 == TestRoleGroup.count()
 
 		when:
 		TestRoleGroupRoles.create roleGroup, adminRole
-		TestRoleGroupRoles.create roleGroup, superAdminRole, true
+		TestRoleGroupRoles.create roleGroup, superAdminRole
 
 		then:
 		2 == TestRoleGroupRoles.count()
@@ -169,7 +170,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		!TestUserRoleGroup.count()
 
 		when:
-		TestUserRoleGroup.create user, roleGroup, true
+		TestUserRoleGroup.create user, roleGroup
 
 		then:
 		1 == TestUserRoleGroup.count()
@@ -193,21 +194,21 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		!TestUser.count()
 
 		when:
-		def user = save(new TestUser(loginName, password))
+		def user = save(new TestUser(loginName: loginName, passwrrd: password))
 
 		then:
 		1 == TestUser.count()
 
 		when:
 		TestUserRole.create user, adminRole
-		TestUserRole.create user, superAdminRole, true
+		TestUserRole.create user, superAdminRole
 
 		def details = userDetailsService.loadUserByUsername(loginName, false)
 
 		then:
 		details
 
-		password == details.password
+		passwordEncoder.isPasswordValid details.password, password, null
 		loginName == details.username
 		details.enabled
 		details.accountNonExpired

@@ -15,11 +15,9 @@ class ${userClassName}${roleClassName} implements Serializable {
 
 	@Override
 	boolean equals(other) {
-		if (!(other instanceof ${userClassName}${roleClassName})) {
-			return false
+		if (other instanceof ${userClassName}${roleClassName}) {
+			other.${userClassProperty}Id == ${userClassProperty}?.id && other.${roleClassProperty}Id == ${roleClassProperty}?.id
 		}
-
-		other.${userClassProperty}?.id == ${userClassProperty}?.id && other.${roleClassProperty}?.id == ${roleClassProperty}?.id
 	}
 
 	@Override
@@ -45,47 +43,34 @@ class ${userClassName}${roleClassName} implements Serializable {
 		}
 	}
 
-	static ${userClassName}${roleClassName} create(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
+	static ${userClassName}${roleClassName} create(${userClassName} ${userClassProperty}, ${roleClassName} ${roleClassProperty}) {
 		def instance = new ${userClassName}${roleClassName}(${userClassProperty}: ${userClassProperty}, ${roleClassProperty}: ${roleClassProperty})
-		instance.save(flush: flush, insert: true)
+		instance.save()
 		instance
 	}
 
-	static boolean remove(${userClassName} u, ${roleClassName} r, boolean flush = false) {
-		if (u == null || r == null) return false
-
-		int rowCount = ${userClassName}${roleClassName}.where { ${userClassProperty} == u && ${roleClassProperty} == r }.deleteAll()
-
-		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
-
-		rowCount
+	static boolean remove(${userClassName} u, ${roleClassName} r) {
+		if (u != null && r != null) {
+			${userClassName}${roleClassName}.where { ${userClassProperty} == u && ${roleClassProperty} == r }.deleteAll()
+		}
 	}
 
-	static void removeAll(${userClassName} u, boolean flush = false) {
-		if (u == null) return
-
-		${userClassName}${roleClassName}.where { ${userClassProperty} == u }.deleteAll()
-
-		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
+	static int removeAll(${userClassName} u) {
+		u == null ? 0 : ${userClassName}${roleClassName}.where { ${userClassProperty} == u }.deleteAll()
 	}
 
-	static void removeAll(${roleClassName} r, boolean flush = false) {
-		if (r == null) return
-
-		${userClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
-
-		if (flush) { ${userClassName}${roleClassName}.withSession { it.flush() } }
+	static int removeAll(${roleClassName} r) {
+		r == null ? 0 : ${userClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
 	}
 
 	static constraints = {
 		${roleClassProperty} validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
-			if (ur.${userClassProperty} == null || ur.${userClassProperty}.id == null) return
-			boolean existing = false
-			${userClassName}${roleClassName}.withNewSession {
-				existing = ${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)
-			}
-			if (existing) {
-				return 'userRole.exists'
+			if (ur.${userClassProperty}?.id) {
+				${userClassName}${roleClassName}.withNewSession {
+					if (${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)) {
+						return ['userRole.exists']
+					}
+				}
 			}
 		}
 	}

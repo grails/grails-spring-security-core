@@ -11,11 +11,6 @@ class TestRoleGroup implements Serializable {
 
 	String name
 
-	TestRoleGroup(String name) {
-		this()
-		this.name = name
-	}
-
 	Set<TestRole> getRoles() {
 		TestRoleGroupRoles.findAllByRoleGroup(this)*.role
 	}

@@ -13,19 +13,11 @@ class TestRoleGroupRoles implements Serializable {
 	TestRoleGroup roleGroup
 	TestRole role
 
-	TestRoleGroupRoles(TestRoleGroup g, TestRole r) {
-		this()
-		roleGroup = g
-		role = r
-	}
-
 	@Override
 	boolean equals(other) {
-		if (!(other instanceof TestRoleGroupRoles)) {
-			return false
+		if (other instanceof TestRoleGroupRoles) {
+			other.roleId == role?.id && other.roleGroupId == roleGroup?.id
 		}
-
-		other.role?.id == role?.id && other.roleGroup?.id == roleGroup?.id
 	}
 
 	@Override
@@ -51,47 +43,34 @@ class TestRoleGroupRoles implements Serializable {
 		}
 	}
 
-	static TestRoleGroupRoles create(TestRoleGroup roleGroup, TestRole role, boolean flush = false) {
+	static TestRoleGroupRoles create(TestRoleGroup roleGroup, TestRole role) {
 		def instance = new TestRoleGroupRoles(roleGroup: roleGroup, role: role)
-		instance.save(flush: flush, insert: true)
+		instance.save()
 		instance
 	}
 
-	static boolean remove(TestRoleGroup rg, TestRole r, boolean flush = false) {
-		if (rg == null || r == null) return false
-
-		int rowCount = TestRoleGroupRoles.where { roleGroup == rg && role == r }.deleteAll()
-
-		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
-
-		rowCount
+	static boolean remove(TestRoleGroup rg, TestRole r) {
+		if (rg && r) {
+			TestRoleGroupRoles.where { roleGroup == rg && role == r }.deleteAll()
+		}
 	}
 
-	static void removeAll(TestRole r, boolean flush = false) {
-		if (r == null) return
-
-		TestRoleGroupRoles.where { role == r }.deleteAll()
-
-		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
+	static int removeAll(TestRole r) {
+		r ? TestRoleGroupRoles.where { role == r }.deleteAll() : 0
 	}
 
-	static void removeAll(TestRoleGroup rg, boolean flush = false) {
-		if (rg == null) return
-
-		TestRoleGroupRoles.where { roleGroup == rg }.deleteAll()
-
-		if (flush) { TestRoleGroupRoles.withSession { it.flush() } }
+	static int removeAll(TestRoleGroup rg) {
+		rg ? TestRoleGroupRoles.where { roleGroup == rg }.deleteAll() : 0
 	}
 
 	static constraints = {
 		role validator: { TestRole r, TestRoleGroupRoles rg ->
-			if (rg.roleGroup == null || rg.roleGroup.id == null) return
-			boolean existing = false
-			TestRoleGroupRoles.withNewSession {
-				existing = TestRoleGroupRoles.exists(rg.roleGroup.id, r.id)
-			}
-			if (existing) {
-				return 'roleGroup.exists'
+			if (rg.roleGroup?.id) {
+				TestRoleGroupRoles.withNewSession {
+					if (TestRoleGroupRoles.exists(rg.roleGroup.id, r.id)) {
+						return ['roleGroup.exists']
+					}
+				}
 			}
 		}
 	}

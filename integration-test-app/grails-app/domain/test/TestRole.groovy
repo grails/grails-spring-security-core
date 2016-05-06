@@ -29,12 +29,6 @@ class TestRole implements Serializable {
 	String auth
 	String description
 
-	TestRole(String auth, String description) {
-		this()
-		this.auth = auth
-		this.description = description
-	}
-
 	static constraints = {
 		auth blank: false, unique: true
 	}

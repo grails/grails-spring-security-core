@@ -32,11 +32,11 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	void 'roleGroup get roles'() {
 
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
 
 		5.times { i ->
-			def r = save(new TestRole("r$i", "r$i"))
+			def r = save(new TestRole(auth: "r$i", description: "r$i"))
 			TestRoleGroupRoles.create rg1, r
 			if (i > 2) {
 				TestRoleGroupRoles.create rg2, r
@@ -56,13 +56,13 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	void 'UserRoleGroup equals and hashCode'() {
 
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
-		TestUser u1 = save(new TestUser('u1', 'u1'))
-		TestUser u2 = save(new TestUser('u2', 'u2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
+		TestUser u2 = save(new TestUser(loginName: 'u2', passwrrd: 'u2'))
 
-		TestUserRoleGroup urg1 = new TestUserRoleGroup(u1, rg1)
-		TestUserRoleGroup urg2 = new TestUserRoleGroup(u1, rg1)
+		TestUserRoleGroup urg1 = new TestUserRoleGroup(user: u1, roleGroup: rg1)
+		TestUserRoleGroup urg2 = new TestUserRoleGroup(user: u1, roleGroup: rg1)
 
 		then:
 		urg1 == urg2
@@ -102,13 +102,13 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	void 'RoleGroupRole equals and hashCode'() {
 
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
-		TestRole r1 = save(new TestRole('r1', 'r1'))
-		TestRole r2 = save(new TestRole('r2', 'r2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
+		TestRole r2 = save(new TestRole(auth: 'r2', description: 'r2'))
 
-		TestRoleGroupRoles rgr1 = new TestRoleGroupRoles(rg1, r1)
-		TestRoleGroupRoles rgr2 = new TestRoleGroupRoles(rg1, r1)
+		TestRoleGroupRoles rgr1 = new TestRoleGroupRoles(roleGroup: rg1, role: r1)
+		TestRoleGroupRoles rgr2 = new TestRoleGroupRoles(roleGroup: rg1, role: r1)
 
 		then:
 		rgr1 == rgr2
@@ -148,8 +148,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 	void 'UserRoleGroup create'() {
 
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestUser u1 = save(new TestUser('u1', 'u1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
 
 		def instance = TestUserRoleGroup.create(null, null)
 
@@ -229,8 +229,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'RoleGroupRole create'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRole r1 = save(new TestRole('r1', 'r1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
 
 		def instance = TestRoleGroupRoles.create(null, null)
 
@@ -310,8 +310,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'UserRoleGroup get'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestUser u1 = save(new TestUser('u1', 'u1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
 
 		then:
 		!TestUserRoleGroup.get(u1.id, rg1.id)
@@ -326,8 +326,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'RoleGroupRole get'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRole r1 = save(new TestRole('r1', 'r1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
 
 		then:
 		!TestRoleGroupRoles.get(rg1.id, r1.id)
@@ -342,8 +342,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'UserRoleGroup exists'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestUser u1 = save(new TestUser('u1', 'u1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
 
 		then:
 		!TestUserRoleGroup.exists(u1.id, rg1.id)
@@ -358,8 +358,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'RoleGroupRole exists'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRole r1 = save(new TestRole('r1', 'r1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
 
 		then:
 		!TestRoleGroupRoles.exists(rg1.id, r1.id)
@@ -374,8 +374,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'UserRoleGroup remove'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestUser u1 = save(new TestUser('u1', 'u1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
 
 		then:
 		!TestUserRoleGroup.remove(u1, rg1)
@@ -390,8 +390,8 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'RoleGroupRole remove'() {
 		when:
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRole r1 = save(new TestRole('r1', 'r1'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
 
 		then:
 		!TestRoleGroupRoles.remove(rg1, r1)
@@ -406,10 +406,10 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'UserRoleGroup removeAllByRoleGroup'() {
 		when:
-		TestUser u1 = save(new TestUser('u1', 'u1'))
-		TestUser u2 = save(new TestUser('u2', 'u2'))
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
+		TestUser u2 = save(new TestUser(loginName: 'u2', passwrrd: 'u2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
 
 		TestUserRoleGroup.create u1, rg1
 		TestUserRoleGroup.create u2, rg1
@@ -429,10 +429,10 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'RoleGroupRole removeAllByRoleGroup'() {
 		when:
-		TestRole r1 = save(new TestRole('r1', 'r1'))
-		TestRole r2 = save(new TestRole('r2', 'r2'))
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
+		TestRole r2 = save(new TestRole(auth: 'r2', description: 'r2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
 
 		TestRoleGroupRoles.create rg1, r1
 		TestRoleGroupRoles.create rg1, r2
@@ -452,10 +452,10 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'UserRoleGroup removeAllByUser'() {
 		when:
-		TestUser u1 = save(new TestUser('u1', 'u1'))
-		TestUser u2 = save(new TestUser('u2', 'u2'))
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
+		TestUser u1 = save(new TestUser(loginName: 'u1', passwrrd: 'u1'))
+		TestUser u2 = save(new TestUser(loginName: 'u2', passwrrd: 'u2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
 
 		TestUserRoleGroup.create u1, rg1
 		TestUserRoleGroup.create u2, rg1
@@ -475,10 +475,10 @@ class RoleGroupSpec extends AbstractIntegrationSpec {
 
 	void 'RoleGroupRole removeAllByRole'() {
 		when:
-		TestRole r1 = save(new TestRole('r1', 'r1'))
-		TestRole r2 = save(new TestRole('r2', 'r2'))
-		TestRoleGroup rg1 = save(new TestRoleGroup('rg1'))
-		TestRoleGroup rg2 = save(new TestRoleGroup('rg2'))
+		TestRole r1 = save(new TestRole(auth: 'r1', description: 'r1'))
+		TestRole r2 = save(new TestRole(auth: 'r2', description: 'r2'))
+		TestRoleGroup rg1 = save(new TestRoleGroup(name: 'rg1'))
+		TestRoleGroup rg2 = save(new TestRoleGroup(name: 'rg2'))
 
 		TestRoleGroupRoles.create rg1, r1
 		TestRoleGroupRoles.create rg1, r2

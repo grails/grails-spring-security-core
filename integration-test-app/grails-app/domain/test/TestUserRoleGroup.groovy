@@ -12,19 +12,11 @@ class TestUserRoleGroup implements Serializable {
 	TestUser user
 	TestRoleGroup roleGroup
 
-	TestUserRoleGroup(TestUser u, TestRoleGroup rg) {
-		this()
-		user = u
-		roleGroup = rg
-	}
-
 	@Override
 	boolean equals(other) {
-		if (!(other instanceof TestUserRoleGroup)) {
-			return false
+		if (other instanceof TestUserRoleGroup) {
+			other.userId == user?.id && other.roleGroupId == roleGroup?.id
 		}
-
-		other.user?.id == user?.id && other.roleGroup?.id == roleGroup?.id
 	}
 
 	@Override
@@ -50,47 +42,34 @@ class TestUserRoleGroup implements Serializable {
 		}
 	}
 
-	static TestUserRoleGroup create(TestUser user, TestRoleGroup roleGroup, boolean flush = false) {
+	static TestUserRoleGroup create(TestUser user, TestRoleGroup roleGroup) {
 		def instance = new TestUserRoleGroup(user: user, roleGroup: roleGroup)
-		instance.save(flush: flush, insert: true)
+		instance.save()
 		instance
 	}
 
-	static boolean remove(TestUser u, TestRoleGroup rg, boolean flush = false) {
-		if (u == null || rg == null) return false
-
-		int rowCount = TestUserRoleGroup.where { user == u && roleGroup == rg }.deleteAll()
-
-		if (flush) { TestUserRoleGroup.withSession { it.flush() } }
-
-		rowCount
+	static boolean remove(TestUser u, TestRoleGroup rg) {
+		if (u && rg) {
+			TestUserRoleGroup.where { user == u && roleGroup == rg }.deleteAll()
+		}
 	}
 
-	static void removeAll(TestUser u, boolean flush = false) {
-		if (u == null) return
-
-		TestUserRoleGroup.where { user == u }.deleteAll()
-
-		if (flush) { TestUserRoleGroup.withSession { it.flush() } }
+	static int removeAll(TestUser u) {
+		u ? TestUserRoleGroup.where { user == u }.deleteAll() : 0
 	}
 
-	static void removeAll(TestRoleGroup rg, boolean flush = false) {
-		if (rg == null) return
-
-		TestUserRoleGroup.where { roleGroup == rg }.deleteAll()
-
-		if (flush) { TestUserRoleGroup.withSession { it.flush() } }
+	static int removeAll(TestRoleGroup rg) {
+		rg ? TestUserRoleGroup.where { roleGroup == rg }.deleteAll() : 0
 	}
 
 	static constraints = {
 		user validator: { TestUser u, TestUserRoleGroup ug ->
-			if (ug.roleGroup == null || ug.roleGroup.id == null) return
-			boolean existing = false
-			TestUserRoleGroup.withNewSession {
-				existing = TestUserRoleGroup.exists(u.id, ug.roleGroup.id)
-			}
-			if (existing) {
-				return 'userGroup.exists'
+			if (ug.roleGroup?.id ) {
+				TestUserRoleGroup.withNewSession {
+					if (TestUserRoleGroup.exists(u.id, ug.roleGroup.id)) {
+						return ['userGroup.exists']
+					}
+				}
 			}
 		}
 	}

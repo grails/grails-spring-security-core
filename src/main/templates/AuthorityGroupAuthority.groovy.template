@@ -15,11 +15,9 @@ class ${groupClassName}${roleClassName} implements Serializable {
 
 	@Override
 	boolean equals(other) {
-		if (!(other instanceof ${groupClassName}${roleClassName})) {
-			return false
+		if (other instanceof ${groupClassName}${roleClassName}) {
+			other.${roleClassProperty}Id == ${roleClassProperty}?.id && other.${groupClassProperty}Id == ${groupClassProperty}?.id
 		}
-
-		other.${roleClassProperty}?.id == ${roleClassProperty}?.id && other.${groupClassProperty}?.id == ${groupClassProperty}?.id
 	}
 
 	@Override
@@ -45,47 +43,34 @@ class ${groupClassName}${roleClassName} implements Serializable {
 		}
 	}
 
-	static ${groupClassName}${roleClassName} create(${groupClassName} ${groupClassProperty}, ${roleClassName} ${roleClassProperty}, boolean flush = false) {
+	static ${groupClassName}${roleClassName} create(${groupClassName} ${groupClassProperty}, ${roleClassName} ${roleClassProperty}) {
 		def instance = new ${groupClassName}${roleClassName}(${groupClassProperty}: ${groupClassProperty}, ${roleClassProperty}: ${roleClassProperty})
-		instance.save(flush: flush, insert: true)
+		instance.save()
 		instance
 	}
 
-	static boolean remove(${groupClassName} rg, ${roleClassName} r, boolean flush = false) {
-		if (rg == null || r == null) return false
-
-		int rowCount = ${groupClassName}${roleClassName}.where { ${groupClassProperty} == rg && ${roleClassProperty} == r }.deleteAll()
-
-		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
-
-		rowCount
+	static boolean remove(${groupClassName} rg, ${roleClassName} r) {
+		if (rg != null && r != null) {
+			${groupClassName}${roleClassName}.where { ${groupClassProperty} == rg && ${roleClassProperty} == r }.deleteAll()
+		}
 	}
 
-	static void removeAll(${roleClassName} r, boolean flush = false) {
-		if (r == null) return
-
-		${groupClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
-
-		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
+	static int removeAll(${roleClassName} r) {
+		r == null ? 0 : ${groupClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
 	}
 
-	static void removeAll(${groupClassName} rg, boolean flush = false) {
-		if (rg == null) return
-
-		${groupClassName}${roleClassName}.where { ${groupClassProperty} == rg }.deleteAll()
-
-		if (flush) { ${groupClassName}${roleClassName}.withSession { it.flush() } }
+	static int removeAll(${groupClassName} rg) {
+		rg == null ? 0 : ${groupClassName}${roleClassName}.where { ${groupClassProperty} == rg }.deleteAll()
 	}
 
 	static constraints = {
 		${roleClassProperty} validator: { ${roleClassName} r, ${groupClassName}${roleClassName} rg ->
-			if (rg.${groupClassProperty} == null || rg.${groupClassProperty}.id == null) return
-			boolean existing = false
-			${groupClassName}${roleClassName}.withNewSession {
-				existing = ${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)
-			}
-			if (existing) {
-				return 'roleGroup.exists'
+			if (rg.${groupClassProperty}?.id) {
+				${groupClassName}${roleClassName}.withNewSession {
+					if (${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)) {
+						return ['roleGroup.exists']
+					}
+				}
 			}
 		}
 	}

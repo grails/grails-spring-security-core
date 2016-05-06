@@ -280,8 +280,8 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains 'Username: admin'
 		assertContentContains 'isLoggedIn: true'
 		assertContentContains 'loggedIn: true'
-		assertContentContains 'getAuthenticatedUser: admin'
-		assertContentContains 'authenticatedUser: admin'
+		assertContentContains 'getAuthenticatedUser: TestUser(username:admin)'
+		assertContentContains 'authenticatedUser: TestUser(username:admin)'
 	}
 
 	void 'test hyphenated'() {

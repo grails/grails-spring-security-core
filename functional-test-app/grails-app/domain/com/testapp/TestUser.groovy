@@ -1,7 +1,11 @@
 package com.testapp
 
-class TestUser implements Serializable {
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
 
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
+class TestUser implements Serializable {
 	private static final long serialVersionUID = 1
 
 	transient springSecurityService
@@ -12,34 +16,6 @@ class TestUser implements Serializable {
 	boolean accountExpired
 	boolean accountLocked
 	boolean passwordExpired
-
-	TestUser(String username, String password) {
-		this()
-		this.username = username
-		this.password = password
-	}
-
-	@Override
-	int hashCode() {
-		username?.hashCode() ?: 0
-	}
-
-	@Override
-	boolean equals(other) {
-		is(other) || (other instanceof TestUser && other.username == username)
-	}
-
-	@Override
-	String toString() {
-		username
-	}
-
-	static transients = ['springSecurityService']
-
-	static constraints = {
-		username blank: false, unique: true
-		password blank: false
-	}
 
 	Set<TestRole> getAuthorities() {
 		TestUserTestRole.findAllByTestUser(this)*.testRole
@@ -57,5 +33,12 @@ class TestUser implements Serializable {
 
 	protected void encodePassword() {
 		password = springSecurityService.encodePassword(password, springSecurityService.grailsApplication.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty ? username : null)
+	}
+
+	static transients = ['springSecurityService']
+
+	static constraints = {
+		username blank: false, unique: true
+		password blank: false, password: true
 	}
 }

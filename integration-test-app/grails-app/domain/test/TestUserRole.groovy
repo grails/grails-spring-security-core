@@ -30,19 +30,11 @@ class TestUserRole implements Serializable {
 	TestUser user
 	TestRole role
 
-	TestUserRole(TestUser u, TestRole r) {
-		this()
-		user = u
-		role = r
-	}
-
 	@Override
 	boolean equals(other) {
-		if (!(other instanceof TestUserRole)) {
-			return false
+		if (other instanceof TestUserRole) {
+			other.userId == user?.id && other.roleId == role?.id
 		}
-
-		other.user?.id == user?.id && other.role?.id == role?.id
 	}
 
 	@Override
@@ -68,47 +60,34 @@ class TestUserRole implements Serializable {
 		}
 	}
 
-	static TestUserRole create(TestUser user, TestRole role, boolean flush = false) {
+	static TestUserRole create(TestUser user, TestRole role) {
 		def instance = new TestUserRole(user: user, role: role)
-		instance.save(flush: flush, insert: true)
+		instance.save()
 		instance
 	}
 
-	static boolean remove(TestUser u, TestRole r, boolean flush = false) {
-		if (u == null || r == null) return false
-
-		int rowCount = TestUserRole.where { user == u && role == r }.deleteAll()
-
-		if (flush) { TestUserRole.withSession { it.flush() } }
-
-		rowCount
+	static boolean remove(TestUser u, TestRole r) {
+		if (u && r) {
+			TestUserRole.where { user == u && role == r }.deleteAll()
+		}
 	}
 
-	static void removeAll(TestUser u, boolean flush = false) {
-		if (u == null) return
-
-		TestUserRole.where { user == u }.deleteAll()
-
-		if (flush) { TestUserRole.withSession { it.flush() } }
+	static int removeAll(TestUser u) {
+		u ? TestUserRole.where { user == u }.deleteAll() : 0
 	}
 
-	static void removeAll(TestRole r, boolean flush = false) {
-		if (r == null) return
-
-		TestUserRole.where { role == r }.deleteAll()
-
-		if (flush) { TestUserRole.withSession { it.flush() } }
+	static int removeAll(TestRole r) {
+		r ? TestUserRole.where { role == r }.deleteAll() : 0
 	}
 
 	static constraints = {
 		role validator: { TestRole r, TestUserRole ur ->
-			if (ur.user == null || ur.user.id == null) return
-			boolean existing = false
-			TestUserRole.withNewSession {
-				existing = TestUserRole.exists(ur.user.id, r.id)
-			}
-			if (existing) {
-				return 'userRole.exists'
+			if (ur.user?.id) {
+				TestUserRole.withNewSession {
+					if (TestUserRole.exists(ur.user.id, r.id)) {
+						return ['userRole.exists']
+					}
+				}
 			}
 		}
 	}

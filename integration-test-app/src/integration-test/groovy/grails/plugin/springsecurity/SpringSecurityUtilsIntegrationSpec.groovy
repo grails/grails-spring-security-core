@@ -57,12 +57,12 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		if (testUser) return
 
 		TestUser.withNewTransaction {
-			testUser = save(new TestUser(username, springSecurityService.encodePassword('password')))
-			def role = save(new TestRole('ROLE_ADMIN', 'admin'))
-			TestUserRole.create testUser, role, true
+			testUser = save(new TestUser(loginName: username, passwrrd: 'password'))
+			def role = save(new TestRole(auth: 'ROLE_ADMIN', description: 'admin'))
+			TestUserRole.create testUser, role
 
-			def user = save(new TestUser('other', springSecurityService.encodePassword('password')))
-			TestUserRole.create user, role, true
+			def user = save(new TestUser(loginName: 'other', passwrrd: 'password'))
+			TestUserRole.create user, role
 		}
 	}
 

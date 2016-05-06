@@ -27,7 +27,7 @@ class ReflectionUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		!ReflectionUtils.loadAllRequestmaps()
 
 		when:
-		10.times { save new TestRequestmap("/url$it", "ROLE_$it") }
+		10.times { save new TestRequestmap(urlPattern: "/url$it", rolePattern: "ROLE_$it") }
 
 		flush()
 

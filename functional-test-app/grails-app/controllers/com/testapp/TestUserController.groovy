@@ -121,7 +121,7 @@ class TestUserController {
 	private void addRoles(person) {
 		for (String key in params.keySet()) {
 			if (key.contains('ROLE') && 'on' == params.get(key)) {
-				TestUserTestRole.create person, TestRole.findByAuthority(key), true
+				TestUserTestRole.create person, TestRole.findByAuthority(key)
 			}
 		}
 	}

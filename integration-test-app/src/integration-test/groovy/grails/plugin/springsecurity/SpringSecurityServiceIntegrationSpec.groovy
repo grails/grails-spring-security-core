@@ -45,7 +45,7 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 
 		createTestRequestmaps()
 
-		role = save(new TestRole(ROLE_ADMIN, ROLE_ADMIN_DESCRIPTION))
+		role = save(new TestRole(auth: ROLE_ADMIN, description: ROLE_ADMIN_DESCRIPTION))
 		flushAndClear()
 	}
 
@@ -130,11 +130,11 @@ class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 	}
 
 	private void createTestRequestmaps() {
-		save new TestRequestmap('/user/**',         'ROLE_USER')
-		save new TestRequestmap('/admin/role/**',   'ROLE_ADMIN')
-		save new TestRequestmap('/admin/person/**', 'ROLE_ADMIN,ROLE_FOO')
-		save new TestRequestmap('/admin/foo/**',    'ROLE_USER,ROLE_ADMIN,ROLE_FOO')
-		save new TestRequestmap('/admin/super/**',  'ROLE_ADMIN,ROLE_FOO')
+		save new TestRequestmap(urlPattern: '/user/**',         rolePattern: 'ROLE_USER')
+		save new TestRequestmap(urlPattern: '/admin/role/**',   rolePattern: 'ROLE_ADMIN')
+		save new TestRequestmap(urlPattern: '/admin/person/**', rolePattern: 'ROLE_ADMIN,ROLE_FOO')
+		save new TestRequestmap(urlPattern: '/admin/foo/**',    rolePattern: 'ROLE_USER,ROLE_ADMIN,ROLE_FOO')
+		save new TestRequestmap(urlPattern: '/admin/super/**',  rolePattern: 'ROLE_ADMIN,ROLE_FOO')
 
 		flushAndClear()
 
