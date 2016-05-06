@@ -51,7 +51,9 @@ dependencies {
 
 	compile 'org.grails.plugins:hibernate'
 	compile 'org.grails.plugins:cache'
-	compile 'org.hibernate:hibernate-ehcache'
+	compile 'org.hibernate:hibernate-ehcache', {
+		exclude module: 'ehcache-core'
+	}
 	compile 'org.grails.plugins:scaffolding'
 
 	compile 'org.grails.plugins:spring-security-core:3.0.4'
