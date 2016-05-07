@@ -5,7 +5,7 @@ class TagLibTestController {
 
 	def test() {}
 
-	def testMetaclassMethods() {
+	def testControllerMethods() {
 
 		render """
 		getPrincipal: ${getPrincipal()}<br/>

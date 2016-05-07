@@ -242,9 +242,9 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentDoesNotContain 'Cannot access /tag-lib-test/test'
 	}
 
-	void 'metaclass methods unauthenticated'() {
+	void 'controller methods unauthenticated'() {
 		when:
-		go 'tag-lib-test/testMetaclassMethods'
+		go 'tag-lib-test/test-controller-methods'
 
 		then:
 		assertContentContains 'getPrincipal: org.springframework.security.core.userdetails.User'
@@ -256,7 +256,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains 'authenticatedUser: null'
 	}
 
-	void 'metaclass methods authenticated'() {
+	void 'controller methods authenticated'() {
 		when:
 		login 'admin'
 
@@ -264,7 +264,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		at IndexPage
 
 		when:
-		go 'tag-lib-test/test-metaclass-methods'
+		go 'tag-lib-test/test-controller-methods'
 
 		then:
 		assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
