@@ -29,10 +29,10 @@
 	<sec:access   expression="hasRole('ROLE_ANONYMOUS')">anonymous access: true</sec:access><br/>
 	<sec:noAccess expression="hasRole('ROLE_ANONYMOUS')">anonymous access: false</sec:noAccess><br/>
 
-	<sec:access   url='/tagLibTest/test'>Can access /tagLibTest/test</sec:access><br/>
-	<sec:noAccess url='/tagLibTest/test'>Cannot access /tagLibTest/test</sec:noAccess><br/>
-	<sec:access   url='/tag-lib-test/test'>Can access /tag-lib-test/test</sec:access><br/>
-	<sec:noAccess url='/tag-lib-test/test'>Cannot access /tag-lib-test/test</sec:noAccess><br/>
+	<sec:access   url='/miscTest/test'>Can access /miscTest/test</sec:access><br/>
+	<sec:noAccess url='/miscTest/test'>Cannot access /miscTest/test</sec:noAccess><br/>
+	<sec:access   url='/misc-test/test'>Can access /misc-test/test</sec:access><br/>
+	<sec:noAccess url='/misc-test/test'>Cannot access /misc-test/test</sec:noAccess><br/>
 
 	<sec:access   url='/login/auth'>Can access /login/auth</sec:access><br/>
 	<sec:noAccess url='/login/auth'>Cannot access /login/auth</sec:noAccess><br/>

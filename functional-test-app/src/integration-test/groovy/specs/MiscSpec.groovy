@@ -130,7 +130,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'taglibs unauthenticated'() {
 		when:
-		go 'tag-lib-test/test'
+		go 'misc-test/test'
 
 		then:
 		assertContentDoesNotContain 'user and admin'
@@ -157,9 +157,9 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains 'Cannot access /secure-annotated'
 
 		assertContentContains 'anonymous access: true'
-		assertContentContains 'Can access /tag-lib-test/test'
+		assertContentContains 'Can access /misc-test/test'
 		assertContentDoesNotContain 'anonymous access: false'
-		assertContentDoesNotContain 'Cannot access /tag-lib-test/test'
+		assertContentDoesNotContain 'Cannot access /misc-test/test'
 	}
 
 	void 'taglibs user'() {
@@ -170,7 +170,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		at IndexPage
 
 		when:
-		go 'tag-lib-test/test'
+		go 'misc-test/test'
 
 		then:
 		assertContentDoesNotContain 'user and admin'
@@ -197,7 +197,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains 'Cannot access /secure-annotated'
 
 		assertContentContains 'anonymous access: false'
-		assertContentContains 'Can access /tag-lib-test/test'
+		assertContentContains 'Can access /misc-test/test'
 		assertContentDoesNotContain 'anonymous access: true'
 	}
 
@@ -209,7 +209,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		at IndexPage
 
 		when:
-		go 'tag-lib-test/test'
+		go 'misc-test/test'
 
 		then:
 		assertContentContains 'user and admin'
@@ -237,14 +237,14 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentDoesNotContain 'Cannot access /secure-annotated'
 
 		assertContentContains 'anonymous access: false'
-		assertContentContains 'Can access /tag-lib-test/test'
+		assertContentContains 'Can access /misc-test/test'
 		assertContentDoesNotContain 'anonymous access: true'
-		assertContentDoesNotContain 'Cannot access /tag-lib-test/test'
+		assertContentDoesNotContain 'Cannot access /misc-test/test'
 	}
 
 	void 'controller methods unauthenticated'() {
 		when:
-		go 'tag-lib-test/test-controller-methods'
+		go 'misc-test/test-controller-methods'
 
 		then:
 		assertContentContains 'getPrincipal: org.springframework.security.core.userdetails.User'
@@ -264,7 +264,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		at IndexPage
 
 		when:
-		go 'tag-lib-test/test-controller-methods'
+		go 'misc-test/test-controller-methods'
 
 		then:
 		assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
@@ -319,5 +319,37 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 		then:
 		assertContentContains 'barFoo'
+	}
+
+	void 'test Servlet API methods unauthenticated'() {
+		when:
+		go 'misc-test/test-servlet-api-methods'
+
+		then:
+		assertContentContains 'request.getUserPrincipal(): null'
+		assertContentContains 'request.userPrincipal: null'
+		assertContentContains "request.isUserInRole('ROLE_ADMIN'): false"
+		assertContentContains "request.isUserInRole('ROLE_FOO'): false"
+		assertContentContains 'request.getRemoteUser(): null'
+		assertContentContains 'request.remoteUser: null'
+	}
+
+	void 'test Servlet API methods authenticated'() {
+		when:
+		login 'admin'
+
+		then:
+		at IndexPage
+
+		when:
+		go 'misc-test/test-servlet-api-methods'
+
+		then:
+		assertContentContains 'request.getUserPrincipal(): org.springframework.security.authentication.UsernamePasswordAuthenticationToken'
+		assertContentContains 'request.userPrincipal: org.springframework.security.authentication.UsernamePasswordAuthenticationToken'
+		assertContentContains "request.isUserInRole('ROLE_ADMIN'): true"
+		assertContentContains "request.isUserInRole('ROLE_FOO'): false"
+		assertContentContains 'request.getRemoteUser(): admin'
+		assertContentContains 'request.remoteUser: admin'
 	}
 }

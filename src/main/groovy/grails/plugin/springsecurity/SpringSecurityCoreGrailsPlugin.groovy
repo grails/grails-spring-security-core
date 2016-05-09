@@ -31,6 +31,7 @@ import grails.plugin.springsecurity.userdetails.NoStackUsernameNotFoundException
 import grails.plugin.springsecurity.web.GrailsRedirectStrategy
 import grails.plugin.springsecurity.web.NullFilterChainValidator
 import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+import grails.plugin.springsecurity.web.UpdateRequestContextHolderExceptionTranslationFilter
 import grails.plugin.springsecurity.web.access.AjaxAwareAccessDeniedHandler
 import grails.plugin.springsecurity.web.access.DefaultThrowableAnalyzer
 import grails.plugin.springsecurity.web.access.GrailsWebInvocationPrivilegeEvaluator
@@ -88,7 +89,6 @@ import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.access.AccessDeniedHandlerImpl
-import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.channel.ChannelDecisionManagerImpl
 import org.springframework.security.web.access.channel.ChannelProcessingFilter
 import org.springframework.security.web.access.channel.InsecureChannelProcessor
@@ -327,7 +327,8 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 		throwableAnalyzer(classFor('throwableAnalyzer', DefaultThrowableAnalyzer))
 
 		/** exceptionTranslationFilter */
-		exceptionTranslationFilter(classFor('exceptionTranslationFilter', ExceptionTranslationFilter), ref('authenticationEntryPoint'), ref('requestCache')) {
+		exceptionTranslationFilter(classFor('exceptionTranslationFilter', UpdateRequestContextHolderExceptionTranslationFilter),
+				ref('authenticationEntryPoint'), ref('requestCache')) {
 			accessDeniedHandler = ref('accessDeniedHandler')
 			authenticationTrustResolver = ref('authenticationTrustResolver')
 			throwableAnalyzer = ref('throwableAnalyzer')
@@ -808,7 +809,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		basicRequestCache(classFor('basicRequestCache', NullRequestCache))
 
-		basicExceptionTranslationFilter(classFor('basicExceptionTranslationFilter', ExceptionTranslationFilter),
+		basicExceptionTranslationFilter(classFor('basicExceptionTranslationFilter', UpdateRequestContextHolderExceptionTranslationFilter),
 				ref('basicAuthenticationEntryPoint'), ref('basicRequestCache')) {
 			accessDeniedHandler = ref('basicAccessDeniedHandler')
 			authenticationTrustResolver = ref('authenticationTrustResolver')
@@ -846,7 +847,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		digestAccessDeniedHandler(classFor('digestAccessDeniedHandler', AccessDeniedHandlerImpl))
 
-		digestExceptionTranslationFilter(classFor('digestExceptionTranslationFilter', ExceptionTranslationFilter),
+		digestExceptionTranslationFilter(classFor('digestExceptionTranslationFilter', UpdateRequestContextHolderExceptionTranslationFilter),
 				ref('digestAuthenticationEntryPoint'), ref('requestCache')) {
 			accessDeniedHandler = ref('digestAccessDeniedHandler')
 			authenticationTrustResolver = ref('authenticationTrustResolver')
