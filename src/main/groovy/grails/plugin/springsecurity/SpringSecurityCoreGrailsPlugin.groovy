@@ -949,7 +949,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		insecureChannelProcessor(classFor('insecureChannelProcessor', InsecureChannelProcessor)) {
 			entryPoint = ref('retryWithHttpEntryPoint')
-			secureKeyword = conf.secureChannel.insecureConfigAttributeKeyword // 'REQUIRES_INSECURE_CHANNEL'
+			insecureKeyword = conf.secureChannel.insecureConfigAttributeKeyword // 'REQUIRES_INSECURE_CHANNEL'
 		}
 
 		channelDecisionManager(classFor('channelDecisionManager', ChannelDecisionManagerImpl)) {
