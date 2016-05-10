@@ -55,7 +55,7 @@ dependencies {
 	}
 	compile 'org.grails.plugins:scaffolding'
 
-	compile 'org.grails.plugins:spring-security-core:3.1.0'
+	compile 'org.grails.plugins:spring-security-core:3.1.1'
 	runtime 'org.grails.plugins:spring-security-appinfo:3.0.0'
 
 	runtime 'org.grails.plugins:asset-pipeline'
