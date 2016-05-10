@@ -12,6 +12,10 @@ Spring Security supports creating a remember-me cookie so that users are not req
 |`grails_remember_me`
 |remember-me cookie name; should be unique per application
 
+|rememberMe.cookieDomain
+|_none_
+|remember-me cookie domain
+
 |rememberMe.alwaysRemember
 |`false`
 |If `true`, create a remember-me cookie even if no checkbox is on the form

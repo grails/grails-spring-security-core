@@ -19,6 +19,30 @@ Use channel security to configure which URLs require HTTP and which require HTTP
 |secureChannel.definition
 |_none_
 |Map of URL pattern to channel rule
+
+|secureChannel.secureHeaderName
+|`'X-Forwarded-Proto'`
+|The name of the header to check for HTTPS
+
+|secureChannel.secureHeaderValue
+|`'http'`
+|The header value for `secureHeaderName` that indicates a need to redirect from HTTPS to HTTP
+
+|secureChannel.secureConfigAttributeKeyword
+|`'REQUIRES_SECURE_CHANNEL'`
+|The config attribute token to use for marking a pattern as requiring HTTPS.
+
+|secureChannel.insecureHeaderName
+|`'X-Forwarded-Proto'`
+|The name of the header to check for HTTP
+
+|secureChannel.insecureHeaderValue
+|`'https'`
+|The header value for `insecureHeaderName` that indicates a need to redirect from HTTP to HTTPS
+
+|secureChannel.insecureConfigAttributeKeyword
+|`'REQUIRES_INSECURE_CHANNEL'`
+|The config attribute token to use for marking a pattern as requiring HTTP.
 |====================
 
 Build a `List` of single-entry ``Map``s under the `secureChannel.definition` key, where URL patterns are stored under the key "`pattern`", and the values are stored under the key "`access`" and are one of the access keywords `REQUIRES_SECURE_CHANNEL`, `REQUIRES_INSECURE_CHANNEL`, or `ANY_CHANNEL`:

@@ -47,6 +47,8 @@ import grails.plugin.springsecurity.web.authentication.FilterProcessUrlRequestMa
 import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
 import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.authentication.preauth.x509.ClosureX509PrincipalExtractor
+import grails.plugin.springsecurity.web.authentication.preauth.x509.NullAuthenticationFailureHandler
+import grails.plugin.springsecurity.web.authentication.preauth.x509.NullAuthenticationSuccessHandler
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
 import grails.plugin.springsecurity.web.authentication.switchuser.NullSwitchUserAuthorityChanger
 import grails.plugin.springsecurity.web.filter.DebugFilter
@@ -264,6 +266,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			authenticationEntryPoint = ref('authenticationEntryPoint')
 			authenticationManager = ref('authenticationManager')
 			logoutHandlers = ref('logoutHandlers')
+			trustResolver = ref('authenticationTrustResolver')
 		}
 
 		/** rememberMeAuthenticationFilter */
@@ -283,6 +286,9 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			rememberMeServices(classFor('rememberMeServices', PersistentTokenBasedRememberMeServices),
 					conf.rememberMe.key, ref('userDetailsService'), ref('tokenRepository')) {
 				cookieName = conf.rememberMe.cookieName
+				if (conf.rememberMe.cookieDomain) {
+					cookieDomain = conf.rememberMe.cookieDomain
+				}
 				alwaysRemember = conf.rememberMe.alwaysRemember
 				tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
 				parameter = conf.rememberMe.parameter
@@ -303,6 +309,9 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 			log.trace 'Configuring non-persistent remember-me'
 			rememberMeServices(classFor('rememberMeServices', TokenBasedRememberMeServices), conf.rememberMe.key, ref('userDetailsService')) {
 				cookieName = conf.rememberMe.cookieName
+				if (conf.rememberMe.cookieDomain) {
+					cookieDomain = conf.rememberMe.cookieDomain
+				}
 				alwaysRemember = conf.rememberMe.alwaysRemember
 				tokenValiditySeconds = conf.rememberMe.tokenValiditySeconds
 				parameter = conf.rememberMe.parameter
@@ -857,6 +866,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 	private configureVoters = { conf ->
 
+		// the hierarchy string is set in doWithApplicationContext to support building
+		// from the database using GORM if roleHierarchyEntryClassName is set
 		roleHierarchy(classFor('roleHierarchy', RoleHierarchyImpl))
 
 		roleVoter(classFor('roleVoter', RoleHierarchyVoter), ref('roleHierarchy'))
@@ -933,10 +944,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		secureChannelProcessor(classFor('secureChannelProcessor', SecureChannelProcessor)) {
 			entryPoint = ref('retryWithHttpsEntryPoint')
+			secureKeyword = conf.secureChannel.secureConfigAttributeKeyword // 'REQUIRES_SECURE_CHANNEL'
 		}
 
 		insecureChannelProcessor(classFor('insecureChannelProcessor', InsecureChannelProcessor)) {
 			entryPoint = ref('retryWithHttpEntryPoint')
+			secureKeyword = conf.secureChannel.insecureConfigAttributeKeyword // 'REQUIRES_INSECURE_CHANNEL'
 		}
 
 		channelDecisionManager(classFor('channelDecisionManager', ChannelDecisionManagerImpl)) {
@@ -945,7 +958,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		if (conf.secureChannel.definition instanceof Map) {
 			throw new IllegalArgumentException('secureChannel.definition defined as a Map is not supported; must be specified as a ' +
-					  "List of Maps as described in section 'Channel Security' of the reference documentation")
+					"List of Maps as described in section 'Channel Security' of the reference documentation")
 		}
 		channelFilterInvocationSecurityMetadataSource(classFor('channelFilterInvocationSecurityMetadataSource', ChannelFilterInvocationSecurityMetadataSourceFactoryBean)) {
 			definition = conf.secureChannel.definition
@@ -960,7 +973,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		if (conf.ipRestrictions instanceof Map) {
 			throw new IllegalArgumentException("ipRestrictions defined as a Map is not supported; must be specified as a " +
-					  "List of Maps as described in section 'IP Address Restrictions' of the reference documentation")
+					"List of Maps as described in section 'IP Address Restrictions' of the reference documentation")
 		}
 
 		if (!(conf.ipRestrictions instanceof List)) {
@@ -988,7 +1001,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		if (conf.failureHandler.exceptionMappings instanceof Map) {
 			throw new IllegalArgumentException('failureHandler.exceptionMappings defined as a Map is not supported; ' +
-					  '''must be specified as a List of Maps, e.g.
+					'''must be specified as a List of Maps, e.g.
 [
    [exception: 'org.springframework.security.authentication.LockedException',             url: '/user/accountLocked'],
    [exception: 'org.springframework.security.authentication.DisabledException',           url: '/user/accountDisabled'],
@@ -1052,12 +1065,17 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 	private configureX509 = { conf ->
 
+		x509AuthenticationFailureHandler(NullAuthenticationFailureHandler)
+		x509AuthenticationSuccessHandler(NullAuthenticationSuccessHandler)
+
 		x509ProcessingFilter(classFor('x509ProcessingFilter', X509AuthenticationFilter)) {
-			principalExtractor = ref('x509PrincipalExtractor')
-			authenticationManager = ref('authenticationManager')
 			authenticationDetailsSource = ref('authenticationDetailsSource')
-			continueFilterChainOnUnsuccessfulAuthentication = conf.x509.continueFilterChainOnUnsuccessfulAuthentication // true
+			authenticationFailureHandler = ref('x509AuthenticationFailureHandler')
+			authenticationManager = ref('authenticationManager')
+			authenticationSuccessHandler = ref('x509AuthenticationSuccessHandler')
+			principalExtractor = ref('x509PrincipalExtractor')
 			checkForPrincipalChanges = conf.x509.checkForPrincipalChanges // false
+			continueFilterChainOnUnsuccessfulAuthentication = conf.x509.continueFilterChainOnUnsuccessfulAuthentication // true
 			invalidateSessionOnPrincipalChange = conf.x509.invalidateSessionOnPrincipalChange // true
 		}
 

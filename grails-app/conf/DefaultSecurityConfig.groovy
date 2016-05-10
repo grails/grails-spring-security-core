@@ -196,6 +196,7 @@ security {
 	/** rememberMeServices */
 	rememberMe {
 		cookieName = 'grails_remember_me'
+		cookieDomain = null
 		alwaysRemember = false
 		tokenValiditySeconds = AbstractRememberMeServices.TWO_WEEKS_S // 1209600 -> 14 days
 		parameter = AbstractRememberMeServices.DEFAULT_PARAMETER // 'remember-me'
@@ -275,8 +276,10 @@ security {
 		useHeaderCheckChannelSecurity = false
 		secureHeaderName = 'X-Forwarded-Proto'
 		secureHeaderValue = 'http'
+		secureConfigAttributeKeyword = 'REQUIRES_SECURE_CHANNEL'
 		insecureHeaderName = 'X-Forwarded-Proto'
 		insecureHeaderValue = 'https'
+		insecureConfigAttributeKeyword = 'REQUIRES_INSECURE_CHANNEL'
 	}
 
 	// X509
