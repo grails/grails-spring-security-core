@@ -1,7 +1,7 @@
-[[controllerMetaClassMethods]]
-== Controller MetaClass Methods
+[[controllerMethods]]
+== Controller Methods
 
-The plugin registers some convenience methods into all controllers in your application. All are accessor methods, so they can be called as methods or properties. They include:
+The plugin registers some convenience methods into all controllers in your application. As of version 3.1.0 this is implemented by a trait that is applied to all controllers but was implemented in earlier versions by adding methods to each controller's `MetaClass`. All are accessor methods, so they can be called as methods or properties. They include:
 
 === isLoggedIn
 

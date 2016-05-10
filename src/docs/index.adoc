@@ -52,7 +52,7 @@ include::miscProperties.adoc[]
 
 include::tutorials.adoc[]
 
-include::controllerMetaClassMethods.adoc[]
+include::controllerMethods.adoc[]
 
 include::i18n.adoc[]
 
