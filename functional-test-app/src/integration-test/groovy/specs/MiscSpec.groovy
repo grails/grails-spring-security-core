@@ -1,6 +1,7 @@
 package specs
 
 import pages.IndexPage
+import spock.lang.Issue
 
 class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
@@ -321,6 +322,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains 'barFoo'
 	}
 
+	@Issue('414')
 	void 'test Servlet API methods unauthenticated'() {
 		when:
 		go 'misc-test/test-servlet-api-methods'
@@ -334,6 +336,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains 'request.remoteUser: null'
 	}
 
+	@Issue('414')
 	void 'test Servlet API methods authenticated'() {
 		when:
 		login 'admin'
@@ -351,5 +354,65 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		assertContentContains "request.isUserInRole('ROLE_FOO'): false"
 		assertContentContains 'request.getRemoteUser(): admin'
 		assertContentContains 'request.remoteUser: admin'
+	}
+
+	@Issue('403')
+	void 'test controller with annotated index action, unauthenticated'() {
+		when:
+		go 'index-annotated'
+
+		then:
+		assertContentContains 'Please Login'
+
+		when:
+		go 'index-annotated/'
+
+		then:
+		assertContentContains 'Please Login'
+
+		when:
+		go 'index-annotated/index'
+
+		then:
+		assertContentContains 'Please Login'
+
+		when:
+		go 'index-annotated/show'
+
+		then:
+		assertContentContains 'Please Login'
+	}
+
+	@Issue('403')
+	void 'test controller with annotated index action, authenticated'() {
+		when:
+		login 'admin'
+
+		then:
+		at IndexPage
+
+		when:
+		go 'index-annotated'
+
+		then:
+		assertContentContains 'index action, principal: '
+
+		when:
+		go 'index-annotated/'
+
+		then:
+		assertContentContains 'index action, principal: '
+
+		when:
+		go 'index-annotated/index'
+
+		then:
+		assertContentContains 'index action, principal: '
+
+		when:
+		go 'index-annotated/show'
+
+		then:
+		assertContentContains "Sorry, you're not authorized to view this page."
 	}
 }

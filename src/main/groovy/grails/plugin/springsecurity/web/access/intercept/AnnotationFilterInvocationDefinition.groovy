@@ -350,7 +350,10 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		}
 		List<String> patterns = [sb.toString(), sb.toString() + '.*'] // TODO
 
-		sb << '/**'
+		if (actionName != '') {
+			sb << '/**'
+		}
+
 		patterns << sb.toString()
 
 		log.trace 'Patterns generated for controller "{}" action "{}" -> {}', controllerNameOrPattern, actionName, patterns
@@ -419,14 +422,14 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			return
 		}
 
-		List<InterceptedUrl> annotatedActionNames = findActionRoles(clazz)
-		if (annotatedActionNames) {
-			actionRoles[controllerUri] = annotatedActionNames
+		List<InterceptedUrl> actionData = findActionRoles(clazz)
+		if (actionData) {
+			actionRoles[controllerUri] = actionData
 		}
 
-		List<InterceptedUrl> closureAnnotatedActionNames = findActionClosures(clazz)
-		if (closureAnnotatedActionNames) {
-			actionClosures[controllerUri] = closureAnnotatedActionNames
+		List<InterceptedUrl> closureAnnotatedData = findActionClosures(clazz)
+		if (closureAnnotatedData) {
+			actionClosures[controllerUri] = closureAnnotatedData
 		}
 	}
 
@@ -475,7 +478,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 	protected List<InterceptedUrl> findActionClosures(Class<?> clazz) {
 		List<InterceptedUrl> actionClosures = []
-		for (Method method : clazz.methods) {
+		for (Method method in clazz.methods) {
 			PluginSecured annotation = method.getAnnotation(PluginSecured)
 			if (annotation && annotation.closure() != PluginSecured) {
 				log.trace 'found annotation with a closure on method {} in {}', method.name, clazz.name
