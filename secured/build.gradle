@@ -5,8 +5,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
-		classpath 'com.bertramlabs.plugins:asset-pipeline-gradle:2.5.0'
-		classpath 'org.grails.plugins:hibernate:4.3.10.5'
+		classpath 'com.bertramlabs.plugins:asset-pipeline-gradle:2.8.2'
 	}
 }
 
@@ -56,7 +55,7 @@ dependencies {
 	}
 	compile 'org.grails.plugins:scaffolding'
 
-	compile 'org.grails.plugins:spring-security-core:3.0.4'
+	compile 'org.grails.plugins:spring-security-core:3.1.0'
 	runtime 'org.grails.plugins:spring-security-appinfo:3.0.0'
 
 	runtime 'org.grails.plugins:asset-pipeline'
