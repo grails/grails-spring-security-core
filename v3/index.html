@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.0.4</span>
+<span id="revnumber">version 3.1.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -554,7 +554,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#usingControllerAnnotations">23.1. Using Controller Annotations to Secure URLs</a></li>
 </ul>
 </li>
-<li><a href="#controllerMetaClassMethods">24. Controller MetaClass Methods</a>
+<li><a href="#controllerMethods">24. Controller Methods</a>
 <ul class="sectlevel2">
 <li><a href="#isloggedin-2">24.1. isLoggedIn</a></li>
 <li><a href="#getprincipal-2">24.2. getPrincipal</a></li>
@@ -586,6 +586,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>May 10, 2016</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.1.0 release</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>March 21, 2016</p>
 <div class="ulist">
@@ -1122,7 +1132,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.4'
+   compile 'org.grails.plugins:spring-security-core:3.1.0'
    ...</code></pre>
 </div>
 </div>
@@ -1370,29 +1380,6 @@ beans = {
 </div>
 <div class="paragraph">
 <p>The <a href="#s2-quickstart">s2-quickstart</a> script creates initial domain classes for you. You specify the package and class names, and it creates the corresponding domain classes. After that you can customize them as you like. You can add additional properties, methods, and so on, as long as the core security-related functionality remains.</p>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>Where practical, the generated domain classes include a parameterized constructor. These are only added to make instance creation more compact, e.g. <code>new Role('ROLE_ADMIN')</code> vs. <code>new Role(authority: 'ROLE_ADMIN')</code> but either approach can be used.</p>
-</div>
-<div class="paragraph">
-<p>These constructors look a bit odd because they include a call to <code>this()</code>. Ordinarily in Groovy or Java, the compiler creates an empty constructor if none are defined in the source, but if there are one or more defined constructors (with or without arguments) then the compiler doesn&#8217;t add one. Grails adds a significant number of methods and other code to domain classes using AST transformations, including an empty constructor that manages dependency injection. So although the plugin-generated domain classes appear to not have an empty constructor, they do in the bytecode.</p>
-</div>
-<div class="paragraph">
-<p>This means that you can use the parameterized constructors if you want, and add more if needed, or continue to use the map constructor approach that&#8217;s common in Grails applications. The call to <code>this()</code> is there to ensure that if you use a non-default constructor and use dependency injection (e.g. to inject a service for use in custom validation), the beans get properly injected. You can remove that line in any domain class that doesn&#8217;t use dependency injection.</p>
-</div>
-<div class="paragraph">
-<p>This is discussed in <a href="https://www.youtube.com/watch?v=Oxwpqh1h0s0">this talk at Greach 2015</a>. The slides for the talk are available <a href="http://www.slideshare.net/burtbeckwith/little-did-he-know">here</a></p>
-</div>
-</td>
-</tr>
-</table>
 </div>
 <div class="sect2">
 <h3 id="personClass">4.1. Person Class</h3>
@@ -4348,6 +4335,11 @@ grails.plugin.springsecurity.digest.realmName = "Ralph's Bait and Tackle"</code>
 <td class="tableblock halign-left valign-top"><p class="tableblock">remember-me cookie name; should be unique per application</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">rememberMe.cookieDomain</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">remember-me cookie domain</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">rememberMe.alwaysRemember</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">If <code>true</code>, create a remember-me cookie even if no checkbox is on the form</p></td>
@@ -6304,6 +6296,36 @@ class BootStrap {
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>none</em></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Map of URL pattern to channel rule</p></td>
 </tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secureChannel.secureHeaderName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'X-Forwarded-Proto'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the header to check for HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secureChannel.secureHeaderValue</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'http'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The header value for <code>secureHeaderName</code> that indicates a need to redirect from HTTPS to HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secureChannel.secureConfigAttributeKeyword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'REQUIRES_SECURE_CHANNEL'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The config attribute token to use for marking a pattern as requiring HTTPS.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secureChannel.insecureHeaderName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'X-Forwarded-Proto'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the header to check for HTTP</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secureChannel.insecureHeaderValue</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'https'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The header value for <code>insecureHeaderName</code> that indicates a need to redirect from HTTP to HTTPS</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">secureChannel.insecureConfigAttributeKeyword</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>'REQUIRES_INSECURE_CHANNEL'</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The config attribute token to use for marking a pattern as requiring HTTP.</p></td>
+</tr>
 </tbody>
 </table>
 <div class="paragraph">
@@ -6796,7 +6818,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.0.4'
+   compile 'org.grails.plugins:spring-security-core:3.1.0'
    ...
 }</code></pre>
 </div>
@@ -7282,10 +7304,10 @@ class SecureController {
 </div>
 </div>
 <div class="sect1">
-<h2 id="controllerMetaClassMethods">24. Controller MetaClass Methods</h2>
+<h2 id="controllerMethods">24. Controller Methods</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>The plugin registers some convenience methods into all controllers in your application. All are accessor methods, so they can be called as methods or properties. They include:</p>
+<p>The plugin registers some convenience methods into all controllers in your application. As of version 3.1.0 this is implemented by a trait that is applied to all controllers but was implemented in earlier versions by adding methods to each controller&#8217;s <code>MetaClass</code>. All are accessor methods, so they can be called as methods or properties. They include:</p>
 </div>
 <div class="sect2">
 <h3 id="isloggedin-2">24.1. isLoggedIn</h3>
@@ -7576,8 +7598,8 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.0.4<br>
-Last updated 2016-03-21 17:03:00 -04:00
+Version 3.1.0<br>
+Last updated 2016-05-10 01:26:24 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
