@@ -57,7 +57,7 @@ class TestUserTestRole implements Serializable {
 		u ? TestUserTestRole.where { testUser == u }.deleteAll() : 0
 	}
 
-	static void removeAll(TestRole r) {
+	static int removeAll(TestRole r) {
 		r ? TestUserTestRole.where { testRole == r }.deleteAll() : 0
 	}
 
