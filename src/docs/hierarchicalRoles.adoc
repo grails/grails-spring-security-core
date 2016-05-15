@@ -107,7 +107,7 @@ To store the equivalent entries for the ROLE_SUPERADMIN / ROLE_FINANCE_ADMIN / R
 .Listing {counter:listing}. Persisting `RoleHierarchyEntry` instances
 ----
 if (!RoleHierarchyEntry.count()) {
-   new RoleHierarchyEntry('ROLE_SUPERADMIN > ROLE_FINANCE_ADMIN').save()
-   new RoleHierarchyEntry('ROLE_FINANCE_ADMIN > ROLE_ADMIN').save()
+   new RoleHierarchyEntry(entry: 'ROLE_SUPERADMIN > ROLE_FINANCE_ADMIN').save()
+   new RoleHierarchyEntry(entry: 'ROLE_FINANCE_ADMIN > ROLE_ADMIN').save()
 }
 ----
