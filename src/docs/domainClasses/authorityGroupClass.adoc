@@ -21,11 +21,6 @@ class RoleGroup implements Serializable {
 
    String name
 
-   RoleGroup(String name) {
-      this()
-      this.name = name
-   }
-
    Set<Role> getAuthorities() {
       RoleGroupRole.findAllByRoleGroup(this)*.role
    }

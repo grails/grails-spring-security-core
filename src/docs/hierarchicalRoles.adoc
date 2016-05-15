@@ -91,11 +91,6 @@ class RoleHierarchyEntry implements Serializable {
 
    String entry
 
-   RoleHierarchyEntry(String entry) {
-      this()
-      this.entry = entry
-   }
-
    static constraints = {
       entry blank: false, unique: true
    }

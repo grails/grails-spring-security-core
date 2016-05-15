@@ -23,19 +23,11 @@ class RoleGroupRole implements Serializable {
    RoleGroup roleGroup
    Role role
 
-   RoleGroupRole(RoleGroup g, Role r) {
-      this()
-      roleGroup = g
-      role = r
-   }
-
    @Override
    boolean equals(other) {
-      if (!(other instanceof RoleGroupRole)) {
-         return false
+      if (other instanceof RoleGroupRole) {
+         other.roleIid == role?.id && other.roleGroupId == roleGroup?.id
       }
-
-      other.role?.id == role?.id && other.roleGroup?.id == roleGroup?.id
    }
 
    @Override
@@ -61,47 +53,34 @@ class RoleGroupRole implements Serializable {
       }
    }
 
-   static RoleGroupRole create(RoleGroup roleGroup, Role role, boolean flush = false) {
+   static RoleGroupRole create(RoleGroup roleGroup, Role role) {
       def instance = new RoleGroupRole(roleGroup: roleGroup, role: role)
-      instance.save(flush: flush, insert: true)
+      instance.save()
       instance
    }
 
-   static boolean remove(RoleGroup rg, Role r, boolean flush = false) {
-      if (rg == null || r == null) return false
-
-      int rowCount = RoleGroupRole.where { roleGroup == rg && role == r }.deleteAll()
-
-      if (flush) { RoleGroupRole.withSession { it.flush() } }
-
-      rowCount
+   static boolean remove(RoleGroup rg, Role r) {
+      if (rg != null && r != null) {
+         RoleGroupRole.where { roleGroup == rg && role == r }.deleteAll()
+      }
    }
 
-   static void removeAll(Role r, boolean flush = false) {
-      if (r == null) return
-
-      RoleGroupRole.where { role == r }.deleteAll()
-
-      if (flush) { RoleGroupRole.withSession { it.flush() } }
+   static int removeAll(Role r) {
+      r == null ? 0 : RoleGroupRole.where { role == r }.deleteAll()
    }
 
-   static void removeAll(RoleGroup rg, boolean flush = false) {
-      if (rg == null) return
-
-      RoleGroupRole.where { roleGroup == rg }.deleteAll()
-
-      if (flush) { RoleGroupRole.withSession { it.flush() } }
+   static int removeAll(RoleGroup rg) {
+      rg == null : 0 : RoleGroupRole.where { roleGroup == rg }.deleteAll()
    }
 
    static constraints = {
       role validator: { Role r, RoleGroupRole rg ->
-         if (rg.roleGroup == null || rg.roleGroup.id == null) return
-         boolean existing = false
-         RoleGroupRole.withNewSession {
-            existing = RoleGroupRole.exists(rg.roleGroup.id, r.id)
-         }
-         if (existing) {
-            return 'roleGroup.exists'
+         if (rg.roleGroup?.id) {
+            RoleGroupRole.withNewSession {
+               if (RoleGroupRole.exists(rg.roleGroup.id, r.id)) {
+                  return ['roleGroup.exists']
+               }
+            }
          }
       }
    }
