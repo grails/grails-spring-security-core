@@ -5811,8 +5811,8 @@ class RoleHierarchyEntry implements Serializable {
 <div class="title">Listing 67. Persisting <code>RoleHierarchyEntry</code> instances</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">if (!RoleHierarchyEntry.count()) {
-   new RoleHierarchyEntry('ROLE_SUPERADMIN &gt; ROLE_FINANCE_ADMIN').save()
-   new RoleHierarchyEntry('ROLE_FINANCE_ADMIN &gt; ROLE_ADMIN').save()
+   new RoleHierarchyEntry(entry: 'ROLE_SUPERADMIN &gt; ROLE_FINANCE_ADMIN').save()
+   new RoleHierarchyEntry(entry: 'ROLE_FINANCE_ADMIN &gt; ROLE_ADMIN').save()
 }</code></pre>
 </div>
 </div>
@@ -7025,7 +7025,7 @@ class BootStrap {
       def adminRole = new Role(authority: 'ROLE_ADMIN').save()
       def userRole = new Role(authority: 'ROLE_USER').save()
 
-      def testUser = new User('me', 'password').save()
+      def testUser = new User(username: 'me', password: 'password').save()
 
       UserRole.create testUser, adminRole
 
@@ -7459,7 +7459,7 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 <div id="footer">
 <div id="footer-text">
 Version 3.1.1<br>
-Last updated 2016-05-15 16:08:25 -04:00
+Last updated 2016-05-15 18:42:57 -04:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
