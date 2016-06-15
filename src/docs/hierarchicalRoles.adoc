@@ -111,3 +111,5 @@ if (!RoleHierarchyEntry.count()) {
    new RoleHierarchyEntry(entry: 'ROLE_FINANCE_ADMIN > ROLE_ADMIN').save()
 }
 ----
+
+Remember to update the `roleHierarchy` beans `hierarchy` definition by calling `SpringSecurityService#reloadDBRoleHierarchy`, or your model changes are not reflected in the running application.
