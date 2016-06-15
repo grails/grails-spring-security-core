@@ -11,3 +11,4 @@ build
 cobertura.ser
 kindlegen
 out
+atlassian-ide-plugin.xml
