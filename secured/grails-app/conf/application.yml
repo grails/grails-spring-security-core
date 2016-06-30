@@ -4,7 +4,8 @@ grails:
    codegen:
       defaultPackage: secured
    spring:
-      transactionManagement: false
+      transactionManagement:
+         proxies: false
 info:
    app:
       name: '@info.app.name@'
