@@ -16,6 +16,10 @@ Properties you are most likely to be override are the `User` and  `Authority` (a
 |"`username`"
 |User class username property
 
+|userLookup.usernameIgnoreCase
+|"`false`"
+|Ignore case when searching for usernamePropertyName
+
 |userLookup.passwordPropertyName
 |"`password`"
 |User class password property

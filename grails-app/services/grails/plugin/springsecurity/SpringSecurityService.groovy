@@ -80,9 +80,11 @@ class SpringSecurityService {
 			User.get principal.id
 		}
 		else {
+			String usernamePropertyName = securityConfig.userLookup.usernamePropertyName
+			def constraints = securityConfig.userLookup.usernameIgnoreCase ? [ignoreCase: true] : [:]
+
 			User.createCriteria().get {
-				String usernamePropertyName = securityConfig.userLookup.usernamePropertyName
-				eq usernamePropertyName, principal[usernamePropertyName]
+				eq(usernamePropertyName, principal[usernamePropertyName], constraints)
 				cache true
 			}
 		}
