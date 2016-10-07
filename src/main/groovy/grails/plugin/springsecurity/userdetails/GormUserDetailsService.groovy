@@ -57,9 +57,12 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		Class<?> User = dc.clazz
 
-		def constraints = conf.userLookup.usernameIgnoreCase ? [ignoreCase: true] : [:]
 		def user = User.createCriteria().get {
-			eq((conf.userLookup.usernamePropertyName), username, constraints)
+			if(conf.userLookup.usernameIgnoreCase) {
+				eq((conf.userLookup.usernamePropertyName), username, [ignoreCase: true])
+			} else {
+				eq((conf.userLookup.usernamePropertyName), username)
+			}
 		}
 
 		if (!user) {

@@ -81,10 +81,13 @@ class SpringSecurityService {
 		}
 		else {
 			String usernamePropertyName = securityConfig.userLookup.usernamePropertyName
-			def constraints = securityConfig.userLookup.usernameIgnoreCase ? [ignoreCase: true] : [:]
 
 			User.createCriteria().get {
-				eq(usernamePropertyName, principal[usernamePropertyName], constraints)
+				if(securityConfig.userLookup.usernameIgnoreCase) {
+					eq(usernamePropertyName, principal[usernamePropertyName], [ignoreCase: true])
+				} else {
+					eq(usernamePropertyName, principal[usernamePropertyName])
+				}
 				cache true
 			}
 		}
