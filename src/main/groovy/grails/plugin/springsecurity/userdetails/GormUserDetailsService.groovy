@@ -57,7 +57,14 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		Class<?> User = dc.clazz
 
-		def user = User.findWhere((conf.userLookup.usernamePropertyName): username)
+		def user = User.createCriteria().get {
+			if(conf.userLookup.usernameIgnoreCase) {
+				eq((conf.userLookup.usernamePropertyName), username, [ignoreCase: true])
+			} else {
+				eq((conf.userLookup.usernamePropertyName), username)
+			}
+		}
+
 		if (!user) {
 			log.warn 'User not found: {}', username
 			throw new NoStackUsernameNotFoundException()

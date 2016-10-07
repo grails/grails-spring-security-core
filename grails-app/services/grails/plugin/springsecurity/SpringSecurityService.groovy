@@ -80,9 +80,14 @@ class SpringSecurityService {
 			User.get principal.id
 		}
 		else {
+			String usernamePropertyName = securityConfig.userLookup.usernamePropertyName
+
 			User.createCriteria().get {
-				String usernamePropertyName = securityConfig.userLookup.usernamePropertyName
-				eq usernamePropertyName, principal[usernamePropertyName]
+				if(securityConfig.userLookup.usernameIgnoreCase) {
+					eq(usernamePropertyName, principal[usernamePropertyName], [ignoreCase: true])
+				} else {
+					eq(usernamePropertyName, principal[usernamePropertyName])
+				}
 				cache true
 			}
 		}

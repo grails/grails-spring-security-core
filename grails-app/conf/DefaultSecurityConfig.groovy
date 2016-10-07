@@ -77,6 +77,7 @@ security {
 	userLookup {
 		userDomainClassName = null // must be set if using UserDetailsService
 		usernamePropertyName = 'username'
+		usernameIgnoreCase = false
 		enabledPropertyName = 'enabled'
 		passwordPropertyName = 'password'
 		authoritiesPropertyName = 'authorities'

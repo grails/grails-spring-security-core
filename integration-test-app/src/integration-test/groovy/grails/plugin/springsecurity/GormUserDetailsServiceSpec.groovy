@@ -132,6 +132,31 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		[ADMIN_ROLE_NAME, SUPER_ADMIN_ROLE_NAME] == details.authorities*.authority.sort()
 	}
 
+	void 'loadUserByUsername userLookup.usernameIgnoreCase'() {
+		setup:
+		ReflectionUtils.setConfigProperty 'userLookup.usernameIgnoreCase', true
+
+		String loginName = 'loginName'
+		String password = 'password123'
+
+		expect:
+		!TestUser.count()
+
+		when:
+		save(new TestUser(loginName: loginName, passwrrd: password))
+		flushAndClear()
+
+		then:
+		1 == TestUser.count()
+		0 == TestRoleGroup.count()
+
+		when:
+		def details = userDetailsService.loadUserByUsername(loginName.toLowerCase())
+
+		then:
+		loginName == details.username
+	}
+
 	void 'loadUserByUsername using role groups'() {
 		setup:
 		//Change the config to use authority groups
