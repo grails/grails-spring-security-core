@@ -67,8 +67,13 @@ class SpringSecurityService {
 
 	/**
 	 * Get the domain class instance associated with the current authentication.
+	 *
+	 * @deprecated will be removed in a future release without replacement, but with documentation on how to add
+	 *             this functionality in the application
+	 *
 	 * @return the user
 	 */
+	@Deprecated
 	def getCurrentUser() {
 		if (!isLoggedIn()) {
 			return null
@@ -111,7 +116,10 @@ class SpringSecurityService {
 	 * want the user only for its id, e.g. as a proxy for the foreign key in queries like "CreditCard.findAllByUser(user)"
 	 *
 	 * @return the proxy
+	 * @deprecated will be removed in a future release without replacement, but with documentation on how to add
+	 *             this functionality in the application
 	 */
+	@Deprecated
 	def loadCurrentUser() {
 		if (!isLoggedIn()) {
 			return null
