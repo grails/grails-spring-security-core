@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity
 
 import grails.converters.JSON
+import org.springframework.context.MessageSource
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
 import org.springframework.security.authentication.AuthenticationTrustResolver
@@ -35,6 +36,9 @@ class LoginController {
 
 	/** Dependency injection for the springSecurityService. */
 	def springSecurityService
+
+	/** Dependency injection for the messageSource. */
+	MessageSource messageSource
 
 	/** Default action; redirects to 'defaultTargetUrl' if logged in, /login/auth otherwise. */
 	def index() {
@@ -100,19 +104,19 @@ class LoginController {
 		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
 		if (exception) {
 			if (exception instanceof AccountExpiredException) {
-				msg = message(code: 'springSecurity.errors.login.expired')
+				msg = messageSource.getMessage('springSecurity.errors.login.expired', null, "Account Expired", request.locale)
 			}
 			else if (exception instanceof CredentialsExpiredException) {
-				msg = message(code: 'springSecurity.errors.login.passwordExpired')
+				msg = messageSource.getMessage('springSecurity.errors.login.passwordExpired', null, "Password Expired", request.locale)
 			}
 			else if (exception instanceof DisabledException) {
-				msg = message(code: 'springSecurity.errors.login.disabled')
+				msg = messageSource.getMessage('springSecurity.errors.login.disabled', null, "Account Disabled", request.locale)
 			}
 			else if (exception instanceof LockedException) {
-				msg = message(code: 'springSecurity.errors.login.locked')
+				msg = messageSource.getMessage('springSecurity.errors.login.locked', null, "Account Locked", request.locale)
 			}
 			else {
-				msg = message(code: 'springSecurity.errors.login.fail')
+				msg = messageSource.getMessage('springSecurity.errors.login.fail', null, "Authentication Failure", request.locale)
 			}
 		}
 
