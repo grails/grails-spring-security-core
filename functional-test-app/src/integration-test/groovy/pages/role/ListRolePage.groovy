@@ -14,7 +14,7 @@ class ListRolePage extends ScaffoldPage {
 	static content = {
 		newRoleButton(to: CreateRolePage) { $('a', text: 'New TestRole') }
 		roleTable { $('div.content table', 0) }
-		roleRow { i -> module RoleRow, roleRows[i] }
+		roleRow { i -> roleRows[i].module RoleRow }
 		roleRows(required: false) { roleTable.find('tbody').find('tr') }
 	}
 }

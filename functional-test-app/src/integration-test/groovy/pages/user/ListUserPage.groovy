@@ -14,7 +14,7 @@ class ListUserPage extends ScaffoldPage {
 	static content = {
 		newUserButton(to: CreateUserPage) { $('a', text: 'New TestUser') }
 		userTable { $('div.list table', 0) }
-		userRow { i -> module UserRow, userRows[i] }
+		userRow { i -> userRows[i].module UserRow }
 		userRows(required: false) { userTable.find('tbody').find('tr') }
 	}
 }
