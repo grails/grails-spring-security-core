@@ -15,7 +15,7 @@ class ListRequestmapPage extends ScaffoldPage {
 		newRequestmapButton(to: CreateRequestmapPage) { $('a', text: 'New TestRequestmap') }
 		requestmapTable { $('div.content table', 0) }
 		requestmapRows(required: false) { requestmapTable.find('tbody').find('tr') }
-		requestmapRow { i -> module RequestmapRow, requestmapRows[i] }
+		requestmapRow { i -> requestmapRows[i].module(RequestmapRow) }
 	}
 }
 

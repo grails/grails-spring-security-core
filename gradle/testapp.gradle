@@ -24,7 +24,6 @@ dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-tomcat'
 	console 'org.grails:grails-console'
 	runtime 'org.grails.plugins:asset-pipeline'
-	testCompile 'org.gebish:geb-core:0.12.2'
 	testCompile 'org.grails.plugins:geb'
 
 	String seleniumVersion = '2.48.2'
@@ -33,6 +32,7 @@ dependencies {
 	                                                  // issue is resolved: https://github.com/detro/ghostdriver/issues/397
 
 	testCompile "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
+	testCompile 'org.gebish:geb-core:1.1.1'
 	['chrome', 'firefox'].each { String name ->
 		testCompile "org.seleniumhq.selenium:selenium-${name}-driver:$seleniumVersion"
 	}
