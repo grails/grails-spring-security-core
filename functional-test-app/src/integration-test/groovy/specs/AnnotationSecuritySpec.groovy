@@ -8,6 +8,7 @@ import pages.role.ShowRolePage
 import pages.user.CreateUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
+import spock.lang.IgnoreIf
 
 class AnnotationSecuritySpec extends AbstractSecuritySpec {
 
@@ -352,6 +353,7 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		action << ['thing', 'thing/index', 'thing/show/1', 'thing/create', 'thing/edit', 'thing/delete']
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'authenticated user can access secured restful domain'() {
 		given:
 		login 'admin1', 'password1'
@@ -363,6 +365,7 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		$().text() == '[]'
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'generated Resource controllers can have inherited secured actions'() {
 		when:
 		go 'customer/index'

@@ -4,6 +4,7 @@ import pages.requestmap.CreateRequestmapPage
 import pages.requestmap.EditRequestmapPage
 import pages.requestmap.ListRequestmapPage
 import pages.requestmap.ShowRequestmapPage
+import spock.lang.IgnoreIf
 
 class RequestmapSpec extends AbstractSecuritySpec {
 
@@ -72,6 +73,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		configAttribute == 'ROLE_ADMINX'
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'delete requestmap'() {
 		when:
 		go 'testRequestmap/list?max=100'

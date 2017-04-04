@@ -4,6 +4,7 @@ import pages.user.CreateUserPage
 import pages.user.EditUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
+import spock.lang.IgnoreIf
 
 class UserSpec extends AbstractSecuritySpec {
 
@@ -79,6 +80,7 @@ class UserSpec extends AbstractSecuritySpec {
 		at ShowUserPage
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'delete user'() {
 		when:
 		to ListUserPage

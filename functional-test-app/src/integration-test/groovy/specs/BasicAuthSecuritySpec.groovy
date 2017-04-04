@@ -7,6 +7,7 @@ import pages.role.ShowRolePage
 import pages.user.CreateUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
+import spock.lang.IgnoreIf
 
 class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 
@@ -170,6 +171,7 @@ class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 		401 == connection.responseCode
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'check allowed for admin1'() {
 
 		// Check with admin1 auth, some @Secure actions are accessible
@@ -241,6 +243,7 @@ class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 		assertContentContains 'Error 403 Forbidden'
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'check allowed for admin2'() {
 
 		// Check that with admin2 auth, some @Secure actions are accessible
