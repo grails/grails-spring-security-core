@@ -8,6 +8,11 @@ set -e
 GRAILS_VERSIONS="3.0.17 3.1.6"
 TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 
+# firefox, htmlUnit, chrome, phantomJs
+GEBENV=htmlUnit
+CHROMEDRIVER=/Users/sdelamo/Applications/chromedriver
+PHANTOMJSDRIVER=/Users/sdelamo/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
+
 rm -rf build
 
 function generateBuildGradle {
@@ -46,7 +51,7 @@ function runTestGroup {
 
 	echo $testGroup > testconfig
 
-	./gradlew -q cleanBuild check --stacktrace
+	./gradlew -q -Dgeb.env=$GEBENV -Dwebdriver.chrome.driver=$CHROMEDRIVER -Dphantomjs.binary.path=$PHANTOMJSDRIVER cleanBuild check --stacktrace
 
 	mv build/reports/tests build/reports/tests-$testGroup-$_grailsVersion
 	mv build/geb-reports build/geb-reports-$testGroup-$_grailsVersion
