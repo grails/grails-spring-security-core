@@ -9,9 +9,18 @@ GRAILS_VERSIONS="3.0.17 3.1.6"
 TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 
 # firefox, htmlUnit, chrome, phantomJs
-GEBENV=htmlUnit
-CHROMEDRIVER=/Users/sdelamo/Applications/chromedriver
-PHANTOMJSDRIVER=/Users/sdelamo/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
+GEBENV=$1
+if [[ $GEBENV = "" ]]; then
+    GEBENV=htmlUnit
+fi
+# /Users/sdelamo/Applications/chromedriver
+CHROMEDRIVER=$2
+# /Users/sdelamo/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
+PHANTOMJSDRIVER=$2
+
+echo "GEB environment: $GEBENV"
+echo "Chrome driver: $CHROMEDRIVER"
+echo "PhantomJS driver: $PHANTOMJSDRIVER"
 
 rm -rf build
 
