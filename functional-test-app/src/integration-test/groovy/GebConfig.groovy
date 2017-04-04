@@ -15,7 +15,6 @@ import geb.report.ReportingListener
 //driver = { new ChromeDriver() }
 driver = { new PhantomJSDriver(new DesiredCapabilities()) }
 
-reportsDir = new File('build/geb-reports')
 baseUrl = 'http://localhost:8238/'
 quitCachedDriverOnShutdown = true
 
