@@ -4,6 +4,7 @@ import pages.role.CreateRolePage
 import pages.role.EditRolePage
 import pages.role.ListRolePage
 import pages.role.ShowRolePage
+import spock.lang.IgnoreIf
 
 class RoleSpec extends AbstractSecuritySpec {
 
@@ -72,6 +73,7 @@ class RoleSpec extends AbstractSecuritySpec {
 		at ShowRolePage
 	}
 
+	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
 	void 'delete role'() {
 		when:
 		to ListRolePage
