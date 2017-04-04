@@ -1,6 +1,7 @@
 
 integrationTest {
     systemProperty "geb.build.reportsDir", reporting.file("${project.projectDir}/build/geb-reports")
+	systemProperties System.properties
 	def file = new File('testconfig')
 	String testconfig = file.exists() ? file.text.trim().toLowerCase() : 'annotation'
 	def tests
