@@ -2,7 +2,7 @@ package com.testapp
 
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
-import org.apache.commons.lang.builder.HashCodeBuilder
+import org.codehaus.groovy.util.HashCodeHelper
 
 @ToString(cache=true, includeNames=true, includePackage=false)
 class TestUserTestRole implements Serializable {
@@ -20,10 +20,14 @@ class TestUserTestRole implements Serializable {
 
 	@Override
 	int hashCode() {
-		def builder = new HashCodeBuilder()
-		if (testUser) builder.append(testUser.id)
-		if (testRole) builder.append(testRole.id)
-		builder.toHashCode()
+		int hashCode = HashCodeHelper.initHash()
+		if (testUser) {
+			hashCode = HashCodeHelper.updateHash(hashCode, testUser.id)
+		}
+		if (testRole) {
+			hashCode = HashCodeHelper.updateHash(hashCode, testRole.id)
+		}
+		hashCode
 	}
 
 	static TestUserTestRole get(long testUserId, long testRoleId) {
