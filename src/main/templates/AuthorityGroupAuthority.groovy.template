@@ -3,7 +3,7 @@ package ${packageName}
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
-import org.apache.commons.lang.builder.HashCodeBuilder
+import org.codehaus.groovy.util.HashCodeHelper
 
 @ToString(cache=true, includeNames=true, includePackage=false)
 class ${groupClassName}${roleClassName} implements Serializable {
@@ -22,10 +22,14 @@ class ${groupClassName}${roleClassName} implements Serializable {
 
 	@Override
 	int hashCode() {
-		def builder = new HashCodeBuilder()
-		if (${groupClassProperty}) builder.append(${groupClassProperty}.id)
-		if (${roleClassProperty}) builder.append(${roleClassProperty}.id)
-		builder.toHashCode()
+	    int hashCode = HashCodeHelper.initHash()
+        if (${groupClassProperty}) {
+            hashCode = HashCodeHelper.updateHash(hashCode, ${groupClassProperty}.id)
+		}
+		if (${roleClassProperty}) {
+		    hashCode = HashCodeHelper.updateHash(hashCode, ${roleClassProperty}.id)
+		}
+		hashCode
 	}
 
 	static ${groupClassName}${roleClassName} get(long ${groupClassProperty}Id, long ${roleClassProperty}Id) {
