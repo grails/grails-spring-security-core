@@ -192,23 +192,29 @@ task asciidoc(type: AsciidoctorTask, description: 'Generates single-page HTML, P
 task asciidocMobi(type: AsciidoctorTask, description: 'Generates MOBI for Kindle', dependsOn: chmodXKindlegen) {
 	backends 'epub3'
 	attributes(['ebook-format': 'kf8'] + asciidoctorAttributes)
+	mustRunAfter asciidoc
 }
 
-task docs(dependsOn: [asciidoc, asciidocMobi]) << {
+task docs(dependsOn: [asciidoc]) {
+	doLast {
+		File dir = new File(buildDir, 'docs')
+		['epub', 'mobi', 'pdf'].each { String ext ->
+			File f = new File(dir, 'index.' + ext)
+			if (f.exists()) {
+				f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
+			}
+		}
 
-	File dir = new File(buildDir, 'docs')
-	['epub', 'mobi', 'pdf'].each { String ext ->
-		File f = new File(dir, 'index.' + ext)
-		if (f.exists()) {
-			f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
+		new File(buildDir, 'docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
+
+		copy {
+			from 'src/docs'
+			into new File(buildDir, 'docs').path
+			include '**/*.png'
 		}
 	}
+}
 
-	new File(buildDir, 'docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
-
-	copy {
-		from 'src/docs'
-		into new File(buildDir, 'docs').path
-		include '**/*.png'
-	}
+task docsMobi(dependsOn: [asciidoc, asciidocMobi]) {
+	finalizedBy docs
 }
