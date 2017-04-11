@@ -14,7 +14,7 @@ if [[ -n $TRAVIS_TAG && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'f
 
 	./gradlew bintrayUpload --stacktrace
 
-	./gradlew docs --stacktrace
+	./gradlew docsMobi --stacktrace
 
 	git config --global user.name "$GIT_NAME"
 	git config --global user.email "$GIT_EMAIL"
