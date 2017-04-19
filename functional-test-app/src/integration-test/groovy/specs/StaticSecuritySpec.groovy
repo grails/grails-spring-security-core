@@ -7,7 +7,9 @@ import pages.role.ShowRolePage
 import pages.user.CreateUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'static' })
 class StaticSecuritySpec extends AbstractSecuritySpec {
 
 	void 'create roles'() {

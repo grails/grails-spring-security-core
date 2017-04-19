@@ -6,6 +6,7 @@ import pages.requestmap.ListRequestmapPage
 import pages.requestmap.ShowRequestmapPage
 import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'requestmap' })
 class RequestmapSpec extends AbstractSecuritySpec {
 
 	void 'there are 20 initially'() {

@@ -3,7 +3,9 @@ package specs
 import groovy.json.JsonSlurper
 import pages.IndexPage
 import pages.LoginPage
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'annotation' })
 class NamespaceSecuritySpec extends AbstractSecuritySpec {
 
 	protected void resetDatabase() {

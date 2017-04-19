@@ -10,6 +10,7 @@ import pages.user.ListUserPage
 import pages.user.ShowUserPage
 import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'annotation' })
 class AnnotationSecuritySpec extends AbstractSecuritySpec {
 
 	void 'create roles'() {

@@ -9,6 +9,7 @@ import pages.user.ListUserPage
 import pages.user.ShowUserPage
 import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'basic' })
 class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 
 	private HttpURLConnection connection
