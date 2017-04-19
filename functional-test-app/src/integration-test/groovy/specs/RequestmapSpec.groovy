@@ -1,5 +1,6 @@
 package specs
 
+import com.testapp.TestDataService
 import pages.requestmap.CreateRequestmapPage
 import pages.requestmap.EditRequestmapPage
 import pages.requestmap.ListRequestmapPage
@@ -9,13 +10,13 @@ import spock.lang.IgnoreIf
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'requestmap' })
 class RequestmapSpec extends AbstractSecuritySpec {
 
-	void 'there are 20 initially'() {
+	void 'test request maps are initially present'() {
 		when:
 		go 'testRequestmap/list?max=100'
 
 		then:
 		at ListRequestmapPage
-		requestmapRows.size() == 20
+		requestmapRows.size() == TestDataService.URIS_FOR_REQUESTMAPS.size()
 	}
 
 	void 'add a requestmap'() {
@@ -41,7 +42,7 @@ class RequestmapSpec extends AbstractSecuritySpec {
 
 		then:
 		at ListRequestmapPage
-		requestmapRows.size() == 21
+		requestmapRows.size() == (TestDataService.URIS_FOR_REQUESTMAPS.size() + 1)
 	}
 
 	void 'edit the details'() {
@@ -100,6 +101,6 @@ class RequestmapSpec extends AbstractSecuritySpec {
 		go 'testRequestmap/list?max=100'
 
 		then:
-		requestmapRows.size() == 20
+		requestmapRows.size() == TestDataService.URIS_FOR_REQUESTMAPS.size()
 	}
 }

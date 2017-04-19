@@ -15,7 +15,7 @@ class TestDataService {
 	def objectDefinitionSource
 
 	//	'/error', '/hack/**', and '/testData/**' are handled in TestRequestmapFilterInvocationDefinition
-	private static final List<String> URIS_FOR_REQUESTMAPS = [
+	static final List<String> URIS_FOR_REQUESTMAPS = [
 		'/', '/**/css/**', '/**/favicon.ico', '/**/images/**', '/**/js/**', '/assets/**', '/dbconsole',
 		'/dbconsole/**', '/index', '/index.gsp', '/login', '/login/**', '/shutdown', '/misctest/**',
 		'/testrequestmap', '/testrequestmap/**', '/testrole', '/testrole/**', '/testuser', '/testuser/**']

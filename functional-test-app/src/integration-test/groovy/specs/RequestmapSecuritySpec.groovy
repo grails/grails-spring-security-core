@@ -1,5 +1,6 @@
 package specs
 
+import com.testapp.TestDataService
 import pages.IndexPage
 import pages.LoginPage
 import pages.requestmap.CreateRequestmapPage
@@ -135,7 +136,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		then:
 		at ListRequestmapPage
 		int initialSize = requestmapRows.size()
-		initialSize == 20
+		initialSize == TestDataService.URIS_FOR_REQUESTMAPS.size()
 
 		when:
 		newRequestmapButton.click()
