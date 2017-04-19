@@ -1,8 +1,5 @@
 package com.testapp
 
-import com.testapp.TestRequestmap
-import com.testapp.TestUser
-import com.testapp.TestUserTestRole
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.transaction.Transactional
 import groovy.sql.Sql
