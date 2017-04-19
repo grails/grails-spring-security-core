@@ -80,7 +80,7 @@ class TestDataService {
 		}
 
 		for (url in URIS_FOR_REQUESTMAPS) {
-			save new TestRequestmap(url: url, configAttribute: 'permitAll')
+			save new TestRequestmap(url: url, configAttribute: 'permitAll'), true
 		}
 
 		assert URIS_FOR_REQUESTMAPS.size() == TestRequestmap.count()
@@ -96,12 +96,12 @@ class TestDataService {
 	}
 
 	TestUser addTestUser(String username, String... roles) {
-		def testUser = save(new TestUser(username: username, password: 'password'))
-		roles.each { save new TestUserTestRole(testUser: testUser, testRole: TestRole.findOrSaveByAuthority(it)) }
+		def testUser = save(new TestUser(username: username, password: 'password'), true)
+		roles.each { save new TestUserTestRole(testUser: testUser, testRole: TestRole.findOrSaveByAuthority(it)), true }
 		testUser
 	}
 
-	private save(o) {
-		o.save(failOnError: true)
+	private save(o, boolean flush = false) {
+		o.save(failOnError: true, flush: flush)
 	}
 }
