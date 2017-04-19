@@ -21,6 +21,12 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	TestDataService testDataService
 
 	void setup() {
+		if ( hasProperty('serverPort') ) {
+			browser.baseUrl = "http://localhost:${getProperty('serverPort')}/"
+		} else {
+			browser.baseUrl = 'http://localhost:8080/'
+		}
+
 		logout()
 
 		// call resetDatabase() once per suite, before the first test; would
