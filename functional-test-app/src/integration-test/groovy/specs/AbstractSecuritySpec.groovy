@@ -1,9 +1,11 @@
 package specs
 
+import com.testapp.TestDataService
 import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.test.mixin.integration.Integration
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import pages.LoginPage
 import spock.lang.Shared
@@ -14,6 +16,9 @@ import spock.lang.Stepwise
 abstract class AbstractSecuritySpec extends GebReportingSpec {
 
 	private @Shared boolean databaseReset = false
+
+	@Autowired
+	TestDataService testDataService
 
 	void setup() {
 		logout()
@@ -35,7 +40,7 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	}
 
 	protected void resetDatabase() {
-		go 'testData/reset'
+		testDataService.returnToInitialState()
 	}
 
 	protected String getContent(String url) {
