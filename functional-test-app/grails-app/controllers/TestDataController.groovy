@@ -1,3 +1,4 @@
+import com.testapp.TestDataService
 import grails.plugin.springsecurity.annotation.Secured
 
 @Secured('permitAll')

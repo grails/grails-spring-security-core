@@ -1,23 +1,24 @@
+package com.testapp
+
 import com.testapp.TestRequestmap
-import com.testapp.TestRole
 import com.testapp.TestUser
 import com.testapp.TestUserTestRole
-
 import grails.plugin.springsecurity.SpringSecurityUtils
+import grails.transaction.Transactional
 import groovy.sql.Sql
 import rest.Book
 import rest.Movie
 
+@Transactional
 class TestDataService {
 
 	def dataSource
-	def grailsApplication
 	def objectDefinitionSource
 
 	//	'/error', '/hack/**', and '/testData/**' are handled in TestRequestmapFilterInvocationDefinition
 	static final List<String> URIS_FOR_REQUESTMAPS = [
 		'/', '/**/css/**', '/**/favicon.ico', '/**/images/**', '/**/js/**', '/assets/**', '/dbconsole',
-		'/dbconsole/**', '/index', '/index.gsp', '/login', '/login/**', '/shutdown', '/misctest/**',
+		'/dbconsole/**', '/index', '/index.gsp', '/login', '/login/**', '/logoff', '/shutdown', '/misctest/**',
 		'/testrequestmap', '/testrequestmap/**', '/testrole', '/testrole/**', '/testuser', '/testuser/**']
 
 	void returnToInitialState() {
@@ -64,8 +65,12 @@ class TestDataService {
 	}
 
 	void enterInitialData() {
-		Book.findOrSaveByTitle 'TestBook'
-		Movie.findOrSaveByTitle 'TestMovie'
+		if ( !Book.findByTitle('TestBook') ) {
+			new Book(title: 'TestBook').save(flush: true)
+		}
+		if ( !Movie.findByTitle('TestMovie') ) {
+			new Movie(title: 'TestMovie').save(flush: true)
+		}
 
 		if (System.getProperty('add_test_users')) {
 			addTestUsers()
