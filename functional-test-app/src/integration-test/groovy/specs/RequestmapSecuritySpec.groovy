@@ -231,6 +231,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	void 'check allowed for admin1'() {
 		when:
 		login 'admin1', 'password1'
+		to IndexPage  // Necessary for chrome
 
 		then:
 		at IndexPage
@@ -253,6 +254,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	void 'check allowed for user1'() {
 		when:
 		login 'user1', 'p4ssw0rd'
+		to IndexPage // Necessary for chrome
 
 		then:
 		at IndexPage
