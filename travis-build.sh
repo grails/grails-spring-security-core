@@ -8,7 +8,9 @@ rm -rf build
 
 integration-test-app/run_integration_tests.sh
 
-functional-test-app/run_functional_tests.sh
+./copy_functional_tests_to_different_grails_versions.sh
+
+./run_functional_tests.sh
 
 if [[ -n $TRAVIS_TAG && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
