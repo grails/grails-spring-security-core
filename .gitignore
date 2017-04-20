@@ -11,3 +11,12 @@ build
 cobertura.ser
 kindlegen
 out
+/functional-test-app/**/grails-app/conf/application.groovy
+/functional-test-app/**/grails-app/conf/spring
+/functional-test-app/**/grails-app/controllers
+/functional-test-app/**/grails-app/domain
+/functional-test-app/**/grails-app/i18n
+/functional-test-app/**/grails-app/init
+/functional-test-app/**/grails-app/services
+/functional-test-app/**/grails-app/views
+/functional-test-app/**/src
