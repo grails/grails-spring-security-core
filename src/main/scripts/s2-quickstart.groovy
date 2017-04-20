@@ -116,7 +116,6 @@ else {
 '''
 }
 
-
 private Map extractVersion(String versionString) {
 	def arr = versionString.split('\\.')
 	def v = [mayor: 0, minor: 0, bug: 0]
@@ -148,26 +147,26 @@ private boolean versionAfterOrEqualsToThreshold(String threshold, String value) 
 	def vb = extractVersion(threshold)
 	def l = [va, vb]
 	l.sort { Map a, Map b ->
-		def compare = b.mayor <=> a.mayor
+		def compare = a.mayor <=> b.mayor
 		if ( compare != 0 ) {
 			return compare
 		}
-		compare = b.minor <=> a.minor
+		compare = a.minor <=> b.minor
 		if ( compare != 0 ) {
 			return compare
 		}
-		b.bug <=> a.bug
+		a.bug <=> b.bug
 	}
-	def sortedValue = l[0].toString()
+	def sortedValue = l[0].collect { k, v -> v }.join('.')
 	threshold.startsWith(sortedValue)
 }
 
 private void createDomains(Model userModel, Model roleModel, Model requestmapModel, Model groupModel) {
 
 	def props = new Properties()
-	file("gradle.properties").withInputStream { props.load(it) }
+	file("gradle.properties")?.withInputStream { props.load(it) }
 
-	final threshold = '6.1.1'
+	final threshold = '6.0.10'
 
 	boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(threshold, props.gormVersion)
 
