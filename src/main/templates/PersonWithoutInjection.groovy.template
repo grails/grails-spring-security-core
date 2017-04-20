@@ -1,0 +1,31 @@
+package ${packageName}
+
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
+class ${userClassName} implements Serializable {
+
+	private static final long serialVersionUID = 1
+
+	String username
+	String password
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
+
+	Set<${groupClassName ?: roleClassName}> getAuthorities() {
+		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this)*.${groupClassProperty ?: roleClassProperty}
+	}
+
+	static constraints = {
+		password blank: false, password: true
+		username blank: false, unique: true
+	}
+
+	static mapping = {
+		password column: '`password`'
+	}
+}

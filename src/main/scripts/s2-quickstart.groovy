@@ -28,6 +28,7 @@ Example: grails s2-quickstart --uiOnly
 
 @Field Map templateAttributes
 @Field boolean uiOnly
+@Field boolean salt
 
 description 'Creates domain classes and updates config settings for the Spring Security plugin', {
 
@@ -47,6 +48,7 @@ Model roleModel
 Model requestmapModel
 Model groupModel
 uiOnly = flag('uiOnly')
+salt = flag('salt')
 if (uiOnly) {
 	addStatus '\nConfiguring Spring Security; not generating domain classes'
 }
@@ -114,9 +116,79 @@ else {
 '''
 }
 
+
+private Map extractVersion(String versionString) {
+	def arr = versionString.split('\\.')
+	def v = [mayor: 0, minor: 0, bug: 0]
+	try {
+		if ( arr.size() >= 1) {
+			v.mayor = arr[0].toInteger()
+		}
+		if ( arr.size() >= 2) {
+			v.minor = arr[1].toInteger()
+		}
+		if ( arr.size() >= 3) {
+			v.bug = arr[2].toInteger()
+		}
+	} catch ( Exception e ) {
+		v = [mayor: 0, minor: 0, bug: 0]
+	}
+	v
+}
+
+private boolean versionAfterOrEqualsToThreshold(String threshold, String value) {
+	if ( value == null ) {
+		return false
+	}
+	if ( value.startsWith(threshold) ) {
+		return true
+	}
+
+	def va = extractVersion(value)
+	def vb = extractVersion(threshold)
+	def l = [va, vb]
+	l.sort { Map a, Map b ->
+		def compare = b.mayor <=> a.mayor
+		if ( compare != 0 ) {
+			return compare
+		}
+		compare = b.minor <=> a.minor
+		if ( compare != 0 ) {
+			return compare
+		}
+		b.bug <=> a.bug
+	}
+	def sortedValue = l[0].toString()
+	threshold.startsWith(sortedValue)
+}
+
 private void createDomains(Model userModel, Model roleModel, Model requestmapModel, Model groupModel) {
 
-	generateFile 'Person', userModel.packagePath, userModel.simpleName
+	def props = new Properties()
+	file("gradle.properties").withInputStream { props.load(it) }
+
+	final threshold = '6.1.1'
+
+	boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(threshold, props.gormVersion)
+
+	if ( gormVersionAfterThreshold ) {
+		generateFile 'PersonWithoutInjection', userModel.packagePath, userModel.simpleName
+		if ( salt ) {
+			generateFile 'PersonPasswordEncoderListenerWithSalt', userModel.packagePath, userModel.simpleName, "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy'
+		} else {
+			generateFile 'PersonPasswordEncoderListener', userModel.packagePath, userModel.simpleName, "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy'
+		}
+		def beansList = [[import: "import ${userModel.packageName}.${userModel.simpleName}PasswordEncoderListener", definition: "${userModel.propertyName}PasswordEncoderListener(${userModel.simpleName}PasswordEncoderListener, ref('hibernateDatastore'))"]]
+		addBeans(beansList, 'grails-app/conf/spring/resources.groovy')
+
+	} else {
+		if ( salt ) {
+			generateFile 'PersonWithSalt', userModel.packagePath, userModel.simpleName
+		} else {
+			generateFile 'Person', userModel.packagePath, userModel.simpleName
+		}
+	}
+
 	generateFile 'Authority', roleModel.packagePath, roleModel.simpleName
 	generateFile 'PersonAuthority', roleModel.packagePath, userModel.simpleName + roleModel.simpleName
 
@@ -176,8 +248,38 @@ private void updateConfig(String userClassName, String roleClassName, String req
 	}
 }
 
-private void generateFile(String templateName, String packagePath, String className) {
+private void generateFile(String templateName, String packagePath, String className, String fileName = null, String folder = 'grails-app/domain') {
 	render template(templateName + '.groovy.template'),
-	       file("grails-app/domain/$packagePath/${className}.groovy"),
+	       file("${folder}/$packagePath/${fileName ?: className}.groovy"),
 	       templateAttributes, false
+}
+
+private void addBeans(List<Map> beans, String pathname) {
+	def f = new File(pathname)
+	def lines = []
+	beans.each { Map bean ->
+		lines << bean.import
+	}
+	if ( f.exists() ) {
+		f.eachLine { line, nb ->
+			lines << line
+			if ( line.contains('beans = {') ) {
+				beans.each { Map bean ->
+					lines << '    ' + bean.definition
+				}
+			}
+		}
+	} else {
+		lines << 'beans = {'
+		beans.each { Map bean ->
+			lines << '    ' + bean.definition
+		}
+		lines << '}'
+	}
+
+	f.withWriter('UTF-8') { writer ->
+		lines.each { String line ->
+			writer.write "${line}${System.lineSeparator()}"
+		}
+	}
 }
