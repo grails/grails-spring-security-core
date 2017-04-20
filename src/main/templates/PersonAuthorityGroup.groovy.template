@@ -47,9 +47,9 @@ class ${userClassName}${groupClassName} implements Serializable {
 		}
 	}
 
-	static ${userClassName}${groupClassName} create(${userClassName} ${userClassProperty}, ${groupClassName} ${groupClassProperty}) {
+	static ${userClassName}${groupClassName} create(${userClassName} ${userClassProperty}, ${groupClassName} ${groupClassProperty}, boolean flush = false) {
 		def instance = new ${userClassName}${groupClassName}(${userClassProperty}: ${userClassProperty}, ${groupClassProperty}: ${groupClassProperty})
-		instance.save()
+		instance.save(flush: flush)
 		instance
 	}
 
