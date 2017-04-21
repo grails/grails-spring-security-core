@@ -6,6 +6,12 @@ import pages.role.ListRolePage
 import pages.role.ShowRolePage
 import spock.lang.IgnoreIf
 
+@IgnoreIf({ !(
+		System.getProperty('TESTCONFIG') == 'annotation' ||
+        System.getProperty('TESTCONFIG') == 'basic' ||
+        System.getProperty('TESTCONFIG') == 'requestmap' ||
+        System.getProperty('TESTCONFIG') == 'static')
+})
 class RoleSpec extends AbstractSecuritySpec {
 
 	void 'there are no roles initially'() {

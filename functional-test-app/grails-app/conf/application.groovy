@@ -42,8 +42,7 @@ grails {
 	}
 }
 
-def file = new File('testconfig')
-String testconfig = file.exists() ? file.text.trim().toLowerCase() : ''
+String testconfig = System.getProperty('TESTCONFIG')
 switch (testconfig) {
 	case 'annotation':
 		grails.plugin.springsecurity.securityConfigType = 'Annotation'

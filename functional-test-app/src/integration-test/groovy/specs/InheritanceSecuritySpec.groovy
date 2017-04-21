@@ -2,7 +2,9 @@ package specs
 
 import pages.IndexPage
 import pages.LoginPage
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'annotation' })
 class InheritanceSecuritySpec extends AbstractSecuritySpec {
 
 	protected void resetDatabase() {

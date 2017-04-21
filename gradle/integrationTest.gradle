@@ -1,0 +1,8 @@
+integrationTest {
+    systemProperty "geb.build.reportsDir", reporting.file("${project.projectDir}/build/geb-reports")
+    systemProperties System.properties
+    doFirst {
+        logger.quiet "\n - Running tests for configuration ${System.getProperty('TESTCONFIG')} with GEB: ${System.getProperty('geb.env')} and Grails $grailsVersion"
+    }
+    beforeTest { descriptor -> logger.quiet " -- $descriptor" }
+}

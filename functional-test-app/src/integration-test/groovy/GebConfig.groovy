@@ -5,7 +5,6 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver
 import org.openqa.selenium.remote.DesiredCapabilities
 
 // See: http://www.gebish.org/manual/current/configuration.html
-baseUrl = 'http://localhost:8238/'
 quitCachedDriverOnShutdown = true
 
 environments {

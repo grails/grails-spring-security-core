@@ -3,7 +3,9 @@ package specs
 import pages.user.CreateUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'bcrypt' })
 class BCryptSpec extends AbstractSecuritySpec {
 
 	void 'create a user'() {

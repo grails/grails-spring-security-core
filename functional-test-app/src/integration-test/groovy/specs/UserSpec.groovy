@@ -6,6 +6,12 @@ import pages.user.ListUserPage
 import pages.user.ShowUserPage
 import spock.lang.IgnoreIf
 
+@IgnoreIf({ !(
+		System.getProperty('TESTCONFIG') == 'annotation' ||
+				System.getProperty('TESTCONFIG') == 'basic' ||
+				System.getProperty('TESTCONFIG') == 'requestmap' ||
+				System.getProperty('TESTCONFIG') == 'static')
+})
 class UserSpec extends AbstractSecuritySpec {
 
 	void 'there are no users initially'() {

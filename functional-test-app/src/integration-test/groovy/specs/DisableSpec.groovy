@@ -1,7 +1,9 @@
 package specs
 
 import pages.IndexPage
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'misc' })
 class DisableSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'lock account'() {

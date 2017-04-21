@@ -1,9 +1,11 @@
 package specs
 
+import com.testapp.TestDataService
 import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.test.mixin.integration.Integration
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import pages.LoginPage
 import spock.lang.Shared
@@ -15,7 +17,16 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 
 	private @Shared boolean databaseReset = false
 
+	@Autowired
+	TestDataService testDataService
+
 	void setup() {
+		if ( hasProperty('serverPort') ) {
+			browser.baseUrl = "http://localhost:${getProperty('serverPort')}/"
+		} else {
+			browser.baseUrl = 'http://localhost:8080/'
+		}
+
 		logout()
 
 		// call resetDatabase() once per suite, before the first test; would
@@ -35,7 +46,7 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	}
 
 	protected void resetDatabase() {
-		go 'testData/reset'
+		testDataService.returnToInitialState()
 	}
 
 	protected String getContent(String url) {

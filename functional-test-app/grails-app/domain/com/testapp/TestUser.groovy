@@ -32,7 +32,23 @@ class TestUser implements Serializable {
 	}
 
 	protected void encodePassword() {
-		password = springSecurityService.encodePassword(password, springSecurityService.grailsApplication.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty ? username : null)
+		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password, salt()) : password
+	}
+
+	def salt() {
+		if ( !springSecurityService ) {
+			return null
+		}
+		def algorithm = springSecurityService.grailsApplication.config.grails.plugin.springsecurity.password.algorithm
+		if ( algorithm == 'bcrypt' || algorithm == 'pbkdf2' ) {
+			return null
+		}
+
+		def reflectionSaltProperty = springSecurityService.grailsApplication.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty
+		if ( reflectionSaltProperty ) {
+			return getProperty(reflectionSaltProperty)
+		}
+		null
 	}
 
 	static transients = ['springSecurityService']

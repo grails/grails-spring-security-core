@@ -1,0 +1,52 @@
+ext {
+    templatesDir = '.'
+    grailsVersions = ['grails_3_2_8_gorm_6_1_1', 'grails_3_2_8_gorm_6_0_9', 'grails_3_1_6', 'grails_3_0_17']
+    testConfigurations = ['static', 'annotation', 'requestmap', 'basic', 'misc', 'bcrypt']
+}
+
+task copyArtefacts {
+    group 'ssc'
+    ext.configurationFiles = ['application.groovy', 'spring/resources.groovy']
+    ext.templateFolders = [
+                '/grails-app/controllers',
+                '/grails-app/domain',
+                '/grails-app/i18n',
+                '/grails-app/init',
+                '/grails-app/services',
+                '/grails-app/views',
+                '/src/integration-test',
+                '/src/main']
+    doLast {
+        for ( String grailsVersion in grailsVersions ) {
+            for ( String templateFolder in templateFolders) {
+                copy {
+                    from "${templatesDir}${templateFolder}"
+                    into "${project.projectDir}/${grailsVersion}${templateFolder}"
+                }
+            }
+            for ( String singleFile in configurationFiles) {
+                copy {
+                    from "${templatesDir}/grails-app/conf"
+                    into "${project.projectDir}/${grailsVersion}/grails-app/conf"
+                    include singleFile
+                }
+            }
+        }
+    }
+}
+
+task deleteArtefacts {
+    group 'ssc'
+    doLast {
+        for ( String grailsVersion in grailsVersions ) {
+            for (String templateFolder in copyArtefacts.ext.templateFolders) {
+                delete "${project.projectDir}/${grailsVersion}${templateFolder}"
+            }
+            for ( String singleFile in copyArtefacts.ext.configurationFiles) {
+                delete "${project.projectDir}/${grailsVersion}/grails-app/conf/${singleFile}"
+            }
+        }
+    }
+}
+
+

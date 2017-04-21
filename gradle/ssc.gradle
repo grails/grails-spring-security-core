@@ -1,0 +1,10 @@
+File pluginDir = file('.').parentFile
+File versionTxt = new File(pluginDir, 'version.txt')
+if ( !versionTxt.exists() ) {
+    versionTxt = new File(pluginDir.parentFile, 'version.txt')
+}
+def sscVersion = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
+
+dependencies {
+    compile "org.grails.plugins:spring-security-core:$sscVersion"
+}

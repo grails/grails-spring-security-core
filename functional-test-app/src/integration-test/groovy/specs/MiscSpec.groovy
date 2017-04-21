@@ -2,7 +2,9 @@ package specs
 
 import pages.IndexPage
 import spock.lang.Issue
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'misc' })
 class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'salted password'() {

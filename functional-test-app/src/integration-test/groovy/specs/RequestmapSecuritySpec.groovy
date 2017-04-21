@@ -1,5 +1,6 @@
 package specs
 
+import com.testapp.TestDataService
 import pages.IndexPage
 import pages.LoginPage
 import pages.requestmap.CreateRequestmapPage
@@ -11,7 +12,9 @@ import pages.role.ShowRolePage
 import pages.user.CreateUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
+import spock.lang.IgnoreIf
 
+@IgnoreIf({ System.getProperty('TESTCONFIG') != 'requestmap' })
 class RequestmapSecuritySpec extends AbstractSecuritySpec {
 
 	void 'create roles'() {
@@ -133,7 +136,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 		then:
 		at ListRequestmapPage
 		int initialSize = requestmapRows.size()
-		initialSize == 20
+		initialSize == TestDataService.URIS_FOR_REQUESTMAPS.size()
 
 		when:
 		newRequestmapButton.click()
@@ -228,6 +231,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	void 'check allowed for admin1'() {
 		when:
 		login 'admin1', 'password1'
+		to IndexPage  // Necessary for chrome
 
 		then:
 		at IndexPage
@@ -250,6 +254,7 @@ class RequestmapSecuritySpec extends AbstractSecuritySpec {
 	void 'check allowed for user1'() {
 		when:
 		login 'user1', 'p4ssw0rd'
+		to IndexPage // Necessary for chrome
 
 		then:
 		at IndexPage
