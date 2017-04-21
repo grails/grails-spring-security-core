@@ -57,3 +57,5 @@ include::controllerMethods.adoc[]
 include::i18n.adoc[]
 
 include::scripts.adoc[]
+
+include::debugging.adoc[]
