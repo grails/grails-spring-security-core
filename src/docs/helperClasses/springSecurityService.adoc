@@ -166,7 +166,7 @@ class PersonController {
 
 [NOTE]
 ====
-If you are hashing the password in the User domain class (using `beforeInsert` and `encodePassword`) then don't call `springSecurityService.encodePassword()` in your controller since you'll double-hash the password and users won't be able to log in. It's best to encapsulate the password handling logic in the domain class.
+If you are hashing the password in an PersistenceEventListener or in the User domain class (using `beforeInsert` and `encodePassword`) then don't call `springSecurityService.encodePassword()` in your controller since you'll double-hash the password and users won't be able to log in. It's best to encapsulate the password handling logic in a single point.
 ====
 
 ==== updateRole()

@@ -1,0 +1,12 @@
+WARNING: Service injection in GORM entities is disabled by default since Grails 3.2.8. Because of that, if you want the service `springSecurityService` to get
+injected in the previous domain class you would need to turn on autowire.
+
+[source,yaml]
+.`grails-app/conf/application.yml`
+----
+grails:
+    gorm:
+        # Whether to autowire entities.
+        # Disabled by default for performance reasons.
+        autowire: true
+----

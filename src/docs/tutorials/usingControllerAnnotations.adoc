@@ -104,10 +104,7 @@ class User implements Serializable {
 }
 ----
 
-[NOTE]
-====
-Earlier versions of the plugin didn't include password hashing logic in the domain class, but it makes the code a lot cleaner.
-====
+include::../domainClasses/gormAutowire.adoc[]
 
 and this Role class:
 
