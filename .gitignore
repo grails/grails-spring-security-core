@@ -20,3 +20,4 @@ out
 /functional-test-app/**/grails-app/services
 /functional-test-app/**/grails-app/views
 /functional-test-app/**/src
+atlassian-ide-plugin.xml
