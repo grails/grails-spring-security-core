@@ -1,0 +1,15 @@
+task updateGormVersion {
+    doLast {
+        if ( project.hasProperty('newGormVersion') ) {
+            Properties props = new Properties()
+	    def gradleProps = new Properties()
+	    file("${project.projectDir}/gradle.properties")?.withInputStream { gradleProps.load(it) }
+            gradleProps.gormVersion = project.properties['newGormVersion']
+            def text = ""
+	    gradleProps.each { k, v ->
+                 text += "${k}=${v}\n"
+            }
+            new File("${project.projectDir}/gradle.properties").text = text
+        }
+    }
+}
