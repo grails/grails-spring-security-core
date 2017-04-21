@@ -104,26 +104,33 @@ You can now define the `SecurityContextHolder` strategy. By default it is stored
 
 === Debug filter
 
-You can enable a "`debug`" filter based on the `org.springframework.security.config.debug.DebugFilter` class. It will log security information at the "`info`" level and can help when debugging configuration issues. This should only be enabled in development mode so consider adding the property that enables it inside an `environments` block in `Config.groovy`
+You can enable a "`debug`" filter based on the `org.springframework.security.config.debug.DebugFilter` class. It will log security information at the "`info`" level and can help when debugging configuration issues. This should only be enabled in development mode so consider adding the property that enables it inside an `environments` block in `grails-app/conf/application.yml`
 
 [source,groovy]
 ----
-environments {
-   development {
-      grails.logging.jul.usebridge = true
-      grails.plugin.springsecurity.debug.useFilter = true
-   }
-   production {
-      grails.logging.jul.usebridge = false
-   }
-}
+environments:
+    development:
+        grails:
+            logging:
+                jul:
+                    usebridge: true
+            plugin:
+                springsecurity:
+                    debug:
+                        useFilter: true
+    production:
+        grails:
+            logging:
+                jul:
+                    usebridge: true
 ----
 
-Also add the implementation class name in your Log4j configuration:
+Also add the implementation class name in your logback configuration:
 
 [source,groovy]
+.grails-app/conf/logback.groovy
 ----
-info 'grails.plugin.springsecurity.web.filter.DebugFilter'
+logger 'grails.plugin.springsecurity.web.filter.DebugFilter', INFO, ['STDOUT'], false
 ----
 
 === Storing usernames in the session
