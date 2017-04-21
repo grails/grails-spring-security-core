@@ -4,7 +4,9 @@ import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.codehaus.groovy.util.HashCodeHelper
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class ${userClassName}${roleClassName} implements Serializable {
 
@@ -60,11 +62,11 @@ class ${userClassName}${roleClassName} implements Serializable {
 	}
 
 	static int removeAll(${userClassName} u) {
-		u == null ? 0 : ${userClassName}${roleClassName}.where { ${userClassProperty} == u }.deleteAll()
+		u == null ? 0 : ${userClassName}${roleClassName}.where { ${userClassProperty} == u }.deleteAll() as int
 	}
 
 	static int removeAll(${roleClassName} r) {
-		r == null ? 0 : ${userClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll()
+		r == null ? 0 : ${userClassName}${roleClassName}.where { ${roleClassProperty} == r }.deleteAll() as int
 	}
 
 	static constraints = {

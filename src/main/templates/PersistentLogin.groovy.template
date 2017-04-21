@@ -2,7 +2,9 @@ package ${packageName}
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes=['series', 'username'])
 @ToString(includes=['series', 'username'], cache=true, includeNames=true, includePackage=false)
 class ${className} implements Serializable {

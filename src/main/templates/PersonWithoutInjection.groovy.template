@@ -2,7 +2,9 @@ package ${packageName}
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
 class ${userClassName} implements Serializable {
@@ -17,7 +19,7 @@ class ${userClassName} implements Serializable {
 	boolean passwordExpired
 
 	Set<${groupClassName ?: roleClassName}> getAuthorities() {
-		${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this)*.${groupClassProperty ?: roleClassProperty}
+		(${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this) as List<${userClassName}${groupClassName ?: roleClassName}>)*.${groupClassProperty ?: roleClassProperty} as Set<${groupClassName ?: roleClassName}>
 	}
 
 	static constraints = {
