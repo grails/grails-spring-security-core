@@ -63,6 +63,8 @@ class User implements Serializable {
 }
 ----
 
+include::gormAutowire.adoc[]
+
 Optionally, you can add other properties such as `email`, `firstName`, and `lastName`, convenience methods, and so on:
 
 [source,groovy]
