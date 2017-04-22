@@ -9,7 +9,7 @@ before_cache:
 jdk:
 - oraclejdk8
 install: true
-script: "./travis-build.sh"
+script: "./publish-docs.sh"
 env:
   global:
   - GIT_NAME="Graeme Rocher"
