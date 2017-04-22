@@ -4,10 +4,6 @@ set -e
 
 echo "travis tag: $TRAVIS_TAG"
 
-echo "pullrequest: $TRAVIS_PULL_REQUEST"
-
-echo "travis branch: $TRAVIS_BRANCH"
-
 rm -rf build
 
 ./gradlew -q clean check install --stacktrace
@@ -20,7 +16,11 @@ integration-test-app/run_integration_tests.sh
 
 if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
+    echo "In branch master not a pull request"
+
     if [[ -n $TRAVIS_TAG ]]; then
+
+    echo "this is a tag, deploy"
 
 	./gradlew bintrayUpload --stacktrace
 
