@@ -82,7 +82,7 @@ task s2Quickstart {
 }
 task resetResourcesGroovy {
     doLast {
-    new File("${project.projectDir}/grails-app/conf/spring/resources.groovy").text = 'beans = { }'
+        new File("${project.projectDir}/grails-app/conf/spring/resources.groovy").text = 'beans = {\n}'
     }
 }
 task deleteS2QuickstartGeneratedFiles {
@@ -93,7 +93,6 @@ task deleteS2QuickstartGeneratedFiles {
 	delete("${project.projectDir}/src/main")
     }
 }
-compileGroovy.dependsOn 's2Quickstart'
-integrationTest.finalizedBy 'deleteS2QuickstartGeneratedFiles'
-
-
+compileGroovy.dependsOn 's2Quickstart', 'updateGormVersion', 'deleteS2QuickstartGeneratedFiles' 
+s2Quickstart.mustRunAfter 'deleteS2QuickstartGeneratedFiles'
+deleteS2QuickstartGeneratedFiles.mustRunAfter 'updateGormVersion'
