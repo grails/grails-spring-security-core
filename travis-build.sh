@@ -4,7 +4,7 @@ set -e
 
 echo "travis tag: $TRAVIS_TAG"
 
-echo "pullrequest: $TRAVIS_TAG_PULL_REQUEST"
+echo "pullrequest: $TRAVIS_PULL_REQUEST"
 
 echo "travis branch: $TRAVIS_BRANCH"
 
