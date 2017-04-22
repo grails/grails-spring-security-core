@@ -68,7 +68,9 @@ task s2Quickstart {
     doLast {
         for ( String cmd : commands ) {
             def sout = new StringBuilder(), serr = new StringBuilder()
-            def proc = "${project.projectDir}/grailsw $cmd".execute()
+            def grailscmd = "${project.projectDir}/grailsw $cmd"
+            println grailscmd
+            def proc = grailscmd.execute()
             proc.consumeProcessOutput(sout, serr)
             proc.waitForOrKill(20000)
             println "$sout $serr"
@@ -78,7 +80,7 @@ task s2Quickstart {
 
 task resetResourcesGroovy {
     doLast {
-    new File("${project.projectDir}/grails-app/conf/spring/resources.groovy").text = 'beans = { }'
+        new File("${project.projectDir}/grails-app/conf/spring/resources.groovy").text = 'beans = {\n}'
     }
 }
 
@@ -90,7 +92,6 @@ task deleteS2QuickstartGeneratedFiles {
 	delete("${project.projectDir}/src/main")
     }
 }
-compileGroovy.dependsOn 's2Quickstart'
-check.dependsOn 'deleteS2QuickstartGeneratedFiles'
-
-
+compileGroovy.dependsOn 's2Quickstart', 'updateGormVersion', 'deleteS2QuickstartGeneratedFiles' 
+s2Quickstart.mustRunAfter 'deleteS2QuickstartGeneratedFiles'
+deleteS2QuickstartGeneratedFiles.mustRunAfter 'updateGormVersion'
