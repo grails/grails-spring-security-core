@@ -2,6 +2,12 @@
 
 set -e
 
+echo "travis tag: $TRAVIS_TAG"
+
+echo "pullrequest: $TRAVIS_TAG_PULL_REQUEST"
+
+echo "travis branch: $TRAVIS_BRANCH"
+
 rm -rf build
 
 ./gradlew -q clean check install --stacktrace
@@ -12,7 +18,9 @@ integration-test-app/run_integration_tests.sh
 
 ./run_functional_tests.sh
 
-if [[ -n $TRAVIS_TAG && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+
+    if [[ -n $TRAVIS_TAG ]]; then
 
 	./gradlew bintrayUpload --stacktrace
 
@@ -41,5 +49,7 @@ if [[ -n $TRAVIS_TAG && $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'f
 
 	git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
 	git push origin
+
+	fi
 
 fi
