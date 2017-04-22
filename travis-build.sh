@@ -18,7 +18,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
     echo "In branch master not a pull request"
 
-    # if [[ -n $TRAVIS_TAG ]]; then
+    if [[ -n $TRAVIS_TAG ]]; then
 
     echo "this is a tag, deploy"
 
@@ -50,6 +50,6 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 	git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
 	git push origin
 
-	# fi
+	fi
 
 fi
