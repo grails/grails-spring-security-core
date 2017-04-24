@@ -17,7 +17,7 @@ if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
 	./gradlew bintrayUpload --stacktrace
 
-    publish-docs.sh
+    ./publish-docs.sh
 
 	fi
 
