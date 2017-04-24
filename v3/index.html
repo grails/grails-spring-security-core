@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.1.1</span>
+<span id="revnumber">version 3.1.2</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -569,6 +569,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#s2-create-role-hierarchy-entry">26.3. s2-create-role-hierarchy-entry</a></li>
 </ul>
 </li>
+<li><a href="#debugging">27. Debugging</a></li>
 </ul>
 </div>
 </div>
@@ -1042,7 +1043,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </td>
 <td class="content">
 <div class="paragraph">
-<p>The plugin&#8217;s configuration values all start with <code>grails.plugin.springsecurity</code> to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the <code>grails.plugin.springsecurity</code> suffix. For example, you specify the attribute <code>password.algorithm</code> as:</p>
+<p>The plugin&#8217;s configuration values all start with <code>grails.plugin.springsecurity</code> to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the <code>grails.plugin.springsecurity</code> preffix. For example, you specify the attribute <code>password.algorithm</code> as:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1142,7 +1143,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.1.1'
+   compile 'org.grails.plugins:spring-security-core:3.1.2'
    ...</code></pre>
 </div>
 </div>
@@ -1297,27 +1298,34 @@ def someMethod() { ... }</code></pre>
 <div class="sect2">
 <h3 id="debug-filter">3.9. Debug filter</h3>
 <div class="paragraph">
-<p>You can enable a &#8220;debug&#8221; filter based on the <code>org.springframework.security.config.debug.DebugFilter</code> class. It will log security information at the &#8220;info&#8221; level and can help when debugging configuration issues. This should only be enabled in development mode so consider adding the property that enables it inside an <code>environments</code> block in <code>Config.groovy</code></p>
+<p>You can enable a &#8220;debug&#8221; filter based on the <code>org.springframework.security.config.debug.DebugFilter</code> class. It will log security information at the &#8220;info&#8221; level and can help when debugging configuration issues. This should only be enabled in development mode so consider adding the property that enables it inside an <code>environments</code> block in <code>grails-app/conf/application.yml</code></p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">environments {
-   development {
-      grails.logging.jul.usebridge = true
-      grails.plugin.springsecurity.debug.useFilter = true
-   }
-   production {
-      grails.logging.jul.usebridge = false
-   }
-}</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">environments:
+    development:
+        grails:
+            logging:
+                jul:
+                    usebridge: true
+            plugin:
+                springsecurity:
+                    debug:
+                        useFilter: true
+    production:
+        grails:
+            logging:
+                jul:
+                    usebridge: true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Also add the implementation class name in your Log4j configuration:</p>
+<p>Also add the implementation class name in your logback configuration:</p>
 </div>
 <div class="listingblock">
+<div class="title">grails-app/conf/logback.groovy</div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">info 'grails.plugin.springsecurity.web.filter.DebugFilter'</code></pre>
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">logger 'grails.plugin.springsecurity.web.filter.DebugFilter', INFO, ['STDOUT'], false</code></pre>
 </div>
 </div>
 </div>
@@ -1456,6 +1464,29 @@ class User implements Serializable {
       password column: '`password`'
    }
 }</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Service injection in GORM entities is disabled by default since Grails 3.2.8. Because of that, if you want the service <code>springSecurityService</code> to get
+injected in the previous domain class you would need to turn on autowire.
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><code>grails-app/conf/application.yml</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-yaml" data-lang="yaml">grails:
+    gorm:
+        # Whether to autowire entities.
+        # Disabled by default for performance reasons.
+        autowire: true</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1709,7 +1740,7 @@ class Role implements Serializable {
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
-import org.apache.commons.lang.builder.HashCodeBuilder
+import org.codehaus.groovy.util.HashCodeHelper
 
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRole implements Serializable {
@@ -1728,10 +1759,14 @@ class UserRole implements Serializable {
 
    @Override
    int hashCode() {
-      def builder = new HashCodeBuilder()
-      if (user) builder.append(user.id)
-      if (role) builder.append(role.id)
-      builder.toHashCode()
+      int hashCode = HashCodeHelper.initHash()
+      if (user) {
+          hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+      }
+      if (role) {
+          hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+      }
+      hashCode
    }
 
    static UserRole get(long userId, long roleId) {
@@ -1932,7 +1967,7 @@ class RoleGroup implements Serializable {
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
-import org.apache.commons.lang.builder.HashCodeBuilder
+import org.codehaus.groovy.util.HashCodeHelper
 
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRoleGroup implements Serializable {
@@ -1951,10 +1986,14 @@ class UserRoleGroup implements Serializable {
 
    @Override
    int hashCode() {
-      def builder = new HashCodeBuilder()
-      if (user) builder.append(user.id)
-      if (roleGroup) builder.append(roleGroup.id)
-      builder.toHashCode()
+      int hashCode = HashCodeHelper.initHash()
+      if (user) {
+         hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+      }
+      if (roleGroup) {
+         hashCode = HashCodeHelper.updateHash(hashCode, roleGroup.id)
+      }
+      hashCode
    }
 
    static UserRoleGroup get(long userId, long roleGroupId) {
@@ -2028,7 +2067,7 @@ class UserRoleGroup implements Serializable {
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
-import org.apache.commons.lang.builder.HashCodeBuilder
+import org.codehaus.groovy.util.HashCodeHelper
 
 @ToString(cache=true, includeNames=true, includePackage=false)
 class RoleGroupRole implements Serializable {
@@ -2047,10 +2086,14 @@ class RoleGroupRole implements Serializable {
 
    @Override
    int hashCode() {
-      def builder = new HashCodeBuilder()
-      if (roleGroup) builder.append(roleGroup.id)
-      if (role) builder.append(role.id)
-      builder.toHashCode()
+      int hashCode = HashCodeHelper.initHash()
+      if (roleGroup) {
+          hashCode = HashCodeHelper.updateHash(hashCode, roleGroup.id)
+      }
+      if (role) {
+          hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+      }
+      hashCode
    }
 
    static RoleGroupRole get(long roleGroupId, long roleId) {
@@ -3440,7 +3483,7 @@ You're not a user
 </td>
 <td class="content">
 <div class="paragraph">
-<p>If you are hashing the password in the User domain class (using <code>beforeInsert</code> and <code>encodePassword</code>) then don&#8217;t call <code>springSecurityService.encodePassword()</code> in your controller since you&#8217;ll double-hash the password and users won&#8217;t be able to log in. It&#8217;s best to encapsulate the password handling logic in the domain class.</p>
+<p>If you are hashing the password in an PersistenceEventListener or in the User domain class (using <code>beforeInsert</code> and <code>encodePassword</code>) then don&#8217;t call <code>springSecurityService.encodePassword()</code> in your controller since you&#8217;ll double-hash the password and users won&#8217;t be able to log in. It&#8217;s best to encapsulate the password handling logic in a single point.</p>
 </div>
 </td>
 </tr>
@@ -3898,6 +3941,11 @@ grails.plugin.springsecurity.onAuthorizationEvent = { e, appCtx -&gt;
 <td class="tableblock halign-left valign-top"><p class="tableblock">userLookup.usernamePropertyName</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&#8220;username&#8221;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User class username property</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">userLookup.usernameIgnoreCase</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">&#8220;false&#8221;</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore case when searching for usernamePropertyName</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">userLookup.passwordPropertyName</p></td>
@@ -5816,6 +5864,9 @@ class RoleHierarchyEntry implements Serializable {
 }</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>Remember to update the <code>roleHierarchy</code> beans <code>hierarchy</code> definition by calling <code>SpringSecurityService#reloadDBRoleHierarchy</code>, or your model changes are not reflected in the running application.</p>
+</div>
 </div>
 </div>
 </div>
@@ -6706,7 +6757,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.1.1'
+   compile 'org.grails.plugins:spring-security-core:3.1.2'
    ...
 }</code></pre>
 </div>
@@ -6810,19 +6861,28 @@ class User implements Serializable {
 }</code></pre>
 </div>
 </div>
-<div class="admonitionblock note">
+<div class="admonitionblock warning">
 <table>
 <tr>
 <td class="icon">
-<i class="fa icon-note" title="Note"></i>
+<i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-<div class="paragraph">
-<p>Earlier versions of the plugin didn&#8217;t include password hashing logic in the domain class, but it makes the code a lot cleaner.</p>
-</div>
+Service injection in GORM entities is disabled by default since Grails 3.2.8. Because of that, if you want the service <code>springSecurityService</code> to get
+injected in the previous domain class you would need to turn on autowire.
 </td>
 </tr>
 </table>
+</div>
+<div class="listingblock">
+<div class="title"><code>grails-app/conf/application.yml</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-yaml" data-lang="yaml">grails:
+    gorm:
+        # Whether to autowire entities.
+        # Disabled by default for performance reasons.
+        autowire: true</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>and this Role class:</p>
@@ -6864,7 +6924,7 @@ class Role implements Serializable {
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
-import org.apache.commons.lang.builder.HashCodeBuilder
+import org.codehaus.groovy.util.HashCodeHelper
 
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRole implements Serializable {
@@ -6883,10 +6943,14 @@ class UserRole implements Serializable {
 
    @Override
    int hashCode() {
-      def builder = new HashCodeBuilder()
-      if (user) builder.append(user.id)
-      if (role) builder.append(role.id)
-      builder.toHashCode()
+      int hashCode = HashCodeHelper.initHash()
+      if (user) {
+         hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+      }
+      if (role) {
+         hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+      }
+      hashCode
    }
 
    static UserRole get(long userId, long roleId) {
@@ -7455,11 +7519,26 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="debugging">27. Debugging</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you need debug information, you can specify the following entries in logback.groovy:</p>
+</div>
+<div class="listingblock">
+<div class="title">grails-app/conf/logback.groovy</div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">logger 'org.springframework.security', DEBUG, ['STDOUT'], false
+logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.1.1<br>
-Last updated 2016-05-15 18:42:57 -04:00
+Version 3.1.2<br>
+Last updated 2017-04-24 09:28:27 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
