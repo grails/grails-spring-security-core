@@ -18,7 +18,7 @@ class ${groupClassName} implements Serializable {
 	}
 
 	static constraints = {
-		name blank: false, unique: true
+		name nullable: false, blank: false, unique: true
 	}
 
 	static mapping = {
