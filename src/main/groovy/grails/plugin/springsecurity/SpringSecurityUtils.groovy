@@ -639,7 +639,7 @@ final class SpringSecurityUtils {
 	}
 
 	private static Collection<? extends GrantedAuthority> findInferredAuthorities(Collection<GrantedAuthority> granted) {
-		getBean('roleHierarchy', RoleHierarchy).getReachableGrantedAuthorities(granted) ?: Collections.emptyList()
+		getBean('roleHierarchy', RoleHierarchy).getReachableGrantedAuthorities(granted) ?: ( Collections.emptyList() as Collection<? extends GrantedAuthority> )
 	}
 
 	@SuppressWarnings('unchecked')

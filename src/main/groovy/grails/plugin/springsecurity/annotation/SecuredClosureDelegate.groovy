@@ -14,8 +14,8 @@
  */
 package grails.plugin.springsecurity.annotation
 
-import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import org.grails.web.servlet.mvc.GrailsWebRequest
+import org.grails.web.util.GrailsApplicationAttributes
 import org.springframework.context.ApplicationContext
 import org.springframework.security.access.PermissionEvaluator
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy

@@ -37,6 +37,7 @@ import org.springframework.security.access.SecurityConfig
 import org.springframework.security.web.FilterInvocation
 import org.springframework.web.context.WebApplicationContext
 import org.springframework.web.context.request.RequestContextHolder
+import spock.lang.Ignore
 import spock.lang.Shared
 
 /**
@@ -171,6 +172,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 		'foo' == fid.determineUrl(filterInvocation)
 	}
 
+	@Ignore
 	void 'initialize'() {
 		when:
 		def mappings = {

@@ -59,8 +59,8 @@ import grails.plugins.Plugin
 import grails.util.Metadata
 import groovy.util.logging.Slf4j
 import org.grails.web.mime.HttpServletResponseExtension
-import org.springframework.boot.context.embedded.FilterRegistrationBean
-import org.springframework.boot.context.embedded.ServletListenerRegistrationBean
+import org.springframework.boot.web.servlet.FilterRegistrationBean
+import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
 import org.springframework.cache.ehcache.EhCacheFactoryBean
 import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
 import org.springframework.core.Ordered
