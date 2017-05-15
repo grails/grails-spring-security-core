@@ -17,9 +17,10 @@ class ${className} implements Serializable {
 	Date lastUsed
 
 	static constraints = {
-		series maxSize: 64
-		token maxSize: 64
-		username maxSize: 64
+		series nullable: false, maxSize: 64
+		token nullable: false, maxSize: 64
+		username nullable: false, maxSize: 64
+		lastUsed nullable: false
 	}
 
 	static mapping = {

@@ -69,7 +69,8 @@ class ${userClassName}${groupClassName} implements Serializable {
 	}
 
 	static constraints = {
-		${userClassProperty} validator: { ${userClassName} u, ${userClassName}${groupClassName} ug ->
+	    ${groupClassProperty} nullable: false
+		${userClassProperty} nullable: false, validator: { ${userClassName} u, ${userClassName}${groupClassName} ug ->
 			if (ug.${groupClassProperty}?.id) {
 				if (${userClassName}${groupClassName}.exists(u.id, ug.${groupClassProperty}.id)) {
 					return ['userGroup.exists']

@@ -18,9 +18,9 @@ class ${requestmapClassName} implements Serializable {
 	String url
 
 	static constraints = {
-		configAttribute blank: false
+		configAttribute nullable: false, blank: false
 		httpMethod nullable: true
-		url blank: false, unique: 'httpMethod'
+		url nullable: false, blank: false, unique: 'httpMethod'
 	}
 
 	static mapping = {

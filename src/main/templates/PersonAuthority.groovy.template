@@ -70,7 +70,8 @@ class ${userClassName}${roleClassName} implements Serializable {
 	}
 
 	static constraints = {
-		${roleClassProperty} validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
+	    ${userClassProperty} nullable: false
+		${roleClassProperty} nullable: false, validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
 			if (ur.${userClassProperty}?.id) {
 				if (${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)) {
 				    return ['userRole.exists']
