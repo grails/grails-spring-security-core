@@ -68,12 +68,11 @@ class TestRoleGroupRoles implements Serializable {
 	}
 
 	static constraints = {
-		role validator: { TestRole r, TestRoleGroupRoles rg ->
+		roleGroup nullable: false
+		role nullable: false, validator: { TestRole r, TestRoleGroupRoles rg ->
 			if (rg.roleGroup?.id) {
-				TestRoleGroupRoles.withNewSession {
-					if (TestRoleGroupRoles.exists(rg.roleGroup.id, r.id)) {
-						return ['roleGroup.exists']
-					}
+				if (TestRoleGroupRoles.exists(rg.roleGroup.id, r.id)) {
+					return ['roleGroup.exists']
 				}
 			}
 		}

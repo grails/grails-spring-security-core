@@ -67,12 +67,11 @@ class TestUserRoleGroup implements Serializable {
 	}
 
 	static constraints = {
-		user validator: { TestUser u, TestUserRoleGroup ug ->
+		roleGroup nullable: false
+		user nullable: false, validator: { TestUser u, TestUserRoleGroup ug ->
 			if (ug.roleGroup?.id ) {
-				TestUserRoleGroup.withNewSession {
-					if (TestUserRoleGroup.exists(u.id, ug.roleGroup.id)) {
-						return ['userGroup.exists']
-					}
+				if (TestUserRoleGroup.exists(u.id, ug.roleGroup.id)) {
+					return ['userGroup.exists']
 				}
 			}
 		}
