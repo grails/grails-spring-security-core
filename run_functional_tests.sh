@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-# GRAILS_VERSIONS="grails_3_2_8_gorm_6_1_1 grails_3_2_8_gorm_6_0_9 grails_3_1_6 grails_3_0_17"
-GRAILS_VERSIONS="grails_3_2_8_gorm_6_1_1 grails_3_2_8_gorm_6_0_9"
+GRAILS_VERSIONS="grails_3_3"
 TEMPLATE_FOLDER="./functional-test-app"
 
 # static annotation requestmap basic misc bcrypt

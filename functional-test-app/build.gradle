@@ -1,6 +1,6 @@
 ext {
     templatesDir = '.'
-    grailsVersions = ['grails_3_2_8_gorm_6_1_1', 'grails_3_2_8_gorm_6_0_9', 'grails_3_1_6', 'grails_3_0_17']
+    grailsVersions = ['grails_3_3']
     testConfigurations = ['static', 'annotation', 'requestmap', 'basic', 'misc', 'bcrypt']
 }
 
