@@ -7,18 +7,13 @@ rm -rf build
 
 ./run-all-tests.sh
 
-if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-
-    echo "In branch master not a pull request"
+if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
     if [[ -n $TRAVIS_TAG ]]; then
 
-    echo "this is a tag, deploy"
+	    ./gradlew bintrayUpload --stacktrace
 
-	./gradlew bintrayUpload --stacktrace
-
-    ./publish-docs.sh
+        ./publish-docs.sh
 
 	fi
-
 fi
