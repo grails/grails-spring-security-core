@@ -13,30 +13,10 @@ If you want to use another existing domain class, it simply has to have a proper
 
 Assuming you choose `com.mycompany.myapp` as your package, and `Role` as your class name, you'll generate this class:
 
-[source,groovy]
+[source, groovy]
 .`Role.groovy`
 ----
-package com.mycompany.myapp
-
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-
-@EqualsAndHashCode(includes='authority')
-@ToString(includes='authority', includeNames=true, includePackage=false)
-class Role implements Serializable {
-
-   private static final long serialVersionUID = 1
-
-   String authority
-
-   static constraints = {
-      authority blank: false, unique: true
-   }
-
-   static mapping = {
-      cache true
-   }
-}
+include::../code/s2-quickstart/grails-app/domain/com/mycompany/myapp//Role.groovy[]
 ----
 
 The class and property names are configurable using these configuration attributes:

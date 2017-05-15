@@ -27,36 +27,10 @@ Optionally, use this class to store request mapping entries in the database inst
 
 Assuming you choose `com.mycompany.myapp` as your package, and `Requestmap` as your class name, you'll generate this class:
 
-[source,groovy]
+[source, groovy]
 .`Requestmap.groovy`
 ----
-package com.mycompany.myapp
-
-import org.springframework.http.HttpMethod
-
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-
-@EqualsAndHashCode(includes=['configAttribute', 'httpMethod', 'url'])
-@ToString(includes=['configAttribute', 'httpMethod', 'url'], cache=true, includeNames=true, includePackage=false)
-class Requestmap implements Serializable {
-
-   private static final long serialVersionUID = 1
-
-   String configAttribute
-   HttpMethod httpMethod
-   String url
-
-   static constraints = {
-      configAttribute blank: false
-      httpMethod nullable: true
-      url blank: false, unique: 'httpMethod'
-   }
-
-   static mapping = {
-      cache true
-   }
-}
+include::../code/s2-quickstart-requestmap/grails-app/domain/com/mycompany/myapp/RequestMap.groovy[]
 ----
 
 To use Requestmap entries to guard URLs, see <<requestmapInstances>>.

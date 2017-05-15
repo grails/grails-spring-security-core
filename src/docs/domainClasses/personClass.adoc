@@ -7,63 +7,11 @@ By default the plugin uses a Grails "`person`" domain class to manage this data.
 
 Assuming you choose `com.mycompany.myapp` as your package, and `User` as your class name, you'll generate this class:
 
-[source,groovy]
+[source, groovy]
 .`User.groovy`
 ----
-package com.mycompany.myapp
-
-import groovy.transform.EqualsAndHashCode
-import groovy.transform.ToString
-
-@EqualsAndHashCode(includes='username')
-@ToString(includes='username', includeNames=true, includePackage=false)
-class User implements Serializable {
-
-   private static final long serialVersionUID = 1
-
-   transient springSecurityService
-
-   String username
-   String password
-   boolean enabled = true
-   boolean accountExpired
-   boolean accountLocked
-   boolean passwordExpired
-
-   Set<Role> getAuthorities() {
-      UserRole.findAllByUser(this)*.role
-   }
-
-   def beforeInsert() {
-      encodePassword()
-   }
-
-   def beforeUpdate() {
-      if (isDirty('password')) {
-         encodePassword()
-      }
-   }
-
-   protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ?
-            springSecurityService.encodePassword(password) :
-            password
-   }
-
-   static transients = ['springSecurityService']
-
-   static constraints = {
-      password blank: false, password: true
-      username blank: false, unique: true
-   }
-
-   static mapping = {
-      password column: '`password`'
-   }
-}
+include::../code/s2-quickstart/grails-app/domain/com/mycompany/myapp/User.groovy[]
 ----
-
-include::gormAutowire.adoc[]
 
 Optionally, you can add other properties such as `email`, `firstName`, and `lastName`, convenience methods, and so on:
 
@@ -74,61 +22,46 @@ package com.mycompany.myapp
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   transient springSecurityService
+	String username
+	String password
+	boolean enabled = true
+    String email // <1>
+    String firstName // <1>
+    String lastName // <1>
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
-   String username
-   String password
-   boolean enabled = true
-   String email
-   String firstName
-   String lastName
-   boolean accountExpired
-   boolean accountLocked
-   boolean passwordExpired
+    def someMethod() { // <2>
+        ...
+    }
 
-   Set<Role> getAuthorities() {
-      UserRole.findAllByUser(this)*.role
-   }
 
-   def someMethod() {
-      ...
-   }
+	Set<Role> getAuthorities() {
+		(UserRole.findAllByUser(this) as List<UserRole>)*.role as Set<Role>
+	}
 
-   def beforeInsert() {
-      encodePassword()
-   }
+	static constraints = {
+		password blank: false, password: true
+		username blank: false, unique: true
+	}
 
-   def beforeUpdate() {
-      if (isDirty('password')) {
-         encodePassword()
-      }
-   }
-
-   protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ?
-            springSecurityService.encodePassword(password) :
-            password
-   }
-
-   static transients = ['springSecurityService']
-
-   static constraints = {
-      password blank: false, password: true
-      username blank: false, unique: true
-   }
-
-   static mapping = {
-      password column: '`password`'
-   }
+	static mapping = {
+		password column: '`password`'
+	}
 }
 ----
+<1> Other properties
+<2> Convenience methods
 
 The `getAuthorities()` method is analagous to defining `static hasMany = [authorities: Authority]` in a traditional many-to-many mapping. This way `GormUserDetailsService` can call `user.authorities` during login to retrieve the roles without the overhead of a bidirectional many-to-many mapping.
 
