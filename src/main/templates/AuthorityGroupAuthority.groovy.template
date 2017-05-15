@@ -72,10 +72,8 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	static constraints = {
 		${roleClassProperty} validator: { ${roleClassName} r, ${groupClassName}${roleClassName} rg ->
 			if (rg.${groupClassProperty}?.id) {
-				${groupClassName}${roleClassName}.withNewSession {
-					if (${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)) {
-						return ['roleGroup.exists']
-					}
+				if (${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)) {
+				    return ['roleGroup.exists']
 				}
 			}
 		}

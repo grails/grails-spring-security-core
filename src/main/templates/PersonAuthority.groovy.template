@@ -72,10 +72,8 @@ class ${userClassName}${roleClassName} implements Serializable {
 	static constraints = {
 		${roleClassProperty} validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
 			if (ur.${userClassProperty}?.id) {
-				${userClassName}${roleClassName}.withNewSession {
-					if (${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)) {
-						return ['userRole.exists']
-					}
+				if (${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)) {
+				    return ['userRole.exists']
 				}
 			}
 		}
