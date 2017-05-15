@@ -59,4 +59,8 @@ class TestUser implements Serializable {
 		loginName blank: false, unique: true
 		passwrrd blank: false, password: true
 	}
+
+	static mapping = {
+		autowire true
+	}
 }
