@@ -12,7 +12,6 @@ buildscript {
 }
 
 group = 'org.grails.plugins'
-sourceCompatibility = targetCompatibility = 1.7
 
 def setIfNotSet = { String name, value ->
 	if (!project.ext.has(name)) {
@@ -31,6 +30,8 @@ apply plugin:"org.grails.grails-plugin-publish"
 //apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
 apply plugin: 'org.asciidoctor.convert'
 apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
+
+sourceCompatibility = targetCompatibility = 1.7
 
 dependencies {
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
