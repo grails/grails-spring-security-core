@@ -21,6 +21,3 @@ out
 /functional-test-app/**/grails-app/views
 /functional-test-app/**/src
 atlassian-ide-plugin.xml
-/misc-functional-test-app/**/src/main
-/misc-functional-test-app/**/grails-app/domain
-/misc-functional-test-app/**/grails-app/conf/application.groovy
