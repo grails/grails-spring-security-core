@@ -14,13 +14,6 @@ repositories {
 	maven { url 'https://repo.grails.org/grails/core' }
 }
 
-dependencyManagement {
-	imports {
-		mavenBom "org.grails:grails-bom:$grailsVersion"
-	}
-	applyMavenExclusions false
-}
-
 dependencies {
 	testCompile 'org.grails:grails-plugin-testing'
 }

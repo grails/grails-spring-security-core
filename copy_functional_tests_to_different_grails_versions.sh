@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-GRAILS_VERSIONS="grails_3_2_8_gorm_6_1_1 grails_3_2_8_gorm_6_0_9 grails_3_1_6 grails_3_0_17"
+GRAILS_VERSIONS="grails_3_3"
 TEMPLATE_FOLDER="./functional-test-app"
 TEMPLATE_FILES="/grails-app/conf/application.groovy"
 S2_QUICKSTART_FILES="/grails-app/domain/com/testapp/TestRole.groovy /grails-app/domain/com/testapp/TestUser.groovy /grails-app/domain/com/testapp/TestUserTestRole.groovy /grails-app/domain/com/testapp/TestRequestmap.groovy src/main/groovy/com/testapp/TestUserPasswordEncoderListener.groovy"
@@ -12,6 +12,16 @@ cd $TEMPLATE_FOLDER
 ./gradlew deleteArtefacts
 ./gradlew copyArtefacts
 cd ..
+
+
+curl -s http://get.sdkman.io | bash
+echo sdkman_auto_answer=true > ~/.sdkman/etc/config
+if [[ $TRAVIS == 'true' ]]; then
+    source "/home/travis/.sdkman/bin/sdkman-init.sh"
+    sdk install grails 3.3.0.M1
+fi
+
+sdk use grails 3.3.0.M1
 
 for grailsVersion in $GRAILS_VERSIONS; do
    rm -rf $TEMPLATE_FOLDER/$grailsVersion/build
@@ -26,7 +36,7 @@ for grailsVersion in $GRAILS_VERSIONS; do
           fi
       done
       cd $TEMPLATE_FOLDER/$grailsVersion
-      ./grailsw s2-quickstart com.testapp TestUser TestRole TestRequestmap --salt
+      grails s2-quickstart com.testapp TestUser TestRole TestRequestmap --salt
       cd ../..
    fi
    for file in $TEMPLATE_FILES; do
