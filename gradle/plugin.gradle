@@ -11,16 +11,6 @@ buildscript {
 	}
 }
 
-apply from: 'gradle/common.gradle'
-
-//apply plugin: 'maven-publish'
-//apply plugin: 'spring-boot'
-apply plugin: 'org.grails.grails-plugin'
-apply plugin:"org.grails.grails-plugin-publish"
-//apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
-apply plugin: 'org.asciidoctor.convert'
-apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
-
 group = 'org.grails.plugins'
 sourceCompatibility = targetCompatibility = 1.7
 
@@ -31,6 +21,16 @@ def setIfNotSet = { String name, value ->
 }
 setIfNotSet 'issueTrackerUrl', project.vcsUrl + '/issues'
 setIfNotSet 'websiteUrl', project.vcsUrl
+
+apply from: 'gradle/common.gradle'
+
+//apply plugin: 'maven-publish'
+//apply plugin: 'spring-boot'
+apply plugin: 'org.grails.grails-plugin'
+apply plugin:"org.grails.grails-plugin-publish"
+//apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/grailsCentralPublishing.gradle'
+apply plugin: 'org.asciidoctor.convert'
+apply from: 'https://raw.githubusercontent.com/grails/grails-profile-repository/master/profiles/plugin/templates/bintrayPublishing.gradle'
 
 dependencies {
 	provided 'javax.servlet:javax.servlet-api:3.1.0'
