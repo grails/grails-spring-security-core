@@ -39,7 +39,11 @@ for project in $PROJECTS; do
 
     echo "running tests for project: $project"
 
-    ./gradlew clean check --stacktrace
+    ./gradlew clean
+    ./gradlew deleteS2QuickstartGeneratedFiles
+    ./gradlew s2Quickstart
+    ./gradlew --stop
+    ./gradlew check --stacktrace
 
     echo "cd ../.."
 
