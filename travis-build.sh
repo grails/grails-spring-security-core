@@ -9,11 +9,11 @@ rm -rf build
 
 if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then
 
-    if [[ -n $TRAVIS_TAG ]]; then
+    # if [[ -n $TRAVIS_TAG ]]; then
 
 	    ./gradlew bintrayUpload --stacktrace
 
         ./publish-docs.sh
 
-	fi
+	# fi
 fi
