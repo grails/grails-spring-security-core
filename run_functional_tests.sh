@@ -9,7 +9,7 @@ TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 # firefox, htmlUnit, chrome, phantomJs
 GEBENV=$1
 if [[ $GEBENV = "" ]]; then
-    GEBENV=htmlUnit
+    GEBENV=firefox
 fi
 # /Users/sdelamo/Applications/chromedriver
 CHROMEDRIVER=$2

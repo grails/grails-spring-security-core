@@ -13,20 +13,31 @@ cd $TEMPLATE_FOLDER
 ./gradlew copyArtefacts
 cd ..
 
-
 curl -s http://get.sdkman.io | bash
 echo sdkman_auto_answer=true > ~/.sdkman/etc/config
-if [[ $TRAVIS == 'true' ]]; then
-    source "/home/travis/.sdkman/bin/sdkman-init.sh"
-    sdk install grails 3.3.0.M1
-fi
+echo "source \"$HOME/.sdkman/bin/sdkman-init.sh\""
+source "$HOME/.sdkman/bin/sdkman-init.sh"
 
-sdk use grails 3.3.0.M1
+GRADLE_PROPERTIES_FILE=gradle.properties
+
+function getProperty {
+    PROP_KEY=$1
+    PROP_VALUE=`cat $GRADLE_PROPERTIES_FILE | grep "$PROP_KEY" | cut -d'=' -f2`
+    echo $PROP_VALUE
+}
 
 for grailsVersion in $GRAILS_VERSIONS; do
-   rm -rf $TEMPLATE_FOLDER/$grailsVersion/build
-   rm -rf $TEMPLATE_FOLDER/$grailsVersion/.gradle
-  
+    rm -rf $TEMPLATE_FOLDER/$grailsVersion/build
+    rm -rf $TEMPLATE_FOLDER/$grailsVersion/.gradle
+
+    GRAILS_VERSION=$(getProperty "grailsVersion")
+
+    sdk install grails $GRAILS_VERSION
+
+    echo "sdk use grails $GRAILS_VERSION"
+
+    sdk use grails $GRAILS_VERSION
+
    if [ -f "$TEMPLATE_FOLDER/$grailsVersion/grailsw" ];
    then 
       for file in $S2_QUICKSTART_FILES; do
