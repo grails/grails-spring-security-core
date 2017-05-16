@@ -8,8 +8,8 @@ rm -rf build
 
 integration-test-app/run_integration_tests.sh
 
+./run-misc-functional-tests.sh
+
 ./copy_functional_tests_to_different_grails_versions.sh
 
 ./run_functional_tests.sh
-
-./run-misc-functional-tests.sh
