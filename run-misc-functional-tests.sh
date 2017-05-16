@@ -10,19 +10,16 @@ for project in $PROJECTS; do
     echo "cd misc-functional-test-app/$project" 
     cd misc-functional-test-app/$project
 
-    for gormVersion in $GORM_VERSIONS; do
-       
-        rm -rf build
+    rm -rf build
 
-        echo "running tests for project: $project with GORM version: $gormVersion"
+    rm -rf .gradle
 
-        echo "./gradlew -PnewGormVersion=$gormVersion clean check --stacktrace"
+    echo "running tests for project: $project"
 
-        ./gradlew -PnewGormVersion=$gormVersion clean check --stacktrace
-
-    done
+    ./gradlew clean check --stacktrace
 
     echo "cd ../.."
+
     cd ../..
 
 done
