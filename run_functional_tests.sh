@@ -5,7 +5,7 @@ GRAILS_VERSIONS="grails_3_2_8_gorm_6_1_1 grails_3_2_8_gorm_6_0_9"
 TEMPLATE_FOLDER="./functional-test-app"
 
 # static annotation requestmap basic misc bcrypt
-TEST_GROUPS="static annotation requestmap basic misc bcryp"
+TEST_GROUPS="static annotation requestmap basic misc bcrypt"
 
 # firefox, htmlUnit, chrome, phantomJs
 GEBENV=$1
