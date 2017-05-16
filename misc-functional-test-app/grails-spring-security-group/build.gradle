@@ -99,5 +99,4 @@ task deleteS2QuickstartGeneratedFiles {
 	delete("${project.projectDir}/src/main")
     }
 }
-compileGroovy.dependsOn 's2Quickstart', 'deleteS2QuickstartGeneratedFiles'
 s2Quickstart.mustRunAfter 'deleteS2QuickstartGeneratedFiles'
