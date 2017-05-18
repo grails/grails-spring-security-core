@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.1.2</span>
+<span id="revnumber">version 3.2.0.M1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -587,6 +587,26 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>May 18, 2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.2.0.M1 release</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>April 22, 2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.1.2 release</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>May 10, 2016</p>
 <div class="ulist">
@@ -1072,6 +1092,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="newInV3">2. What&#8217;s New in Version 3.0</h2>
 <div class="sectionbody">
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Version 1.2.0.M1 is only compatible with Grails 3.3.x or higher.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Version 3.x of the plugin requires Grails 3 or higher; to use the plugin in Grails 2 applications use the latest 2.x.x version of the plugin.</p>
 </div>
@@ -1143,7 +1175,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.1.2'
+   compile 'org.grails.plugins:spring-security-core:3.2.0.M1'
    ...</code></pre>
 </div>
 </div>
@@ -1417,76 +1449,35 @@ beans = {
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   transient springSecurityService
+	String username
+	String password
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
-   String username
-   String password
-   boolean enabled = true
-   boolean accountExpired
-   boolean accountLocked
-   boolean passwordExpired
+	Set&lt;Role&gt; getAuthorities() {
+		(UserRole.findAllByUser(this) as List&lt;UserRole&gt;)*.role as Set&lt;Role&gt;
+	}
 
-   Set&lt;Role&gt; getAuthorities() {
-      UserRole.findAllByUser(this)*.role
-   }
+	static constraints = {
+		password blank: false, password: true
+		username blank: false, unique: true
+	}
 
-   def beforeInsert() {
-      encodePassword()
-   }
-
-   def beforeUpdate() {
-      if (isDirty('password')) {
-         encodePassword()
-      }
-   }
-
-   protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ?
-            springSecurityService.encodePassword(password) :
-            password
-   }
-
-   static transients = ['springSecurityService']
-
-   static constraints = {
-      password blank: false, password: true
-      username blank: false, unique: true
-   }
-
-   static mapping = {
-      password column: '`password`'
-   }
+	static mapping = {
+		password column: '`password`'
+	}
 }</code></pre>
-</div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Service injection in GORM entities is disabled by default since Grails 3.2.8. Because of that, if you want the service <code>springSecurityService</code> to get
-injected in the previous domain class you would need to turn on autowire.
-</td>
-</tr>
-</table>
-</div>
-<div class="listingblock">
-<div class="title"><code>grails-app/conf/application.yml</code></div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-yaml" data-lang="yaml">grails:
-    gorm:
-        # Whether to autowire entities.
-        # Disabled by default for performance reasons.
-        autowire: true</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -1499,61 +1490,56 @@ injected in the previous domain class you would need to turn on autowire.
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   transient springSecurityService
+	String username
+	String password
+	boolean enabled = true
+    String email <i class="conum" data-value="1"></i><b>(1)</b>
+    String firstName <i class="conum" data-value="1"></i><b>(1)</b>
+    String lastName <i class="conum" data-value="1"></i><b>(1)</b>
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
-   String username
-   String password
-   boolean enabled = true
-   String email
-   String firstName
-   String lastName
-   boolean accountExpired
-   boolean accountLocked
-   boolean passwordExpired
+    def someMethod() { <i class="conum" data-value="2"></i><b>(2)</b>
+        ...
+    }
 
-   Set&lt;Role&gt; getAuthorities() {
-      UserRole.findAllByUser(this)*.role
-   }
 
-   def someMethod() {
-      ...
-   }
+	Set&lt;Role&gt; getAuthorities() {
+		(UserRole.findAllByUser(this) as List&lt;UserRole&gt;)*.role as Set&lt;Role&gt;
+	}
 
-   def beforeInsert() {
-      encodePassword()
-   }
+	static constraints = {
+		password blank: false, password: true
+		username blank: false, unique: true
+	}
 
-   def beforeUpdate() {
-      if (isDirty('password')) {
-         encodePassword()
-      }
-   }
-
-   protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ?
-            springSecurityService.encodePassword(password) :
-            password
-   }
-
-   static transients = ['springSecurityService']
-
-   static constraints = {
-      password blank: false, password: true
-      username blank: false, unique: true
-   }
-
-   static mapping = {
-      password column: '`password`'
-   }
+	static mapping = {
+		password column: '`password`'
+	}
 }</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Other properties</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Convenience methods</td>
+</tr>
+</table>
 </div>
 <div class="paragraph">
 <p>The <code>getAuthorities()</code> method is analagous to defining <code>static hasMany = [authorities: Authority]</code> in a traditional many-to-many mapping. This way <code>GormUserDetailsService</code> can call <code>user.authorities</code> during login to retrieve the roles without the overhead of a bidirectional many-to-many mapping.</p>
@@ -1657,22 +1643,24 @@ If you want to use another existing domain class, it simply has to have a proper
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='authority')
 @ToString(includes='authority', includeNames=true, includePackage=false)
 class Role implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   String authority
+	String authority
 
-   static constraints = {
-      authority blank: false, unique: true
-   }
+	static constraints = {
+		authority blank: false, unique: true
+	}
 
-   static mapping = {
-      cache true
-   }
+	static mapping = {
+		cache true
+	}
 }</code></pre>
 </div>
 </div>
@@ -1741,85 +1729,87 @@ import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.codehaus.groovy.util.HashCodeHelper
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRole implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   User user
-   Role role
+	User user
+	Role role
 
-   @Override
-   boolean equals(other) {
-      if (other instanceof UserRole) {
-         other.userId == user?.id &amp;&amp; other.roleId == role?.id
-      }
-   }
+	@Override
+	boolean equals(other) {
+		if (other instanceof UserRole) {
+			other.userId == user?.id &amp;&amp; other.roleId == role?.id
+		}
+	}
 
-   @Override
-   int hashCode() {
-      int hashCode = HashCodeHelper.initHash()
-      if (user) {
-          hashCode = HashCodeHelper.updateHash(hashCode, user.id)
-      }
-      if (role) {
-          hashCode = HashCodeHelper.updateHash(hashCode, role.id)
-      }
-      hashCode
-   }
+    @Override
+	int hashCode() {
+	    int hashCode = HashCodeHelper.initHash()
+        if (user) {
+            hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+		}
+		if (role) {
+		    hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+		}
+		hashCode
+	}
 
-   static UserRole get(long userId, long roleId) {
-      criteriaFor(userId, roleId).get()
-   }
+	static UserRole get(long userId, long roleId) {
+		criteriaFor(userId, roleId).get()
+	}
 
-   static boolean exists(long userId, long roleId) {
-      criteriaFor(userId, roleId).count()
-   }
+	static boolean exists(long userId, long roleId) {
+		criteriaFor(userId, roleId).count()
+	}
 
-   private static DetachedCriteria criteriaFor(long userId, long roleId) {
-      UserRole.where {
-         user == User.load(userId) &amp;&amp;
-         role == Role.load(roleId)
-      }
-   }
+	private static DetachedCriteria criteriaFor(long userId, long roleId) {
+		UserRole.where {
+			user == User.load(userId) &amp;&amp;
+			role == Role.load(roleId)
+		}
+	}
 
-   static UserRole create(User user, Role role) {
-      def instance = new UserRole(user: user, role: role)
-      instance.save()
-      instance
-   }
+	static UserRole create(User user, Role role, boolean flush = false) {
+		def instance = new UserRole(user: user, role: role)
+		instance.save(flush: flush)
+		instance
+	}
 
-   static boolean remove(User u, Role r) {
-      if (u != null &amp;&amp; r != null) {
-         UserRole.where { user == u &amp;&amp; role == r }.deleteAll()
-      }
-   }
+	static boolean remove(User u, Role r) {
+		if (u != null &amp;&amp; r != null) {
+			UserRole.where { user == u &amp;&amp; role == r }.deleteAll()
+		}
+	}
 
-   static int removeAll(User u) {
-      u == null ? 0 : UserRole.where { user == u }.deleteAll()
-   }
+	static int removeAll(User u) {
+		u == null ? 0 : UserRole.where { user == u }.deleteAll() as int
+	}
 
-   static int removeAll(Role r) {
-      r == null ? 0 : UserRole.where { role == r }.deleteAll()
-   }
+	static int removeAll(Role r) {
+		r == null ? 0 : UserRole.where { role == r }.deleteAll() as int
+	}
 
-   static constraints = {
-      role validator: { Role r, UserRole ur -&gt;
-         if (ur.user?.id) {
-            UserRole.withNewSession {
-               if (UserRole.exists(ur.user.id, r.id)) {
-                  return ['userRole.exists']
-               }
-            }
-         }
-      }
-   }
+	static constraints = {
+		role validator: { Role r, UserRole ur -&gt;
+			if (ur.user?.id) {
+				UserRole.withNewSession {
+					if (UserRole.exists(ur.user.id, r.id)) {
+						return ['userRole.exists']
+					}
+				}
+			}
+		}
+	}
 
-   static mapping = {
-      id composite: ['user', 'role']
-      version false
-   }
+	static mapping = {
+		id composite: ['user', 'role']
+		version false
+	}
 }</code></pre>
 </div>
 </div>
@@ -1886,26 +1876,28 @@ UserRole.remove user, role</code></pre>
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='name')
 @ToString(includes='name', includeNames=true, includePackage=false)
 class RoleGroup implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   String name
+	String name
 
-   Set&lt;Role&gt; getAuthorities() {
-      RoleGroupRole.findAllByRoleGroup(this)*.role
-   }
+	Set&lt;Role&gt; getAuthorities() {
+		(RoleGroupRole.findAllByRoleGroup(this) as List&lt;RoleGroupRole&gt;)*.role as Set&lt;Role&gt;
+	}
 
-   static constraints = {
-      name blank: false, unique: true
-   }
+	static constraints = {
+		name blank: false, unique: true
+	}
 
-   static mapping = {
-      cache true
-   }
+	static mapping = {
+		cache true
+	}
 }</code></pre>
 </div>
 </div>
@@ -1916,7 +1908,7 @@ class RoleGroup implements Serializable {
 <div class="title">Listing 3. The generated <code>getAuthorities()</code> method when using role groups</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">Set&lt;RoleGroup&gt; getAuthorities() {
-   UserRoleGroup.findAllByUser(this)*.roleGroup
+	(UserRoleGroup.findAllByUser(this) as List&lt;UserRoleGroup&gt;)*.roleGroup as Set&lt;RoleGroup&gt;
 }</code></pre>
 </div>
 </div>
@@ -1966,87 +1958,88 @@ class RoleGroup implements Serializable {
 
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
-
 import org.codehaus.groovy.util.HashCodeHelper
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRoleGroup implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   User user
-   RoleGroup roleGroup
+	User user
+	RoleGroup roleGroup
 
-   @Override
-   boolean equals(other) {
-      if (other instanceof UserRoleGroup) {
-         other.userId == user?.id &amp;&amp; other.roleGroupId == roleGroup?.id
-      }
-   }
+	@Override
+	boolean equals(other) {
+		if (other instanceof UserRoleGroup) {
+			other.userId == user?.id &amp;&amp; other.roleGroupId == roleGroup?.id
+		}
+	}
 
-   @Override
-   int hashCode() {
-      int hashCode = HashCodeHelper.initHash()
-      if (user) {
-         hashCode = HashCodeHelper.updateHash(hashCode, user.id)
-      }
-      if (roleGroup) {
-         hashCode = HashCodeHelper.updateHash(hashCode, roleGroup.id)
-      }
-      hashCode
-   }
+    @Override
+	int hashCode() {
+	    int hashCode = HashCodeHelper.initHash()
+        if (user) {
+            hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+		}
+		if (roleGroup) {
+		    hashCode = HashCodeHelper.updateHash(hashCode, roleGroup.id)
+		}
+		hashCode
+	}
 
-   static UserRoleGroup get(long userId, long roleGroupId) {
-      criteriaFor(userId, roleGroupId).get()
-   }
+	static UserRoleGroup get(long userId, long roleGroupId) {
+		criteriaFor(userId, roleGroupId).get()
+	}
 
-   static boolean exists(long userId, long roleGroupId) {
-      criteriaFor(userId, roleGroupId).count()
-   }
+	static boolean exists(long userId, long roleGroupId) {
+		criteriaFor(userId, roleGroupId).count()
+	}
 
-   private static DetachedCriteria criteriaFor(long userId, long roleGroupId) {
-      UserRoleGroup.where {
-         user == User.load(userId) &amp;&amp;
-         roleGroup == RoleGroup.load(roleGroupId)
-      }
-   }
+	private static DetachedCriteria criteriaFor(long userId, long roleGroupId) {
+		UserRoleGroup.where {
+			user == User.load(userId) &amp;&amp;
+			roleGroup == RoleGroup.load(roleGroupId)
+		}
+	}
 
-   static UserRoleGroup create(User user, RoleGroup roleGroup) {
-      def instance = new UserRoleGroup(user: user, roleGroup: roleGroup)
-      instance.save()
-      instance
-   }
+	static UserRoleGroup create(User user, RoleGroup roleGroup, boolean flush = false) {
+		def instance = new UserRoleGroup(user: user, roleGroup: roleGroup)
+		instance.save(flush: flush)
+		instance
+	}
 
-   static boolean remove(User u, RoleGroup rg) {
-      if (u != null &amp;&amp; rg != null) {
-         UserRoleGroup.where { user == u &amp;&amp; roleGroup == rg }.deleteAll()
-      }
-   }
+	static boolean remove(User u, RoleGroup rg) {
+		if (u != null &amp;&amp; rg != null) {
+			UserRoleGroup.where { user == u &amp;&amp; roleGroup == rg }.deleteAll()
+		}
+	}
 
-   static int removeAll(User u) {
-      u == null ? 0 : UserRoleGroup.where { user == u }.deleteAll()
-   }
+	static int removeAll(User u) {
+		u == null ? 0 : UserRoleGroup.where { user == u }.deleteAll() as int
+	}
 
-   static int removeAll(RoleGroup rg) {
-      rg == null ? 0 : UserRoleGroup.where { roleGroup == rg }.deleteAll()
-   }
+	static int removeAll(RoleGroup rg) {
+		rg == null ? 0 : UserRoleGroup.where { roleGroup == rg }.deleteAll() as int
+	}
 
-   static constraints = {
-      user validator: { User u, UserRoleGroup ug -&gt;
-         if (ug.roleGroup?.id) {
-            UserRoleGroup.withNewSession {
-               if (UserRoleGroup.exists(u.id, ug.roleGroup.id)) {
-	               return ['userGroup.exists']
-               }
-            }
-         }
-      }
-   }
+	static constraints = {
+		user validator: { User u, UserRoleGroup ug -&gt;
+			if (ug.roleGroup?.id) {
+				UserRoleGroup.withNewSession {
+					if (UserRoleGroup.exists(u.id, ug.roleGroup.id)) {
+						return ['userGroup.exists']
+					}
+				}
+			}
+		}
+	}
 
-   static mapping = {
-      id composite: ['roleGroup', 'user']
-      version false
-   }
+	static mapping = {
+		id composite: ['roleGroup', 'user']
+		version false
+	}
 }</code></pre>
 </div>
 </div>
@@ -2068,85 +2061,87 @@ import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.codehaus.groovy.util.HashCodeHelper
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class RoleGroupRole implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   RoleGroup roleGroup
-   Role role
+	RoleGroup roleGroup
+	Role role
 
-   @Override
-   boolean equals(other) {
-      if (other instanceof RoleGroupRole) {
-         other.roleIid == role?.id &amp;&amp; other.roleGroupId == roleGroup?.id
-      }
-   }
+	@Override
+	boolean equals(other) {
+		if (other instanceof RoleGroupRole) {
+			other.roleId == role?.id &amp;&amp; other.roleGroupId == roleGroup?.id
+		}
+	}
 
-   @Override
-   int hashCode() {
-      int hashCode = HashCodeHelper.initHash()
-      if (roleGroup) {
-          hashCode = HashCodeHelper.updateHash(hashCode, roleGroup.id)
-      }
-      if (role) {
-          hashCode = HashCodeHelper.updateHash(hashCode, role.id)
-      }
-      hashCode
-   }
+	@Override
+	int hashCode() {
+	    int hashCode = HashCodeHelper.initHash()
+        if (roleGroup) {
+            hashCode = HashCodeHelper.updateHash(hashCode, roleGroup.id)
+		}
+		if (role) {
+		    hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+		}
+		hashCode
+	}
 
-   static RoleGroupRole get(long roleGroupId, long roleId) {
-      criteriaFor(roleGroupId, roleId).get()
-   }
+	static RoleGroupRole get(long roleGroupId, long roleId) {
+		criteriaFor(roleGroupId, roleId).get()
+	}
 
-   static boolean exists(long roleGroupId, long roleId) {
-      criteriaFor(roleGroupId, roleId).count()
-   }
+	static boolean exists(long roleGroupId, long roleId) {
+		criteriaFor(roleGroupId, roleId).count()
+	}
 
-   private static DetachedCriteria criteriaFor(long roleGroupId, long roleId) {
-      RoleGroupRole.where {
-         roleGroup == RoleGroup.load(roleGroupId) &amp;&amp;
-         role == Role.load(roleId)
-      }
-   }
+	private static DetachedCriteria criteriaFor(long roleGroupId, long roleId) {
+		RoleGroupRole.where {
+			roleGroup == RoleGroup.load(roleGroupId) &amp;&amp;
+			role == Role.load(roleId)
+		}
+	}
 
-   static RoleGroupRole create(RoleGroup roleGroup, Role role) {
-      def instance = new RoleGroupRole(roleGroup: roleGroup, role: role)
-      instance.save()
-      instance
-   }
+	static RoleGroupRole create(RoleGroup roleGroup, Role role, boolean flush = false) {
+		def instance = new RoleGroupRole(roleGroup: roleGroup, role: role)
+		instance.save(flush: flush)
+		instance
+	}
 
-   static boolean remove(RoleGroup rg, Role r) {
-      if (rg != null &amp;&amp; r != null) {
-         RoleGroupRole.where { roleGroup == rg &amp;&amp; role == r }.deleteAll()
-      }
-   }
+	static boolean remove(RoleGroup rg, Role r) {
+		if (rg != null &amp;&amp; r != null) {
+			RoleGroupRole.where { roleGroup == rg &amp;&amp; role == r }.deleteAll()
+		}
+	}
 
-   static int removeAll(Role r) {
-      r == null ? 0 : RoleGroupRole.where { role == r }.deleteAll()
-   }
+	static int removeAll(Role r) {
+		r == null ? 0 : RoleGroupRole.where { role == r }.deleteAll() as int
+	}
 
-   static int removeAll(RoleGroup rg) {
-      rg == null : 0 : RoleGroupRole.where { roleGroup == rg }.deleteAll()
-   }
+	static int removeAll(RoleGroup rg) {
+		rg == null ? 0 : RoleGroupRole.where { roleGroup == rg }.deleteAll() as int
+	}
 
-   static constraints = {
-      role validator: { Role r, RoleGroupRole rg -&gt;
-         if (rg.roleGroup?.id) {
-            RoleGroupRole.withNewSession {
-               if (RoleGroupRole.exists(rg.roleGroup.id, r.id)) {
-                  return ['roleGroup.exists']
-               }
-            }
-         }
-      }
-   }
+	static constraints = {
+		role validator: { Role r, RoleGroupRole rg -&gt;
+			if (rg.roleGroup?.id) {
+				RoleGroupRole.withNewSession {
+					if (RoleGroupRole.exists(rg.roleGroup.id, r.id)) {
+						return ['roleGroup.exists']
+					}
+				}
+			}
+		}
+	}
 
-   static mapping = {
-      id composite: ['roleGroup', 'role']
-      version false
-   }
+	static mapping = {
+		id composite: ['roleGroup', 'role']
+		version false
+	}
 }</code></pre>
 </div>
 </div>
@@ -2205,26 +2200,28 @@ import org.springframework.http.HttpMethod
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes=['configAttribute', 'httpMethod', 'url'])
 @ToString(includes=['configAttribute', 'httpMethod', 'url'], cache=true, includeNames=true, includePackage=false)
-class Requestmap implements Serializable {
+class RequestMap implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   String configAttribute
-   HttpMethod httpMethod
-   String url
+	String configAttribute
+	HttpMethod httpMethod
+	String url
 
-   static constraints = {
-      configAttribute blank: false
-      httpMethod nullable: true
-      url blank: false, unique: 'httpMethod'
-   }
+	static constraints = {
+		configAttribute blank: false
+		httpMethod nullable: true
+		url blank: false, unique: 'httpMethod'
+	}
 
-   static mapping = {
-      cache true
-   }
+	static mapping = {
+		cache true
+	}
 }</code></pre>
 </div>
 </div>
@@ -6757,7 +6754,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.1.2'
+   compile 'org.grails.plugins:spring-security-core:3.2.0.M1'
    ...
 }</code></pre>
 </div>
@@ -6775,7 +6772,7 @@ $ cd bookstore</pre>
 <h4 id="3-create-the-user-and-role-domain-classes">23.1.3. 3. Create the User and Role domain classes.</h4>
 <div class="literalblock">
 <div class="content">
-<pre>$ grails s2-quickstart com.testapp User Role</pre>
+<pre>$ grails s2-quickstart com.mycompany.myapp User Role</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6803,61 +6800,153 @@ $ cd bookstore</pre>
 </table>
 </div>
 <div class="paragraph">
-<p>The script creates this User class:</p>
+<p>For Spring Security Core version 6.1.2 or GORM 6.0.10 or later, the script creates this User class:</p>
 </div>
 <div class="listingblock">
 <div class="title"><code>User.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.testapp
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='username')
 @ToString(includes='username', includeNames=true, includePackage=false)
 class User implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   transient springSecurityService
+	String username
+	String password
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
-   String username
-   String password
-   boolean enabled = true
-   boolean accountExpired
-   boolean accountLocked
-   boolean passwordExpired
+	Set&lt;Role&gt; getAuthorities() {
+		(UserRole.findAllByUser(this) as List&lt;UserRole&gt;)*.role as Set&lt;Role&gt;
+	}
 
-   Set&lt;Role&gt; getAuthorities() {
-      UserRole.findAllByUser(this)*.role
-   }
+	static constraints = {
+		password blank: false, password: true
+		username blank: false, unique: true
+	}
 
-   def beforeInsert() {
-      encodePassword()
-   }
+	static mapping = {
+		password column: '`password`'
+	}
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>and a password encoder listener to manage password encoding:</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>UserPasswordEncoderListener.groovy</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
-   def beforeUpdate() {
-      if (isDirty('password')) {
-         encodePassword()
-      }
-   }
+import grails.plugin.springsecurity.SpringSecurityService
+import org.grails.datastore.mapping.core.Datastore
+import org.grails.datastore.mapping.engine.event.AbstractPersistenceEvent
+import org.grails.datastore.mapping.engine.event.AbstractPersistenceEventListener
+import org.grails.datastore.mapping.engine.event.EventType
+import org.grails.datastore.mapping.engine.event.PreInsertEvent
+import org.grails.datastore.mapping.engine.event.PreUpdateEvent
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.ApplicationEvent
+import groovy.transform.CompileStatic
 
-   protected void encodePassword() {
-      password = springSecurityService?.passwordEncoder ?
-            springSecurityService.encodePassword(password) :
-            password
-   }
+@CompileStatic
+class UserPasswordEncoderListener extends AbstractPersistenceEventListener {
 
-   static transients = ['springSecurityService']
+    @Autowired
+    SpringSecurityService springSecurityService
 
-   static constraints = {
-      password blank: false, password: true
-      username blank: false, unique: true
-   }
+    UserPasswordEncoderListener(final Datastore datastore) {
+        super(datastore)
+    }
 
-   static mapping = {
-      password column: '`password`'
-   }
+    @Override
+    protected void onPersistenceEvent(AbstractPersistenceEvent event) {
+        if (event.entityObject instanceof User) {
+            User u = (event.entityObject as User)
+            if (u.password &amp;&amp; (event.eventType == EventType.PreInsert || (event.eventType == EventType.PreUpdate &amp;&amp; u.isDirty('password')))) {
+                event.getEntityAccess().setProperty("password", encodePassword(u.password))
+            }
+        }
+    }
+
+    @Override
+    boolean supportsEventType(Class&lt;? extends ApplicationEvent&gt; eventType) {
+        eventType == PreUpdateEvent || eventType == PreInsertEvent
+    }
+
+    private String encodePassword(String password) {
+        springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Previous versions of the plugin&#8217;s script manage the password encoding directly in domain class:</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>User.groovy</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
+
+import grails.plugin.springsecurity.SpringSecurityService
+import groovy.transform.EqualsAndHashCode
+import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
+
+@GrailsCompileStatic
+@EqualsAndHashCode(includes='username')
+@ToString(includes='username', includeNames=true, includePackage=false)
+class User implements Serializable {
+
+	private static final long serialVersionUID = 1
+
+	SpringSecurityService springSecurityService
+
+	String username
+	String password
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
+
+	Set&lt;Role&gt; getAuthorities() {
+		(UserRole.findAllByUser(this) as List&lt;UserRole&gt;)*.role as Set&lt;Role&gt;
+	}
+
+	def beforeInsert() {
+		encodePassword()
+	}
+
+	def beforeUpdate() {
+		if (isDirty('password')) {
+			encodePassword()
+		}
+	}
+
+	protected void encodePassword() {
+		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password) : password
+	}
+
+	static transients = ['springSecurityService']
+
+	static constraints = {
+		password blank: false, password: true
+		username blank: false, unique: true
+	}
+
+	static mapping = {
+		password column: '`password`'
+	}
 }</code></pre>
 </div>
 </div>
@@ -6885,31 +6974,33 @@ injected in the previous domain class you would need to turn on autowire.
 </div>
 </div>
 <div class="paragraph">
-<p>and this Role class:</p>
+<p><code>s2-quickstart</code> script generates this Role too:</p>
 </div>
 <div class="listingblock">
 <div class="title"><code>Role.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.testapp
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @EqualsAndHashCode(includes='authority')
 @ToString(includes='authority', includeNames=true, includePackage=false)
 class Role implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   String authority
+	String authority
 
-   static constraints = {
-      authority blank: false, unique: true
-   }
+	static constraints = {
+		authority blank: false, unique: true
+	}
 
-   static mapping = {
-      cache true
-   }
+	static mapping = {
+		cache true
+	}
 }</code></pre>
 </div>
 </div>
@@ -6919,91 +7010,93 @@ class Role implements Serializable {
 <div class="listingblock">
 <div class="title"><code>UserRole.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.testapp
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
 
 import org.codehaus.groovy.util.HashCodeHelper
+import grails.compiler.GrailsCompileStatic
 
+@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class UserRole implements Serializable {
 
-   private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-   User user
-   Role role
+	User user
+	Role role
 
-   @Override
-   boolean equals(other) {
-      if (other instanceof UserRole) {
-         other.userId == user?.id &amp;&amp; other.roleId == role?.id
-      }
-   }
+	@Override
+	boolean equals(other) {
+		if (other instanceof UserRole) {
+			other.userId == user?.id &amp;&amp; other.roleId == role?.id
+		}
+	}
 
-   @Override
-   int hashCode() {
-      int hashCode = HashCodeHelper.initHash()
-      if (user) {
-         hashCode = HashCodeHelper.updateHash(hashCode, user.id)
-      }
-      if (role) {
-         hashCode = HashCodeHelper.updateHash(hashCode, role.id)
-      }
-      hashCode
-   }
+    @Override
+	int hashCode() {
+	    int hashCode = HashCodeHelper.initHash()
+        if (user) {
+            hashCode = HashCodeHelper.updateHash(hashCode, user.id)
+		}
+		if (role) {
+		    hashCode = HashCodeHelper.updateHash(hashCode, role.id)
+		}
+		hashCode
+	}
 
-   static UserRole get(long userId, long roleId) {
-      criteriaFor(userId, roleId).get()
-   }
+	static UserRole get(long userId, long roleId) {
+		criteriaFor(userId, roleId).get()
+	}
 
-   static boolean exists(long userId, long roleId) {
-      criteriaFor(userId, roleId).count()
-   }
+	static boolean exists(long userId, long roleId) {
+		criteriaFor(userId, roleId).count()
+	}
 
-   private static DetachedCriteria criteriaFor(long userId, long roleId) {
-      UserRole.where {
-         user == User.load(userId) &amp;&amp;
-         role == Role.load(roleId)
-      }
-   }
+	private static DetachedCriteria criteriaFor(long userId, long roleId) {
+		UserRole.where {
+			user == User.load(userId) &amp;&amp;
+			role == Role.load(roleId)
+		}
+	}
 
-   static UserRole create(User user, Role role) {
-      def instance = new UserRole(user: user, role: role)
-      instance.save()
-      instance
-   }
+	static UserRole create(User user, Role role, boolean flush = false) {
+		def instance = new UserRole(user: user, role: role)
+		instance.save(flush: flush)
+		instance
+	}
 
-   static boolean remove(User u, Role r) {
-      if (u != null &amp;&amp; r != null) {
-         UserRole.where { user == u &amp;&amp; role == r }.deleteAll()
-      }
-   }
+	static boolean remove(User u, Role r) {
+		if (u != null &amp;&amp; r != null) {
+			UserRole.where { user == u &amp;&amp; role == r }.deleteAll()
+		}
+	}
 
-   static int removeAll(User u) {
-      u == null ? 0 : UserRole.where { user == u }.deleteAll()
-   }
+	static int removeAll(User u) {
+		u == null ? 0 : UserRole.where { user == u }.deleteAll() as int
+	}
 
-   static int removeAll(Role r) {
-      r == null ? 0 : UserRole.where { role == r }.deleteAll()
-   }
+	static int removeAll(Role r) {
+		r == null ? 0 : UserRole.where { role == r }.deleteAll() as int
+	}
 
-   static constraints = {
-      role validator: { Role r, UserRole ur -&gt;
-         if (ur.user?.id) {
-            UserRole.withNewSession {
-               if (UserRole.exists(ur.user.id, r.id)) {
-                  return ['userRole.exists']
-               }
-            }
-         }
-      }
-   }
+	static constraints = {
+		role validator: { Role r, UserRole ur -&gt;
+			if (ur.user?.id) {
+				UserRole.withNewSession {
+					if (UserRole.exists(ur.user.id, r.id)) {
+						return ['userRole.exists']
+					}
+				}
+			}
+		}
+	}
 
-   static mapping = {
-      id composite: ['user', 'role']
-      version false
-   }
+	static mapping = {
+		id composite: ['user', 'role']
+		version false
+	}
 }</code></pre>
 </div>
 </div>
@@ -7015,7 +7108,10 @@ class UserRole implements Serializable {
 </td>
 <td class="content">
 <div class="paragraph">
-<p>These generated files are not part of the plugin - these are your application files. They are examples to get you started, so you can edit them as you please. They contain the minimum needed for the plugin&#8217;s default implementation of the Spring Security <code>UserDetailsService</code> (which like everything in the plugin is customizable - see <a href="#userDetailsService">Custom UserDetailsService</a>).</p>
+<p>These generated files are not part of the plugin - these are your application files.
+They are examples to get you started, so you can edit them as you please.
+They contain the minimum needed for the plugin&#8217;s default implementation of the Spring Security <code>UserDetailsService</code>
+(which like everything in the plugin is customizable - see <a href="#userDetailsService">Custom UserDetailsService</a>).</p>
 </div>
 </td>
 </tr>
@@ -7054,16 +7150,16 @@ class UserRole implements Serializable {
 <h4 id="4-create-a-controller-that-will-be-restricted-by-role">23.1.4. 4. Create a controller that will be restricted by role.</h4>
 <div class="literalblock">
 <div class="content">
-<pre>$ grails create-controller com.testapp.Secure</pre>
+<pre>$ grails create-controller com.mycompany.myapp.Secure</pre>
 </div>
 </div>
 <div class="paragraph">
-<p>This command creates <code>grails-app/controllers/com/testapp/SecureController.groovy</code>. Add some output so you can verify that things are working:</p>
+<p>This command creates <code>grails-app/controllers/com/mycompany/myapp/SecureController.groovy</code>. Add some output so you can verify that things are working:</p>
 </div>
 <div class="listingblock">
 <div class="title"><code>SecureController.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.testapp
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 class SecureController {
    def index() {
@@ -7078,29 +7174,27 @@ class SecureController {
 <div class="listingblock">
 <div class="title"><code>BootStrap.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">import com.testapp.Role
-import com.testapp.User
-import com.testapp.UserRole
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 class BootStrap {
 
    def init = {
 
-      def adminRole = new Role(authority: 'ROLE_ADMIN').save()
-      def userRole = new Role(authority: 'ROLE_USER').save()
+         def adminRole = new Role(authority: 'ROLE_ADMIN').save()
 
-      def testUser = new User(username: 'me', password: 'password').save()
+         def testUser = new User(username: 'me', password: 'password').save()
 
-      UserRole.create testUser, adminRole
+         UserRole.create testUser, adminRole
 
-      UserRole.withSession {
-         it.flush()
-         it.clear()
-      }
+         UserRole.withSession {
+            it.flush()
+            it.clear()
+         }
 
-      assert User.count() == 1
-      assert Role.count() == 2
-      assert UserRole.count() == 1
+         assert User.count() == 1
+         assert Role.count() == 1
+         assert UserRole.count() == 1
+
    }
 }</code></pre>
 </div>
@@ -7144,17 +7238,16 @@ class BootStrap {
 <div class="sect3">
 <h4 id="8-apply-the-annotation">23.1.8. 8. Apply the annotation.</h4>
 <div class="paragraph">
-<p>Edit grails-app/controllers/SecureController.groovy to import the annotation class and apply the annotation to restrict (and grant) access.</p>
+<p>Edit <code>grails-app/controllers/com/mycompany/myapp/SecureController.groovy</code> to import the annotation class and apply the annotation to restrict (and grant) access.</p>
 </div>
 <div class="listingblock">
 <div class="title"><code>SecureController.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.testapp
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import grails.plugin.springsecurity.annotation.Secured
 
 class SecureController {
-
    @Secured('ROLE_ADMIN')
    def index() {
       render 'Secure access only'
@@ -7168,7 +7261,7 @@ class SecureController {
 <div class="listingblock">
 <div class="title"><code>SecureController.groovy</code></div>
 <div class="content">
-<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.testapp
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -7208,12 +7301,12 @@ class SecureController {
 <h5 id="run-grails-generate-all-for-the-domain-classes">Run grails generate-all for the domain classes:</h5>
 <div class="literalblock">
 <div class="content">
-<pre>$ grails generate-all com.testapp.User</pre>
+<pre>$ grails generate-all com.mycompany.myapp.User</pre>
 </div>
 </div>
 <div class="literalblock">
 <div class="content">
-<pre>$ grails generate-all com.testapp.Role</pre>
+<pre>$ grails generate-all com.mycompany.myapp.Role</pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7537,8 +7630,8 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.1.2<br>
-Last updated 2017-04-24 09:28:27 UTC
+Version 3.2.0.M1<br>
+Last updated 2017-05-18 08:18:40 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
