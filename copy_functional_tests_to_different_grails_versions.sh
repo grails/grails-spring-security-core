@@ -38,20 +38,18 @@ for grailsVersion in $GRAILS_VERSIONS; do
 
     sdk use grails $GRAILS_VERSION
 
-   if [ -f "$TEMPLATE_FOLDER/$grailsVersion/grailsw" ];
-   then 
-      for file in $S2_QUICKSTART_FILES; do
-          if [ -f "$TEMPLATE_FOLDER/$grailsVersion$file" ];
-          then 
-          rm $TEMPLATE_FOLDER/$grailsVersion$file
-          fi
-      done
-      cd $TEMPLATE_FOLDER/$grailsVersion
-      grails s2-quickstart com.testapp TestUser TestRole TestRequestmap --salt
-      cd ../..
-   fi
-   for file in $TEMPLATE_FILES; do
-       cp $TEMPLATE_FOLDER$file $TEMPLATE_FOLDER/$grailsVersion$file
-   done
+    for file in $S2_QUICKSTART_FILES; do
+        if [ -f "$TEMPLATE_FOLDER/$grailsVersion$file" ];
+        then
+            rm $TEMPLATE_FOLDER/$grailsVersion$file
+        fi
+    done
+    cd $TEMPLATE_FOLDER/$grailsVersion
+    grails s2-quickstart com.testapp TestUser TestRole TestRequestmap --salt
+    cd ../..
+
+    for file in $TEMPLATE_FILES; do
+        cp $TEMPLATE_FOLDER$file $TEMPLATE_FOLDER/$grailsVersion$file
+    done
 done
 
