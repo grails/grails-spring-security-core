@@ -1,11 +1,9 @@
-[[newInV3.3]]
-== What's New in Version 3.x
+[[newInV3]]
+== What's New in Version 3.0
 
-NOTE: Grails 3.3 or higher requires version 3.3.x of the plugin
+NOTE: Version 1.2.0.M1 is only compatible with Grails 3.3.x or higher. 
 
-NOTE: To use the plugin in Grails 3 applications lower than 3.3.x (3.0.x or 3.1.x or 3.2.x) use the latest 3.1.x version of the plugin.
-
-NOTE: To use the plugin in Grails 2 applications use the latest 2.x.x version of the plugin.
+Version 3.x of the plugin requires Grails 3 or higher; to use the plugin in Grails 2 applications use the latest 2.x.x version of the plugin.
 
 In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using `web.xml`. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 4 (currently 4.0.3.RELEASE), but the changes required were primarily internal and don't affect usage. There are new features in Spring Security 4 however, and the plugin will be updated in future releases to take advantage of those.
 
