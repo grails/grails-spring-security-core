@@ -1092,18 +1092,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="sect1">
 <h2 id="newInV3">2. What&#8217;s New in Version 3.0</h2>
 <div class="sectionbody">
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-Version 1.2.0.M1 is only compatible with Grails 3.3.x or higher.
-</td>
-</tr>
-</table>
-</div>
 <div class="paragraph">
 <p>Version 3.x of the plugin requires Grails 3 or higher; to use the plugin in Grails 2 applications use the latest 2.x.x version of the plugin.</p>
 </div>
@@ -1176,6 +1164,30 @@ Version 1.2.0.M1 is only compatible with Grails 3.3.x or higher.
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
    compile 'org.grails.plugins:spring-security-core:3.2.0.M1'
+   ...</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Version 3.2.0.M1 is only compatible with Grails 3.3.x or higher.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>For previous Grails 3 versions ( 3.0.x, 3.1.x and 3.2.x ) use:</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>build.gradle</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+   ...
+   compile 'org.grails.plugins:spring-security-core:3.1.2'
    ...</code></pre>
 </div>
 </div>
@@ -7631,7 +7643,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.0.M1<br>
-Last updated 2017-05-18 08:18:40 UTC
+Last updated 2017-05-18 08:38:14 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
