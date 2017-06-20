@@ -14,13 +14,12 @@
  */
 package grails.plugin.springsecurity
 
+
 import static grails.web.http.HttpHeaders.ACCEPT_VERSION
 
 import org.grails.config.PropertySourcesConfig
 import org.grails.web.mime.HttpServletResponseExtension
 import org.grails.web.servlet.mvc.GrailsWebRequest
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.core.env.MapPropertySource
 import org.springframework.core.env.PropertySource
 import org.springframework.expression.Expression
@@ -30,22 +29,21 @@ import org.springframework.security.access.AccessDecisionVoter
 import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.expression.SecurityExpressionHandler
-
 import grails.core.GrailsApplication
 import grails.plugin.springsecurity.web.access.expression.WebExpressionConfigAttribute
 import grails.util.Holders
 import grails.web.mapping.UrlMapping
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
+import groovy.util.logging.Slf4j
 
 /**
  * Helper methods that use dynamic Groovy.
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 class ReflectionUtils {
-
-	private static final Logger log = LoggerFactory.getLogger(this)
 
 	// set at startup
 	static GrailsApplication application

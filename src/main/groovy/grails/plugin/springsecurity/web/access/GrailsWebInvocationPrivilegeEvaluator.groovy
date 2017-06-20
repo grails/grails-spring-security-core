@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.access
 
+import groovy.util.logging.Slf4j
+
 import java.lang.reflect.InvocationHandler
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
@@ -43,6 +45,7 @@ import groovy.transform.CompileStatic
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationPrivilegeEvaluator {
 
@@ -53,8 +56,6 @@ class GrailsWebInvocationPrivilegeEvaluator extends DefaultWebInvocationPrivileg
 	}
 
 	protected static final HttpServletResponse DUMMY_RESPONSE = DummyResponseCreator.createInstance()
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	protected AbstractSecurityInterceptor interceptor
 

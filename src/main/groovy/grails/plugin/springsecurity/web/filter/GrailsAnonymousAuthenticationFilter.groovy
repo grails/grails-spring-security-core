@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.filter
 
+import groovy.util.logging.Slf4j
+
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.ServletRequest
@@ -36,10 +38,9 @@ import groovy.transform.CompileStatic
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class GrailsAnonymousAuthenticationFilter extends GenericFilterBean {
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for authenticationDetailsSource. */
 	AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource

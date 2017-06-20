@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.authentication.preauth.x509
 
+import groovy.util.logging.Slf4j
+
 import java.security.cert.X509Certificate
 
 import org.slf4j.Logger
@@ -29,11 +31,11 @@ import groovy.transform.CompileStatic
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class ClosureX509PrincipalExtractor implements X509PrincipalExtractor {
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.accessor
-	protected Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for the closure to use to extract the username. */
 	Closure<?> closure

@@ -14,25 +14,22 @@
  */
 package grails.plugin.springsecurity.access.vote
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 import org.springframework.context.ApplicationContextAware
 import org.springframework.security.access.AccessDecisionVoter
 import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.FilterInvocation
-
 import grails.plugin.springsecurity.annotation.SecuredClosureDelegate
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class ClosureVoter implements AccessDecisionVoter<FilterInvocation>, ApplicationContextAware {
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	ApplicationContext applicationContext
 

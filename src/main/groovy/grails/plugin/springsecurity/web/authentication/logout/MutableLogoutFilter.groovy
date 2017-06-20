@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.authentication.logout
 
+import groovy.util.logging.Slf4j
+
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
 import javax.servlet.ServletRequest
@@ -34,11 +36,11 @@ import groovy.transform.CompileStatic
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class MutableLogoutFilter extends LogoutFilter {
 
 	protected final LogoutSuccessHandler logoutSuccessHandler
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for the logout handlers. */
 	List<LogoutHandler> handlers

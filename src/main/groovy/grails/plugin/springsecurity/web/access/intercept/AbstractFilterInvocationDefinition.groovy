@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
+import groovy.util.logging.Slf4j
+
 import java.util.concurrent.CopyOnWriteArrayList
 
 import javax.servlet.http.HttpServletRequest
@@ -39,6 +41,7 @@ import groovy.transform.CompileStatic
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 abstract class AbstractFilterInvocationDefinition implements FilterInvocationSecurityMetadataSource {
 
@@ -52,8 +55,6 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.accessor
 	protected AntPathMatcher urlMatcher = new AntPathMatcher()
 	protected boolean initialized
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for whether to reject if there's no matching rule. */
 	boolean rejectIfNoRule

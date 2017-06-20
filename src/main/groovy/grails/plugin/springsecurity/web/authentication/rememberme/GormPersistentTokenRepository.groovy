@@ -14,8 +14,7 @@
  */
 package grails.plugin.springsecurity.web.authentication.rememberme
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
+import groovy.util.logging.Slf4j
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository
 
@@ -29,9 +28,8 @@ import grails.plugin.springsecurity.SpringSecurityUtils
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 class GormPersistentTokenRepository implements PersistentTokenRepository, GrailsApplicationAware {
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	/** Dependency injection for grailsApplication. */
 	GrailsApplication grailsApplication
