@@ -32,10 +32,14 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
 
   # If this is the master branch then update the snapshot
   if [[ $TRAVIS_BRANCH == 'master' ]]; then
+
+    mv ../build/docs/ghpages.html index.html
+    git add index.html
+
     mkdir -p snapshot
     cp -r ../build/docs/. ./snapshot/
-
     git add snapshot/*
+
   fi
 
   # If there is a tag present then this becomes the latest
@@ -57,13 +61,12 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
         git rm -rf "$majorVersion"
         cp -r ../build/docs/. "./$majorVersion/"
         git add "$majorVersion/*"
-
   fi
 
-    git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
-    git push origin HEAD
-    cd ..
-    rm -rf gh-pages
+  git commit -a -m "Updating docs for Travis build: https://travis-ci.org/$TRAVIS_REPO_SLUG/builds/$TRAVIS_BUILD_ID"
+  git push origin HEAD
+  cd ..
+  rm -rf gh-pages
 fi
 
 exit $EXIT_STATUS

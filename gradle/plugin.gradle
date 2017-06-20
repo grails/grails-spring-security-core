@@ -203,7 +203,7 @@ task docs(dependsOn: [asciidoc]) {
 		['epub', 'mobi', 'pdf'].each { String ext ->
 			File f = new File(dir, 'index.' + ext)
 			if (f.exists()) {
-				f.renameTo new File(dir, project.name + '-' + project.version + '.' + ext)
+				f.renameTo new File(dir, project.name + '.' + ext)
 			}
 		}
 
