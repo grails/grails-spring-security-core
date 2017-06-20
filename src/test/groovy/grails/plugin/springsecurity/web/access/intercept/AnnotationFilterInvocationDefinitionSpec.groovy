@@ -22,6 +22,7 @@ import grails.plugin.springsecurity.annotation.Secured
 import grails.web.CamelCaseUrlConverter
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
+import groovy.util.logging.Slf4j
 import org.grails.core.DefaultGrailsControllerClass
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.web.mapping.DefaultUrlMappingEvaluator
@@ -275,6 +276,7 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 }
 
+@Slf4j
 class MockAnnotationFilterInvocationDefinition extends AnnotationFilterInvocationDefinition {
 	String url
 	protected String findGrailsUrl(UrlMappingInfo mapping) { url }

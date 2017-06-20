@@ -28,6 +28,7 @@ import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
 import grails.web.servlet.mvc.GrailsParameterMap
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.web.mapping.mvc.GrailsControllerUrlMappingInfo
 import org.grails.web.mime.HttpServletResponseExtension
@@ -59,6 +60,7 @@ import java.lang.reflect.Method
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefinition implements ServletContextAware {
 
