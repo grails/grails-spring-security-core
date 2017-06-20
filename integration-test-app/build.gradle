@@ -63,8 +63,15 @@ bootRun {
     addResources = true
 }
 
-
 assets {
     minifyJs = true
     minifyCss = true
+}
+
+integrationTest {
+    testLogging {
+        exceptionFormat = 'full'
+        events 'failed', 'standardOut', 'standardError'
+    }
+    beforeTest { descriptor -> logger.quiet " -- $descriptor" }
 }
