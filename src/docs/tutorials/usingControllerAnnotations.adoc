@@ -46,10 +46,10 @@ static mapping = {
 ----
 ====
 
-For Spring Security Core version 6.1.2 or GORM 6.0.10 or later, the script creates this User class:
+If you are using Spring Core version 3.1.2 or later and GORM 6.0.10 or later, the script creates this User class:
 
 [source, groovy]
-.`User.groovy`
+.`grails-app/domain/com/mycompany/myapp/User.groovy`
 ----
 include::../code/s2-quickstart/grails-app/domain/com/mycompany/myapp/User.groovy[]
 ----
@@ -57,7 +57,16 @@ include::../code/s2-quickstart/grails-app/domain/com/mycompany/myapp/User.groovy
 and a password encoder listener to manage password encoding:
 
 [source, groovy]
-.`UserPasswordEncoderListener.groovy`
+.`grails-app/conf/spring/resources.groovy`
+----
+include::../code/s2-quickstart/grails-app/conf/spring/resources.groovy[]
+----
+
+NOTE: If you are using a GORM implementation such as http://gorm.grails.org/latest/mongodb/manual/index.html[MongoDB], you will need to replace
+`userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))` with `userPasswordEncoderListener(UserPasswordEncoderListener, ref('mongoDatastore'))`
+
+[source, groovy]
+.`src/main/groovy/com/mycompany/myapp/UserPasswordEncoderListener.groovy`
 ----
 include::../code/s2-quickstart/src/main/groovy/com/mycompany/myapp/UserPasswordEncoderListener.groovy[]
 ----
@@ -65,7 +74,7 @@ include::../code/s2-quickstart/src/main/groovy/com/mycompany/myapp/UserPasswordE
 Previous versions of the plugin's script manage the password encoding directly in domain class:
 
 [source, groovy]
-.`User.groovy`
+.`grails-app/domain/com/mycompany/myapp/User.groovy`
 ----
 include::../code/s2-quickstart-old/grails-app/domain/com/mycompany/myapp/User.groovy[]
 ----
