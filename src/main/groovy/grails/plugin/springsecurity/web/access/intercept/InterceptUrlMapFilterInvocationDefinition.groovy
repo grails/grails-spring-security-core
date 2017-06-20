@@ -17,10 +17,12 @@ package grails.plugin.springsecurity.web.access.intercept
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.ReflectionUtils
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class InterceptUrlMapFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
 

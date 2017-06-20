@@ -17,6 +17,7 @@ package grails.plugin.springsecurity.web.access.intercept
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.ReflectionUtils
 import grails.web.mapping.UrlMappingInfo
+import groovy.util.logging.Slf4j
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.HttpMethod
@@ -194,6 +195,7 @@ class InterceptUrlMapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 }
 
+@Slf4j
 class MockInterceptUrlMapFilterInvocationDefinition extends InterceptUrlMapFilterInvocationDefinition {
 	String url
 	protected String findGrailsUrl(UrlMappingInfo mapping) { url }

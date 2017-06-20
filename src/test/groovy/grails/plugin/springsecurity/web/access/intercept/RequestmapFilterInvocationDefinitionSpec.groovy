@@ -16,6 +16,7 @@ package grails.plugin.springsecurity.web.access.intercept
 
 import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.InterceptedUrl
+import groovy.util.logging.Slf4j
 import org.springframework.mock.web.MockFilterChain
 import org.springframework.security.web.FilterInvocation
 
@@ -118,6 +119,7 @@ class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 	}
 }
 
+@Slf4j
 class TestRequestmapFilterInvocationDefinition extends RequestmapFilterInvocationDefinition {
 	protected List<InterceptedUrl> loadRequestmaps() {
 		[new InterceptedUrl('/foo/bar', ['ROLE_USER'], null), new InterceptedUrl('/admin/**', ['ROLE_ADMIN'], null)]
