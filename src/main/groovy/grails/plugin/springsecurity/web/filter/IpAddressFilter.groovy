@@ -17,6 +17,7 @@ package grails.plugin.springsecurity.web.filter
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.ReflectionUtils
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 import org.grails.web.util.WebUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -41,13 +42,12 @@ import javax.servlet.http.HttpServletResponse
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class IpAddressFilter extends GenericFilterBean {
 
 	protected static final String IPV4_LOOPBACK = '127.0.0.1'
 	protected static final String IPV6_LOOPBACK = '0:0:0:0:0:0:0:1'
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	protected final AntPathMatcher pathMatcher = new AntPathMatcher()
 

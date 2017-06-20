@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.userdetails
 
+import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.context.support.MessageSourceAccessor
@@ -32,11 +33,11 @@ import groovy.transform.CompileStatic
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class DefaultPreAuthenticationChecks implements UserDetailsChecker {
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.accessor
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	void check(UserDetails user) {
 		if (!user.accountNonLocked) {

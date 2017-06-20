@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity.web.filter
 
+import groovy.util.logging.Slf4j
+
 import javax.servlet.Filter
 import javax.servlet.FilterChain
 import javax.servlet.ServletException
@@ -41,14 +43,13 @@ import groovy.transform.CompileStatic
  * @author Rob Winch
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class DebugFilter extends GenericFilterBean {
 
 	protected static final String ALREADY_FILTERED_ATTR_NAME = DebugFilter.name + '.FILTERED'
 	protected static final String JAVA_LANG_EXCEPTION = 'java.lang.Exception'
 	protected static final int JAVA_LANG_EXCEPTION_LENGTH = JAVA_LANG_EXCEPTION.length()
-
-	protected final Logger log = LoggerFactory.getLogger(getClass())
 
 	final FilterChainProxy filterChainProxy
 
