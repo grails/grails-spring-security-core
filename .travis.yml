@@ -9,7 +9,7 @@ before_cache:
 jdk:
 - oraclejdk8
 install: true
-script: "./publish-docs.sh"
+script: "./travis-build.sh"
 env:
   global:
   - secure: odKVTnq8V5a4ZrHWfiK2+Y8yIrvtZGrjDHYA4c8qXu8zucRet+FRHkuKtYWrXmF+xWqfGp+4r2171AiisSxIsMxDB++FRBS1ccHyjzSymm7nAwi+pwCnzpx7bKcdjA/4Q9SpWkNR2QxpzaUoIAP1MkP1ZQ8c56wGuou5XuQ+PWE=
