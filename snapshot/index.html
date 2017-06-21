@@ -6812,10 +6812,10 @@ $ cd bookstore</pre>
 </table>
 </div>
 <div class="paragraph">
-<p>For Spring Security Core version 6.1.2 or GORM 6.0.10 or later, the script creates this User class:</p>
+<p>If you are using Spring Core version 3.1.2 or later and GORM 6.0.10 or later, the script creates this User class:</p>
 </div>
 <div class="listingblock">
-<div class="title"><code>User.groovy</code></div>
+<div class="title"><code>grails-app/domain/com/mycompany/myapp/User.groovy</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
@@ -6856,7 +6856,30 @@ class User implements Serializable {
 <p>and a password encoder listener to manage password encoding:</p>
 </div>
 <div class="listingblock">
-<div class="title"><code>UserPasswordEncoderListener.groovy</code></div>
+<div class="title"><code>grails-app/conf/spring/resources.groovy</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">import com.mycompany.myapp.UserPasswordEncoderListener
+// Place your Spring DSL code here
+beans = {
+    userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+If you are using a GORM implementation such as <a href="http://gorm.grails.org/latest/mongodb/manual/index.html">MongoDB</a>, you will need to replace
+<code>userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))</code> with <code>userPasswordEncoderListener(UserPasswordEncoderListener, ref('mongoDatastore'))</code>
+</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title"><code>src/main/groovy/com/mycompany/myapp/UserPasswordEncoderListener.groovy</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
@@ -6906,7 +6929,7 @@ class UserPasswordEncoderListener extends AbstractPersistenceEventListener {
 <p>Previous versions of the plugin&#8217;s script manage the password encoding directly in domain class:</p>
 </div>
 <div class="listingblock">
-<div class="title"><code>User.groovy</code></div>
+<div class="title"><code>grails-app/domain/com/mycompany/myapp/User.groovy</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
@@ -7643,7 +7666,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.0.M1<br>
-Last updated 2017-06-20 08:52:27 UTC
+Last updated 2017-06-21 09:57:06 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
