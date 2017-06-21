@@ -17,6 +17,7 @@ package test
 import grails.plugin.springsecurity.InterceptedUrl
 import grails.plugin.springsecurity.web.access.intercept.RequestmapFilterInvocationDefinition
 import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
 
 /**
  * Avoids the problem when using requestmaps where you can't make any web calls without any
@@ -24,6 +25,7 @@ import groovy.transform.CompileStatic
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class TestRequestmapFilterInvocationDefinition extends RequestmapFilterInvocationDefinition {
 
