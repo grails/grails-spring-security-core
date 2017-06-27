@@ -1,0 +1,13 @@
+// deletes everything from the build directory except for test reports
+task cleanBuild {
+    if (!buildDir.exists()) return
+
+    buildDir.eachFile {
+        if (it.file) {
+            it.delete()
+        }
+        else if (it.name != 'reports' && !it.name.startsWith('geb-reports') && !it.name.startsWith('test-results')) {
+            it.deleteDir()
+        }
+    }
+}

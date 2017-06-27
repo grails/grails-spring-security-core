@@ -1,3 +1,11 @@
+def setIfNotSet = { String name, value ->
+    if (!project.ext.has(name)) {
+        project.ext[name] = value
+    }
+}
+setIfNotSet 'issueTrackerUrl', project.vcsUrl + '/issues'
+setIfNotSet 'websiteUrl', project.vcsUrl
+
 grailsPublish {
     user = System.getenv("BINTRAY_USER") ?: project.hasProperty("bintrayUser") ? project.bintrayUser : ''
     key = System.getenv("BINTRAY_KEY") ?: project.hasProperty("bintrayKey") ? project.bintrayKey : ''

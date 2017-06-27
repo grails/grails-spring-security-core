@@ -1,0 +1,195 @@
+buildscript {
+    repositories {
+        maven { url 'https://repo.grails.org/grails/core' }
+    }
+    dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
+    }
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+def asciidoctorAttributes = [
+        copyright           : 'Apache License, Version 2.0',
+        docinfo1            : 'true',
+        doctype             : 'book',
+        encoding            : 'utf-8',
+        'front-cover-image'  : 'image:cover.png[Front Cover,800,600]',
+        icons               : 'font',
+        id                  : project.name + ':' + project.version,
+        idprefix            : '',
+        idseparator         : '-',
+        lang                : 'en',
+        linkattrs           : true,
+        numbered            : '',
+        producer            : 'Asciidoctor',
+        revnumber           : project.version,
+        setanchors          : true,
+        'source-highlighter' : 'prettify',
+        toc                 : 'left',
+        toc2                : '',
+        toclevels           : '2'
+]
+
+
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.asciidoctor.gradle.AsciidoctorTask
+
+tasks.withType(AsciidoctorTask) {
+    attributes asciidoctorAttributes
+    outputDir new File(buildDir, 'docs')
+    separateOutputDirs = false
+    sourceDir = file('src/docs')
+    sources {
+        include 'index.adoc'
+    }
+}
+
+task getKindlegen {
+    ext {
+        kindlegenfolder = "${rootProject.projectDir}/kindlegen"
+        kindlegenFilename = "${kindlegenfolder}/kindlegen"
+
+
+    }
+
+    doLast {
+        if (Os.isFamily(Os.FAMILY_MAC)) {
+
+        } else {
+            File tgz = file(kindlegenGz)
+            if (!tgz.exists()) {
+                tgz.parentFile.mkdirs()
+                def url = kindlegenLinuxUrl
+                println "Downloading Kindlegen from $url"
+                ant.get(src: url, dest: tgz)
+            }
+            File kindlegenFile = file(kindlegenFilename)
+            if (!kindlegenFile.exists()) {
+
+                ant.chmod(file: kindlegenFile, perm: '+x')
+            }
+        }
+    }
+}
+
+task cleanKindlegen {
+    ext {
+        kindlegenfolder = "${rootProject.projectDir}/kindlegen"
+    }
+    doLast {
+        delete kindlegenfolder
+    }
+}
+
+task downloadKindlegenMac {
+    ext {
+        kindlegenUrl = 'http://kindlegen.s3.amazonaws.com/KindleGen_Mac_i386_v2_9.zip'
+        kindlegenZip = "${cleanKindlegen.ext.kindlegenfolder}/kindlegen.zip"
+    }
+    doLast {
+        if (Os.isFamily(Os.FAMILY_MAC)) {
+            File zipFile = file(kindlegenZip)
+            if (!zipFile.exists()) {
+                zipFile.parentFile.mkdirs()
+            }
+            def url = kindlegenUrl
+            println "Downloading Kindlegen from $url"
+            ant.get(src: url, dest: zipFile)
+        }
+    }
+}
+
+task downloadKindlegenLinux {
+    ext {
+        kindlegenUrl = 'http://kindlegen.s3.amazonaws.com/kindlegen_linux_2.6_i386_v2_9.tar.gz'
+        kindlegenGz = "${cleanKindlegen.ext.kindlegenfolder}/kindlegen.tar.gz"
+    }
+    doLast {
+        if (!Os.isFamily(Os.FAMILY_MAC) && !Os.isFamily(Os.FAMILY_WINDOWS)) {
+            File tgz = file(kindlegenGz)
+            if (!tgz.exists()) {
+                tgz.parentFile.mkdirs()
+            }
+            def url = kindlegenUrl
+            println "Downloading Kindlegen from $url"
+            ant.get(src: url, dest: tgz)
+        }
+    }
+}
+
+
+task unzipKidlengen {
+    dependsOn 'downloadKindlegenMac'
+    doLast {
+        File zipFile = file(downloadKindlegenMac.ext.kindlegenZip)
+        if ( zipFile.exists() ) {
+            copy {
+                from zipTree(zipFile)
+                into file(cleanKindlegen.ext.kindlegenfolder)
+            }
+        }
+    }
+
+}
+
+task untarKidlengen(dependsOn: downloadKindlegenLinux) {
+    doLast {
+        File tgz = file(downloadKindlegenLinux.ext.kindlegenGz)
+        if ( tgz.exists() ) {
+            ant.untar(src: tgz, dest: cleanKindlegen.ext.kindlegenfolder, compression: 'gzip')
+        }
+    }
+}
+
+
+task chmodXKindlegen {
+    dependsOn 'untarKidlengen'
+    dependsOn 'unzipKidlengen'
+    ext {
+        kindlegenFile = "${cleanKindlegen.ext.kindlegenfolder}/kindlegen"
+    }
+    doLast {
+        ant.chmod(file: kindlegenFile, perm: '+x')
+    }
+
+}
+
+clean.dependsOn cleanKindlegen
+
+task asciidoc(type: AsciidoctorTask, description: 'Generates single-page HTML, PDF, and EPUB3') {
+    backends 'html5', 'pdf', 'epub3'
+}
+
+task asciidocMobi(type: AsciidoctorTask, description: 'Generates MOBI for Kindle', dependsOn: chmodXKindlegen) {
+    backends 'epub3'
+    attributes(['ebook-format': 'kf8'] + asciidoctorAttributes)
+    mustRunAfter asciidoc
+}
+
+task docs(dependsOn: [asciidoc]) {
+    doLast {
+        File dir = new File(buildDir, 'docs')
+        ['epub', 'mobi', 'pdf'].each { String ext ->
+            File f = new File(dir, 'index.' + ext)
+            if (f.exists()) {
+                f.renameTo new File(dir, project.name + '.' + ext)
+            }
+        }
+
+        new File(buildDir, 'docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
+
+        copy {
+            from 'src/docs'
+            into new File(buildDir, 'docs').path
+            include '**/*.png'
+        }
+    }
+}
+
+task docsMobi(dependsOn: [asciidoc, asciidocMobi]) {
+    finalizedBy docs
+}

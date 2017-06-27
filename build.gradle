@@ -5,17 +5,41 @@ buildscript {
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsVersion"
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
+		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
+		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
 	}
 }
 
-plugins {
-	id 'io.spring.dependency-management' version '0.5.4.RELEASE'
-	id 'com.jfrog.bintray' version '1.2'
+group = 'org.grails.plugins'
+def versionTxt = file('version.txt')
+version = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
+
+apply plugin: 'idea'
+apply plugin: 'war'
+apply plugin: 'org.grails.grails-gsp'
+apply plugin: 'org.grails.grails-plugin'
+apply plugin: 'org.grails.grails-plugin-publish'
+apply plugin: 'org.asciidoctor.convert'
+apply plugin: "com.jfrog.artifactory"
+
+repositories {
+	mavenLocal()
+	mavenCentral()
+	maven { url 'https://repo.grails.org/grails/core' }
 }
 
-apply from: 'gradle/plugin.gradle'
+sourceCompatibility = targetCompatibility = 1.7
 
 dependencies {
+	provided 'javax.servlet:javax.servlet-api:3.1.0'
+	provided 'org.grails:grails-dependencies'
+	provided 'org.grails:grails-web-boot'
+	provided 'org.springframework.boot:spring-boot-starter-logging'
+
+	testCompile 'org.grails:grails-plugin-testing'
+
 	compile 'net.sf.ehcache:ehcache:2.9.0'
 	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
 		['spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression'].each { exclude module: it }
@@ -24,3 +48,9 @@ dependencies {
 		exclude module: 'spring-web'
 	}
 }
+
+apply from: 'gradle/grailsPublish.gradle'
+apply from: 'gradle/artifactoryPublish.gradle'
+apply from: 'gradle/docs.gradle'
+apply from: 'gradle/cleanBuild.gradle'
+apply from: 'gradle/testVerbose.gradle'
