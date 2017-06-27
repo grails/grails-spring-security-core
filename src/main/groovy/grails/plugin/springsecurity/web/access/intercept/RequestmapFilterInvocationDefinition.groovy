@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity.web.access.intercept
 
+import groovy.util.logging.Slf4j
 import org.springframework.http.HttpMethod
 
 import grails.plugin.springsecurity.InterceptedUrl
@@ -23,6 +24,7 @@ import groovy.transform.CompileStatic
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
+@Slf4j
 @CompileStatic
 class RequestmapFilterInvocationDefinition extends AbstractFilterInvocationDefinition {
 
