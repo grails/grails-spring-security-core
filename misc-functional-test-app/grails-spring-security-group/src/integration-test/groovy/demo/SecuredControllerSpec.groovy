@@ -1,7 +1,7 @@
 package demo
 
 import geb.spock.GebSpec
-import grails.test.mixin.integration.Integration
+import grails.testing.mixin.integration.Integration
 import grails.transaction.Rollback
 
 @Rollback

@@ -4,7 +4,7 @@ import com.testapp.TestDataService
 import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.test.mixin.integration.Integration
+import grails.testing.mixin.integration.Integration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
 import pages.LoginPage

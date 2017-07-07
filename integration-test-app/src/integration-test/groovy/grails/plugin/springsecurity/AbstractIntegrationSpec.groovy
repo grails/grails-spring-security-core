@@ -15,7 +15,7 @@
 package grails.plugin.springsecurity
 
 import grails.core.GrailsApplication
-import grails.test.mixin.integration.Integration
+import grails.testing.mixin.integration.Integration
 import grails.transaction.Rollback
 import org.springframework.transaction.annotation.Transactional
 import spock.lang.Specification

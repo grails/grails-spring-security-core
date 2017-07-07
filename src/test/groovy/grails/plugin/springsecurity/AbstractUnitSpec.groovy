@@ -15,8 +15,7 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.SecurityRequestHolder
-import grails.test.mixin.TestMixin
-import grails.test.mixin.web.ControllerUnitTestMixin
+import grails.testing.web.GrailsWebUnitTest
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.core.context.SecurityContextHolder
@@ -26,8 +25,7 @@ import spock.lang.Specification
 /**
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-@TestMixin(ControllerUnitTestMixin)
-abstract class AbstractUnitSpec extends Specification {
+abstract class AbstractUnitSpec extends Specification implements GrailsWebUnitTest {
 
 	void setupSpec() {
 		defineBeans {
