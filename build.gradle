@@ -33,16 +33,18 @@ repositories {
 sourceCompatibility = targetCompatibility = 1.7
 
 dependencies {
-	provided 'javax.servlet:javax.servlet-api:3.1.0'
+	provided "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
 	provided 'org.grails:grails-dependencies'
 	provided 'org.grails:grails-web-boot'
 	provided 'org.springframework.boot:spring-boot-starter-logging'
 
 	testCompile 'org.grails:grails-plugin-testing'
 
-	compile 'net.sf.ehcache:ehcache:2.9.0'
+	compile "net.sf.ehcache:ehcache:$ehcacheVersion"
 	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
-		['spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression'].each { exclude module: it }
+		['spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression'].each {
+			exclude module: it
+		}
 	}
 	compile "org.springframework.security:spring-security-web:$springSecurityVersion", {
 		exclude module: 'spring-web'
