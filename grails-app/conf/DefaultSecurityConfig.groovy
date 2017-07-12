@@ -16,7 +16,7 @@ import grails.plugin.springsecurity.BeanTypeResolver
 import grails.plugin.springsecurity.SecurityConfigType
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationToken
-
+import grails.util.Environment
 import org.springframework.security.authentication.RememberMeAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
@@ -186,11 +186,20 @@ security {
 	password {
 		algorithm = 'bcrypt'
 		encodeHashAsBase64 = false
-		bcrypt {
-			logrounds = 10
-		}
-		hash {
-			iterations = 10000
+		if (Environment.current == Environment.TEST) {
+			bcrypt {
+				logrounds = 4
+			}
+			hash {
+				iterations = 1
+			}
+		} else {
+			bcrypt {
+				logrounds = 10
+			}
+			hash {
+				iterations = 10000
+			}
 		}
 	}
 
