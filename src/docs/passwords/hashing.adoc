@@ -49,9 +49,5 @@ If you want to use a message digest hashing algorithm, see https://docs.oracle.c
 |the number of iterations which will be executed on the hashed password/salt when using a message digest algorithm
 |====================
 
-For performance reasons, the number of rounds and of hashing iterations are lowered to the minimum when running tests.
-`password.bcrypt.logrounds` is set to `4` and `password.hash.iterations` is set to `1` when
-`Environment.current == Environment.TEST`.
-
-If you override the bcrypt default values, do not forget to alo override the values for `TEST` if you want to retain
-this optimization.
+NOTE: The bcrypt `logrounds` and `iterations` are set to a lower number to improve speed while testing.
+If you rely on them to be higher, set them manually when testing.
