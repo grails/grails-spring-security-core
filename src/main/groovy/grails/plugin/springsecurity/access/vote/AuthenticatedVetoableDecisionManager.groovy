@@ -62,12 +62,15 @@ class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager
 		boolean grant = false
 		for (AccessDecisionVoter voter in decisionVoters) {
 			if (voter instanceof AuthenticatedVoter) {
-				int result = voter.vote(authentication, object, configAttributes)
-				switch (result) {
-					case AccessDecisionVoter.ACCESS_GRANTED: grant = true; break
-					case AccessDecisionVoter.ACCESS_DENIED:  deny(); break
-					default: break // abstain
-				}
+                boolean voterSupportsSecurityContext = object == null || voter.supports(object.class)
+                if (voterSupportsSecurityContext) {
+                    int result = voter.vote(authentication, object, configAttributes)
+                    switch (result) {
+                        case AccessDecisionVoter.ACCESS_GRANTED: grant = true; break
+                        case AccessDecisionVoter.ACCESS_DENIED: deny(); break
+                        default: break // abstain
+                    }
+                }
 			}
 		}
 
@@ -86,13 +89,15 @@ class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager
 			if (voter instanceof AuthenticatedVoter) {
 				continue
 			}
-
-			int result = voter.vote(authentication, object, configAttributes)
-			switch (result) {
-				case AccessDecisionVoter.ACCESS_GRANTED: return true
-				case AccessDecisionVoter.ACCESS_DENIED:  denyCount++; break
-				default: break // abstain
-			}
+            boolean voterSupportsSecurityContext = object == null || voter.supports(object.class)
+            if (voterSupportsSecurityContext) {
+                int result = voter.vote(authentication, object, configAttributes)
+                switch (result) {
+                    case AccessDecisionVoter.ACCESS_GRANTED: return true
+                    case AccessDecisionVoter.ACCESS_DENIED: denyCount++; break
+                    default: break // abstain
+                }
+            }
 		}
 
 		if (denyCount) {
