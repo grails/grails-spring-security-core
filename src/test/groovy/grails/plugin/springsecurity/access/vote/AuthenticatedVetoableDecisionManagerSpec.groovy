@@ -15,7 +15,9 @@
 package grails.plugin.springsecurity.access.vote
 
 import grails.plugin.springsecurity.AbstractUnitSpec
+import org.springframework.security.access.AccessDecisionVoter
 import org.springframework.security.access.AccessDeniedException
+import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.access.SecurityConfig
 import org.springframework.security.access.vote.AuthenticatedVoter
 import org.springframework.security.access.vote.RoleVoter
@@ -33,10 +35,27 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
  */
 class AuthenticatedVetoableDecisionManagerSpec extends AbstractUnitSpec {
 
-	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager([new AuthenticatedVoter(), new RoleVoter()])
+	protected AccessDecisionVoter UnsupportedVoter = new AccessDecisionVoter(){
+		@Override
+		boolean supports(ConfigAttribute attribute) {
+			return false
+		}
 
+		@Override
+		int vote(Authentication authentication, Object object, Collection collection) {
+			return ACCESS_GRANTED
+		}
+
+		@Override
+		boolean supports(Class clazz) {
+			return clazz.equals(Object.class)
+		}
+	}
+	private AuthenticatedVetoableDecisionManager manager = new AuthenticatedVetoableDecisionManager([new AuthenticatedVoter(), new RoleVoter()])
+	private AuthenticatedVetoableDecisionManager unsupportedVoterManager = new AuthenticatedVetoableDecisionManager([UnsupportedVoter])
 	void 'decide with one role'() {
 		when:
+			
 		manager.decide createAuthentication(['ROLE_USER']), null, createDefinition(['ROLE_USER', 'ROLE_ADMIN'])
 
 		then:
@@ -83,6 +102,19 @@ class AuthenticatedVetoableDecisionManagerSpec extends AbstractUnitSpec {
 
 		then:
 		thrown AccessDeniedException
+	}
+	
+	void 'should succeed with supported object'(){
+		when:
+			unsupportedVoterManager.decide createAuthentication([]), new Object(), createDefinition(['ROLE_USER'])
+		then:
+			notThrown AccessDeniedException
+	}
+	void 'should fail with unsupported object'(){
+		when:
+			unsupportedVoterManager.decide createAuthentication([]), 'not object', createDefinition(['ROLE_USER'])
+		then:
+			thrown AccessDeniedException
 	}
 
 	private Authentication createAuthentication(roleNames) {
