@@ -14,6 +14,7 @@
  */
 package grails.plugin.springsecurity
 
+import grails.web.mapping.LinkGenerator
 import org.springframework.expression.EvaluationContext
 import org.springframework.expression.Expression
 import org.springframework.security.access.expression.ExpressionUtils
@@ -233,23 +234,14 @@ class SecurityTagLib {
 			return ExpressionUtils.evaluateAsBoolean(expression, ctx)
 		}
 
-		String url = attrs.remove('url')
-		if (!url) {
-			String controller = attrs.remove('controller')
-			String mapping = attrs.remove('mapping')
-			if (!controller && !mapping) {
-				throwTagError "Tag [$tagName] requires an expression, a URL, or controller/action/mapping attributes to create a URL"
-			}
-			if (mapping) {
-				url = g.createLink(mapping: mapping)
-			}
-			else {
-				String action = attrs.remove('action')
-				url = g.createLink(controller: controller, action: action, base: '/')
-			}
-		}
+		Map urlAttributes = attrs.subMap(LinkGenerator.LINK_ATTRIBUTES)
 
-		String method = attrs.remove('method') ?: 'GET'
+		if (!urlAttributes) {
+			throwTagError "Tag [$tagName] requires an expression, a URL, or controller/action/mapping attributes to create a URL"
+		}
+		String url = g.createLink(urlAttributes)
+
+		String method = urlAttributes.remove('method') ?: 'GET'
 
 		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
 	}
