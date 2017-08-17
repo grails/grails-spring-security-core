@@ -1070,6 +1070,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">grails.plugin.springsecurity.password.algorithm = 'bcrypt'</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If you are using cxf grails plugin in your app then move the cxf dependency above this plugin i.e.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+    compile 'org.grails.plugins:cxf:3.1.1'
+    // CXF above security.
+    compile 'org.grails.plugins:spring-security-core:3.1.2'
+}</code></pre>
+</div>
+</div>
 </td>
 </tr>
 </table>
@@ -7679,7 +7691,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.0-BUILD-SNAPSHOT<br>
-Last updated 2017-08-17 07:50:07 UTC
+Last updated 2017-08-17 07:51:56 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
