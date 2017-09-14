@@ -1096,7 +1096,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Version 3.x of the plugin requires Grails 3 or higher; to use the plugin in Grails 2 applications use the latest 2.x.x version of the plugin.</p>
 </div>
 <div class="paragraph">
-<p>In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 4 (currently 4.0.3.RELEASE), but the changes required were primarily internal and don&#8217;t affect usage. There are new features in Spring Security 4 however, and the plugin will be updated in future releases to take advantage of those.</p>
+<p>In general, using the Spring Security plugin in Grails 3 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 4 (currently 4.0.3.RELEASE) and while most changes required were primarily internal, minimal usage changes are highlighted below. There are also new features in Spring Security 4, and the plugin will be updated in future releases to take advantage of those.</p>
 </div>
 <div class="paragraph">
 <p>Spring Security 4 changed the default URLs and parameter names for login, logout, switch-user, etc. This is handled by the plugin for you and is usually transparent, but you should be aware of the changes if you want to customize the filters or GSPs:</p>
@@ -1132,6 +1132,10 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p><code>/j_spring_security_exit_user</code> (the <code>switchUser.exitUserUrl</code> config setting) changed to <code>/logout/impersonate</code></p>
 </li>
 </ul>
+</div>
+<div class="paragraph">
+<p>The default role prefix is defined as "ROLE_" and is not configurable for the plugin. This prefix is added automatically when using the <code>hasRole(role)</code> or <code>hasAnyRole([role1,role2])</code> SpEL expressions. Two new methods have been introduced in Spring Security 4.0, <code>hasAuthority([authority])</code> and <code>hasAnyAuthority([authority1,authority2])</code>, which can be used instead when dealing with custom prefix definitions (see <a href="#expressions">Using Expressions</a>).
+</p>
 </div>
 <div class="paragraph">
 <p>Note that the 2.x.x plugin was written primarily in Java, with Groovy used only for dynamic calls, but in version 3 all Java classes were converted to Groovy with the <code>@CompileStatic</code> annotation. Java was used because Spring Security is configured as a chain of servlet filters that fire for every request (including static resources) and the cumulative cost of many small Groovy performance hits can be non-trivial. But with <code>@CompileStatic</code> we get the best of both worlds - Java performance, and Groovy compactness. If you&#8217;re curious you can see these changes <a href="https://github.com/grails-plugins/grails-spring-security-core/commit/da06fa44d8bbea0ff374dd31b1c6b28426bdf7b4">in this GitHub commit</a>.</p>
@@ -2890,6 +2894,14 @@ new Requestmap(url: "/secure/someOtherAction",
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasAnyRole([role1,role2])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the current principal has any of the supplied roles (given as a comma-separated list of strings)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasAuthority([authority])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the current principal has the specified authority.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>hasAnyAuthority([authority1,authority2])</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Returns <code>true</code> if the current principal has any of the supplied roles (given as a comma-separated list of strings)</p></td>
 </tr>
 <tr>
