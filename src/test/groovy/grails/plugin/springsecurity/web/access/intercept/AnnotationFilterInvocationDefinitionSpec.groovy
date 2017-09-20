@@ -63,6 +63,11 @@ class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 		'/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR?x=1')
 	}
 
+	void 'lowercaseAndStringQuerystring removes fragement'() {
+		expect:
+		'/foo/bar' == fid.lowercaseAndStripQuerystring('/foo/BAR#tableOfContents')
+	}
+
 	void 'getAttributes for null arg'() {
 		when:
 		fid.getAttributes null
