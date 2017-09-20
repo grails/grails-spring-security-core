@@ -188,6 +188,11 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 			fixed = fixed.substring(0, firstQuestionMarkIndex)
 		}
 
+		int firstHashtagIndex = fixed.indexOf('#')
+		if (firstHashtagIndex != -1) {
+			fixed = fixed.substring(0, firstHashtagIndex)
+		}
+
 		fixed
 	}
 
