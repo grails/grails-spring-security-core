@@ -99,7 +99,7 @@
 |Whether to eagerly create a session in the `securityContextRepository` bean
 
 |sch.strategyName
-|`SecurityContextHolder.MODE_THREADLOCAL`
+|`SecurityContextHolder.MODE_INHERITABLETHREADLOCAL`
 |The strategy to use for storing the `SecurityContext` - can be one of `MODE_THREADLOCAL`, `MODE_INHERITABLETHREADLOCAL`, or `MODE_GLOBAL`, or the name of a class implementing {apidocs}org/springframework/security/core/context/SecurityContextHolderStrategy.html[SecurityContextHolderStrategy]
 
 |debug.useFilter
