@@ -11,16 +11,16 @@ GEBENV=$1
 if [[ $GEBENV = "" ]]; then
     GEBENV=htmlUnit
 fi
-# /Users/sdelamo/Applications/chromedriver
+# ~/Applications/chromedriver
 CHROMEDRIVER=$2
 if [[ $CHROMEDRIVER = "" ]]; then
-    CHROMEDRIVER=/Users/sdelamo/Applications/chromedriver
+    CHROMEDRIVER=~/Applications/chromedriver
 fi
 
-# /Users/sdelamo/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
+# ~/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
 PHANTOMJSDRIVER=$2
 if [[ $PHANTOMJSDRIVER = "" ]]; then
-    PHANTOMJSDRIVER=/Users/sdelamo/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
+    PHANTOMJSDRIVER=~/Applications/phantomjs-2.1.1-macosx/bin/phantomjs
 fi
 
 echo "GEB environment: $GEBENV"
