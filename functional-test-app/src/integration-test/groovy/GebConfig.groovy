@@ -13,7 +13,7 @@ environments {
 	htmlUnit {
 		driver = { new HtmlUnitDriver() }
 	}
-	// run as 'grails -Dgeb.env=chrome -Dwebdriver.chrome.driver=/Users/sdelamo/Applications/chromedriver test-app'
+	// run as 'grails -Dgeb.env=chrome -Dwebdriver.chrome.driver=~/Applications/chromedriver test-app'
 	// See: http://code.google.com/p/selenium/wiki/ChromeDriver
 	chrome {
 		driver = { new ChromeDriver() }
@@ -23,7 +23,7 @@ environments {
 	firefox {
 		driver = { new FirefoxDriver() }
 	}
-	// run as 'grails -Dgeb.env=phantomJs -Dphantomjs.binary.path=/Users/sdelamo/Applications/phantomjs-2.1.1-macosx/bin/phantomjs test-app'
+	// run as 'grails -Dgeb.env=phantomJs -Dphantomjs.binary.path=~/Applications/phantomjs-2.1.1-macosx/bin/phantomjs test-app'
 	phantomJs {
 		driver = { new PhantomJSDriver(new DesiredCapabilities()) }
 	}
