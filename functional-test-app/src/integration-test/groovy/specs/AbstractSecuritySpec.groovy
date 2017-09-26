@@ -87,7 +87,7 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 
 	protected MessageDigestPasswordEncoder createSha256Encoder() {
 		def passwordEncoder = new MessageDigestPasswordEncoder('SHA-256')
-		passwordEncoder.iterations = 10000
+		passwordEncoder.iterations = 1
 		passwordEncoder
 	}
 }
