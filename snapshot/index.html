@@ -6886,22 +6886,9 @@ class User implements Serializable {
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">import com.mycompany.myapp.UserPasswordEncoderListener
 // Place your Spring DSL code here
 beans = {
-    userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))
+    userPasswordEncoderListener(UserPasswordEncoderListener)
 }</code></pre>
 </div>
-</div>
-<div class="admonitionblock note">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-If you are using a GORM implementation such as <a href="http://gorm.grails.org/latest/mongodb/manual/index.html">MongoDB</a>, you will need to replace
-<code>userPasswordEncoderListener(UserPasswordEncoderListener, ref('hibernateDatastore'))</code> with <code>userPasswordEncoderListener(UserPasswordEncoderListener, ref('mongoDatastore'))</code>
-</td>
-</tr>
-</table>
 </div>
 <div class="listingblock">
 <div class="title"><code>src/main/groovy/com/mycompany/myapp/UserPasswordEncoderListener.groovy</code></div>
@@ -6909,39 +6896,36 @@ If you are using a GORM implementation such as <a href="http://gorm.grails.org/l
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import grails.plugin.springsecurity.SpringSecurityService
-import org.grails.datastore.mapping.core.Datastore
 import org.grails.datastore.mapping.engine.event.AbstractPersistenceEvent
-import org.grails.datastore.mapping.engine.event.AbstractPersistenceEventListener
-import org.grails.datastore.mapping.engine.event.EventType
 import org.grails.datastore.mapping.engine.event.PreInsertEvent
 import org.grails.datastore.mapping.engine.event.PreUpdateEvent
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationEvent
+import grails.events.annotation.gorm.Listener
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class UserPasswordEncoderListener extends AbstractPersistenceEventListener {
+class UserPasswordEncoderListener {
 
     @Autowired
     SpringSecurityService springSecurityService
 
-    UserPasswordEncoderListener(final Datastore datastore) {
-        super(datastore)
+    @Listener(User)
+    void onPreInsertEvent(PreInsertEvent event) {
+        encodePasswordForEvent(event)
     }
 
-    @Override
-    protected void onPersistenceEvent(AbstractPersistenceEvent event) {
+    @Listener(User)
+    void onPreUpdateEvent(PreUpdateEvent event) {
+        encodePasswordForEvent(event)
+    }
+
+    private void encodePasswordForEvent(AbstractPersistenceEvent event) {
         if (event.entityObject instanceof User) {
-            User u = (event.entityObject as User)
-            if (u.password &amp;&amp; (event.eventType == EventType.PreInsert || (event.eventType == EventType.PreUpdate &amp;&amp; u.isDirty('password')))) {
-                event.getEntityAccess().setProperty("password", encodePassword(u.password))
+            User u = event.entityObject as User
+            if (u.password &amp;&amp; ((event instanceof  PreInsertEvent) || (event instanceof PreUpdateEvent &amp;&amp; u.isDirty('password')))) {
+                event.getEntityAccess().setProperty('password', encodePassword(u.password))
             }
         }
-    }
-
-    @Override
-    boolean supportsEventType(Class&lt;? extends ApplicationEvent&gt; eventType) {
-        eventType == PreUpdateEvent || eventType == PreInsertEvent
     }
 
     private String encodePassword(String password) {
@@ -7017,21 +7001,10 @@ class User implements Serializable {
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Service injection in GORM entities is disabled by default since Grails 3.2.8. Because of that, if you want the service <code>springSecurityService</code> to get
-injected in the previous domain class you would need to turn on autowire.
+Service injection in GORM entities is disabled by default since Grails 3.2.8. Read documentation about <a href="http://docs.grails.org/latest/ref/Domain%20Classes/Usage.html#_spring_autowiring_of_domain_instances">Spring Autowiring of Domain Instances</a> to learn how to turn autowire on.
 </td>
 </tr>
 </table>
-</div>
-<div class="listingblock">
-<div class="title"><code>grails-app/conf/application.yml</code></div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-yaml" data-lang="yaml">grails:
-    gorm:
-        # Whether to autowire entities.
-        # Disabled by default for performance reasons.
-        autowire: true</code></pre>
-</div>
 </div>
 <div class="paragraph">
 <p><code>s2-quickstart</code> script generates this Role too:</p>
@@ -7691,7 +7664,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.0-BUILD-SNAPSHOT<br>
-Last updated 2017-09-26 05:22:31 +00:00
+Last updated 2017-09-26 06:47:23 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
