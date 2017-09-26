@@ -1,5 +1,0 @@
-= A simple "Hello, World" demo app
-
-Authenticate as user/password or admin/password. Either can access `/secure/index` and the admin can access `/secure/admin`.
-
-The http://grails.org/plugin/spring-security-appinfo[spring-security-appinfo] plugin is installed, so you can view `/securityInfo/**` if authenticated as admin.

@@ -1,17 +1,11 @@
-grails {
-	plugin {
-		springsecurity {
-			authority.className = 'com.testapp.TestRole'
-			debug.useFilter = true
-			logout.afterLogoutUrl = '/hack/blankPage'
-			password.algorithm = 'SHA-256'
-			requestMap.className = 'com.testapp.TestRequestmap'
-			userLookup {
-				authorityJoinClassName = 'com.testapp.TestUserTestRole'
-				userDomainClassName = 'com.testapp.TestUser'
-			}
-
-			controllerAnnotations.staticRules = [
+grails.plugin.springsecurity.authority.className = 'com.testapp.TestRole'
+grails.plugin.springsecurity.debug.useFilter = true
+grails.plugin.springsecurity.logout.afterLogoutUrl = '/hack/blankPage'
+grails.plugin.springsecurity.password.algorithm = 'SHA-256'
+grails.plugin.springsecurity.requestMap.className = 'com.testapp.TestRequestmap'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'com.testapp.TestUserTestRole'
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.testapp.TestUser'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 				[pattern: '/login/impersonate',  access: 'ROLE_ADMIN'],
 				[pattern: '/logout/impersonate', access: 'permitAll'],
 				[pattern: '/',                   access: 'permitAll'],
@@ -29,8 +23,7 @@ grails {
 				[pattern: '/securityinfo',       access: 'permitAll'],
 				[pattern: '/securityinfo/**',    access: 'permitAll']
 			]
-
-			filterChain.chainMap = [
+grails.plugin.springsecurity.filterChain.chainMap = [
 				[pattern: '/assets/**',      filters: 'none'],
 				[pattern: '/**/js/**',       filters: 'none'],
 				[pattern: '/**/css/**',      filters: 'none'],
@@ -38,9 +31,7 @@ grails {
 				[pattern: '/**/favicon.ico', filters: 'none'],
 				[pattern: '/**',             filters: 'JOINED_FILTERS']
 			]
-		}
-	}
-}
+
 
 String testconfig = System.getProperty('TESTCONFIG')
 switch (testconfig) {

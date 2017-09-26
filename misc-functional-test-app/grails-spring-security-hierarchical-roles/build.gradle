@@ -59,9 +59,8 @@ dependencies {
     testCompile "org.grails:grails-web-testing-support"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    compile project(':spring-security-core')
 }
-
-apply from: '../../gradle/ssc.gradle'
 
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
@@ -73,34 +72,6 @@ assets {
     minifyCss = true
 }
 
-
 integrationTest {
     systemProperties System.properties
 }
-
-task s2Quickstart {
-    ext.commands = ['s2-quickstart demo User Role', 's2-create-role-hierarchy-entry demo.RoleHierarchyEntry']
-    doLast {
-        for ( String cmd : commands ) {
-            def sout = new StringBuilder(), serr = new StringBuilder()
-            def proc = "grails $cmd".execute()
-            proc.consumeProcessOutput(sout, serr)
-            proc.waitForOrKill(20000)
-            println "$sout $serr"
-        }
-    }
-}
-task resetResourcesGroovy {
-    doLast {
-        new File("${project.projectDir}/grails-app/conf/spring/resources.groovy").text = 'beans = {\n}'
-    }
-}
-task deleteS2QuickstartGeneratedFiles {
-    dependsOn 'resetResourcesGroovy'
-    doLast {
-	delete("${project.projectDir}/grails-app/conf/application.groovy")
-	delete("${project.projectDir}/grails-app/domain/demo")
-	delete("${project.projectDir}/src/main")
-    }
-}
-s2Quickstart.mustRunAfter 'deleteS2QuickstartGeneratedFiles'

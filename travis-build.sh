@@ -1,27 +1,108 @@
 #!/usr/bin/env bash
-
 set -e
+
+export EXIT_STATUS=0
+
 echo "TRAVIS_TAG          : $TRAVIS_TAG"
 echo "TRAVIS_BRANCH       : $TRAVIS_BRANCH"
 echo "TRAVIS_PULL_REQUEST : $TRAVIS_PULL_REQUEST"
 echo "Publishing archives for branch $TRAVIS_BRANCH"
 rm -rf build
 
-./run-all-tests.sh
+./gradlew :spring-security-core:clean || EXIT_STATUS=$?
+./gradlew :spring-security-core:check || EXIT_STATUS=$?
 
-EXIT_STATUS=0
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Check failed"
+    exit $EXIT_STATUS
+fi
+
+./gradlew :spring-security-core:install || EXIT_STATUS=$?
+
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Check failed"
+    exit $EXIT_STATUS
+fi
+
+./gradlew :integration-test-app:clean || EXIT_STATUS=$?
+./gradlew :integration-test-app:check || EXIT_STATUS=$?
+
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Integration tests failed"
+    exit $EXIT_STATUS
+fi
+
+./gradlew :misc-functional-test-app/grails-spring-security-group:clean || EXIT_STATUS=$?
+./gradlew :misc-functional-test-app/grails-spring-security-group:check || EXIT_STATUS=$?
+
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security Group failed"
+    exit $EXIT_STATUS
+fi
+
+./gradlew :misc-functional-test-app/grails-spring-security-hierarchical-roles:clean || EXIT_STATUS=$?
+./gradlew :misc-functional-test-app/grails-spring-security-hierarchical-roles:check || EXIT_STATUS=$?
+
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security Group Hierarchical roles failed"
+    exit $EXIT_STATUS
+fi
+
+./gradlew functional-test-app:clean || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - clean failed "
+    exit $EXIT_STATUS
+fi
+
+./gradlew -DTESTCONFIG=static -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:static - check failed "
+    exit $EXIT_STATUS
+fi
+
+./gradlew -DTESTCONFIG=annotation -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:annotation - check failed "
+    exit $EXIT_STATUS
+fi
+
+./gradlew -DTESTCONFIG=requestmap -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:requestmap - check failed "
+    exit $EXIT_STATUS
+fi
+
+./gradlew -DTESTCONFIG=basic -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:basic - check failed "
+    exit $EXIT_STATUS
+fi
+
+./gradlew -DTESTCONFIG=misc -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:misc - check failed "
+    exit $EXIT_STATUS
+fi
+
+./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:bcrypt - check failed "
+    exit $EXIT_STATUS
+fi
+
+
 # Only publish if the branch is on master, and it is not a PR
 if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
   echo "Publishing archives for branch $TRAVIS_BRANCH"
   if [[ -n $TRAVIS_TAG ]]; then
       echo "Pushing build to Bintray"
-      ./gradlew bintrayUpload || EXIT_STATUS=$?
+      ./gradlew :spring-security-core:bintrayUpload || EXIT_STATUS=$?
   else
       echo "Publishing snapshot to OJO"
-      ./gradlew artifactoryPublish || EXIT_STATUS=$?
+      ./gradlew :spring-security-core:artifactoryPublish || EXIT_STATUS=$?
   fi
 
-  ./gradlew docs || EXIT_STATUS=$?
+  ./gradlew :spring-security-core:docs || EXIT_STATUS=$?
 
   git config --global user.name "$GIT_NAME"
   git config --global user.email "$GIT_EMAIL"
@@ -34,11 +115,11 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
   # If this is the master branch then update the snapshot
   if [[ $TRAVIS_BRANCH == 'master' ]]; then
 
-    mv ../build/docs/ghpages.html index.html
+    mv ../plugin/build/docs/ghpages.html index.html
     git add index.html
 
     mkdir -p snapshot
-    cp -r ../build/docs/. ./snapshot/
+    cp -r ../plugin/build/docs/. ./snapshot/
     git add snapshot/*
 
   fi
@@ -47,7 +128,7 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
   if [[ -n $TRAVIS_TAG ]]; then
         git rm -rf latest/
         mkdir -p latest
-        cp -r ../build/docs/. ./latest/
+        cp -r ../plugin/build/docs/. ./latest/
         git add latest/*
 
         version="$TRAVIS_TAG" # eg: v3.0.1
@@ -56,11 +137,11 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
         majorVersion="${majorVersion}x" # 3.0.x
 
         mkdir -p "$version"
-        cp -r ../build/docs/. "./$version/"
+        cp -r ../plugin/build/docs/. "./$version/"
         git add "$version/*"
 
         git rm -rf "$majorVersion"
-        cp -r ../build/docs/. "./$majorVersion/"
+        cp -r ../plugin/build/docs/. "./$majorVersion/"
         git add "$majorVersion/*"
   fi
 
@@ -71,3 +152,7 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
 fi
 
 exit $EXIT_STATUS
+
+
+
+EXIT_STATUS=0

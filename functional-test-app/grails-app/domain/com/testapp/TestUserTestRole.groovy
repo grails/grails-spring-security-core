@@ -2,10 +2,14 @@ package com.testapp
 
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
-import org.codehaus.groovy.util.HashCodeHelper
 
+import org.codehaus.groovy.util.HashCodeHelper
+import grails.compiler.GrailsCompileStatic
+
+@GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)
 class TestUserTestRole implements Serializable {
+
 	private static final long serialVersionUID = 1
 
 	TestUser testUser
@@ -18,14 +22,14 @@ class TestUserTestRole implements Serializable {
 		}
 	}
 
-	@Override
+    @Override
 	int hashCode() {
-		int hashCode = HashCodeHelper.initHash()
-		if (testUser) {
-			hashCode = HashCodeHelper.updateHash(hashCode, testUser.id)
+	    int hashCode = HashCodeHelper.initHash()
+        if (testUser) {
+            hashCode = HashCodeHelper.updateHash(hashCode, testUser.id)
 		}
 		if (testRole) {
-			hashCode = HashCodeHelper.updateHash(hashCode, testRole.id)
+		    hashCode = HashCodeHelper.updateHash(hashCode, testRole.id)
 		}
 		hashCode
 	}
@@ -58,20 +62,19 @@ class TestUserTestRole implements Serializable {
 	}
 
 	static int removeAll(TestUser u) {
-		u ? TestUserTestRole.where { testUser == u }.deleteAll() : 0
+		u == null ? 0 : TestUserTestRole.where { testUser == u }.deleteAll() as int
 	}
 
 	static int removeAll(TestRole r) {
-		r ? TestUserTestRole.where { testRole == r }.deleteAll() : 0
+		r == null ? 0 : TestUserTestRole.where { testRole == r }.deleteAll() as int
 	}
 
 	static constraints = {
-		testRole validator: { TestRole r, TestUserTestRole ur ->
+	    testUser nullable: false
+		testRole nullable: false, validator: { TestRole r, TestUserTestRole ur ->
 			if (ur.testUser?.id) {
-				TestUserTestRole.withNewSession {
-					if (TestUserTestRole.exists(ur.testUser.id, r.id)) {
-						return ['userRole.exists']
-					}
+				if (TestUserTestRole.exists(ur.testUser.id, r.id)) {
+				    return ['userRole.exists']
 				}
 			}
 		}

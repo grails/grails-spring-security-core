@@ -1,0 +1,1 @@
+WARNING: Service injection in GORM entities is disabled by default since Grails 3.2.8. Read documentation about http://docs.grails.org/latest/ref/Domain%20Classes/Usage.html#_spring_autowiring_of_domain_instances[Spring Autowiring of Domain Instances] to learn how to turn autowire on.
