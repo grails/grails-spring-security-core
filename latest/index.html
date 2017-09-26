@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.2.0.M1</span>
+<span id="revnumber">version 3.2.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -587,6 +587,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>Sep 26, 2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.2.0 release</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>May 18, 2017</p>
 <div class="ulist">
@@ -1070,6 +1080,18 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">grails.plugin.springsecurity.password.algorithm = 'bcrypt'</code></pre>
 </div>
 </div>
+<div class="paragraph">
+<p>If you are using cxf grails plugin in your app then move the cxf dependency above this plugin i.e.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
+    compile 'org.grails.plugins:cxf:3.1.1'
+    // CXF above security.
+    compile 'org.grails.plugins:spring-security-core:3.1.2'
+}</code></pre>
+</div>
+</div>
 </td>
 </tr>
 </table>
@@ -1163,7 +1185,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.2.0.M1'
+   compile 'org.grails.plugins:spring-security-core:3.2.0'
    ...</code></pre>
 </div>
 </div>
@@ -5066,6 +5088,19 @@ beans = {
 </tr>
 </tbody>
 </table>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+The bcrypt <code>logrounds</code> and <code>iterations</code> are set to a lower number to improve speed while testing.
+If you rely on them to be higher, set them manually when testing.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="salt">12.2. Salted Passwords</h3>
@@ -6766,7 +6801,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.2.0.M1'
+   compile 'org.grails.plugins:spring-security-core:3.2.0'
    ...
 }</code></pre>
 </div>
@@ -6812,10 +6847,10 @@ $ cd bookstore</pre>
 </table>
 </div>
 <div class="paragraph">
-<p>For Spring Security Core version 6.1.2 or GORM 6.0.10 or later, the script creates this User class:</p>
+<p>If you are using Spring Core version 3.1.2 or later and GORM 6.0.10 or later, the script creates this User class:</p>
 </div>
 <div class="listingblock">
-<div class="title"><code>User.groovy</code></div>
+<div class="title"><code>grails-app/domain/com/mycompany/myapp/User.groovy</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
@@ -6856,44 +6891,51 @@ class User implements Serializable {
 <p>and a password encoder listener to manage password encoding:</p>
 </div>
 <div class="listingblock">
-<div class="title"><code>UserPasswordEncoderListener.groovy</code></div>
+<div class="title"><code>grails-app/conf/spring/resources.groovy</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">import com.mycompany.myapp.UserPasswordEncoderListener
+// Place your Spring DSL code here
+beans = {
+    userPasswordEncoderListener(UserPasswordEncoderListener)
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title"><code>src/main/groovy/com/mycompany/myapp/UserPasswordEncoderListener.groovy</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
 import grails.plugin.springsecurity.SpringSecurityService
-import org.grails.datastore.mapping.core.Datastore
 import org.grails.datastore.mapping.engine.event.AbstractPersistenceEvent
-import org.grails.datastore.mapping.engine.event.AbstractPersistenceEventListener
-import org.grails.datastore.mapping.engine.event.EventType
 import org.grails.datastore.mapping.engine.event.PreInsertEvent
 import org.grails.datastore.mapping.engine.event.PreUpdateEvent
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.ApplicationEvent
+import grails.events.annotation.gorm.Listener
 import groovy.transform.CompileStatic
 
 @CompileStatic
-class UserPasswordEncoderListener extends AbstractPersistenceEventListener {
+class UserPasswordEncoderListener {
 
     @Autowired
     SpringSecurityService springSecurityService
 
-    UserPasswordEncoderListener(final Datastore datastore) {
-        super(datastore)
+    @Listener(User)
+    void onPreInsertEvent(PreInsertEvent event) {
+        encodePasswordForEvent(event)
     }
 
-    @Override
-    protected void onPersistenceEvent(AbstractPersistenceEvent event) {
+    @Listener(User)
+    void onPreUpdateEvent(PreUpdateEvent event) {
+        encodePasswordForEvent(event)
+    }
+
+    private void encodePasswordForEvent(AbstractPersistenceEvent event) {
         if (event.entityObject instanceof User) {
-            User u = (event.entityObject as User)
-            if (u.password &amp;&amp; (event.eventType == EventType.PreInsert || (event.eventType == EventType.PreUpdate &amp;&amp; u.isDirty('password')))) {
-                event.getEntityAccess().setProperty("password", encodePassword(u.password))
+            User u = event.entityObject as User
+            if (u.password &amp;&amp; ((event instanceof  PreInsertEvent) || (event instanceof PreUpdateEvent &amp;&amp; u.isDirty('password')))) {
+                event.getEntityAccess().setProperty('password', encodePassword(u.password))
             }
         }
-    }
-
-    @Override
-    boolean supportsEventType(Class&lt;? extends ApplicationEvent&gt; eventType) {
-        eventType == PreUpdateEvent || eventType == PreInsertEvent
     }
 
     private String encodePassword(String password) {
@@ -6906,7 +6948,7 @@ class UserPasswordEncoderListener extends AbstractPersistenceEventListener {
 <p>Previous versions of the plugin&#8217;s script manage the password encoding directly in domain class:</p>
 </div>
 <div class="listingblock">
-<div class="title"><code>User.groovy</code></div>
+<div class="title"><code>grails-app/domain/com/mycompany/myapp/User.groovy</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">package com.mycompany.myapp
 
@@ -6969,21 +7011,10 @@ class User implements Serializable {
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-Service injection in GORM entities is disabled by default since Grails 3.2.8. Because of that, if you want the service <code>springSecurityService</code> to get
-injected in the previous domain class you would need to turn on autowire.
+Service injection in GORM entities is disabled by default since Grails 3.2.8. Read documentation about <a href="http://docs.grails.org/latest/ref/Domain%20Classes/Usage.html#_spring_autowiring_of_domain_instances">Spring Autowiring of Domain Instances</a> to learn how to turn autowire on.
 </td>
 </tr>
 </table>
-</div>
-<div class="listingblock">
-<div class="title"><code>grails-app/conf/application.yml</code></div>
-<div class="content">
-<pre class="prettyprint highlight"><code class="language-yaml" data-lang="yaml">grails:
-    gorm:
-        # Whether to autowire entities.
-        # Disabled by default for performance reasons.
-        autowire: true</code></pre>
-</div>
 </div>
 <div class="paragraph">
 <p><code>s2-quickstart</code> script generates this Role too:</p>
@@ -7642,8 +7673,8 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.2.0.M1<br>
-Last updated 2017-06-20 08:52:27 UTC
+Version 3.2.0<br>
+Last updated 2017-09-26 08:53:51 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
