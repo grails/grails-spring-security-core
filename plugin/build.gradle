@@ -47,8 +47,8 @@ dependencies {
 		exclude module: 'spring-web'
 	}
 
-	testCompile "org.grails:grails-gorm-testing-support:1.0.0.RC4"
-	testCompile "org.grails:grails-web-testing-support:1.0.0.RC4"
+	testCompile "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
+	testCompile "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
 }
 
 apply from: "${rootProject.projectDir}/gradle/grailsPublish.gradle"
