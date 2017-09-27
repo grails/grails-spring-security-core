@@ -168,14 +168,14 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
 		when:
 		doInThread {
-			assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
+			assert springSecurityService.loggedIn, "should be authenticated in a new thread"
 
 			SpringSecurityUtils.doWithAuth username, {
 				assert springSecurityService.loggedIn
 				assert username == springSecurityService.principal.username
 			}
 
-			assert !springSecurityService.loggedIn, 'should have reset auth'
+			assert springSecurityService.loggedIn, 'should not have reset auth in a new thread'
 		}
 
 		then:
@@ -199,7 +199,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		}
 
 		then:
-		assert !springSecurityService.loggedIn, 'should still be unauthenticated in main thread'
+		assert springSecurityService.loggedIn, 'should still be authenticated in main thread'
 	}
 
 	void 'doWithAuth with a new auth, existing'() {
@@ -214,14 +214,14 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
 		when:
 		doInThread {
-			assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
+			assert springSecurityService.loggedIn, "should appear authenticated in a new thread"
 
 			SpringSecurityUtils.doWithAuth 'other', {
 				assert springSecurityService.loggedIn
 				assert 'other' == springSecurityService.principal.username
 			}
 
-			assert !springSecurityService.loggedIn, 'should have reset auth'
+			assert springSecurityService.loggedIn, 'should not have reset auth'
 		}
 
 		then:
