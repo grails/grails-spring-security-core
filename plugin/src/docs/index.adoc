@@ -52,6 +52,8 @@ include::miscProperties.adoc[]
 
 include::tutorials.adoc[]
 
+include::examples.adoc[]
+
 include::controllerMethods.adoc[]
 
 include::i18n.adoc[]
