@@ -31,7 +31,7 @@ MongoDB is an open source, document-oriented database.
 https://github.com/grails-spring-security-samples/grails-ssc-mongodb
 
 ==== grails-spring-security-params
-A sample Grails App which uses the Spring Security Core Plugin to demonstrate how request parameters may be used to secure an endpoint with the `@Secured` annotation.
+A sample Grails App which uses the Spring Security Core Plugin to demonstrate how to use a closure with the `@Secured` annotation.
 
 https://github.com/grails-spring-security-samples/grails-spring-security-params
 
