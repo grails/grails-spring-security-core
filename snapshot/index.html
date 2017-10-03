@@ -554,22 +554,28 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#usingControllerAnnotations">23.1. Using Controller Annotations to Secure URLs</a></li>
 </ul>
 </li>
-<li><a href="#controllerMethods">24. Controller Methods</a>
+<li><a href="#examples">24. Example Applications</a>
 <ul class="sectlevel2">
-<li><a href="#isloggedin-2">24.1. isLoggedIn</a></li>
-<li><a href="#getprincipal-2">24.2. getPrincipal</a></li>
-<li><a href="#getauthenticateduser">24.3. getAuthenticatedUser</a></li>
+<li><a href="#the-repos">24.1. The Repos</a></li>
+<li><a href="#the-example-apps">24.2. The Example Apps</a></li>
 </ul>
 </li>
-<li><a href="#i18n">25. Internationalization</a></li>
-<li><a href="#scripts">26. Scripts</a>
+<li><a href="#controllerMethods">25. Controller Methods</a>
 <ul class="sectlevel2">
-<li><a href="#s2-quickstart">26.1. s2-quickstart</a></li>
-<li><a href="#s2-create-persistent-token">26.2. s2-create-persistent-token</a></li>
-<li><a href="#s2-create-role-hierarchy-entry">26.3. s2-create-role-hierarchy-entry</a></li>
+<li><a href="#isloggedin-2">25.1. isLoggedIn</a></li>
+<li><a href="#getprincipal-2">25.2. getPrincipal</a></li>
+<li><a href="#getauthenticateduser">25.3. getAuthenticatedUser</a></li>
 </ul>
 </li>
-<li><a href="#debugging">27. Debugging</a></li>
+<li><a href="#i18n">26. Internationalization</a></li>
+<li><a href="#scripts">27. Scripts</a>
+<ul class="sectlevel2">
+<li><a href="#s2-quickstart">27.1. s2-quickstart</a></li>
+<li><a href="#s2-create-persistent-token">27.2. s2-create-persistent-token</a></li>
+<li><a href="#s2-create-role-hierarchy-entry">27.3. s2-create-role-hierarchy-entry</a></li>
+</ul>
+</li>
+<li><a href="#debugging">28. Debugging</a></li>
 </ul>
 </div>
 </div>
@@ -7364,13 +7370,115 @@ class SecureController {
 </div>
 </div>
 <div class="sect1">
-<h2 id="controllerMethods">24. Controller Methods</h2>
+<h2 id="examples">24. Example Applications</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Sometimes the best way to learn is by example. We have an ever-expanding list of example apps created to do just that&#8230;&#8203; help you learn how to utilize the grails-spring-security-core plugin in your current application.</p>
+</div>
+<div class="sect2">
+<h3 id="the-repos">24.1. The Repos</h3>
+<div class="paragraph">
+<p>A comprehensive list of example spring security apps may be found at:</p>
+</div>
+<div class="sect3">
+<h4 id="a-href-https-github-com-grails-spring-security-samples-class-bare-https-github-com-grails-spring-security-samples-a">24.1.1. <a href="https://github.com/grails-spring-security-samples" class="bare">https://github.com/grails-spring-security-samples</a></h4>
+
+</div>
+</div>
+<div class="sect2">
+<h3 id="the-example-apps">24.2. The Example Apps</h3>
+<div class="sect3">
+<h4 id="spring-security-ui">24.2.1. spring-security-ui</h4>
+<div class="paragraph">
+<p>A sample Grails App which uses the Grails Spring Security UI and Spring Security Core Plugins.</p>
+</div>
+<div class="paragraph">
+<p>The Spring Security UI plugin provides CRUD screens and other user management workflows.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/spring-security-ui" class="bare">https://github.com/grails-spring-security-samples/spring-security-ui</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-spring-security-spring-boot-actuators">24.2.2. grails-spring-security-spring-boot-actuators</h4>
+<div class="paragraph">
+<p>A sample Grails App which secures a Spring Boot Actuator endpoint using the Spring Security Core Plugin.</p>
+</div>
+<div class="paragraph">
+<p>Spring Boot Actuators provide ways to monitor the health and performance of your application along with other metadata information.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/grails-spring-security-spring-boot-actuators" class="bare">https://github.com/grails-spring-security-samples/grails-spring-security-spring-boot-actuators</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-ssc-mongodb">24.2.3. grails-ssc-mongodb</h4>
+<div class="paragraph">
+<p>A sample Grails App which uses the Spring Security Core Plugin and MongoDB.</p>
+</div>
+<div class="paragraph">
+<p>MongoDB is an open source, document-oriented database.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/grails-ssc-mongodb" class="bare">https://github.com/grails-spring-security-samples/grails-ssc-mongodb</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-spring-security-params">24.2.4. grails-spring-security-params</h4>
+<div class="paragraph">
+<p>A sample Grails App which uses the Spring Security Core Plugin to demonstrate how to use a closure with the <code>@Secured</code> annotation.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/grails-spring-security-params" class="bare">https://github.com/grails-spring-security-samples/grails-spring-security-params</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-spring-security-group">24.2.5. grails-spring-security-group</h4>
+<div class="paragraph">
+<p>A sample Grails App which uses the Spring Security Core Plugin and Group Authentication as described in the documentation.</p>
+</div>
+<div class="paragraph">
+<p>Rather than granting authorities directly to a “person”, you can create a “group”, map authorities to it, and then map a “person” to that “group”. For applications that have a one or more groups of users who need the same level of access, having one or more “group” instances makes managing changes to access levels easier.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/grails-spring-security-group" class="bare">https://github.com/grails-spring-security-samples/grails-spring-security-group</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-spring-security-hierarchical-roles">24.2.6. grails-spring-security-hierarchical-roles</h4>
+<div class="paragraph">
+<p>A sample Grails App which uses the Spring Security Core Plugin and Hierarchical Roles as described in the documentation.</p>
+</div>
+<div class="paragraph">
+<p>Hierarchical roles are a convenient way to reduce clutter in your request mappings.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/grails-spring-security-hierarchical-roles" class="bare">https://github.com/grails-spring-security-samples/grails-spring-security-hierarchical-roles</a></p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-spring-security-ajax">24.2.7. grails-spring-security-ajax</h4>
+<div class="paragraph">
+<p>A sample Grails App which uses the Spring Security Core Plugin and Ajax Authentication as described in the documentation.</p>
+</div>
+<div class="paragraph">
+<p>The Spring Security Core Plugin supports Ajax logins, but you need to create your own client-side code.</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/grails-spring-security-samples/grails-spring-security-ajax" class="bare">https://github.com/grails-spring-security-samples/grails-spring-security-ajax</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="controllerMethods">25. Controller Methods</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The plugin registers some convenience methods into all controllers in your application. As of version 3.1.0 this is implemented by a trait that is applied to all controllers but was implemented in earlier versions by adding methods to each controller&#8217;s <code>MetaClass</code>. All are accessor methods, so they can be called as methods or properties. They include:</p>
 </div>
 <div class="sect2">
-<h3 id="isloggedin-2">24.1. isLoggedIn</h3>
+<h3 id="isloggedin-2">25.1. isLoggedIn</h3>
 <div class="paragraph">
 <p>Returns <code>true</code> if there is an authenticated user.</p>
 </div>
@@ -7405,7 +7513,7 @@ class SecureController {
 </div>
 </div>
 <div class="sect2">
-<h3 id="getprincipal-2">24.2. getPrincipal</h3>
+<h3 id="getprincipal-2">25.2. getPrincipal</h3>
 <div class="paragraph">
 <p>Retrieves the current authenticated user&#8217;s Principal (a <code>GrailsUser</code> instance unless you&#8217;ve customized this) or <code>null</code> if not authenticated.</p>
 </div>
@@ -7432,7 +7540,7 @@ class SecureController {
 </div>
 </div>
 <div class="sect2">
-<h3 id="getauthenticateduser">24.3. getAuthenticatedUser</h3>
+<h3 id="getauthenticateduser">25.3. getAuthenticatedUser</h3>
 <div class="paragraph">
 <p>Loads the user domain class instance from the database that corresponds to the currently authenticated user, or <code>null</code> if not authenticated. This is the equivalent of adding a dependency injection for <code>springSecurityService</code> and calling <code>PersonDomainClassName.get(springSecurityService.principal.id)</code> (the typical way that this is often done).</p>
 </div>
@@ -7461,7 +7569,7 @@ class SecureController {
 </div>
 </div>
 <div class="sect1">
-<h2 id="i18n">25. Internationalization</h2>
+<h2 id="i18n">26. Internationalization</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>The plugin includes i18n messages in several languages. To customize or translate these, add messages for the following keys to your i18n resource bundle(s) for each exception:</p>
@@ -7561,10 +7669,10 @@ class SecureController {
 </div>
 </div>
 <div class="sect1">
-<h2 id="scripts">26. Scripts</h2>
+<h2 id="scripts">27. Scripts</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="s2-quickstart">26.1. s2-quickstart</h3>
+<h3 id="s2-quickstart">27.1. s2-quickstart</h3>
 <div class="paragraph">
 <div class="title">Purpose</div>
 <p>Creates a user and role class (and optionally a requestmap class) in the specified package.
@@ -7610,7 +7718,7 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 </div>
 <div class="sect2">
-<h3 id="s2-create-persistent-token">26.2. s2-create-persistent-token</h3>
+<h3 id="s2-create-persistent-token">27.2. s2-create-persistent-token</h3>
 <div class="paragraph">
 <div class="title">Purpose</div>
 <p>Creates a persistent token domain class for storing remember-me cookie information in the database. The general format is:</p>
@@ -7632,7 +7740,7 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 </div>
 <div class="sect2">
-<h3 id="s2-create-role-hierarchy-entry">26.3. s2-create-role-hierarchy-entry</h3>
+<h3 id="s2-create-role-hierarchy-entry">27.3. s2-create-role-hierarchy-entry</h3>
 <div class="paragraph">
 <div class="title">Purpose</div>
 <p>Creates a persistent role hierarchy entry domain class for storing role hierarchy information in the database. The general format is:</p>
@@ -7656,7 +7764,7 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 </div>
 </div>
 <div class="sect1">
-<h2 id="debugging">27. Debugging</h2>
+<h2 id="debugging">28. Debugging</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>If you need debug information, you can specify the following entries in logback.groovy:</p>
@@ -7674,7 +7782,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.1-BUILD_SNAPHSOT<br>
-Last updated 2017-09-26 10:32:37 +00:00
+Last updated 2017-10-03 11:27:06 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
