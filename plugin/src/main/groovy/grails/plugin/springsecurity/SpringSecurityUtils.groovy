@@ -459,6 +459,9 @@ final class SpringSecurityUtils {
 			}
 
 			String filters = entry.filters
+			if (filters.toLowerCase() == 'none') {
+				return true
+			}
 			for (item in filters.split(',')) {
 				item = item.toString().trim()
 				if (item.startsWith('-') && item.substring(1) == filterName) {
