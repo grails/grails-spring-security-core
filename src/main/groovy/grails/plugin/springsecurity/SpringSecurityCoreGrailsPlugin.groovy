@@ -158,7 +158,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 		if (!conf || !conf.active) {
 			if (printStatusMessages) {
 				String message = '\n\nSpring Security is disabled, not loading\n\n'
-				log.warn message
+				log.info message
 				println message
 			}
 			return
@@ -168,7 +168,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 
 		if (printStatusMessages) {
 			String message = '\nConfiguring Spring Security Core ...'
-			log.warn message
+			log.info message
 			println message
 		}
 
@@ -632,7 +632,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		if (printStatusMessages) {
 			String message = '... finished configuring Spring Security Core\n'
-			log.warn message
+			log.info message
 			println message
 		}
 	}}
