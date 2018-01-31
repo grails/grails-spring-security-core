@@ -241,6 +241,11 @@ class SecurityTagLib {
 		}
 		String url = g.createLink(urlAttributes)
 
+		String contextPathConfig = grailsApplication.config.get('server.contextPath')
+		if (contextPathConfig && url.startsWith(contextPathConfig)) {
+			url = url.replaceFirst(contextPathConfig, "")
+		}
+
 		String method = urlAttributes.remove('method') ?: 'GET'
 
 		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
