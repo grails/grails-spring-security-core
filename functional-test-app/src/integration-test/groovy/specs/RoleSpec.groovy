@@ -79,7 +79,7 @@ class RoleSpec extends AbstractSecuritySpec {
 		at ShowRolePage
 	}
 
-	@IgnoreIf({ !System.getProperty('geb.env') || System.getProperty('geb.env') == 'htmlUnit' })
+	@IgnoreIf({ !System.getProperty('geb.env') })
 	void 'delete role'() {
 		when:
 		to ListRolePage
