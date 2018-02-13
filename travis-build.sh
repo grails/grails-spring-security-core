@@ -54,37 +54,37 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
     exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=static -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=static -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:static - check failed "
     exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=annotation -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=annotation -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:annotation - check failed "
     exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=requestmap -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=requestmap -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:requestmap - check failed "
     exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=basic -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=basic -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:basic - check failed "
     exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=misc -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=misc -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:misc - check failed "
     exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=htmlUnit functional-test-app:check || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:bcrypt - check failed "
     exit $EXIT_STATUS

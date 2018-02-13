@@ -6,6 +6,7 @@ buildscript {
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
+        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:1.4"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:2.14.2"
     }
 }
@@ -17,6 +18,7 @@ apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"war"
 apply plugin:"org.grails.grails-web"
+apply plugin:"com.energizedwork.webdriver-binaries"
 apply plugin:"asset-pipeline"
 apply plugin:"org.grails.grails-gsp"
 
@@ -53,13 +55,24 @@ dependencies {
     runtime "org.apache.tomcat:tomcat-jdbc"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:2.14.2"
     testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.grails.plugins:geb"
     testCompile "org.grails:grails-web-testing-support"
-    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+    testCompile("org.grails.plugins:geb") {
+        exclude group: 'org.gebish', module: 'geb-core'
+    }
+    testCompile 'org.gebish:geb-core:2.1'
+    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.6.0"
+    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.6.0"
+    testCompile "org.seleniumhq.selenium:selenium-remote-driver:3.6.0"
+    testCompile "org.seleniumhq.selenium:selenium-api:3.6.0"
+    testCompile "org.seleniumhq.selenium:selenium-support:3.6.0"
     compile project(':spring-security-core')
 }
-apply from: "${rootProject.projectDir}/gradle/geb.gradle"
+
+webdriverBinaries {
+    chromedriver '2.34'
+    geckodriver '0.18.0'
+}
+
 apply from: "${rootProject.projectDir}/gradle/integrationTest.gradle"
 
 bootRun {
