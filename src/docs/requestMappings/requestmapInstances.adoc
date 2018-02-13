@@ -31,6 +31,7 @@ new Requestmap(url: '/admin/user/**',
                configAttribute: 'ROLE_ADMIN,ROLE_SUPERVISOR').save()
 new Requestmap(url: '/login/impersonate',
                configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save()
+springSecurityService.clearCachedRequestmaps()
 ----
 
 The `configAttribute` value can have a single value or have multiple comma-delimited values. In this example only users with `ROLE_ADMIN` or `ROLE_SUPERVISOR` can access `/admin/user/pass:[**]` urls, and only users with `ROLE_SWITCH_USER` can access the switch-user url (`/login/impersonate`) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining `IS_AUTHENTICATED_FULLY`, `IS_AUTHENTICATED_REMEMBERED`, or `IS_AUTHENTICATED_ANONYMOUSLY` (or their corresponding SpEL expressions) with one or more roles means the user must have one of the roles and satisty the `IS_AUTHENTICATED` rule.

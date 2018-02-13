@@ -95,6 +95,7 @@ for (String url in [
       '/logout', '/logout.*', '/logout/*']) {
    new Requestmap(url: url, configAttribute: 'permitAll').save()
 }
+springSecurityService.clearCachedRequestmaps()
 ----
 
 The analogous interceptUrlMap settings would be:
