@@ -2396,7 +2396,8 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = true</code></pre>
       '/login', '/login.*', '/login/*',
       '/logout', '/logout.*', '/logout/*']) {
    new Requestmap(url: url, configAttribute: 'permitAll').save()
-}</code></pre>
+}
+springSecurityService.clearCachedRequestmaps()</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2800,7 +2801,8 @@ new Requestmap(url: '/admin/role/**', configAttribute: 'ROLE_SUPERVISOR').save()
 new Requestmap(url: '/admin/user/**',
                configAttribute: 'ROLE_ADMIN,ROLE_SUPERVISOR').save()
 new Requestmap(url: '/login/impersonate',
-               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save()</code></pre>
+               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save()
+springSecurityService.clearCachedRequestmaps()</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -7782,7 +7784,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.1-BUILD_SNAPHSOT<br>
-Last updated 2018-02-13 11:33:06 +00:00
+Last updated 2018-02-13 11:50:48 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
