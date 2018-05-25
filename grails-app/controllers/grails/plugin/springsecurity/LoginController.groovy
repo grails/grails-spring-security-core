@@ -25,6 +25,7 @@ import org.springframework.security.authentication.LockedException
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.WebAttributes
+import org.springframework.security.web.authentication.session.SessionAuthenticationException
 
 import javax.servlet.http.HttpServletResponse
 
@@ -111,6 +112,8 @@ class LoginController {
                 msg = messageSource.getMessage('springSecurity.errors.login.disabled', null, "Account Disabled", request.locale)
             } else if (exception instanceof LockedException) {
                 msg = messageSource.getMessage('springSecurity.errors.login.locked', null, "Account Locked", request.locale)
+            } else if (exception instanceof SessionAuthenticationException) {
+                msg = messageSource.getMessage('springSecurity.errors.login.max.sessions.exceeded', null, "Sorry, you have exceeded your maximum number of open sessions.", request.locale)
             } else {
                 msg = messageSource.getMessage('springSecurity.errors.login.fail', null, "Authentication Failure", request.locale)
             }
