@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import grails.config.Config
+import grails.core.support.GrailsConfigurationAware
 import grails.web.mapping.LinkGenerator
 import org.springframework.expression.EvaluationContext
 import org.springframework.expression.Expression
@@ -30,9 +32,11 @@ import javax.servlet.FilterChain
  *
  * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
  */
-class SecurityTagLib {
+class SecurityTagLib implements GrailsConfigurationAware {
 
 	static namespace = 'sec'
+
+	String serverContextPath
 
 	/** Dependency injection for springSecurityService. */
 	def springSecurityService
@@ -239,16 +243,21 @@ class SecurityTagLib {
 		if (!urlAttributes) {
 			throwTagError "Tag [$tagName] requires an expression, a URL, or controller/action/mapping attributes to create a URL"
 		}
-		String url = g.createLink(urlAttributes)
-
-		String contextPathConfig = grailsApplication.config.get('server.contextPath')
-		if (contextPathConfig && url.startsWith(contextPathConfig)) {
-			url = url.replaceFirst(contextPathConfig, "")
-		}
+		String url = determineUrl(urlAttributes)
 
 		String method = urlAttributes.remove('method') ?: 'GET'
 
 		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
+	}
+
+	private String determineUrl(Map urlAttributes) {
+		String url = g.createLink(urlAttributes)
+
+		String contextPathConfig = serverContextPath ?: request.contextPath
+		if (contextPathConfig && url.startsWith(contextPathConfig)) {
+			url = url.replaceFirst(contextPathConfig, "")
+		}
+		return url
 	}
 
 	protected assertAttribute(String name, attrs, String tag) {
@@ -276,5 +285,10 @@ class SecurityTagLib {
 			expressionCache[text] = expression = webExpressionHandler.expressionParser.parseExpression(text)
 		}
 		expression
+	}
+
+	@Override
+	void setConfiguration(Config co) {
+		serverContextPath = co.getProperty('server.contextPath', String, null)
 	}
 }
