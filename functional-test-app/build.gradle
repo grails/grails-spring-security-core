@@ -69,8 +69,8 @@ dependencies {
 }
 
 webdriverBinaries {
-    chromedriver '2.34'
-    geckodriver '0.18.0'
+    chromedriver '2.38'
+    geckodriver '0.20.0'
 }
 
 apply from: "${rootProject.projectDir}/gradle/integrationTest.gradle"
@@ -84,3 +84,16 @@ assets {
     minifyJs = true
     minifyCss = true
 }
+
+// Uncomment the following to cause Gradle to output more information to stdout for test failures.
+// This may be useful when debugging test failures on Travis
+//tasks.withType(Test) {
+//    systemProperty "geb.env", System.getProperty('geb.env')
+//    systemProperty "geb.build.reportsDir", reporting.file("reportes")
+//
+//    beforeTest { descriptor -> logger.quiet " -- $descriptor" }
+//    testLogging {
+//        events "passed", "skipped", "failed"
+//        exceptionFormat 'full'
+//    }
+//}
