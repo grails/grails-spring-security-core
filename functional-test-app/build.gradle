@@ -59,12 +59,12 @@ dependencies {
     testCompile("org.grails.plugins:geb") {
         exclude group: 'org.gebish', module: 'geb-core'
     }
-    testCompile 'org.gebish:geb-core:2.1'
-    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:3.6.0"
-    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:3.6.0"
-    testCompile "org.seleniumhq.selenium:selenium-remote-driver:3.6.0"
-    testCompile "org.seleniumhq.selenium:selenium-api:3.6.0"
-    testCompile "org.seleniumhq.selenium:selenium-support:3.6.0"
+    testCompile "org.gebish:geb-core:$gebVersion"
+    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
+    testCompile "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
+    testCompile "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
+    testCompile "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     compile project(':spring-security-core')
 }
 
