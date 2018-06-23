@@ -69,8 +69,8 @@ dependencies {
 }
 
 webdriverBinaries {
-    chromedriver '2.34'
-    geckodriver '0.18.0'
+    chromedriver '2.40'
+    geckodriver '0.21.0'
 }
 
 apply from: "${rootProject.projectDir}/gradle/integrationTest.gradle"
