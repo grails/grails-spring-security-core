@@ -99,7 +99,7 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
       ./gradlew :spring-security-core:bintrayUpload || EXIT_STATUS=$?
   else
       echo "Publishing snapshot to OJO"
-      # ./gradlew :spring-security-core:artifactoryPublish || EXIT_STATUS=$?
+      ./gradlew :spring-security-core:artifactoryPublish || EXIT_STATUS=$?
   fi
 
   ./gradlew :spring-security-core:docs || EXIT_STATUS=$?
