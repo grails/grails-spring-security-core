@@ -43,6 +43,21 @@ dependencies {
 
 NOTE: Version 3.2.x is only compatible with Grails 3.3.x or higher.
 
+Snapshots are published automatically to https://oss.jfrog.org/[Artifactory OSS] on every successful build. To use them:
+
+[source,groovy]
+[subs="attributes"]
+.`build.gradle`
+----
+repositories {
+  ...
+  maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
+}
+dependencies {
+   ...
+   compile 'org.grails.plugins:spring-security-core:{snapshotversion}'
+   ...
+----
 
 ==== Grails 3.0.x, 3.1.x, 3.2.x
 
