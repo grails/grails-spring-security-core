@@ -594,6 +594,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="ulist">
 <ul>
 <li>
+<p>Feb 13, 2017</p>
+<div class="ulist">
+<ul>
+<li>
+<p>3.2.1 release</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
 <p>Sep 26, 2017</p>
 <div class="ulist">
 <ul>
@@ -1183,6 +1193,8 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </div>
 <div class="sect2">
 <h3 id="installation">2.1. Installation</h3>
+<div class="sect3">
+<h4 id="grails-3-3-x">2.1.1. Grails 3.3.x</h4>
 <div class="paragraph">
 <p>The &#8220;installation&#8221; process has changed in version 3+ of the plugin, but they&#8217;re the same as for any Grails 3 plugin. Simply add an entry in the <code>dependencies</code> block of your <code>build.gradle</code> file, changing the version as needed:</p>
 </div>
@@ -1191,7 +1203,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.2.2.BUILD-SNAPSHOT'
+   compile 'org.grails.plugins:spring-security-core:3.2.1'
    ...</code></pre>
 </div>
 </div>
@@ -1208,6 +1220,25 @@ Version 3.2.x is only compatible with Grails 3.3.x or higher.
 </table>
 </div>
 <div class="paragraph">
+<p>Snapshots are published automatically to <a href="https://oss.jfrog.org/">Artifactory OSS</a> on every successful build. To use them:</p>
+</div>
+<div class="listingblock">
+<div class="title"><code>build.gradle</code></div>
+<div class="content">
+<pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">repositories {
+  ...
+  maven { url "https://oss.jfrog.org/artifactory/oss-snapshot-local" }
+}
+dependencies {
+   ...
+   compile 'org.grails.plugins:spring-security-core:3.2.2.BUILD-SNAPSHOT'
+   ...</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="grails-3-0-x-3-1-x-3-2-x">2.1.2. Grails 3.0.x, 3.1.x, 3.2.x</h4>
+<div class="paragraph">
 <p>For previous Grails 3 versions ( 3.0.x, 3.1.x and 3.2.x ) use:</p>
 </div>
 <div class="listingblock">
@@ -1221,6 +1252,7 @@ Version 3.2.x is only compatible with Grails 3.3.x or higher.
 </div>
 <div class="paragraph">
 <p>Run the <a href="#s2-quickstart">s2-quickstart</a> script to generate domain classes and add the initial configuration settings in <code>application.groovy</code>.</p>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -7784,7 +7816,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.2.BUILD-SNAPSHOT<br>
-Last updated 2018-06-24 14:23:52 +00:00
+Last updated 2018-06-24 15:28:22 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
