@@ -12,7 +12,19 @@ buildscript {
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
+String versionTxt = file("${rootProject.projectDir}/version.txt").text.trim()
+String stableversion = ''
+String[] arr = versionTxt.tokenize('.')
+int mayor = arr[0] as int
+int minor = arr[1] as int
+int patch = arr[2] as int
+if (versionTxt.endsWith('SNAPSHOT')) {
+    stableversion = "${mayor}.${minor}.${(patch-1)}".toString()
+} else {
+    stableversion = versionTxt
+}
 def asciidoctorAttributes = [
+        stableversion       : stableversion,
         copyright           : 'Apache License, Version 2.0',
         docinfo1            : 'true',
         doctype             : 'book',

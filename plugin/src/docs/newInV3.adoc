@@ -27,6 +27,8 @@ There are a few breaking configuration changes as of version 3.0.0.M2. Prior to 
 
 === Installation
 
+==== Grails 3.3.x
+
 The "`installation`" process has changed in version 3+ of the plugin, but they're the same as for any Grails 3 plugin. Simply add an entry in the `dependencies` block of your `build.gradle` file, changing the version as needed:
 
 [source,groovy]
@@ -35,11 +37,14 @@ The "`installation`" process has changed in version 3+ of the plugin, but they'r
 ----
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:{project-version}'
+   compile 'org.grails.plugins:spring-security-core:{stableversion}'
    ...
 ----
 
 NOTE: Version 3.2.x is only compatible with Grails 3.3.x or higher.
+
+
+==== Grails 3.0.x, 3.1.x, 3.2.x
 
 For previous Grails 3 versions ( 3.0.x, 3.1.x and 3.2.x ) use:
 
