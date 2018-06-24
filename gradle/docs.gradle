@@ -165,12 +165,14 @@ task asciidoc(type: AsciidoctorTask, description: 'Generates single-page HTML, P
 }
 
 task asciidocMobi(type: AsciidoctorTask, description: 'Generates MOBI for Kindle', dependsOn: chmodXKindlegen) {
+    group 'documentation'
     backends 'epub3'
     attributes(['ebook-format': 'kf8'] + asciidoctorAttributes)
     mustRunAfter asciidoc
 }
 
 task docs(dependsOn: [asciidoc]) {
+    group 'documentation'
     doLast {
         File dir = new File(buildDir, 'docs')
         ['epub', 'mobi', 'pdf'].each { String ext ->
@@ -191,5 +193,6 @@ task docs(dependsOn: [asciidoc]) {
 }
 
 task docsMobi(dependsOn: [asciidoc, asciidocMobi]) {
+    group 'documentation'
     finalizedBy docs
 }
