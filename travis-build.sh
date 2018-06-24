@@ -98,8 +98,11 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
       echo "Pushing build to Bintray"
       ./gradlew :spring-security-core:bintrayUpload || EXIT_STATUS=$?
   else
-      echo "Publishing snapshot to OJO"
-      ./gradlew :spring-security-core:artifactoryPublish || EXIT_STATUS=$?
+      pluginversion=$(<version.txt)
+      if [[ $pluginversion = *"BUILD-SNAPSHOT"* ]]; then
+        echo "Publishing snapshot to OJO"
+        ./gradlew :spring-security-core:artifactoryPublish || EXIT_STATUS=$?
+      fi
   fi
 
   ./gradlew :spring-security-core:docs || EXIT_STATUS=$?
