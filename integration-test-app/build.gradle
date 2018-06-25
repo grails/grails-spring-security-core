@@ -19,6 +19,4 @@ dependencies {
 	compile 'org.grails.plugins:hibernate'
 }
 
-integrationTest {
-	beforeTest { descriptor -> logger.quiet " -- $descriptor" }
-}
+apply from: '../gradle/integrationTest.gradle'

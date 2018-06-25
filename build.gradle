@@ -24,3 +24,5 @@ dependencies {
 		exclude module: 'spring-web'
 	}
 }
+
+apply from: "${rootProject.projectDir}/gradle/integrationTest.gradle"

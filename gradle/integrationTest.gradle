@@ -1,8 +1,21 @@
-integrationTest {
+tasks.withType(Test) {
     systemProperty "geb.build.reportsDir", reporting.file("${project.projectDir}/build/geb-reports")
     systemProperties System.properties
+    testLogging {
+        exceptionFormat = 'full'
+        events "standardOut", "started", "passed", "skipped", "failed"
+        afterSuite { desc, result ->
+            // Match the outermost suite
+            if (!desc.parent) {
+                println "Tests run: ${result.testCount}, Failures: ${result.failedTestCount}, Skipped: ${result.skippedTestCount}"
+            }
+        }
+    }
     doFirst {
         logger.quiet "\n - Running tests for configuration ${System.getProperty('TESTCONFIG')} with GEB: ${System.getProperty('geb.env')} and Grails $grailsVersion"
     }
     beforeTest { descriptor -> logger.quiet " -- $descriptor" }
+
+    reports.html.enabled = !System.getenv("TRAVIS")
+    reports.junitXml.enabled = !System.getenv("TRAVIS")
 }
