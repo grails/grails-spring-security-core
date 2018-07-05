@@ -28,6 +28,7 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
+import org.springframework.web.filter.HttpPutFormContentFilter
 import test.TestRole
 import test.TestUser
 import test.TestUserRole
@@ -82,7 +83,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		def map = SpringSecurityUtils.configuredOrderedFilters
 
 		expect:
-		9 == map.size()
+		10 == map.size()
 		map[Integer.MIN_VALUE + 10] instanceof SecurityRequestHolderFilter
 		map[300] instanceof SecurityContextPersistenceFilter
 		map[400] instanceof MutableLogoutFilter
@@ -90,8 +91,9 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		map[1400] instanceof SecurityContextHolderAwareRequestFilter
 		map[1500] instanceof GrailsRememberMeAuthenticationFilter
 		map[1600] instanceof GrailsAnonymousAuthenticationFilter
-		map[1800] instanceof ExceptionTranslationFilter
-		map[1900] instanceof FilterSecurityInterceptor
+		map[1800] instanceof HttpPutFormContentFilter
+		map[1900] instanceof ExceptionTranslationFilter
+		map[2000] instanceof FilterSecurityInterceptor
 
 		when:
 		SpringSecurityUtils.clientRegisterFilter 'foo', SecurityFilterPosition.LOGOUT_FILTER
@@ -118,7 +120,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', SecurityFilterPosition.LOGOUT_FILTER.order + 10
 
 		then:
-		10 == map.size()
+		11 == map.size()
 		map[410] instanceof DummyFilter
 
 		when:
@@ -133,8 +135,9 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		filters[5] instanceof SecurityContextHolderAwareRequestFilter
 		filters[6] instanceof GrailsRememberMeAuthenticationFilter
 		filters[7] instanceof GrailsAnonymousAuthenticationFilter
-		filters[8] instanceof ExceptionTranslationFilter
-		filters[9] instanceof FilterSecurityInterceptor
+		filters[8] instanceof HttpPutFormContentFilter
+		filters[9] instanceof ExceptionTranslationFilter
+		filters[10] instanceof FilterSecurityInterceptor
 	}
 
 	void 'reauthenticate'() {

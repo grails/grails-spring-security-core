@@ -60,6 +60,7 @@ dependencies {
         exclude group: 'org.gebish', module: 'geb-core'
     }
     testCompile "org.gebish:geb-core:$gebVersion"
+    testCompile "org.grails:grails-datastore-rest-client:5.0.0.RC2"
     testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
     testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
     testCompile "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
