@@ -2,6 +2,7 @@ package specs
 
 import grails.plugins.rest.client.RestBuilder
 import grails.plugins.rest.client.RestResponse
+import groovy.util.logging.Commons
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory
@@ -9,9 +10,14 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 
+@Commons
 class TestFormParamsSpec extends AbstractSecuritySpec {
     @Value('${local.server.port}')
     Integer serverPort
+
+    @Value('${browser.baseUrl ?:localhost}')
+    String browserBaseUrl
+
     private final String USERNAME = "Admin"
     private final String PASSWORD = "myPassword"
 
@@ -20,11 +26,14 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.put("http://${browserBaseUrl}:${serverPort}/testFormParams") {
             contentType("application/x-www-form-urlencoded")
         }
 
         then: "the controller responds with the correct status and parameters are null"
+        log.error "STATUS: ${response.status}"
+        log.error "TEXT: ${response.text}"
+        log.error "BASE URL: ${browserBaseUrl}"
         response.status == HttpStatus.OK.value()
         response.text == "username: null, password: null"
     }
