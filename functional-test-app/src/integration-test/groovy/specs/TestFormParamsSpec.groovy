@@ -20,7 +20,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://127.0.0.1:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -34,7 +34,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://127.0.0.1:${serverPort}/testFormParams?username=${USERNAME}&password=${PASSWORD}") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams?username=${USERNAME}&password=${PASSWORD}") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -53,7 +53,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         form.add("password", PASSWORD)
 
         when: "A PUT request with form params is made"
-        RestResponse response = restBuilder.put("http://127.0.0.1:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams") {
             contentType("application/x-www-form-urlencoded")
             body(form)
         }
@@ -70,7 +70,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder(restTemplate)
 
         when: "A PATCH request with no parameters is made"
-        RestResponse response = restBuilder.patch("http://127.0.0.1:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -86,7 +86,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder(restTemplate)
 
         when: "A PATCH request with no parameters is made"
-        RestResponse response = restBuilder.patch("http://127.0.0.1:${serverPort}/testFormParams?username=${USERNAME}&password=${PASSWORD}") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams?username=${USERNAME}&password=${PASSWORD}") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -107,7 +107,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         form.add("password", PASSWORD)
 
         when: "A PATCH request with form params is made"
-        RestResponse response = restBuilder.patch("http://127.0.0.1:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams") {
             contentType("application/x-www-form-urlencoded")
             body(form)
         }
