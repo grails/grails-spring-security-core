@@ -124,6 +124,7 @@ import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.security.web.session.HttpSessionEventPublisher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
+import org.springframework.web.filter.HttpPutFormContentFilter
 
 import javax.servlet.DispatcherType
 
@@ -635,6 +636,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 			log.info message
 			println message
 		}
+
+		httpPutFormContentFilter(classFor('httpPutFormContentFilter', HttpPutFormContentFilter))
 	}}
 
 	void doWithApplicationContext() {
