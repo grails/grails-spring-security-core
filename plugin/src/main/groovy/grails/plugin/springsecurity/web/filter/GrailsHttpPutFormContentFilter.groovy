@@ -34,8 +34,8 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
             requestCache.saveRequest request, response
         }
 
-        if (("PUT".equals(request.getMethod()) || "PATCH".equals(request.getMethod())) && isFormContentType(request)) {
-            GrailsWebRequest grailsWebRequest = WebUtils.retrieveGrailsWebRequest()
+        GrailsWebRequest grailsWebRequest = WebUtils.retrieveGrailsWebRequest()
+        if (isPutOrPatchRequest(grailsWebRequest) && isFormContentType(request)) {
             Map grailsParameterMap = grailsWebRequest.parameterMap
 
             MultiValueMap<String, String> formParameters = new LinkedMultiValueMap(grailsParameterMap?.size() ?: 0)
@@ -51,18 +51,35 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
         }
     }
 
+    private boolean isPutOrPatchRequest(GrailsWebRequest grailsWebRequest) {
+        return isRequestMethodPutOrPatch(grailsWebRequest) && !isFormParameterPutOrPatch(grailsWebRequest)
+    }
+
+    /**
+     * Checks to see if a form was used to tunnel the PUT HTTP method through a form POST.  If true, this filter will not process filter the request.
+     * @param grailsWebRequest
+     * @return true if a form was used to tunnel the PUT method
+     */
+    private boolean isFormParameterPutOrPatch(GrailsWebRequest grailsWebRequest) {
+        return grailsWebRequest.parameterMap[('_method')] in ['PUT', 'PATCH']
+    }
+
+    private boolean isRequestMethodPutOrPatch(GrailsWebRequest grailsWebRequest) {
+        return grailsWebRequest.httpMethod.name() in ['PUT', 'PATCH']
+    }
+
     private boolean isFormContentType(HttpServletRequest request) {
-        String contentType = request.getContentType();
+        String contentType = request.contentType
         if (contentType != null) {
             try {
-                MediaType mediaType = MediaType.parseMediaType(contentType);
-                return (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType));
+                MediaType mediaType = MediaType.parseMediaType(contentType)
+                return (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType))
             }
             catch (IllegalArgumentException ex) {
-                return false;
+                return false
             }
         } else {
-            return false;
+            return false
         }
     }
 
