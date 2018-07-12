@@ -68,6 +68,12 @@ switch (testconfig) {
 		grails.web.url.converter = 'hyphenated'
 		break
 
+	case 'putWithParams':
+		grails.plugin.springsecurity.filterChain.chainMap = [
+				[pattern: '/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter']
+		]
+		break
+
 	case 'requestmap':
 		grails.plugin.springsecurity.securityConfigType = 'Requestmap'
 		break

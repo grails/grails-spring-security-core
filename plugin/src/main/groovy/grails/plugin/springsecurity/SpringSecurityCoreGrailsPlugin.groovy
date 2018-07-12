@@ -53,6 +53,7 @@ import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistent
 import grails.plugin.springsecurity.web.authentication.switchuser.NullSwitchUserAuthorityChanger
 import grails.plugin.springsecurity.web.filter.DebugFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsHttpPutFormContentFilter
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.IpAddressFilter
 import grails.plugins.Plugin
@@ -124,7 +125,6 @@ import org.springframework.security.web.savedrequest.NullRequestCache
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.security.web.session.HttpSessionEventPublisher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
-import org.springframework.web.filter.HttpPutFormContentFilter
 
 import javax.servlet.DispatcherType
 
@@ -637,7 +637,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			println message
 		}
 
-		httpPutFormContentFilter(classFor('httpPutFormContentFilter', HttpPutFormContentFilter))
+		httpPutFormContentFilter(classFor('httpPutFormContentFilter', GrailsHttpPutFormContentFilter), ref('requestCache'))
 	}}
 
 	void doWithApplicationContext() {

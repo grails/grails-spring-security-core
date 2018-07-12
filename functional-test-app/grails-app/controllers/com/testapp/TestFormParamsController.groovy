@@ -2,20 +2,24 @@ package com.testapp
 
 import grails.plugin.springsecurity.annotation.Secured
 import grails.validation.Validateable
-import org.springframework.web.bind.annotation.PutMapping
 
 /**
- * This controller is used to verify that parameters on PUT and PATCH requests are available
+ * This controller is used to verify that form parameters on PUT and PATCH requests are available
  */
-@Secured(['permitAll'])
 class TestFormParamsController {
 
     static allowedMethods = [
-            index: ["PUT", "PATCH"]
+            permitAll  : ["PUT", "PATCH"],
+            permitAdmin: ["PUT", "PATCH"]
     ]
 
-    @PutMapping
-    def index(TestFormCommand cmd) {
+    @Secured(['permitAll'])
+    def permitAll(TestFormCommand cmd) {
+        render "username: ${cmd.username}, password: ${cmd.password}"
+    }
+
+    @Secured(['ROLE_ADMIN'])
+    def permitAdmin(TestFormCommand cmd) {
         render "username: ${cmd.username}, password: ${cmd.password}"
     }
 }

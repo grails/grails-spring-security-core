@@ -9,9 +9,16 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.client.RestTemplate
 import spock.lang.IgnoreIf
+import spock.lang.Issue
 
+/**
+ * Please note, these tests utilize the filterChain.chainMap pattern of:
+ * [pattern: '/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter']
+ */
 @IgnoreIf({ System.getProperty('TESTCONFIG') == 'requestmap' })
-class TestFormParamsSpec extends AbstractSecuritySpec {
+@Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
+class TestFormParamsControllerSpec extends AbstractSecuritySpec {
+
     @Value('${local.server.port}')
     Integer serverPort
     private final String USERNAME = "Admin"
@@ -22,7 +29,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -36,7 +43,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams?username=${USERNAME}&password=${PASSWORD}") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -55,7 +62,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         form.add("password", PASSWORD)
 
         when: "A PUT request with form params is made"
-        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll") {
             contentType("application/x-www-form-urlencoded")
             body(form)
         }
@@ -72,7 +79,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder(restTemplate)
 
         when: "A PATCH request with no parameters is made"
-        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -88,7 +95,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder(restTemplate)
 
         when: "A PATCH request with no parameters is made"
-        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams?username=${USERNAME}&password=${PASSWORD}") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}") {
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -109,7 +116,7 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         form.add("password", PASSWORD)
 
         when: "A PATCH request with form params is made"
-        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll") {
             contentType("application/x-www-form-urlencoded")
             body(form)
         }
@@ -117,6 +124,46 @@ class TestFormParamsSpec extends AbstractSecuritySpec {
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK.value()
         response.text == "username: ${USERNAME}, password: ${PASSWORD}"
+    }
+
+    void 'PUT request to secured endpoint with parameters as x-www-form-urlencoded'() {
+        given: "a RestBuilder"
+        RestBuilder restBuilder = new RestBuilder()
+
+        and: "a form with username and password params"
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>()
+        form.add("username", USERNAME)
+        form.add("password", PASSWORD)
+
+        when: "A PUT request with form params is made to a secured endpoint"
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAdmin") {
+            contentType("application/x-www-form-urlencoded")
+            body(form)
+        }
+
+        then: "the request is not processed by the controller"
+        response.status == HttpStatus.INTERNAL_SERVER_ERROR.value()
+    }
+
+    void 'PATCH request to secured endpoint with parameters as x-www-form-urlencoded'() {
+        given: "An HTTP client that supports PATCH requests"
+        RestTemplate restTemplate = new RestTemplate()
+        restTemplate.requestFactory = new HttpComponentsClientHttpRequestFactory()
+        RestBuilder restBuilder = new RestBuilder(restTemplate)
+
+        and: "a form with username and password params"
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>()
+        form.add("username", USERNAME)
+        form.add("password", PASSWORD)
+
+        when: "A PATCH request with form params is made to a secured endpoint"
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAdmin") {
+            contentType("application/x-www-form-urlencoded")
+            body(form)
+        }
+
+        then: "the request is not processed by the controller"
+        response.status == HttpStatus.INTERNAL_SERVER_ERROR.value()
     }
 
 }

@@ -84,6 +84,12 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
     exit $EXIT_STATUS
 fi
 
+./gradlew -DTESTCONFIG=putWithParams -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:putWithParams - check failed "
+    exit $EXIT_STATUS
+fi
+
 ./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Functional tests for Spring Security - TESTCONFIG:bcrypt - check failed "
