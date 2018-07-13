@@ -32,7 +32,6 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
                 formParameters.add((String) k, (String) v)
             }
 
-            // create the wrapper before reading it and shit
             HttpServletRequest wrapper = new HttpPutFormContentRequestWrapper(request, formParameters)
             filterChain.doFilter(wrapper, response)
         } else {
