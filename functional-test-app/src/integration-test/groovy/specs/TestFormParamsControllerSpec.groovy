@@ -15,7 +15,7 @@ import spock.lang.Issue
  * Please note, these tests utilize the filterChain.chainMap pattern of:
  * [pattern: '/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter']
  */
-@IgnoreIf({ System.getProperty('TESTCONFIG') != 'putWithParams' })
+@IgnoreIf({ System.getProperty('TESTCONFIG') == 'requestmap' })
 @Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
 class TestFormParamsControllerSpec extends AbstractSecuritySpec {
 
