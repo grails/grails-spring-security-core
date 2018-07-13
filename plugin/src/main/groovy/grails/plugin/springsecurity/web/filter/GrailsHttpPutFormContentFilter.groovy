@@ -5,7 +5,6 @@ import groovy.util.logging.Slf4j
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.MediaType
-import org.springframework.security.web.savedrequest.RequestCache
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import org.springframework.web.filter.HttpPutFormContentFilter
@@ -20,19 +19,9 @@ import javax.servlet.http.HttpServletResponse
 @CompileStatic
 class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
 
-    protected RequestCache requestCache
-
-    GrailsHttpPutFormContentFilter(RequestCache requestCache) {
-        super()
-        this.requestCache = requestCache
-    }
-
     @Override
     protected void doFilterInternal(final HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-        if (!requestCache.getRequest(request, response)) {
-            requestCache.saveRequest request, response
-        }
 
         GrailsWebRequest grailsWebRequest = WebUtils.retrieveGrailsWebRequest()
         if (isPutOrPatchRequest(grailsWebRequest) && isFormContentType(request)) {

@@ -637,7 +637,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			println message
 		}
 
-		httpPutFormContentFilter(classFor('httpPutFormContentFilter', GrailsHttpPutFormContentFilter), ref('requestCache'))
+		httpPutFormContentFilter(classFor('httpPutFormContentFilter', GrailsHttpPutFormContentFilter))
 	}}
 
 	void doWithApplicationContext() {
