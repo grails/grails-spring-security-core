@@ -45,12 +45,12 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
     }
 
     /**
-     * Checks to see if a form was used to tunnel the PUT HTTP method through a form POST.  If true, this filter will not process filter the request.
+     * Checks to see if a form was used to tunnel the PUT HTTP method through a form POST.  If true, this filter will not process the request.
      * @param grailsWebRequest
      * @return true if a form was used to tunnel the PUT method
      */
     private boolean isFormParameterPutOrPatch(GrailsWebRequest grailsWebRequest) {
-        return grailsWebRequest.parameterMap[('_method')] in ['PUT', 'PATCH']
+        return grailsWebRequest.parameterMap[('_method')] in ['PUT', 'PATCH', 'put', 'patch']
     }
 
     private boolean isRequestMethodPutOrPatch(GrailsWebRequest grailsWebRequest) {
