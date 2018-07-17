@@ -90,6 +90,12 @@ if [[ $EXIT_STATUS -ne 0 ]]; then
     exit $EXIT_STATUS
 fi
 
+./gradlew -DTESTCONFIG=issue503 -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
+if [[ $EXIT_STATUS -ne 0 ]]; then
+    echo "Functional tests for Spring Security - TESTCONFIG:issue503 - check failed "
+    exit $EXIT_STATUS
+fi
+
 
 # Only publish if the branch is on master, and it is not a PR
 if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
