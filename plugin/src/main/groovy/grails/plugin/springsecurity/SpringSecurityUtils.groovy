@@ -436,7 +436,7 @@ final class SpringSecurityUtils {
 		List<Map<String, ?>> chainMap = (List)(ReflectionUtils.getConfigProperty('filterChain.chainMap') ?: [])
 		for (GrailsSecurityFilterChain filterChain in filterChains) {
 
-			if (filterIsExcluded(chainMap, filterChain.matcherPattern, beanName)) {
+			if (noFilterIsApplied(chainMap, filterChain.matcherPattern, beanName) || filterIsExcluded(chainMap, filterChain.matcherPattern, beanName)) {
 				continue
 			}
 
@@ -450,6 +450,25 @@ final class SpringSecurityUtils {
 			filterChain.filters.clear()
 			filterChain.filters.addAll filters
 		}
+	}
+
+	private static boolean noFilterIsApplied(List<Map<String, ?>> chainMap, String pattern, String filterName) {
+		for (Map<String, ?> entry in chainMap) {
+			if (entry.pattern != pattern) {
+				continue
+			}
+
+			String filters = entry.filters ?: ''
+			String[] filtersArray = filters.split(',')
+
+			if (filtersArray.size() == 1 && filtersArray[0] == 'none') {
+				return true
+			}
+
+			return false
+		}
+
+		return false
 	}
 
 	private static boolean filterIsExcluded(List<Map<String, ?>> chainMap, String pattern, String filterName) {
