@@ -145,7 +145,7 @@ final class SpringSecurityUtils {
 		}
 
 		// remove the fake role if it's there
-		Collection<GrantedAuthority> copy = ([] + authorities) as Collection
+		Collection<GrantedAuthority> copy = ([] + authorities) as Collection<GrantedAuthority>
 		for (Iterator<GrantedAuthority> iter = copy.iterator(); iter.hasNext();) {
 			if (NO_ROLE == iter.next().authority) {
 				iter.remove()
@@ -798,7 +798,7 @@ final class SpringSecurityUtils {
 							throw new IllegalArgumentException("Cannot add a filter to JOINED_FILTERS, can only remove: $item")
 						}
 					}
-					filters = copy.values() as List
+					filters = copy.values() as List<Filter>
 				}
 				else {
 					// explicit filter names
