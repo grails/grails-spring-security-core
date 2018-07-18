@@ -23,6 +23,7 @@ import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.DefaultSavedRequest
 import org.springframework.web.filter.GenericFilterBean
+import spock.lang.Unroll
 
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
@@ -55,6 +56,18 @@ class SpringSecurityUtilsSpec extends AbstractUnitSpec {
 
 		applicationContext.securityFilterChains[0].filters.clear()
 		applicationContext.securityFilterChains[0].filters << applicationContext.firstDummy << applicationContext.secondDummy
+	}
+
+	@Unroll("noFiltersIsApplied returns #expected for pattern #pattern, chainMap => [pattern: #chainMapPattern, filters: #chainMapFilters]")
+	void "verifies noFiltersIsApplied "(String chainMapPattern, String chainMapFilters, String pattern, boolean expected) {
+		expect:
+		SpringSecurityUtils.noFilterIsApplied([[pattern: chainMapPattern, filters: chainMapFilters]], pattern) == expected
+
+		where:
+		chainMapPattern | chainMapFilters 	| pattern		| expected
+		'/assets/**'    | 'JOINED_FILTERS'  | '/assets/**'	| false
+		'/assets/**'    | 'none'            | '/assets/**'  | true
+		'/foo'          | 'none'            | '/assets/**'  | false
 	}
 
 	void 'should retain existing chainmap'() {
