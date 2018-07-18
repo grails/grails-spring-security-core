@@ -2,11 +2,14 @@ package grails.plugin.springsecurity.web.filter
 
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import org.grails.web.filters.HiddenHttpMethodFilter
 import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.grails.web.util.WebUtils
 import org.springframework.http.MediaType
+import org.springframework.util.Assert
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
+import org.springframework.util.StringUtils
 import org.springframework.web.filter.HttpPutFormContentFilter
 
 import javax.servlet.FilterChain
@@ -19,12 +22,25 @@ import javax.servlet.http.HttpServletResponse
 @CompileStatic
 class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
 
+    HttpMethodOverrideDetector httpMethodOverrideDetector = new HttpMethodOverrideDetector()
+
+    /**
+     * Set the parameter name to look for HTTP methods.
+     * @see {@link HttpMethodOverrideDetector#DEFAULT_METHOD_PARAM}
+     */
+    void setMethodParam(String methodParam) {
+        httpMethodOverrideDetector.setMethodParam(methodParam)
+    }
+
     @Override
     protected void doFilterInternal(final HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-
-        GrailsWebRequest grailsWebRequest = WebUtils.retrieveGrailsWebRequest()
-        if (isPutOrPatchRequest(grailsWebRequest) && isFormContentType(request)) {
+        String httpMethodOverride = httpMethodOverrideDetector.getHttpMethodOverride(request)
+        if ((request.getMethod().toUpperCase() in ['PUT', 'PATCH']) &&
+                isFormContentType(request) &&
+                (!StringUtils.hasLength(httpMethodOverride) || !['PUT', 'PATCH'].contains(httpMethodOverride?.toUpperCase()))
+        ) {
+            GrailsWebRequest grailsWebRequest = WebUtils.retrieveGrailsWebRequest()
             Map grailsParameterMap = grailsWebRequest.parameterMap
 
             MultiValueMap<String, String> formParameters = new LinkedMultiValueMap(grailsParameterMap?.size() ?: 0)
@@ -37,23 +53,6 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
         } else {
             filterChain.doFilter(request, response)
         }
-    }
-
-    private boolean isPutOrPatchRequest(GrailsWebRequest grailsWebRequest) {
-        return isRequestMethodPutOrPatch(grailsWebRequest) && !isFormParameterPutOrPatch(grailsWebRequest)
-    }
-
-    /**
-     * Checks to see if a form was used to tunnel the PUT HTTP method through a form POST.  If true, this filter will not process the request.
-     * @param grailsWebRequest
-     * @return true if a form was used to tunnel the PUT method
-     */
-    private boolean isFormParameterPutOrPatch(GrailsWebRequest grailsWebRequest) {
-        return grailsWebRequest.parameterMap[('_method')] in ['PUT', 'PATCH', 'put', 'patch']
-    }
-
-    private boolean isRequestMethodPutOrPatch(GrailsWebRequest grailsWebRequest) {
-        return grailsWebRequest.httpMethod.name() in ['PUT', 'PATCH']
     }
 
     private boolean isFormContentType(HttpServletRequest request) {
@@ -69,7 +68,6 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
         }
         return (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType))
     }
-
 
     private static class HttpPutFormContentRequestWrapper extends HttpServletRequestWrapper {
 

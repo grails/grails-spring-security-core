@@ -67,6 +67,7 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK.value()
+        response.status == HttpStatus.OK.value()
         response.text == "username: ${USERNAME}, password: ${PASSWORD}"
     }
 
