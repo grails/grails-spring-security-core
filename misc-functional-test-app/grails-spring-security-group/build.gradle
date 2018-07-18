@@ -61,6 +61,7 @@ dependencies {
 }
 
 apply from: "${rootProject.projectDir}/gradle/ssc.gradle"
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
