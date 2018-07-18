@@ -70,10 +70,4 @@ assets {
     minifyCss = true
 }
 
-integrationTest {
-    testLogging {
-        exceptionFormat = 'full'
-        events 'failed', 'standardOut', 'standardError'
-    }
-    beforeTest { descriptor -> logger.quiet " -- $descriptor" }
-}
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

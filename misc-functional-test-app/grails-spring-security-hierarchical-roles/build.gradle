@@ -62,6 +62,8 @@ dependencies {
     compile project(':spring-security-core')
 }
 
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
+
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
     addResources = true
