@@ -19,8 +19,6 @@ import spock.lang.Issue
 @Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
 class TestFormParamsControllerSpec extends AbstractSecuritySpec {
 
-    @Value('${local.server.port}')
-    Integer serverPort
     private final String USERNAME = "Admin"
     private final String PASSWORD = "myPassword"
 
