@@ -26,7 +26,6 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
 
     /**
      * Set the parameter name to look for HTTP methods.
-     * @see {@link HttpMethodOverrideDetector#DEFAULT_METHOD_PARAM}
      */
     void setMethodParam(String methodParam) {
         httpMethodOverrideDetector.setMethodParam(methodParam)
