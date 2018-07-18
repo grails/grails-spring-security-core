@@ -58,17 +58,16 @@ class GrailsHttpPutFormContentFilter extends HttpPutFormContentFilter {
 
     private boolean isFormContentType(HttpServletRequest request) {
         String contentType = request.contentType
-        if (contentType != null) {
-            try {
-                MediaType mediaType = MediaType.parseMediaType(contentType)
-                return (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType))
-            }
-            catch (IllegalArgumentException ex) {
-                return false
-            }
-        } else {
+        if (contentType == null) {
             return false
         }
+        MediaType mediaType
+        try {
+            mediaType = MediaType.parseMediaType(contentType)
+        } catch (IllegalArgumentException ex) {
+            return false
+        }
+        return (MediaType.APPLICATION_FORM_URLENCODED.includes(mediaType))
     }
 
 
