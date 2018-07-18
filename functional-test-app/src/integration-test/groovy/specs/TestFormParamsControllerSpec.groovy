@@ -71,6 +71,30 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
         response.text == "username: ${USERNAME}, password: ${PASSWORD}"
     }
 
+    void 'PUT request with NULL Content-Type and parameters in the URL'() {
+        given:
+        RestBuilder restBuilder = new RestBuilder()
+
+        when: "A PUT request with no parameters is made"
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}")
+
+        then: "the controller responds with the correct status and parameters are extracted"
+        response.status == HttpStatus.OK.value()
+        response.text == "username: ${USERNAME}, password: ${PASSWORD}"
+    }
+
+    void 'PUT request with NULL Content-Type'() {
+        given:
+        RestBuilder restBuilder = new RestBuilder()
+
+        when: "A PUT request with NULL Content-Type is made"
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll")
+
+        then: "the controller responds with the correct status and parameters are null"
+        response.status == HttpStatus.OK.value()
+        response.text == "username: null, password: null"
+    }
+
     void 'PATCH request with no parameters'() {
         given: "An HTTP client that supports PATCH requests"
         RestTemplate restTemplate = new RestTemplate()
@@ -163,6 +187,34 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
 
         then: "the request is not processed by the controller"
         response.status == HttpStatus.INTERNAL_SERVER_ERROR.value()
+    }
+
+    void 'PATCH request with NULL Content-Type and parameters in the URL'() {
+        given: "An HTTP client that supports PATCH requests"
+        RestTemplate restTemplate = new RestTemplate()
+        restTemplate.requestFactory = new HttpComponentsClientHttpRequestFactory()
+        RestBuilder restBuilder = new RestBuilder(restTemplate)
+
+        when: "A PUT request with no parameters is made"
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}")
+
+        then: "the controller responds with the correct status and parameters are extracted"
+        response.status == HttpStatus.OK.value()
+        response.text == "username: ${USERNAME}, password: ${PASSWORD}"
+    }
+
+    void 'PATCH request with NULL Content-Type'() {
+        given: "An HTTP client that supports PATCH requests"
+        RestTemplate restTemplate = new RestTemplate()
+        restTemplate.requestFactory = new HttpComponentsClientHttpRequestFactory()
+        RestBuilder restBuilder = new RestBuilder(restTemplate)
+
+        when: "A PATCH request with NULL Content-Type is made"
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll")
+
+        then: "the controller responds with the correct status and parameters are null"
+        response.status == HttpStatus.OK.value()
+        response.text == "username: null, password: null"
     }
 
 }
