@@ -15,6 +15,6 @@ import javax.servlet.ServletResponse
 class MaintenanceModeFilter extends GenericFilterBean {
 
     void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
-        throw NullPointerException()
+        throw new NullPointerException()
     }
 }
