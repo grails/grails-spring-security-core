@@ -59,6 +59,8 @@ enum SecurityFilterPosition {
 	ANONYMOUS_FILTER,
 	/** SessionManagementFilter */
 	SESSION_MANAGEMENT_FILTER,
+	/** Spring HttpPutFormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests */
+	HTTP_PUT_FORM_CONTENT_FILTER,
 	/** ExceptionTranslationFilter */
 	EXCEPTION_TRANSLATION_FILTER,
 	/** FilterSecurityInterceptor */

@@ -756,6 +756,8 @@ final class SpringSecurityUtils {
 				orderedNames[SecurityFilterPosition.SWITCH_USER_FILTER.order] = 'switchUserProcessingFilter'
 			}
 
+			orderedNames[SecurityFilterPosition.HTTP_PUT_FORM_CONTENT_FILTER.order] = 'httpPutFormContentFilter'
+
 			// add in filters contributed by secondary plugins
 			orderedNames << SpringSecurityUtils.orderedFilters
 		}

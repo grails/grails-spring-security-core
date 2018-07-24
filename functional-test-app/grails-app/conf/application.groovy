@@ -29,7 +29,7 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 				[pattern: '/**/css/**',      filters: 'none'],
 				[pattern: '/**/images/**',   filters: 'none'],
 				[pattern: '/**/favicon.ico', filters: 'none'],
-				[pattern: '/**',             filters: 'JOINED_FILTERS']
+				[pattern: '/**', 			 filters: 'JOINED_FILTERS']
 			]
 
 
@@ -66,6 +66,12 @@ switch (testconfig) {
 			[exception: 'org.springframework.security.authentication.CredentialsExpiredException', url: '/test-user/password-expired']
 		]
 		grails.web.url.converter = 'hyphenated'
+		break
+
+	case 'putWithParams':
+		grails.plugin.springsecurity.filterChain.chainMap = [
+				[pattern: '/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter']
+		]
 		break
 
 	case 'requestmap':
