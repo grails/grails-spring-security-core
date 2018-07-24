@@ -41,7 +41,8 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}") {
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll?username={username}&password={password}") {
+            urlVariables([username: USERNAME, password: PASSWORD])
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -75,7 +76,9 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder()
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}")
+        RestResponse response = restBuilder.put("http://localhost:${serverPort}/testFormParams/permitAll?username={username}&password={password}") {
+            urlVariables([username: USERNAME, password: PASSWORD])
+        }
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK.value()
@@ -117,7 +120,8 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder(restTemplate)
 
         when: "A PATCH request with no parameters is made"
-        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}") {
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll?username={username}&password={password}") {
+            urlVariables([username: USERNAME, password: PASSWORD])
             contentType("application/x-www-form-urlencoded")
         }
 
@@ -195,7 +199,9 @@ class TestFormParamsControllerSpec extends AbstractSecuritySpec {
         RestBuilder restBuilder = new RestBuilder(restTemplate)
 
         when: "A PUT request with no parameters is made"
-        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll?username=${USERNAME}&password=${PASSWORD}")
+        RestResponse response = restBuilder.patch("http://localhost:${serverPort}/testFormParams/permitAll?username={username}&password={password}") {
+            urlVariables([username: USERNAME, password: PASSWORD])
+        }
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK.value()
