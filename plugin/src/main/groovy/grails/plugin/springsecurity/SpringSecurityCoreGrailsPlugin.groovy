@@ -53,6 +53,7 @@ import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistent
 import grails.plugin.springsecurity.web.authentication.switchuser.NullSwitchUserAuthorityChanger
 import grails.plugin.springsecurity.web.filter.DebugFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsHttpPutFormContentFilter
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import grails.plugin.springsecurity.web.filter.IpAddressFilter
 import grails.plugins.Plugin
@@ -635,6 +636,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 			log.info message
 			println message
 		}
+
+		httpPutFormContentFilter(classFor('httpPutFormContentFilter', GrailsHttpPutFormContentFilter))
 	}}
 
 	void doWithApplicationContext() {
