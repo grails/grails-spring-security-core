@@ -97,6 +97,7 @@ final class SpringSecurityUtils {
 	public static final String NO_ROLE = 'ROLE_NO_ROLES'
 
 	public static final String XML_HTTP_REQUEST = 'XMLHttpRequest'
+	public static final String FILTERS_NONE = 'none'
 
 	private SpringSecurityUtils() {
 		// static only
@@ -771,7 +772,7 @@ final class SpringSecurityUtils {
 			for (Map<String, ?> entry in chainMap) {
 				String value = (entry.filters ?: '').toString().trim()
 				List<Filter> filters
-				if (value.toLowerCase() == 'none') {
+				if (value.toLowerCase() == FILTERS_NONE) {
 					filters = Collections.emptyList()
 				}
 				else if (value.contains('JOINED_FILTERS')) {
