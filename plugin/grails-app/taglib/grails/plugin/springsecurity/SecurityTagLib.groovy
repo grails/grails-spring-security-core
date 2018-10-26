@@ -201,11 +201,18 @@ class SecurityTagLib implements GrailsConfigurationAware {
 	 * Renders the link if the user has access to the specified URL.
 	 */
 	def link = { attrs, body ->
+		boolean isFallback = isFallback(attrs)
 		// retain original attributes for later, since hasAccess() removes ones necessary to create a link
 		def origAttrsMinusExpression = [:] + attrs
 		origAttrsMinusExpression.remove 'expression'
-		if (hasAccess(attrs, 'link')) {
+		boolean hasAccess = hasAccess(attrs, 'link')
+		if (hasAccess) {
 			out << g.link(origAttrsMinusExpression, body)
+			return
+		}
+
+		if (isFallback) {
+			out << body()
 		}
 	}
 
@@ -248,6 +255,24 @@ class SecurityTagLib implements GrailsConfigurationAware {
 		String method = urlAttributes.remove('method') ?: 'GET'
 
 		return webInvocationPrivilegeEvaluator.isAllowed(request.contextPath, url, method, auth)
+	}
+
+	protected boolean isFallback(def attrs) {
+		boolean fallback = false
+		def o = attrs.remove("fallback")
+		if (o instanceof Boolean) {
+			fallback = o
+		} else {
+			if (o != null) {
+				try {
+					def str = o.toString()
+					if (str) {
+						fallback = Boolean.parseBoolean(str)
+					}
+				} catch(e){}
+			}
+		}
+		return fallback
 	}
 
 	private String determineUrl(Map urlAttributes) {
