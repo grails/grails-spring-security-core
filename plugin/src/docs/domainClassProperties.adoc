@@ -1,7 +1,7 @@
 [[domainClassProperties]]
 == User, Authority (Role), and Requestmap Properties
 
-Properties you are most likely to be override are the `User` and  `Authority` (and `Requestmap` if you use the database to store mappings) class and property names.
+Properties you are most likely to override are the `User` and  `Authority` (and `Requestmap` if you use the database to store mappings) class and property names.
 
 .Domain class configuration options
 [cols="30,30,40"]
