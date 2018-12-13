@@ -3,7 +3,7 @@ package demo
 import geb.spock.GebSpec
 import grails.testing.mixin.integration.Integration
 
-@Integration
+@Integration(applicationClass = Application)
 class SecuredControllerSpec extends GebSpec {
 
     def setup() {

@@ -1,5 +1,6 @@
 package specs
 
+import grails.plugin.springsecurity.Application
 import grails.testing.mixin.integration.Integration
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -17,7 +18,7 @@ import spock.lang.Issue
  */
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'putWithParams' })
 @Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
-@Integration
+@Integration(applicationClass = functional.test.app.Application)
 class TestFormParamsControllerSpec extends HttpClientSpec {
 
     private final String USERNAME = "Admin"

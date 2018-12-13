@@ -3,6 +3,7 @@ package specs
 import com.testapp.TestDataService
 import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
+import grails.plugin.springsecurity.Application
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.testing.mixin.integration.Integration
 import org.springframework.beans.factory.annotation.Autowired
@@ -11,7 +12,7 @@ import pages.LoginPage
 import spock.lang.Shared
 import spock.lang.Stepwise
 
-@Integration
+@Integration(applicationClass = functional.test.app.Application)
 @Stepwise
 abstract class AbstractSecuritySpec extends GebReportingSpec {
 

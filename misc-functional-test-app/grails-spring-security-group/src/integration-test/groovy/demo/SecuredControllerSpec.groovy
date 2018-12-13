@@ -5,7 +5,7 @@ import grails.testing.mixin.integration.Integration
 import grails.gorm.transactions.Rollback
 
 @Rollback
-@Integration
+@Integration(applicationClass = Application)
 class SecuredControllerSpec extends GebSpec {
 
     def setup() {

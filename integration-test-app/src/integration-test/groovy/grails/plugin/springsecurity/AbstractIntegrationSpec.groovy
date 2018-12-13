@@ -24,7 +24,7 @@ import test.TestRole
 /**
  * @author Burt Beckwith
  */
-@Integration
+@Integration(applicationClass = integration.test.app.Application)
 @Rollback
 @Transactional
 abstract class AbstractIntegrationSpec extends Specification {

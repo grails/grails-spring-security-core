@@ -1,5 +1,6 @@
 package specs
 
+import grails.plugin.springsecurity.Application
 import grails.testing.mixin.integration.Integration
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
@@ -9,7 +10,7 @@ import spock.lang.Issue
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'issue503' })
 @Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/503')
-@Integration
+@Integration(applicationClass = functional.test.app.Application)
 class CustomFilterRegistrationSpec extends HttpClientSpec {
 
     void 'GET request to /assets/spinner.gif should not throw error because custom filter is excluded'() {
