@@ -6,102 +6,102 @@ export EXIT_STATUS=0
 echo "TRAVIS_TAG          : $TRAVIS_TAG"
 echo "TRAVIS_BRANCH       : $TRAVIS_BRANCH"
 echo "TRAVIS_PULL_REQUEST : $TRAVIS_PULL_REQUEST"
-echo "Publishing archives for branch $TRAVIS_BRANCH"
-rm -rf build
 
-./gradlew :spring-security-core:clean || EXIT_STATUS=$?
-./gradlew :spring-security-core:check || EXIT_STATUS=$?
+./gradlew :spring-security-core:check --no-daemon --console=plain || EXIT_STATUS=$?
 
 if [[ $EXIT_STATUS -ne 0 ]]; then
     echo "Check failed"
     exit $EXIT_STATUS
 fi
 
-./gradlew :spring-security-core:install || EXIT_STATUS=$?
-
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Check failed"
-    exit $EXIT_STATUS
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "spring-security-core:check failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew :integration-test-app:clean || EXIT_STATUS=$?
-./gradlew :integration-test-app:check || EXIT_STATUS=$?
+./gradlew :spring-security-core:install --no-daemon --console=plain  || EXIT_STATUS=$?
 
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Integration tests failed"
-    exit $EXIT_STATUS
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "spring-security-core:install failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew :misc-functional-test-app/grails-spring-security-group:clean || EXIT_STATUS=$?
-./gradlew :misc-functional-test-app/grails-spring-security-group:check || EXIT_STATUS=$?
+./gradlew :integration-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security Group failed"
-    exit $EXIT_STATUS
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "integration-test-app:check failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew :misc-functional-test-app/grails-spring-security-hierarchical-roles:clean || EXIT_STATUS=$?
-./gradlew :misc-functional-test-app/grails-spring-security-hierarchical-roles:check || EXIT_STATUS=$?
+./gradlew :misc-functional-test-app/grails-spring-security-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security Group Hierarchical roles failed"
-    exit $EXIT_STATUS
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "misc-functional-test-app/grails-spring-security-group:check failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew functional-test-app:clean || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - clean failed "
-    exit $EXIT_STATUS
+./gradlew :misc-functional-test-app/grails-spring-security-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "misc-functional-test-app/grails-spring-security-hierarchical-roles:check  failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=static -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:static - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=static -Dgeb.env=chromeHeadless functional-test-app:check  --no-daemon --console=plain || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "static functional-test-app:check failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=annotation -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:annotation - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=annotation -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "static functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=requestmap -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:requestmap - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=requestmap -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "requestmap functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=basic -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:basic - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=basic -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "basic functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=misc -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:misc - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=misc -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "misc functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=putWithParams -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:putWithParams - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=putWithParams -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "putWithParams functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:bcrypt - check failed "
-    exit $EXIT_STATUS
+./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "bcrypt functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
 fi
 
-./gradlew -DTESTCONFIG=issue503 -Dgeb.env=chromeHeadless functional-test-app:check || EXIT_STATUS=$?
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Functional tests for Spring Security - TESTCONFIG:issue503 - check failed "
-    exit $EXIT_STATUS
-fi
+./gradlew -DTESTCONFIG=issue503 -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
+if [ $EXIT_STATUS -ne 0 ]; then
+  echo "issue503 functional-test-app:annotation failed => exit $EXIT_STATUS"
+  exit $EXIT_STATUS
+fi
 
 # Only publish if the branch is on master, and it is not a PR
 if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
