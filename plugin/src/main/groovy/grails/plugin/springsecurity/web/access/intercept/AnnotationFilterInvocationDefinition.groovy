@@ -184,7 +184,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		// reset params since mapping.configure() sets values
 		GrailsParameterMap params = grailsRequest.params
 		params.clear()
-		params << savedParams
+		params.putAll(savedParams)
 
 		mapping.configure grailsRequest
 	}
