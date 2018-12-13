@@ -191,7 +191,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 	@SuppressWarnings('unchecked')
 	protected Map<String, Object> copyParams(GrailsWebRequest grailsRequest) {
-		[:] << grailsRequest.params
+		([:] << grailsRequest.params) as Map<String, Object>
 	}
 
 	/**
@@ -328,7 +328,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		}
 
 		for (String pattern in generatePatterns(controllerName, actionName, false)) {
-			Collection<ConfigAttribute> configAttributes = [new ClosureConfigAttribute(newInstance(closureClass))] as Collection
+			Collection<ConfigAttribute> configAttributes = [new ClosureConfigAttribute(newInstance(closureClass))] as Collection<ConfigAttribute>
 
 			String key = pattern.toLowerCase()
 			InterceptedUrl replaced = storeMapping(key, method, configAttributes)

@@ -83,7 +83,7 @@ class AuthoritiesTransformation implements ASTTransformation {
 		AnnotationNode securedAnnotationNode = new AnnotationNode(SECURED)
 		List<Expression> nameExpressions = authorityNames.collect { String authorityName ->
 			new ConstantExpression(authorityName)
-		} as List
+		} as List<Expression>
 		securedAnnotationNode.addMember 'value', new ListExpression(nameExpressions)
 		securedAnnotationNode
 	}
