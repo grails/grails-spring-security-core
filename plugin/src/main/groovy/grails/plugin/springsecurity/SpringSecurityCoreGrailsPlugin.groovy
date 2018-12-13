@@ -129,7 +129,7 @@ import org.springframework.security.web.util.matcher.AnyRequestMatcher
 import javax.servlet.DispatcherType
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 class SpringSecurityCoreGrailsPlugin extends Plugin {

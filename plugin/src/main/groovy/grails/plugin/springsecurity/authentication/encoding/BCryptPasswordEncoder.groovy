@@ -19,7 +19,7 @@ import groovy.transform.CompileStatic
 /**
  * Wrapper for the Spring Security crypto version (different interface).
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @SuppressWarnings('deprecation')

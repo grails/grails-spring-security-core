@@ -25,7 +25,7 @@ import groovy.transform.CompileStatic
  * PBKDF2 salted password hashing, from https://crackstation.net/hashing-security.htm
  *
  * @author havoc AT defuse.ca
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @SuppressWarnings('deprecation')

@@ -32,7 +32,7 @@ import groovy.transform.CompileStatic
  * Uses code from package org.springframework.security.web.authentication.www.DigestAuthUtils
  * which is unfortunately package-default.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @SuppressWarnings('deprecation')

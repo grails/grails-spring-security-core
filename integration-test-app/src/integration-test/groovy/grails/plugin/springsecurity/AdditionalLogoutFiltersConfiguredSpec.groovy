@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices
 
 /**
- * @author <a href='mailto:george@georgemcintosh.com'>George McIntosh</a>
+ * @author George McIntosh
  * @author Burt Beckwith
  */
 class AdditionalLogoutFiltersConfiguredSpec extends AbstractIntegrationSpec {
