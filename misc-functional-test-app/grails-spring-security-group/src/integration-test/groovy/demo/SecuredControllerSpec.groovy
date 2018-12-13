@@ -2,7 +2,7 @@ package demo
 
 import geb.spock.GebSpec
 import grails.testing.mixin.integration.Integration
-import grails.transaction.Rollback
+import grails.gorm.transactions.Rollback
 
 @Rollback
 @Integration
