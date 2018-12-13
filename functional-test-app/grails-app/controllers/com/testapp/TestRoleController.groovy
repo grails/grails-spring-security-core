@@ -1,5 +1,6 @@
 package com.testapp
 
+import grails.gorm.transactions.Transactional
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.access.annotation.Secured
 
@@ -19,6 +20,7 @@ class TestRoleController {
 		[testRole: testRole]
 	}
 
+	@Transactional
 	def save(TestRole testRole) {
 		if (!testRole.save(flush: true)) {
 			render view: 'create', model: [testRole: testRole]

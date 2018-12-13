@@ -1,8 +1,10 @@
 package com.testapp
 
+import grails.gorm.transactions.Transactional
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.security.access.annotation.Secured
 
+@Transactional
 @Secured('permitAll')
 class TestRequestmapController {
 

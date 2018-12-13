@@ -1,6 +1,8 @@
 import com.testapp.TestUser
+import grails.gorm.transactions.Transactional
 import org.springframework.security.access.annotation.Secured
 
+@Transactional
 @Secured('permitAll')
 class HackController {
 
