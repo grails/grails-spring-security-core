@@ -4,6 +4,7 @@ import groovy.json.JsonSlurper
 import pages.IndexPage
 import pages.LoginPage
 import spock.lang.IgnoreIf
+import spock.lang.PendingFeature
 import spock.lang.Unroll
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'annotation' })
@@ -50,6 +51,7 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		format << ['', '.json']
 	}
 
+	@PendingFeature(reason = 'Restful Controller currently broken')
 	void 'verify security for testuser_books'() {
 		when:
 		login 'testuser_books', 'password'
@@ -73,6 +75,7 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		format << ['', '.json']
 	}
 
+    @PendingFeature(reason = 'Restful Controller currently broken')
 	void 'verify security for testuser_movies'() {
 		when:
 		login 'testuser_movies', 'password'
@@ -96,6 +99,7 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		format << ['', '.json']
 	}
 
+	@PendingFeature(reason = 'Restful Controller currently broken')
 	void 'verify security for testuser_books_and_movies'() {
 		when:
 		login 'testuser_books_and_movies', 'password'
