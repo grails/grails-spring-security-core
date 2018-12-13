@@ -25,7 +25,7 @@ import org.springframework.security.core.userdetails.User
 /**
  * Unit tests for SpringSecurityService.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SpringSecurityServiceSpec extends AbstractUnitSpec {
 

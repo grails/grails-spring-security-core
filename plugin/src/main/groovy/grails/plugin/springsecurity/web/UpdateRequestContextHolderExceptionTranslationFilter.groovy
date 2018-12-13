@@ -35,7 +35,7 @@ import javax.servlet.http.HttpServletResponse
  * response from the filter chain instead of the cached instances from earlier in the chain to ensure that controllers
  * and other classes that access the request from the thread-local RequestContextHolder use the correct instances.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class UpdateRequestContextHolderExceptionTranslationFilter extends ExceptionTranslationFilter {

@@ -40,7 +40,7 @@ import groovy.util.logging.Slf4j
 /**
  * Helper methods that use dynamic Groovy.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 class ReflectionUtils {

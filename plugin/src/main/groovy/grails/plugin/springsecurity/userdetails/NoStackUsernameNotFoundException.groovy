@@ -21,7 +21,7 @@ import groovy.transform.CompileStatic
 /**
  * Lightweight exception that avoids the cost of filling in the stack frames.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class NoStackUsernameNotFoundException extends UsernameNotFoundException {

@@ -34,7 +34,7 @@ import groovy.transform.CompileStatic
 /**
  * See http://burtbeckwith.com/blog/?p=1398 for the motivation for this.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @GroovyASTTransformation(phase=CompilePhase.CANONICALIZATION)

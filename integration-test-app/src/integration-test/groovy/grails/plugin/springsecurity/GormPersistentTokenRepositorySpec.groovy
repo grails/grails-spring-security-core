@@ -25,7 +25,7 @@ import java.text.SimpleDateFormat
  * Integration tests for <code>GormPersistentTokenRepository</code>, based on the tests
  * for <code>JdbcTokenRepositoryImpl</code>.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 

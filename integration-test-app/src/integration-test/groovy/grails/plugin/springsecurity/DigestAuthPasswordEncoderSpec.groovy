@@ -19,7 +19,7 @@ import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEn
 import static org.springframework.security.authentication.dao.DaoAuthenticationProvider.USER_NOT_FOUND_PASSWORD
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class DigestAuthPasswordEncoderSpec extends AbstractIntegrationSpec {
 

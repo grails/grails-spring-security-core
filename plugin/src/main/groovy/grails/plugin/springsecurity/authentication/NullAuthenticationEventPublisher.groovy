@@ -21,7 +21,7 @@ import org.springframework.security.core.AuthenticationException
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class NullAuthenticationEventPublisher implements AuthenticationEventPublisher {

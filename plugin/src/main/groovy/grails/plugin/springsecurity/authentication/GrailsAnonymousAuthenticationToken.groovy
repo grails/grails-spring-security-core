@@ -24,7 +24,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class GrailsAnonymousAuthenticationToken extends AnonymousAuthenticationToken {

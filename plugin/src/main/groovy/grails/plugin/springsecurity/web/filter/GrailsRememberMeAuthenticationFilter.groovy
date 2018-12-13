@@ -28,7 +28,7 @@ import groovy.transform.CompileStatic
 /**
  * Stores a SavedRequest so remember-me autologin gets redirected to requested url.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class GrailsRememberMeAuthenticationFilter extends RememberMeAuthenticationFilter {

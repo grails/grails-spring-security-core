@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
  * Extension of the standard interface that allows specifying whether or not to load roles
  * from the database, e.g. for LDAP where role information is inferred from LDAP group membership.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 interface GrailsUserDetailsService extends UserDetailsService {
 

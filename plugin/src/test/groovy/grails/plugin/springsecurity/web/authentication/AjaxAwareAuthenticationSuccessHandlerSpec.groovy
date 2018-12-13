@@ -25,7 +25,7 @@ import org.springframework.security.web.savedrequest.RequestCache
 import org.springframework.security.web.savedrequest.SavedRequest
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class AjaxAwareAuthenticationSuccessHandlerSpec extends AbstractUnitSpec {
 

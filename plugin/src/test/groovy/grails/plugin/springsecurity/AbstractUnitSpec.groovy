@@ -23,7 +23,7 @@ import org.springframework.security.web.access.expression.DefaultWebSecurityExpr
 import spock.lang.Specification
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 abstract class AbstractUnitSpec extends Specification implements GrailsWebUnitTest {
 

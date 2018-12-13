@@ -21,7 +21,7 @@ import javax.servlet.FilterChain
 /**
  * Unit tests for <code>IpAddressFilter</code>.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class IpAddressFilterSpec extends AbstractUnitSpec {
 

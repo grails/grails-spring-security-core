@@ -22,7 +22,7 @@ import groovy.transform.CompileStatic
 /**
  * Uses a {@link ThreadLocal} to store the current request and response.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 final class SecurityRequestHolder {

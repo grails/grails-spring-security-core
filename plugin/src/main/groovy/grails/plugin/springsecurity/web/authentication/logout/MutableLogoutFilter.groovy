@@ -34,7 +34,7 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

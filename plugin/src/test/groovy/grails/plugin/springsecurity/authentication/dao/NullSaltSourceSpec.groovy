@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.User
 /**
  * Unit tests for <code>NullSaltSource</code>.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class NullSaltSourceSpec extends AbstractUnitSpec {
 

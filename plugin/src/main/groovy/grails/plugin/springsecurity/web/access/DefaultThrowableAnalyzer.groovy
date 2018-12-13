@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
 /**
  * Copy of org.springframework.security.web.access.ExceptionTranslationFilter.DefaultThrowableAnalyzer which is private.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class DefaultThrowableAnalyzer extends ThrowableAnalyzer {

@@ -58,7 +58,7 @@ import java.lang.reflect.Method
  * <code>SecurityConfig.groovy</code>, e.g. for js, images, css or for rules
  * that cannot be expressed in a controller like '/**'.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

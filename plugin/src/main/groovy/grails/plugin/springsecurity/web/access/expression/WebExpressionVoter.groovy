@@ -30,7 +30,7 @@ import groovy.util.logging.Slf4j
  * package-default WebExpressionConfigAttribute.
  *
  * @author Luke Taylor
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @Slf4j

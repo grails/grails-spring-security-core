@@ -23,7 +23,7 @@ import org.springframework.security.web.FilterInvocation
 /**
  * Unit tests for RequestmapFilterInvocationDefinition.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 

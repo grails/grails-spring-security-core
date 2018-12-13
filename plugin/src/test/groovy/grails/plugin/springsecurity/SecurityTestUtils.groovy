@@ -25,7 +25,7 @@ import java.lang.reflect.Modifier
 /**
  * Utility methods for security unit tests.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SecurityTestUtils {
 

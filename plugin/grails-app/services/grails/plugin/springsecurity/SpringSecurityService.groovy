@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletRequest
 /**
  * Utility methods.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 class SpringSecurityService {

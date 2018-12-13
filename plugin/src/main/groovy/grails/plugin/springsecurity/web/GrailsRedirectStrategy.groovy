@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse
  * Builds absolute urls when using header check channel security to prevent the
  * container from generating urls with an incorrect scheme.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @Slf4j

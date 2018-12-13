@@ -43,7 +43,7 @@ import static org.springframework.beans.factory.support.AbstractBeanDefinition.A
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 

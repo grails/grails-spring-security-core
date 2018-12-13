@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 
 /**
  * @author <a href='mailto:george@georgemcintosh.com'>George McIntosh</a>
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class AdditionalLogoutFiltersConfiguredSpec extends AbstractIntegrationSpec {
 

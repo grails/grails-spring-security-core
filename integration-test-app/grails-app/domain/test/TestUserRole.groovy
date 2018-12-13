@@ -20,7 +20,7 @@ import groovy.transform.ToString
 import org.codehaus.groovy.util.HashCodeHelper
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @ToString(cache=true, includeNames=true, includePackage=false)
 class TestUserRole implements Serializable {

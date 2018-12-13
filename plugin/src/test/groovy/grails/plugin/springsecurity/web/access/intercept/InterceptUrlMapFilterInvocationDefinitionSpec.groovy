@@ -28,7 +28,7 @@ import org.springframework.security.access.vote.RoleVoter
 import org.springframework.security.web.FilterInvocation
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class InterceptUrlMapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 

@@ -22,7 +22,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.security.access.ConfigAttribute
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @EqualsAndHashCode(includes='pattern,access,httpMethod')
 @ToString(includeNames=true)

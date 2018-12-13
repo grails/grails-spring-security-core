@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.switchuser.Authentication
 /**
  * Unit tests for SecurityEventListener.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SecurityEventListenerSpec extends AbstractUnitSpec {
 

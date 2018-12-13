@@ -22,7 +22,7 @@ import groovy.transform.CompileStatic
 /**
  * No-op validator.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class NullFilterChainValidator implements FilterChainValidator {

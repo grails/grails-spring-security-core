@@ -19,7 +19,7 @@ import grails.boot.config.GrailsAutoConfiguration
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class Application extends GrailsAutoConfiguration {

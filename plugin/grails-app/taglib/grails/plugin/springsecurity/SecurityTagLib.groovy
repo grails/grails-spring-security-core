@@ -30,7 +30,7 @@ import javax.servlet.FilterChain
 /**
  * Security tags.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SecurityTagLib implements GrailsConfigurationAware {
 

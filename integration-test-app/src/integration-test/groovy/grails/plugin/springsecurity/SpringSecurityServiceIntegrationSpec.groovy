@@ -20,7 +20,7 @@ import test.TestRole
 /**
  * Integration tests for SpringSecurityService.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SpringSecurityServiceIntegrationSpec extends AbstractIntegrationSpec {
 

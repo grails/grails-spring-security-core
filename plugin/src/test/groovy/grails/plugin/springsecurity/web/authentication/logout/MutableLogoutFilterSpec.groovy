@@ -26,7 +26,7 @@ import javax.servlet.FilterChain
 /**
  * Unit tests for MutableLogoutFilter.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class MutableLogoutFilterSpec extends AbstractUnitSpec {
 

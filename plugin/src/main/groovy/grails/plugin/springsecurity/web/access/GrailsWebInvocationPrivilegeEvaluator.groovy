@@ -43,7 +43,7 @@ import groovy.transform.CompileStatic
  * a mock request that works with Grails - more methods get called than are expected in the mock request
  * that the base class uses.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

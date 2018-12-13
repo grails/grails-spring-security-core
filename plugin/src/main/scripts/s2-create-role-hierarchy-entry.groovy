@@ -17,7 +17,7 @@ import grails.codegen.model.Model
 
 /**
  * @author fpape
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 
 description 'Creates a domain class for a persistent role hierarchy for the Spring Security Core plugin', {

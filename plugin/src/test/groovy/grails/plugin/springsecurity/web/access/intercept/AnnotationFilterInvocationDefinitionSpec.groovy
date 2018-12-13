@@ -44,7 +44,7 @@ import spock.lang.Shared
 /**
  * Unit tests for AnnotationFilterInvocationDefinition.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class AnnotationFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 

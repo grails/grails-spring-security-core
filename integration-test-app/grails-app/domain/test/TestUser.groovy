@@ -18,7 +18,7 @@ import groovy.transform.EqualsAndHashCode
 import groovy.transform.ToString
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @EqualsAndHashCode(includes='loginName')
 @ToString(includes='loginName', includeNames=true, includePackage=false)

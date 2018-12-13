@@ -36,7 +36,7 @@ import groovy.transform.CompileStatic
 /**
  * Replaces org.springframework.security.web.authentication.AnonymousAuthenticationFilter.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

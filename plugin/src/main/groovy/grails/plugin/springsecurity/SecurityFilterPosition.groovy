@@ -20,7 +20,7 @@ package grails.plugin.springsecurity
  * Equivalent to <code>org.springframework.security.config.http.SecurityFilters</code> which
  * unfortunately is package-default.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 enum SecurityFilterPosition {
 	/** First */

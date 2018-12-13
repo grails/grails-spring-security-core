@@ -26,7 +26,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class AjaxAwareAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {

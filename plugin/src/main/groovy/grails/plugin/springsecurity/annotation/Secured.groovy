@@ -25,7 +25,7 @@ import java.lang.annotation.Target
  * Annotation for Controllers at the class level or per-action, defining what roles
  * are required for the entire controller or action.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Target([ElementType.METHOD, ElementType.TYPE])
 @Retention(RetentionPolicy.RUNTIME)

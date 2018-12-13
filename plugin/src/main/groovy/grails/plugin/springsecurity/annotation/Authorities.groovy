@@ -27,7 +27,7 @@ import org.codehaus.groovy.transform.GroovyASTTransformationClass
  * Specify the property file key with this annotation, and the AST transform
  * class will replace with an @Secured annotation with the associated role names.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Target([ElementType.FIELD, ElementType.METHOD, ElementType.TYPE])
 @Retention(RetentionPolicy.RUNTIME)

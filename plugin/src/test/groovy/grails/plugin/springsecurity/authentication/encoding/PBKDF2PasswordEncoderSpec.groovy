@@ -20,7 +20,7 @@ import grails.plugin.springsecurity.AbstractUnitSpec
  * Unit tests for PBKDF2PasswordEncoder.
  *
  * @author havoc AT defuse.ca
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class PBKDF2PasswordEncoderSpec extends AbstractUnitSpec {
 

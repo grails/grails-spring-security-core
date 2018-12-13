@@ -23,7 +23,7 @@ import groovy.transform.CompileStatic
  * Extends the default Spring Security user class to contain the ID for efficient lookup
  * of the domain class from the Authentication.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class GrailsUser extends User {

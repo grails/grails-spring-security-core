@@ -22,7 +22,7 @@ import spock.lang.Specification
 import test.TestRole
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Integration
 @Rollback

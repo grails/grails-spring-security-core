@@ -26,7 +26,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 /**
  * GORM-based PersistentTokenRepository implementation, based on {@link org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl}.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 class GormPersistentTokenRepository implements PersistentTokenRepository, GrailsApplicationAware {

@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletRequest
 /**
  * Based on org.springframework.security.web.DefaultSecurityFilterChain which is final.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @Slf4j

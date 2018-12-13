@@ -19,7 +19,7 @@ import groovy.transform.ToString
 import org.springframework.http.HttpMethod
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @EqualsAndHashCode(includes=['rolePattern', 'httpMethod', 'urlPattern'])
 @ToString(includes=['rolePattern', 'httpMethod', 'urlPattern'], cache=true, includeNames=true, includePackage=false)

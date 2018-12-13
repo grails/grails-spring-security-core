@@ -20,7 +20,7 @@ import groovy.transform.CompileStatic
  * Converts a org.springframework.security.crypto.password.PasswordEncoder to a
  * org.springframework.security.authentication.encoding.PasswordEncoder.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @SuppressWarnings('deprecation')
 @CompileStatic

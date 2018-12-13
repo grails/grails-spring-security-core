@@ -15,7 +15,7 @@
 package grails.plugin.springsecurity
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 enum SecurityConfigType {
 

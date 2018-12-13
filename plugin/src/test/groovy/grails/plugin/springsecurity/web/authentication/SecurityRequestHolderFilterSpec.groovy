@@ -21,7 +21,7 @@ import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
 import javax.servlet.FilterChain
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SecurityRequestHolderFilterSpec extends AbstractUnitSpec {
 

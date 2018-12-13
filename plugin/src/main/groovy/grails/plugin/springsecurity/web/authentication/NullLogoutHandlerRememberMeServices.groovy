@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.logout.LogoutHandler
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class NullLogoutHandlerRememberMeServices extends NullRememberMeServices implements LogoutHandler {

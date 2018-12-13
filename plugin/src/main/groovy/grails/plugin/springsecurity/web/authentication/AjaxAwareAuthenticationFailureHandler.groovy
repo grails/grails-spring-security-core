@@ -28,7 +28,7 @@ import groovy.transform.CompileStatic
 /**
  * Ajax-aware failure handler that detects failed Ajax logins and redirects to the appropriate URL.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class AjaxAwareAuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler implements InitializingBean {

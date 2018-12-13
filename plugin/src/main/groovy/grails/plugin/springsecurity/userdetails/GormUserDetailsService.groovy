@@ -28,7 +28,7 @@ import groovy.util.logging.Slf4j
  * Default implementation of <code>GrailsUserDetailsService</code> that uses
  * domain classes to load users and roles.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 class GormUserDetailsService implements GrailsUserDetailsService {

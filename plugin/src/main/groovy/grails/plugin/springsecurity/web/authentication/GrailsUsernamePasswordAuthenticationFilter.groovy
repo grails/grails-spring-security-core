@@ -29,7 +29,7 @@ import javax.servlet.http.HttpSession
  * last attempted login username in the session under the 'SPRING_SECURITY_LAST_USERNAME'
  * key if storeLastUsername is true.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class GrailsUsernamePasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {

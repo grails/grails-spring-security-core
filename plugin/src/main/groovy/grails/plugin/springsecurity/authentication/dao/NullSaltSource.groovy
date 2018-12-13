@@ -23,7 +23,7 @@ import groovy.transform.CompileStatic
  * Dummy salt source that's used as the default salt source in the Spring config. Allows
  * users to easily replace in resources.groovy.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class NullSaltSource implements SaltSource {

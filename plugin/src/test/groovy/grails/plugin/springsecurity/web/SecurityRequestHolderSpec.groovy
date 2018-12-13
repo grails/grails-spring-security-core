@@ -20,7 +20,7 @@ import grails.plugin.springsecurity.SecurityTestUtils
 /**
  * Unit tests for <code>SecurityRequestHolder</code>.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SecurityRequestHolderSpec extends AbstractUnitSpec {
 

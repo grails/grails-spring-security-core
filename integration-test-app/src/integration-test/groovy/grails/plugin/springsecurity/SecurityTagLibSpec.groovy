@@ -40,7 +40,7 @@ import java.security.Principal
 /**
  * Integration tests for <code>SecurityTagLib</code>.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class SecurityTagLibSpec extends AbstractIntegrationSpec {
 

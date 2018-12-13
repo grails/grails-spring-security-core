@@ -41,7 +41,7 @@ import groovy.transform.CompileStatic
  *
  * @author Luke Taylor
  * @author Rob Winch
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

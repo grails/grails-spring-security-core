@@ -26,7 +26,7 @@ import org.springframework.security.web.PortResolverImpl
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class AjaxAwareAccessDeniedHandlerSpec extends AbstractUnitSpec {
 

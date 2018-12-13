@@ -29,7 +29,7 @@ import org.springframework.security.web.authentication.preauth.x509.X509Principa
 import groovy.transform.CompileStatic
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

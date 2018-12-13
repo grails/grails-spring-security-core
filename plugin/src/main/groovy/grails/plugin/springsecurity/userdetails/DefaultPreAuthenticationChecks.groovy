@@ -31,7 +31,7 @@ import groovy.transform.CompileStatic
  * Copy of the private class in AbstractUserDetailsAuthenticationProvider
  * to make subclassing or replacement easier.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

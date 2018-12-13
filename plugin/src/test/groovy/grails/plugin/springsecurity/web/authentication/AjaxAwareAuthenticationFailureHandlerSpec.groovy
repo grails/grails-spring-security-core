@@ -21,7 +21,7 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.web.RedirectStrategy
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class AjaxAwareAuthenticationFailureHandlerSpec extends AbstractUnitSpec {
 

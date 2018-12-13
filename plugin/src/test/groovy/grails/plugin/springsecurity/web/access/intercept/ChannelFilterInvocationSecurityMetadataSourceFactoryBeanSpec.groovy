@@ -19,7 +19,7 @@ import org.springframework.security.web.access.intercept.DefaultFilterInvocation
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class ChannelFilterInvocationSecurityMetadataSourceFactoryBeanSpec extends AbstractUnitSpec {
 

@@ -24,7 +24,7 @@ import test.TestUserRoleGroup
 /**
  * Integration tests for the RoleGroup and RoleGroupRoles domain classes.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class RoleGroupSpec extends AbstractIntegrationSpec {
 

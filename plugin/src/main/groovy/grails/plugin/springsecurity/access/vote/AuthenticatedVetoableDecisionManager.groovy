@@ -29,7 +29,7 @@ import groovy.transform.CompileStatic
  * an authenticated voter to 'veto' access. This allows specification of roles and
  * <code>IS_AUTHENTICATED_FULLY</code> on one line in SecurityConfig.groovy.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class AuthenticatedVetoableDecisionManager extends AbstractAccessDecisionManager {

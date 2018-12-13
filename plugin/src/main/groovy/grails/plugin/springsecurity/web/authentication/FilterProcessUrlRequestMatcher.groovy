@@ -27,7 +27,7 @@ import groovy.transform.CompileStatic
  *
  * @author Ben Alex
  * @author Luke Taylor
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class FilterProcessUrlRequestMatcher implements RequestMatcher {

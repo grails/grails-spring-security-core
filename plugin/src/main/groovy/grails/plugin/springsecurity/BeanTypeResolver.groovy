@@ -27,7 +27,7 @@ import groovy.transform.CompileStatic
  * different. Just overriding the class (ordinarily done with a bean post-processor) allows redefined beans to use new
  * or changed properties in future versions of the plugin.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class BeanTypeResolver {

@@ -19,7 +19,7 @@ import org.grails.core.artefact.ControllerArtefactHandler
 import org.springframework.security.core.context.SecurityContextHolder
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Enhances(ControllerArtefactHandler.TYPE)
 trait ControllerMixin {

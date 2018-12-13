@@ -23,7 +23,7 @@ import groovy.util.logging.Slf4j
  * Avoids the problem when using requestmaps where you can't make any web calls without any
  * instances in the database, but the instances are populated by a call to TestDataController.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

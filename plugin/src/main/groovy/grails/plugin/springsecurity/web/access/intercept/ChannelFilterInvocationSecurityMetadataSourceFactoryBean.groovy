@@ -29,7 +29,7 @@ import groovy.transform.CompileStatic
 /**
  * Factory bean that builds a {@link FilterInvocationSecurityMetadataSource} for channel security.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class ChannelFilterInvocationSecurityMetadataSourceFactoryBean implements FactoryBean<FilterInvocationSecurityMetadataSource>, InitializingBean {

@@ -27,7 +27,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean
 /**
  * Unregisters auto-config beans registered by Boot.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class SpringSecurityBeanFactoryPostProcessor implements BeanFactoryPostProcessor {

@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
 /**
  * No-op implementation.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class NullSwitchUserAuthorityChanger implements SwitchUserAuthorityChanger {

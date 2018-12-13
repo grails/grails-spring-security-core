@@ -31,7 +31,7 @@ import groovy.transform.CompileStatic
  * Set as the delegate of a closure in @Secured annotations; provides access to the request and application context,
  * as well as all of the methods and properties available when using SpEL.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class SecuredClosureDelegate extends WebSecurityExpressionRoot {

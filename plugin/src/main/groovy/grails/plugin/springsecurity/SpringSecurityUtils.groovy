@@ -48,7 +48,7 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 /**
  * Helper methods.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @Slf4j

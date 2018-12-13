@@ -31,7 +31,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 /**
  * Unit tests for AuthenticatedVetoableDecisionManager.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class AuthenticatedVetoableDecisionManagerSpec extends AbstractUnitSpec {
 

@@ -19,7 +19,7 @@ import grails.plugin.springsecurity.AbstractUnitSpec
 /**
  * Unit tests for BCryptPasswordEncoder.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class BCryptPasswordEncoderSpec extends AbstractUnitSpec {
 

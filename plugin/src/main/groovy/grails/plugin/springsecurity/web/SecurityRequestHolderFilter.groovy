@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletResponse
  * wrapper that is aware of the X-Forwarded-Proto header and returns the correct value from isSecure(),
  * getScheme(), and getServerPort() if the header is present.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 @Slf4j

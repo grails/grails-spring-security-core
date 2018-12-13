@@ -24,7 +24,7 @@ import groovy.transform.CompileStatic
  * Based on the class of the same name in Spring Security which is package-default.
  *
  * @author Luke Taylor
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class WebExpressionConfigAttribute implements ConfigAttribute {

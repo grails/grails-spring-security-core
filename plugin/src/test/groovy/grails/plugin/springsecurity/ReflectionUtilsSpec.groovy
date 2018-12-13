@@ -17,7 +17,7 @@ package grails.plugin.springsecurity
 import org.springframework.http.HttpMethod
 
 /**
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 class ReflectionUtilsSpec extends AbstractUnitSpec {
 

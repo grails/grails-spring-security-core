@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse
  * Supports either single IP addresses or CIDR masked patterns
  * (e.g. 192.168.1.0/24, 202.24.0.0/14, 10.0.0.0/8, etc.).
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @Slf4j
 @CompileStatic

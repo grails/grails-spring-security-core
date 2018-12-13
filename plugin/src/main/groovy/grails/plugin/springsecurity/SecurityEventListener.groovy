@@ -55,7 +55,7 @@ import groovy.transform.CompileStatic
  * The event and the Spring context are provided in case you need to look up a Spring bean,
  * e.g. the Hibernate SessionFactory.
  *
- * @author <a href='mailto:burt@burtbeckwith.com'>Burt Beckwith</a>
+ * @author Burt Beckwith
  */
 @CompileStatic
 class SecurityEventListener implements ApplicationListener<ApplicationEvent>, ApplicationContextAware {
