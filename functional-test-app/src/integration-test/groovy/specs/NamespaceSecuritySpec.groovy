@@ -4,6 +4,7 @@ import groovy.json.JsonSlurper
 import pages.IndexPage
 import pages.LoginPage
 import spock.lang.IgnoreIf
+import spock.lang.Unroll
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'annotation' })
 class NamespaceSecuritySpec extends AbstractSecuritySpec {
@@ -13,15 +14,17 @@ class NamespaceSecuritySpec extends AbstractSecuritySpec {
 		go 'testData/addTestUsers'
 	}
 
-	void 'should redirect to login page for anonymous'() {
+    @Unroll
+	void '#path should redirect to login page for anonymous'(String uri, String path) {
 		when:
-		go 'api/v1/' + uri
+		go path
 
 		then:
 		at LoginPage
 
 		where:
 		uri << ['books', 'books.json', 'movies', 'movies.json']
+        path = 'api/v1/' + uri
 	}
 
 	void 'api not allowed for testuser'() {
