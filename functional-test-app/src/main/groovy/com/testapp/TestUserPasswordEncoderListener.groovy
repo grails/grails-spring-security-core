@@ -45,7 +45,7 @@ class TestUserPasswordEncoderListener {
     }
 
     private String encodePassword(TestUser u) {
-        springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(u.password, salt(u)) : u.password
+        springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(u.password) : u.password
     }
 
     private def salt(TestUser u) {

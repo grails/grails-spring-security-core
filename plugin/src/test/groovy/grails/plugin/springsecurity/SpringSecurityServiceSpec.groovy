@@ -50,7 +50,7 @@ class SpringSecurityServiceSpec extends AbstractUnitSpec {
 
 	void 'encodePassword'() {
 		when:
-		service.passwordEncoder = [encodePassword: { String pwd, salt -> pwd + '_encoded' }]
+		service.passwordEncoder = [encode: { String pwd  -> pwd + '_encoded' }]
 
 		then:
 		'passw0rd_encoded' == service.encodePassword('passw0rd')

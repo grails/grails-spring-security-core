@@ -1,5 +1,6 @@
 package specs
 
+import org.springframework.security.crypto.password.PasswordEncoder
 import pages.IndexPage
 import spock.lang.IgnoreRest
 import spock.lang.Issue
@@ -8,19 +9,16 @@ import spock.lang.IgnoreIf
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'misc' })
 class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
-	@IgnoreRest
 	void 'salted password'() {
 		given:
 		String username = 'testuser_books_and_movies'
-		def passwordEncoder = createSha256Encoder()
+		PasswordEncoder passwordEncoder = createSha256Encoder()
 
 		when:
 		String hashedPassword = getUserProperty(username, 'password')
-		String notSalted = passwordEncoder.encodePassword('password', null)
-		String salted = passwordEncoder.encodePassword('password', username)
+		String notSalted = passwordEncoder.encode('password')
 
 		then:
-		salted == hashedPassword
 		notSalted != hashedPassword
 	}
 

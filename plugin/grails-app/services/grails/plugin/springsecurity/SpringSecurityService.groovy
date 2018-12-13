@@ -126,11 +126,8 @@ class SpringSecurityService {
 	/**
 	 * Encode the password using the configured PasswordEncoder.
 	 */
-	String encodePassword(String password, salt = null) {
-		if (securityConfig.password.algorithm in NO_SALT) {
-			salt = null
-		}
-		passwordEncoder.encodePassword password, salt
+	String encodePassword(String password) {
+		passwordEncoder.encode password
 	}
 
 	/**

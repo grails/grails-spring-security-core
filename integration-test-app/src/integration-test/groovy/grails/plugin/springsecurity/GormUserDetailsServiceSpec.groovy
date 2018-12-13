@@ -123,7 +123,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		then:
 		details
 
-		passwordEncoder.isPasswordValid details.password, password, null
+		passwordEncoder.matches password, details.password
 		loginName == details.username
 		details.enabled
 		details.accountNonExpired
@@ -237,7 +237,7 @@ class GormUserDetailsServiceSpec extends AbstractIntegrationSpec {
 		then:
 		details
 
-		passwordEncoder.isPasswordValid details.password, password, null
+		passwordEncoder.matches password, details.password
 		loginName == details.username
 		details.enabled
 		details.accountNonExpired

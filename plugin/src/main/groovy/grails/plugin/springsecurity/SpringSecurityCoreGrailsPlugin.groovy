@@ -20,10 +20,6 @@ import grails.plugin.springsecurity.access.vote.AuthenticatedVetoableDecisionMan
 import grails.plugin.springsecurity.access.vote.ClosureVoter
 import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationProvider
 import grails.plugin.springsecurity.authentication.NullAuthenticationEventPublisher
-import grails.plugin.springsecurity.authentication.dao.NullSaltSource
-import grails.plugin.springsecurity.authentication.encoding.BCryptPasswordEncoder
-import grails.plugin.springsecurity.authentication.encoding.DigestAuthPasswordEncoder
-import grails.plugin.springsecurity.authentication.encoding.PBKDF2PasswordEncoder
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
@@ -80,14 +76,22 @@ import org.springframework.security.authentication.DefaultAuthenticationEventPub
 import org.springframework.security.authentication.ProviderManager
 import org.springframework.security.authentication.RememberMeAuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
-import org.springframework.security.authentication.dao.ReflectionSaltSource
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
-import org.springframework.security.authentication.encoding.PlaintextPasswordEncoder
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.factory.PasswordEncoderFactories
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder
+import org.springframework.security.crypto.password.LdapShaPasswordEncoder
+import org.springframework.security.crypto.password.Md4PasswordEncoder
+import org.springframework.security.crypto.password.MessageDigestPasswordEncoder
+import org.springframework.security.crypto.password.NoOpPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder
+import org.springframework.security.crypto.password.StandardPasswordEncoder
+import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.PortMapperImpl
 import org.springframework.security.web.PortResolverImpl
@@ -133,6 +137,16 @@ import javax.servlet.DispatcherType
  */
 @Slf4j
 class SpringSecurityCoreGrailsPlugin extends Plugin {
+
+	public static final String ENCODING_ID_BCRYPT = "bcrypt"
+	public static final String ENCODING_ID_LDAP = "ldap"
+	public static final String ENCODING_ID_MD4 = "MD4"
+	public static final String ENCODING_ID_MD5 = "MD5"
+	public static final String ENCODING_ID_NOOP = "noop"
+	public static final String ENCODING_ID_PBKDF2 = "pbkdf2"
+	public static final String ENCODING_ID_SCRYPT = "scrypt"
+	public static final String ENCODING_ID_SHA1 = "SHA-1"
+	public static final String ENCODING_IDSHA256 = "SHA-256"
 
 	String grailsVersion = '4.0.0 > *'
 	List observe = ['controllers']
@@ -456,17 +470,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 		configureAuthenticationManager conf
 
 		/** daoAuthenticationProvider */
-		String reflectionSaltSourceProperty = conf.dao.reflectionSaltSourceProperty
-		if (reflectionSaltSourceProperty) {
-			log.trace "Using reflectionSaltSourceProperty '{}'", reflectionSaltSourceProperty
-			saltSource(classFor('saltSource', ReflectionSaltSource)) {
-				userPropertyToUse = reflectionSaltSourceProperty
-			}
-		}
-		else {
-			saltSource(classFor('saltSource', NullSaltSource))
-		}
-
 		preAuthenticationChecks(classFor('preAuthenticationChecks', DefaultPreAuthenticationChecks))
 		postAuthenticationChecks(classFor('postAuthenticationChecks', DefaultPostAuthenticationChecks))
 
@@ -474,7 +477,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 			userDetailsService = ref('userDetailsService')
 			passwordEncoder = ref('passwordEncoder')
 			userCache = ref('userCache')
-			saltSource = ref('saltSource')
 			preAuthenticationChecks = ref('preAuthenticationChecks')
 			postAuthenticationChecks = ref('postAuthenticationChecks')
 			authoritiesMapper = ref('authoritiesMapper')
@@ -483,22 +485,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		/** passwordEncoder */
 		String algorithm = conf.password.algorithm
-		switch (algorithm) {
-			case 'bcrypt':
-				log.trace 'Using bcrypt'
-				passwordEncoder(classFor('passwordEncoder', BCryptPasswordEncoder), conf.password.bcrypt.logrounds) // 10
-				break
-			case 'pbkdf2':
-				log.trace 'Using pbkdf2'
-				passwordEncoder(classFor('passwordEncoder', PBKDF2PasswordEncoder))
-				break
-			default:
-				log.trace "Using password algorithm '{}'", algorithm
-				passwordEncoder(classFor('passwordEncoder', MessageDigestPasswordEncoder), algorithm) {
-					encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
-					iterations = conf.password.hash.iterations // 10000
-				}
-		}
+
+		log.trace 'Using {} algorithm', algorithm
+		passwordEncoder(classFor('passwordEncoder', DelegatingPasswordEncoder), algorithm, idToPasswordEncoder(conf))
 
 		/** userDetailsService */
 		userDetailsService(classFor('userDetailsService', GormUserDetailsService)) {
@@ -727,9 +716,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		if (conf.useDigestAuth) {
 			def passwordEncoder = applicationContext.passwordEncoder
-			if (passwordEncoder instanceof DigestAuthPasswordEncoder) {
-				passwordEncoder.resetInitializing()
-			}
+// TODO			if (passwordEncoder instanceof DigestAuthPasswordEncoder) {
+//				passwordEncoder.resetInitializing()
+//			}
 		}
 	}
 
@@ -832,7 +821,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private configureDigestAuth = { conf ->
 
 		if (conf.digest.useCleartextPasswords) {
-			passwordEncoder(classFor('passwordEncoder', PlaintextPasswordEncoder))
+			passwordEncoder(classFor('passwordEncoder', DelegatingPasswordEncoder), ENCODING_ID_NOOP, idToPasswordEncoder(conf))
 		}
 		else {
 			conf.digest.passwordAlreadyEncoded = true
@@ -1102,5 +1091,33 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 	private Class classFor(String beanName, Class defaultType) {
 		beanTypeResolver.resolveType beanName, defaultType
+	}
+
+
+	Map<String, PasswordEncoder> idToPasswordEncoder(ConfigObject conf) {
+
+		MessageDigestPasswordEncoder messsageDigestPasswordEncoderMD5 = new MessageDigestPasswordEncoder(ENCODING_ID_MD5)
+		messsageDigestPasswordEncoderMD5.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
+		messsageDigestPasswordEncoderMD5.iterations = conf.password.hash.iterations // 10000
+
+		MessageDigestPasswordEncoder messsageDigestPasswordEncoderSHA1 = new MessageDigestPasswordEncoder(ENCODING_ID_SHA1)
+		messsageDigestPasswordEncoderSHA1.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
+		messsageDigestPasswordEncoderSHA1.iterations = conf.password.hash.iterations // 10000
+
+		MessageDigestPasswordEncoder messsageDigestPasswordEncoderSHA256 = new MessageDigestPasswordEncoder(ENCODING_IDSHA256)
+		messsageDigestPasswordEncoderSHA256.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
+		messsageDigestPasswordEncoderSHA256.iterations = conf.password.hash.iterations // 10000
+
+		int strength = conf.password.bcrypt.logrounds
+		[(ENCODING_ID_BCRYPT): new BCryptPasswordEncoder(strength),
+		(ENCODING_ID_LDAP): new LdapShaPasswordEncoder(),
+		(ENCODING_ID_MD4): new Md4PasswordEncoder(),
+		(ENCODING_ID_MD5): messsageDigestPasswordEncoderMD5,
+		(ENCODING_ID_NOOP): NoOpPasswordEncoder.getInstance(),
+		(ENCODING_ID_PBKDF2): new Pbkdf2PasswordEncoder(),
+		(ENCODING_ID_SCRYPT): new SCryptPasswordEncoder(),
+		(ENCODING_ID_SHA1): messsageDigestPasswordEncoderSHA1,
+		(ENCODING_IDSHA256): messsageDigestPasswordEncoderSHA256,
+		"sha256": new StandardPasswordEncoder()]
 	}
 }

@@ -153,13 +153,13 @@ def updatePassword(String password, String password_new, String password_new_2) 
    }
 
    User user = User.findByUsername(username)
-   if (!passwordEncoder.isPasswordValid(user.password, password, null /*salt*/)) {
+   if (!passwordEncoder.matches(password, user.password)) {
       flash.message = 'Current password is incorrect'
       render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
    }
 
-   if (passwordEncoder.isPasswordValid(user.password, password_new, null /*salt*/)) {
+   if (passwordEncoder.matches(password_new, user.password)) {
       flash.message = 'Please choose a different password from your current one'
       render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return

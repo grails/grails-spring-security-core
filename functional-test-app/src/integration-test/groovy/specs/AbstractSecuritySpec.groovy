@@ -3,11 +3,11 @@ package specs
 import com.testapp.TestDataService
 import geb.driver.CachingDriverFactory
 import geb.spock.GebReportingSpec
-import grails.plugin.springsecurity.Application
+import grails.plugin.springsecurity.SpringSecurityCoreGrailsPlugin
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.testing.mixin.integration.Integration
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.authentication.encoding.MessageDigestPasswordEncoder
+import org.springframework.security.crypto.password.MessageDigestPasswordEncoder
 import pages.LoginPage
 import spock.lang.Shared
 import spock.lang.Stepwise
@@ -87,7 +87,7 @@ abstract class AbstractSecuritySpec extends GebReportingSpec {
 	}
 
 	protected MessageDigestPasswordEncoder createSha256Encoder() {
-		def passwordEncoder = new MessageDigestPasswordEncoder('SHA-256')
+		MessageDigestPasswordEncoder passwordEncoder = new MessageDigestPasswordEncoder(SpringSecurityCoreGrailsPlugin.ENCODING_IDSHA256)
 		passwordEncoder.iterations = 1
 		passwordEncoder
 	}

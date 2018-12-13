@@ -39,15 +39,13 @@ class BCryptSpec extends AbstractSecuritySpec {
 		String encryptedPassword = getContent('hack/getUserProperty?user=user1&propName=password')
 
 		then:
-		encryptedPassword.startsWith '$2a$'
+		encryptedPassword.startsWith '{bcrypt}$2a$'
 
 		when:
 		def shaPasswordEncoder = createSha256Encoder()
-		String notSalted = shaPasswordEncoder.encodePassword('p4ssw0rd', null)
-		String salted = shaPasswordEncoder.encodePassword('p4ssw0rd', 'user1')
+		String notSalted = shaPasswordEncoder.encode('p4ssw0rd')
 
 		then:
-		salted != encryptedPassword
 		notSalted != encryptedPassword
 	}
 }
