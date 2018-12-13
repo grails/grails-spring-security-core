@@ -24,7 +24,7 @@ import org.springframework.security.access.ConfigAttribute
 /**
  * @author Burt Beckwith
  */
-@EqualsAndHashCode(includes='pattern,access,httpMethod')
+@EqualsAndHashCode(includes='pattern,httpMethod')
 @ToString(includeNames=true)
 @CompileStatic
 class InterceptedUrl {
