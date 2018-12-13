@@ -1,7 +1,7 @@
 package com.testapp
 
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import groovy.sql.Sql
 import rest.Book
 import rest.Movie

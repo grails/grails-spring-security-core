@@ -15,8 +15,8 @@
 package grails.plugin.springsecurity
 
 import grails.core.GrailsApplication
+import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.userdetails.GrailsUser
-import grails.transaction.Transactional
 import groovy.util.logging.Slf4j
 import org.springframework.security.authentication.AuthenticationTrustResolver
 import org.springframework.security.core.Authentication

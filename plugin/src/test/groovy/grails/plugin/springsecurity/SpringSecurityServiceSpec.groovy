@@ -14,7 +14,7 @@
  */
 package grails.plugin.springsecurity
 
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import org.grails.core.util.ClassPropertyFetcher
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl

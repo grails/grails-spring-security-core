@@ -21,7 +21,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 
 import grails.core.GrailsApplication
 import grails.plugin.springsecurity.SpringSecurityUtils
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import groovy.util.logging.Slf4j
 
 /**
