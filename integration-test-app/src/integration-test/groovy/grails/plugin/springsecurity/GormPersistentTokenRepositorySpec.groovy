@@ -15,9 +15,9 @@
 package grails.plugin.springsecurity
 
 import grails.plugin.springsecurity.web.authentication.rememberme.GormPersistentTokenRepository
-import groovy.sql.Sql
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken
 import test.TestPersistentLogin
+import test.TestPersistentLoginService
 
 import java.text.SimpleDateFormat
 
@@ -32,14 +32,8 @@ class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 	private static final String DATE_FORMAT = 'yyyy-MM-dd HH:mm:ss'
 	private static final Date DATE = new SimpleDateFormat(DATE_FORMAT).parse('2007-10-09 18:19:25')
 
-	private Sql sql
-
 	GormPersistentTokenRepository tokenRepository
-	def dataSource
-
-	void setup() {
-		sql = new Sql(dataSource)
-	}
+	TestPersistentLoginService testPersistentLoginService
 
 	void 'create new token inserts correct data'() {
 		when:
@@ -52,11 +46,11 @@ class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 		1 == TestPersistentLogin.count()
 
 		when:
-		def row = sql.firstRow('select last_used, series, token, username from persistent_login')
+		TestPersistentLogin row = testPersistentLoginService.findAll([offset: 0, max: 1])[0]
 
 		then:
 		row
-		currentDate.time == row.last_used.time
+		currentDate.time == row.lastUsed.time
 		'joeuser' == row.username
 		'joesseries' == row.series
 		'atoken' == row.token
@@ -83,29 +77,31 @@ class GormPersistentTokenRepositorySpec extends AbstractIntegrationSpec {
 		tokenRepository.removeUserTokens 'joeuser'
 
 		then:
-		0 == sql.firstRow('select count(series) from persistent_login where username=?', ['joeuser'])[0]
+		0 == testPersistentLoginService.countByUsername('joeuser')
 	}
 
 	void 'updating token modifies token value and lastUsed'() {
 		when:
 		Date date = new Date(System.currentTimeMillis() - 1)
-		insertToken 'joesseries', 'joeuser', 'atoken', date
-		tokenRepository.updateToken 'joesseries', 'newtoken', new Date()
-		flushAndClear()
-
-		def row = sql.firstRow('select last_used, series, token, username from persistent_login where series=?', ['joesseries'])
-		Date lastUsed = row.last_used
+		TestPersistentLogin inserted = insertToken 'joesseries', 'joeuser', 'atoken', date
 
 		then:
+		inserted
+		inserted.series == 'joesseries'
+
+		when:
+		tokenRepository.updateToken 'joesseries', 'newtoken', new Date()
+		TestPersistentLogin row = testPersistentLoginService.get('joesseries')
+
+		then:
+		row
 		'joeuser' == row.username
 		'joesseries' == row.series
 		'newtoken' == row.token
-		lastUsed.time > date.time
+		row.lastUsed.time > date.time
 	}
 
-	private void insertToken(String series, String username, String token, Date lastUsed) {
-		String formattedDate = lastUsed.format(DATE_FORMAT)
-		sql.execute 'insert into persistent_login (last_used, series, token, username) values (?, ?, ?, ?)',
-		            [formattedDate, series, token, username]
+	private TestPersistentLogin insertToken(String series, String username, String token, Date lastUsed) {
+		testPersistentLoginService.save(series, token, username, lastUsed)
 	}
 }
