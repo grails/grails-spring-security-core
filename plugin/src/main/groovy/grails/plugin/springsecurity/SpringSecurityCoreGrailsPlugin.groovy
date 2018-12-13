@@ -168,7 +168,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 		ReflectionUtils.application = SpringSecurityUtils.application = grailsApplication
 
 		SpringSecurityUtils.resetSecurityConfig()
-		def conf = SpringSecurityUtils.securityConfig
+		ConfigObject conf = SpringSecurityUtils.securityConfig
 		boolean printStatusMessages = (conf.printStatusMessages instanceof Boolean) ? conf.printStatusMessages : true
 		if (!conf || !conf.active) {
 			if (printStatusMessages) {
