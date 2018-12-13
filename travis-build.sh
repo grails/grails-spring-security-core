@@ -9,11 +9,6 @@ echo "TRAVIS_PULL_REQUEST : $TRAVIS_PULL_REQUEST"
 
 ./gradlew :spring-security-core:check --no-daemon --console=plain || EXIT_STATUS=$?
 
-if [[ $EXIT_STATUS -ne 0 ]]; then
-    echo "Check failed"
-    exit $EXIT_STATUS
-fi
-
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "spring-security-core:check failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
@@ -33,17 +28,17 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
-./gradlew :misc-functional-test-app/grails-spring-security-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
+./gradlew :misc-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
-  echo "misc-functional-test-app/grails-spring-security-group:check failed => exit $EXIT_STATUS"
+  echo "misc-group:check failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
 
-./gradlew :misc-functional-test-app/grails-spring-security-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
+./gradlew :misc-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
-  echo "misc-functional-test-app/grails-spring-security-hierarchical-roles:check  failed => exit $EXIT_STATUS"
+  echo "misc-hierarchical-roles:check  failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
 

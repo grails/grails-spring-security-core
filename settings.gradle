@@ -1,5 +1,9 @@
-include 'misc-functional-test-app/grails-spring-security-group'
-include 'misc-functional-test-app/grails-spring-security-hierarchical-roles'
+include "misc-group"
+project(":misc-group").projectDir = new File(settingsDir, "misc-functional-test-app/grails-spring-security-group")
+
+include "misc-hierarchical-roles"
+project(":misc-hierarchical-roles").projectDir = new File(settingsDir, "misc-functional-test-app/grails-spring-security-hierarchical-roles")
+
 include 'integration-test-app'
 include 'functional-test-app'
 include 'plugin'
