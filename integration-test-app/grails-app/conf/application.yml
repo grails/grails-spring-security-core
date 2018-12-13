@@ -3,9 +3,6 @@ grails:
     profile: web
     codegen:
         defaultPackage: test
-    spring:
-        transactionManagement:
-            proxies: false
     gorm:
         # Whether to autowire entities. 
         # Disabled by default for performance reasons.
