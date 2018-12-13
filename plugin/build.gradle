@@ -29,7 +29,7 @@ repositories {
 	maven { url 'https://repo.grails.org/grails/core' }
 }
 
-sourceCompatibility = targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = 1.8
 
 dependencies {
 	provided "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
