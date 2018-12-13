@@ -134,7 +134,7 @@ import javax.servlet.DispatcherType
 @Slf4j
 class SpringSecurityCoreGrailsPlugin extends Plugin {
 
-	String grailsVersion = '3.0.0 > *'
+	String grailsVersion = '4.0.0 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'hibernate', 'hibernate4', 'hibernate5', 'services']
 	String author = 'Burt Beckwith'
