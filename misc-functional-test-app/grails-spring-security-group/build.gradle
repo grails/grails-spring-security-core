@@ -7,6 +7,7 @@ buildscript {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
         classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
+        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverBinariesVersion"
     }
 }
 
@@ -19,6 +20,7 @@ apply plugin:"war"
 apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.grails-gsp"
 apply plugin: "com.bertramlabs.asset-pipeline"
+apply plugin:"com.energizedwork.webdriver-binaries"
 
 repositories {
     mavenLocal()
@@ -53,13 +55,10 @@ dependencies {
     runtime "org.apache.tomcat:tomcat-jdbc"
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
     testCompile "org.grails:grails-gorm-testing-support"
-    testCompile "org.grails.plugins:geb"
     testCompile "org.grails:grails-web-testing-support"
-    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
-    testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
     compile project(':spring-security-core')
 }
-
+apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 apply from: "${rootProject.projectDir}/gradle/ssc.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 

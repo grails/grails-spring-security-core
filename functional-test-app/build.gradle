@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsVersion"
         classpath "org.grails.plugins:hibernate5:${gormVersion-".RELEASE"}"
-        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:1.4"
+        classpath "gradle.plugin.com.energizedwork.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverBinariesVersion"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
     }
 }
@@ -56,24 +56,10 @@ dependencies {
     runtime "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails:grails-web-testing-support"
-    testCompile("org.grails.plugins:geb") {
-        exclude group: 'org.gebish', module: 'geb-core'
-    }
-    testCompile "org.gebish:geb-core:$gebVersion"
     testCompile "io.micronaut:micronaut-http-client:$micronautVersion"
-    testRuntime "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
-    testRuntime "org.seleniumhq.selenium:selenium-firefox-driver:$seleniumVersion"
-    testCompile "org.seleniumhq.selenium:selenium-remote-driver:$seleniumVersion"
-    testCompile "org.seleniumhq.selenium:selenium-api:$seleniumVersion"
-    testCompile "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
     compile project(':spring-security-core')
 }
-
-webdriverBinaries {
-    chromedriver '2.45'
-    geckodriver '0.23.0'
-}
-
+apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 apply from: "${rootProject.projectDir}/gradle/integrationTest.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
