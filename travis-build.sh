@@ -12,7 +12,7 @@ echo "*******************************"
 echo "spring-security-core:check"
 echo "*******************************"
 
-./gradlew :spring-security-core:check --no-daemon --console=plain || EXIT_STATUS=$?
+./gradlew -Dgeb.env=chromeHeadless :spring-security-core:check --no-daemon --console=plain || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "spring-security-core:check failed => exit $EXIT_STATUS"
@@ -34,7 +34,7 @@ echo "*******************************"
 echo "integration-test-app:check"
 echo "*******************************"
 
-./gradlew :integration-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
+./gradlew -Dgeb.env=chromeHeadless :integration-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "integration-test-app:check failed => exit $EXIT_STATUS"
@@ -45,7 +45,7 @@ echo "*******************************"
 echo "misc-group:check"
 echo "*******************************"
 
-./gradlew :misc-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
+./gradlew -Dgeb.env=chromeHeadless :misc-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "misc-group:check failed => exit $EXIT_STATUS"
@@ -56,7 +56,7 @@ echo "*******************************"
 echo "misc-hierarchical-roles:check"
 echo "*******************************"
 
-./gradlew :misc-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
+./gradlew  -Dgeb.env=chromeHeadless :misc-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "misc-hierarchical-roles:check  failed => exit $EXIT_STATUS"
