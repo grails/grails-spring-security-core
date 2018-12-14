@@ -4980,7 +4980,7 @@ class MyUserDetails extends GrailsUser {
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GrailsUserDetailsService
 import grails.plugin.springsecurity.userdetails.NoStackUsernameNotFoundException
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -5506,13 +5506,13 @@ grails.plugin.springsecurity.failureHandler.exceptionMappings = [
    }
 
    User user = User.findByUsername(username)
-   if (!passwordEncoder.isPasswordValid(user.password, password, null /*salt*/)) {
+   if (!passwordEncoder.matches(password, user.password)) {
       flash.message = 'Current password is incorrect'
       render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
    }
 
-   if (passwordEncoder.isPasswordValid(user.password, password_new, null /*salt*/)) {
+   if (passwordEncoder.matches(password_new, user.password)) {
       flash.message = 'Please choose a different password from your current one'
       render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
@@ -7836,7 +7836,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 3.2.4.BUILD-SNAPSHOT<br>
-Last updated 2018-12-13 04:43:41 +00:00
+Last updated 2018-12-14 07:03:00 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
