@@ -11,6 +11,7 @@ import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
 import spock.lang.IgnoreIf
 import spock.lang.Issue
+import spock.lang.Shared
 
 /**
  * Please note, these tests utilize the filterChain.chainMap pattern of:
@@ -21,8 +22,11 @@ import spock.lang.Issue
 @Integration(applicationClass = functional.test.app.Application)
 class TestFormParamsControllerSpec extends HttpClientSpec {
 
-    private final String USERNAME = "Admin"
-    private final String PASSWORD = "myPassword"
+    @Shared
+    String USERNAME = "Admin"
+
+    @Shared
+    String PASSWORD = "myPassword"
 
     void 'PUT request with no parameters'() {
         when: "A PUT request with no parameters is made"

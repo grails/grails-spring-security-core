@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.switchuser.SwitchUserFilter
 import org.springframework.web.context.request.RequestContextHolder
 import spock.lang.Ignore
+import spock.lang.Shared
 
 import javax.servlet.FilterChain
 import javax.servlet.ServletContext
@@ -44,7 +45,9 @@ import java.security.Principal
  */
 class SecurityTagLibSpec extends AbstractIntegrationSpec {
 
-	private final user = new Expando()
+	@Shared
+	private Expando user = new Expando()
+
 	private GrailsMockHttpServletRequest request = new GrailsMockHttpServletRequest()
 	private GrailsMockHttpServletResponse response = new GrailsMockHttpServletResponse()
 
