@@ -1,7 +1,7 @@
 tasks.withType(Test) {
     testLogging {
         exceptionFormat = 'full'
-        events 'passed', 'failed', 'standardOut', 'standardError'
+        events 'passed', 'failed'//, 'standardOut', 'standardError'
     }
 
     reports.html.enabled = !System.getenv("TRAVIS")
