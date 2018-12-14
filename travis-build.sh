@@ -7,12 +7,21 @@ echo "TRAVIS_TAG          : $TRAVIS_TAG"
 echo "TRAVIS_BRANCH       : $TRAVIS_BRANCH"
 echo "TRAVIS_PULL_REQUEST : $TRAVIS_PULL_REQUEST"
 
+
+echo "*******************************"
+echo "spring-security-core:check"
+echo "*******************************"
+
 ./gradlew :spring-security-core:check --no-daemon --console=plain || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "spring-security-core:check failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
+
+echo "*******************************"
+echo "spring-security-core:install"
+echo "*******************************"
 
 ./gradlew :spring-security-core:install --no-daemon --console=plain  || EXIT_STATUS=$?
 
@@ -21,12 +30,20 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
+echo "*******************************"
+echo "integration-test-app:check"
+echo "*******************************"
+
 ./gradlew :integration-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "integration-test-app:check failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
+
+echo "*******************************"
+echo "misc-group:check"
+echo "*******************************"
 
 ./gradlew :misc-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
@@ -35,12 +52,20 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
+echo "*******************************"
+echo "misc-hierarchical-roles:check"
+echo "*******************************"
+
 ./gradlew :misc-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "misc-hierarchical-roles:check  failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
+
+echo "*******************************"
+echo "static functional-test-app:check"
+echo "*******************************"
 
 ./gradlew -DTESTCONFIG=static -Dgeb.env=chromeHeadless functional-test-app:check  --no-daemon --console=plain || EXIT_STATUS=$?
 
@@ -49,12 +74,20 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
+echo "*******************************"
+echo "annotation functional-test-app:check"
+echo "*******************************"
+
 ./gradlew -DTESTCONFIG=annotation -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "static functional-test-app:annotation failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
+
+echo "*******************************"
+echo "requestmap functional-test-app:check"
+echo "*******************************"
 
 ./gradlew -DTESTCONFIG=requestmap -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
@@ -63,12 +96,20 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
+echo "*******************************"
+echo "basic functional-test-app:check"
+echo "*******************************"
+
 ./gradlew -DTESTCONFIG=basic -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "basic functional-test-app:annotation failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
+
+echo "*******************************"
+echo "misc functional-test-app:check"
+echo "*******************************"
 
 ./gradlew -DTESTCONFIG=misc -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
@@ -77,6 +118,10 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
+echo "*******************************"
+echo "putWithParams functional-test-app:check"
+echo "*******************************"
+
 ./gradlew -DTESTCONFIG=putWithParams -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
@@ -84,12 +129,20 @@ if [ $EXIT_STATUS -ne 0 ]; then
   exit $EXIT_STATUS
 fi
 
+echo "*******************************"
+echo "bcrypt functional-test-app:check"
+echo "*******************************"
+
 ./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "bcrypt functional-test-app:annotation failed => exit $EXIT_STATUS"
   exit $EXIT_STATUS
 fi
+
+echo "*******************************"
+echo "issue503 functional-test-app:check"
+echo "*******************************"
 
 ./gradlew -DTESTCONFIG=issue503 -Dgeb.env=chromeHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
