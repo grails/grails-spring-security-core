@@ -3,8 +3,12 @@ package com.testapp
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.gorm.transactions.Transactional
 import groovy.sql.Sql
+import org.springframework.transaction.annotation.Propagation
 import rest.Book
+import rest.Customer
 import rest.Movie
+import rest.Stuff
+import rest.Thing
 
 @Transactional
 class TestDataService {
@@ -19,9 +23,25 @@ class TestDataService {
 		'/testrequestmap', '/testrequestmap/**', '/testrole', '/testrole/**', '/testuser', '/testuser/**']
 
 	void returnToInitialState() {
-		truncateTablesAndRetry 3, false
+		truncateDomainClasses()
+		//truncateTablesAndRetry 3, false
 		enterInitialData()
 		objectDefinitionSource.reset()
+	}
+
+
+	boolean truncateDomainClasses() {
+		TestUser.withNewTransaction {
+			TestUserTestRole.where {}.deleteAll()
+			TestRequestmap.where {}.deleteAll()
+			TestRole.where {}.deleteAll()
+			TestUser.where {}.deleteAll()
+			Book.where {}.deleteAll()
+			Customer.where {}.deleteAll()
+			Movie.where {}.deleteAll()
+			Stuff.where {}.deleteAll()
+			Thing.where {}.deleteAll()
+		}
 	}
 
 	boolean truncateTablesAndRetry(int retryCount, boolean ignoreExceptions) {
