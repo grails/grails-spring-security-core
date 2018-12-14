@@ -9,6 +9,7 @@ import pages.user.CreateUserPage
 import pages.user.ListUserPage
 import pages.user.ShowUserPage
 import spock.lang.IgnoreIf
+import spock.lang.PendingFeature
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'annotation' })
 class AnnotationSecuritySpec extends AbstractSecuritySpec {
@@ -354,6 +355,7 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		action << ['thing', 'thing/index', 'thing/show/1', 'thing/create', 'thing/edit', 'thing/delete']
 	}
 
+	@PendingFeature(reason = "@Resource is currently broken for Grails 4")
 	@IgnoreIf({ !System.getProperty('geb.env') })
 	void 'authenticated user can access secured restful domain'() {
 		given:
@@ -366,6 +368,7 @@ class AnnotationSecuritySpec extends AbstractSecuritySpec {
 		$().text() == '[]'
 	}
 
+	@PendingFeature(reason = "@Resource is currently broken for Grails 4")
 	@IgnoreIf({ !System.getProperty('geb.env') })
 	void 'generated Resource controllers can have inherited secured actions'() {
 		when:
