@@ -54,15 +54,15 @@
 		padding-right: 10px;
 	}
 
-	#login #remember_me_holder {
+	#remember_me_holder {
 		padding-left: 120px;
 	}
 
-	#login #submit {
+	#submit {
 		margin-left: 15px;
 	}
 
-	#login #remember_me_holder label {
+	#remember_me_holder label {
 		float: none;
 		margin-left: 0;
 		text-align: left;
