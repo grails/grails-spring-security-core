@@ -83,6 +83,10 @@
 	#login .inner .chk {
 		height: 12px;
 	}
+	
+	#passwordToggler {
+		padding: 3px 4px;
+	}
 	</style>
 </head>
 
@@ -104,6 +108,7 @@
 			<p>
 				<label for="password"><g:message code='springSecurity.login.password.label'/>:</label>
 				<input type="password" class="text_" name="${passwordParameter ?: 'password'}" id="password"/>
+				<i id="passwordToggler" title="toggle password display" onclick="passwordDisplayToggle()">&#128065;</i>
 			</p>
 
 			<p id="remember_me_holder">
@@ -121,6 +126,21 @@
 	document.addEventListener("DOMContentLoaded", function(event) {
 		document.forms['loginForm'].elements['username'].focus();
 	});
+
+	function passwordDisplayToggle() {
+		var toggleEl = document.getElementById("passwordToggler");
+		var eyeIcon = '\u{1F441}';
+		var xIcon = '\u{2715}';
+		var passEl = document.getElementById("password");
+
+		if (passEl.type === "password") {
+			toggleEl.innerHTML = xIcon;
+			passEl.type = "text";
+		} else {
+			toggleEl.innerHTML = eyeIcon;
+			passEl.type = "password";
+		}
+	}
 </script>
 </body>
 </html>
