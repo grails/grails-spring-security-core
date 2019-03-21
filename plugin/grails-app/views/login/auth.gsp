@@ -115,10 +115,10 @@
 		</form>
 	</div>
 </div>
-<script>
-(function() {
-	document.forms['loginForm'].elements['${usernameParameter ?: 'username'}'].focus();
-})();
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) {
+		document.forms['loginForm'].elements['username'].focus();
+	});
 </script>
 </body>
 </html>
