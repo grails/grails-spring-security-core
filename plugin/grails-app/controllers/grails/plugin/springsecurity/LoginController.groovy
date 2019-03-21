@@ -98,36 +98,36 @@ class LoginController {
 		               gspLayout: conf.gsp.layoutAuth]
 	}
 
-    /** Callback after a failed login. Redirects to the auth page with a warning message. */
-    def authfail() {
+	/** Callback after a failed login. Redirects to the auth page with a warning message. */
+	def authfail() {
 
-        String msg = ''
-        def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
-        if (exception) {
-            if (exception instanceof AccountExpiredException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.expired', null, "Account Expired", request.locale)
-            } else if (exception instanceof CredentialsExpiredException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.passwordExpired', null, "Password Expired", request.locale)
-            } else if (exception instanceof DisabledException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.disabled', null, "Account Disabled", request.locale)
-            } else if (exception instanceof LockedException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.locked', null, "Account Locked", request.locale)
-            } else if (exception instanceof SessionAuthenticationException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.max.sessions.exceeded', null, "Sorry, you have exceeded your maximum number of open sessions.", request.locale)
-            } else {
-                msg = messageSource.getMessage('springSecurity.errors.login.fail', null, "Authentication Failure", request.locale)
-            }
-        }
+		String msg = ''
+		def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
+		if (exception) {
+			if (exception instanceof AccountExpiredException) {
+				msg = messageSource.getMessage('springSecurity.errors.login.expired', null, "Account Expired", request.locale)
+			} else if (exception instanceof CredentialsExpiredException) {
+				msg = messageSource.getMessage('springSecurity.errors.login.passwordExpired', null, "Password Expired", request.locale)
+			} else if (exception instanceof DisabledException) {
+				msg = messageSource.getMessage('springSecurity.errors.login.disabled', null, "Account Disabled", request.locale)
+			} else if (exception instanceof LockedException) {
+				msg = messageSource.getMessage('springSecurity.errors.login.locked', null, "Account Locked", request.locale)
+			} else if (exception instanceof SessionAuthenticationException) {
+				msg = messageSource.getMessage('springSecurity.errors.login.max.sessions.exceeded', null, "Sorry, you have exceeded your maximum number of open sessions.", request.locale)
+			} else {
+				msg = messageSource.getMessage('springSecurity.errors.login.fail', null, "Authentication Failure", request.locale)
+			}
+		}
 
-        if (springSecurityService.isAjax(request)) {
-            render([error: msg] as JSON)
-        } else {
-            flash.message = msg
-            redirect action: 'auth', params: params
-        }
-    }
+		if (springSecurityService.isAjax(request)) {
+			render([error: msg] as JSON)
+		} else {
+			flash.message = msg
+			redirect action: 'auth', params: params
+		}
+	}
 
-    /** The Ajax success redirect url. */
+	/** The Ajax success redirect url. */
 	def ajaxSuccess() {
 		render([success: true, username: authentication.name] as JSON)
 	}

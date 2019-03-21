@@ -21,18 +21,18 @@ class ${userClassName}${groupClassName} implements Serializable {
 		}
 	}
 
-    @Override
+	@Override
 	int hashCode() {
-	    int hashCode = HashCodeHelper.initHash()
-        if (${userClassProperty}) {
-            hashCode = HashCodeHelper.updateHash(hashCode, ${userClassProperty}.id)
+		int hashCode = HashCodeHelper.initHash()
+		if (${userClassProperty}) {
+			hashCode = HashCodeHelper.updateHash(hashCode, ${userClassProperty}.id)
 		}
 		if (${groupClassProperty}) {
-		    hashCode = HashCodeHelper.updateHash(hashCode, ${groupClassProperty}.id)
+			hashCode = HashCodeHelper.updateHash(hashCode, ${groupClassProperty}.id)
 		}
 		hashCode
 	}
-	
+
 	static ${userClassName}${groupClassName} get(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
 		criteriaFor(${userClassProperty}Id, ${groupClassProperty}Id).get()
 	}
@@ -69,7 +69,7 @@ class ${userClassName}${groupClassName} implements Serializable {
 	}
 
 	static constraints = {
-	    ${groupClassProperty} nullable: false
+		${groupClassProperty} nullable: false
 		${userClassProperty} nullable: false, validator: { ${userClassName} u, ${userClassName}${groupClassName} ug ->
 			if (ug.${groupClassProperty}?.id) {
 				if (${userClassName}${groupClassName}.exists(u.id, ug.${groupClassProperty}.id)) {

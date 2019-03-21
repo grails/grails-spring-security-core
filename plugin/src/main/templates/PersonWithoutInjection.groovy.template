@@ -9,25 +9,25 @@ import grails.compiler.GrailsCompileStatic
 @ToString(includes='username', includeNames=true, includePackage=false)
 class ${userClassName} implements Serializable {
 
-    private static final long serialVersionUID = 1
+	private static final long serialVersionUID = 1
 
-    String username
-    String password
-    boolean enabled = true
-    boolean accountExpired
-    boolean accountLocked
-    boolean passwordExpired
+	String username
+	String password
+	boolean enabled = true
+	boolean accountExpired
+	boolean accountLocked
+	boolean passwordExpired
 
-    Set<${groupClassName ?: roleClassName}> getAuthorities() {
-        (${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this) as List<${userClassName}${groupClassName ?: roleClassName}>)*.${groupClassProperty ?: roleClassProperty} as Set<${groupClassName ?: roleClassName}>
-    }
+	Set<${groupClassName ?: roleClassName}> getAuthorities() {
+		(${userClassName}${groupClassName ?: roleClassName}.findAllBy${userClassName}(this) as List<${userClassName}${groupClassName ?: roleClassName}>)*.${groupClassProperty ?: roleClassProperty} as Set<${groupClassName ?: roleClassName}>
+	}
 
-    static constraints = {
-        password nullable: false, blank: false, password: true
-        username nullable: false, blank: false, unique: true
-    }
+	static constraints = {
+		password nullable: false, blank: false, password: true
+		username nullable: false, blank: false, unique: true
+	}
 
-    static mapping = {
-	    password column: '`password`'
-    }
+	static mapping = {
+		password column: '`password`'
+	}
 }
