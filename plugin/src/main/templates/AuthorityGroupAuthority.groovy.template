@@ -24,12 +24,12 @@ class ${groupClassName}${roleClassName} implements Serializable {
 
 	@Override
 	int hashCode() {
-	    int hashCode = HashCodeHelper.initHash()
-        if (${groupClassProperty}) {
-            hashCode = HashCodeHelper.updateHash(hashCode, ${groupClassProperty}.id)
+		int hashCode = HashCodeHelper.initHash()
+		if (${groupClassProperty}) {
+			hashCode = HashCodeHelper.updateHash(hashCode, ${groupClassProperty}.id)
 		}
 		if (${roleClassProperty}) {
-		    hashCode = HashCodeHelper.updateHash(hashCode, ${roleClassProperty}.id)
+			hashCode = HashCodeHelper.updateHash(hashCode, ${roleClassProperty}.id)
 		}
 		hashCode
 	}
@@ -70,11 +70,11 @@ class ${groupClassName}${roleClassName} implements Serializable {
 	}
 
 	static constraints = {
-	    ${groupClassProperty} nullable: false
+		${groupClassProperty} nullable: false
 		${roleClassProperty} nullable: false, validator: { ${roleClassName} r, ${groupClassName}${roleClassName} rg ->
 			if (rg.${groupClassProperty}?.id) {
 				if (${groupClassName}${roleClassName}.exists(rg.${groupClassProperty}.id, r.id)) {
-				    return ['roleGroup.exists']
+					return ['roleGroup.exists']
 				}
 			}
 		}

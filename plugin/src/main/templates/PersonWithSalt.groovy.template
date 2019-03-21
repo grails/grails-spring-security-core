@@ -36,11 +36,11 @@ class ${userClassName} implements Serializable {
 		}
 	}
 
-    protected void encodePassword() {
+	protected void encodePassword() {
 		password = springSecurityService?.passwordEncoder ? springSecurityService.encodePassword(password, salt()) : password
 	}
 
-    @CompileDynamic
+	@CompileDynamic
 	def salt() {
 		if ( !springSecurityService ) {
 			return null

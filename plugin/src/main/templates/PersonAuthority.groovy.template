@@ -22,14 +22,14 @@ class ${userClassName}${roleClassName} implements Serializable {
 		}
 	}
 
-    @Override
+	@Override
 	int hashCode() {
-	    int hashCode = HashCodeHelper.initHash()
-        if (${userClassProperty}) {
-            hashCode = HashCodeHelper.updateHash(hashCode, ${userClassProperty}.id)
+		int hashCode = HashCodeHelper.initHash()
+		if (${userClassProperty}) {
+			hashCode = HashCodeHelper.updateHash(hashCode, ${userClassProperty}.id)
 		}
 		if (${roleClassProperty}) {
-		    hashCode = HashCodeHelper.updateHash(hashCode, ${roleClassProperty}.id)
+			hashCode = HashCodeHelper.updateHash(hashCode, ${roleClassProperty}.id)
 		}
 		hashCode
 	}
@@ -70,11 +70,11 @@ class ${userClassName}${roleClassName} implements Serializable {
 	}
 
 	static constraints = {
-	    ${userClassProperty} nullable: false
+		${userClassProperty} nullable: false
 		${roleClassProperty} nullable: false, validator: { ${roleClassName} r, ${userClassName}${roleClassName} ur ->
 			if (ur.${userClassProperty}?.id) {
 				if (${userClassName}${roleClassName}.exists(ur.${userClassProperty}.id, r.id)) {
-				    return ['userRole.exists']
+					return ['userRole.exists']
 				}
 			}
 		}
