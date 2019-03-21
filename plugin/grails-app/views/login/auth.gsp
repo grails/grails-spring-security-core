@@ -3,10 +3,12 @@
 	<meta name="layout" content="${gspLayout ?: 'main'}"/>
 	<title><g:message code='springSecurity.login.title'/></title>
 	<style type="text/css" media="screen">
+	
 	#login {
 		margin: 15px 0px;
 		padding: 0px;
 		text-align: center;
+		font-family: Arial, Helvetica, sans-serif;
 	}
 
 	#login .inner {
