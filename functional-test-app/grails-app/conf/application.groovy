@@ -55,6 +55,7 @@ switch (testconfig) {
 		break
 
 	case 'misc':
+		grails.plugin.springsecurity.cacheUsers = false
 		grails.plugin.springsecurity.securityConfigType = 'Annotation'
 		grails.plugin.springsecurity.dao.reflectionSaltSourceProperty = 'username'
 		grails.plugin.springsecurity.roleHierarchy = 'ROLE_ADMIN > ROLE_USER'

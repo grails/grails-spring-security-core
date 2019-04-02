@@ -1,12 +1,12 @@
-import com.testapp.TestUser
-import grails.gorm.transactions.Transactional
+import com.testapp.HackService
 import org.springframework.security.access.annotation.Secured
 
-@Transactional
+
 @Secured('permitAll')
 class HackController {
 
 	def userCache
+	HackService hackService
 
 	def getSessionValue(String name) {
 		def value = session[name]
@@ -14,13 +14,20 @@ class HackController {
 	}
 
 	def getUserProperty(String user, String propName) {
-		render TestUser.findByUsername(user)."$propName"
+		String result = "false"
+		if (propName && user) {
+			result = hackService.findByUsername(user)?.getProperty(propName)
+			if (!result) {
+				result = "false"
+			}
+		} else {
+			result = "false"
+		}
+		render(result)
 	}
 
 	def setUserProperty() {
-		def user = TestUser.findByUsername(params.user)
-		user.properties = params
-		user.save(flush: true)
+		def user = hackService.updateUser(params.user,params)
 		userCache.removeUserFromCache user.username
 		render 'setUserProperty: OK'
 	}
