@@ -53,14 +53,14 @@ enum SecurityFilterPosition {
 	REQUEST_CACHE_FILTER,
 	/** SecurityContextHolderAwareRequestFilter */
 	SERVLET_API_SUPPORT_FILTER,
-	/** Remember-me cookie */
-	REMEMBER_ME_FILTER,
 	/** Anonymous auth */
 	ANONYMOUS_FILTER,
 	/** SessionManagementFilter */
 	SESSION_MANAGEMENT_FILTER,
 	/** Spring HttpPutFormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests */
 	HTTP_PUT_FORM_CONTENT_FILTER,
+	/** Remember-me cookie */
+	REMEMBER_ME_FILTER,
 	/** ExceptionTranslationFilter */
 	EXCEPTION_TRANSLATION_FILTER,
 	/** FilterSecurityInterceptor */
