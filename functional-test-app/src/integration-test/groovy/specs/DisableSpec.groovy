@@ -8,7 +8,9 @@ class DisableSpec extends AbstractHyphenatedSecuritySpec {
 
 	void 'lock account'() {
 		given:
+		resetDatabase()
 		String username = 'admin'
+		setUserProperty(username,"accountLocked",false)
 
 		when:
 		login username
@@ -82,7 +84,6 @@ class DisableSpec extends AbstractHyphenatedSecuritySpec {
 		then:
 		assertContentContains 'accountDisabled'
 
-		// reset
 		when:
 		setUserProperty username, 'enabled', true
 
