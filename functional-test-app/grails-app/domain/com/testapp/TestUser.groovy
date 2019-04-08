@@ -13,10 +13,10 @@ class TestUser implements Serializable {
 
     String username
     String password
-    Boolean enabled = true
-    Boolean accountExpired = false
-    Boolean accountLocked = false
-    Boolean passwordExpired = false
+    boolean enabled = true
+    boolean accountExpired
+    boolean accountLocked
+    boolean passwordExpired
 
     Set<TestRole> getAuthorities() {
         (TestUserTestRole.findAllByTestUser(this) as List<TestUserTestRole>)*.testRole as Set<TestRole>
@@ -25,13 +25,9 @@ class TestUser implements Serializable {
     static constraints = {
         password nullable: false, blank: false, password: true
         username nullable: false, blank: false, unique: true
-        accountExpired nullable: true
-        accountLocked nullable: true
-        passwordExpired nullable: true
     }
 
     static mapping = {
 	    password column: '`password`'
-        cache: false
     }
 }

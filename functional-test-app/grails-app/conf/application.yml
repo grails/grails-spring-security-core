@@ -92,9 +92,7 @@ hibernate:
         use_second_level_cache: false
     format_sql: true
     use_sql_comments: true
-    hibernateDirtyChecking: true
 dataSource:
-    logSql: false
     dbCreate: update
     driverClassName: org.h2.Driver
     jmxExport: true
