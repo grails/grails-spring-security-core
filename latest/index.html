@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 3.2.3</span>
+<span id="revnumber">version 4.0.0.M1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1223,7 +1223,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.2.3'
+   compile 'org.grails.plugins:spring-security-core:4.0.0.M1'
    ...</code></pre>
 </div>
 </div>
@@ -1251,7 +1251,7 @@ Version 3.2.x is only compatible with Grails 3.3.x or higher.
 }
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.2.4.BUILD-SNAPSHOT'
+   compile 'org.grails.plugins:spring-security-core:4.0.1.BUILD-SNAPSHOT'
    ...</code></pre>
 </div>
 </div>
@@ -2430,7 +2430,7 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = true</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>Now in addition to the default mappings, we require an authentication with <code>ROLE_USER</code> for any URL starting with <code>/user</code>, a &#8220;fully authenticated&#8221; authentication (i.e. an explicit login was performed without using remember-me) with <code>ROLE_USER</code> for any URL starting with <code>/admin</code>, and finally to access the URL <code>/thing/register</code> the user must be authenticated with any role(s) but must use a PUT request.</p>
+<p>Now in addition to the default mappings, we require an authentication with <code>ROLE_USER</code> for any URL starting with <code>/user</code>, a &#8220;fully authenticated&#8221; authentication (i.e. an explicit login was performed without using remember-me) with <code>ROLE_ADMIN</code> for any URL starting with <code>/admin</code>, and finally to access the URL <code>/thing/register</code> the user must be authenticated with any role(s) but must use a PUT request.</p>
 </div>
 </td>
 </tr>
@@ -4006,7 +4006,7 @@ grails.plugin.springsecurity.onAuthorizationEvent = { e, appCtx -&gt;
 <h2 id="domainClassProperties">8. User, Authority (Role), and Requestmap Properties</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Properties you are most likely to be override are the <code>User</code> and  <code>Authority</code> (and <code>Requestmap</code> if you use the database to store mappings) class and property names.</p>
+<p>Properties you are most likely to override are the <code>User</code> and  <code>Authority</code> (and <code>Requestmap</code> if you use the database to store mappings) class and property names.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <caption class="title">Table 9. Domain class configuration options</caption>
@@ -4980,7 +4980,7 @@ class MyUserDetails extends GrailsUser {
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.userdetails.GrailsUserDetailsService
 import grails.plugin.springsecurity.userdetails.NoStackUsernameNotFoundException
-import grails.transaction.Transactional
+import grails.gorm.transactions.Transactional
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -5506,13 +5506,13 @@ grails.plugin.springsecurity.failureHandler.exceptionMappings = [
    }
 
    User user = User.findByUsername(username)
-   if (!passwordEncoder.isPasswordValid(user.password, password, null /*salt*/)) {
+   if (!passwordEncoder.matches(password, user.password)) {
       flash.message = 'Current password is incorrect'
       render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
    }
 
-   if (passwordEncoder.isPasswordValid(user.password, password_new, null /*salt*/)) {
+   if (passwordEncoder.matches(password_new, user.password)) {
       flash.message = 'Please choose a different password from your current one'
       render view: 'passwordExpired', model: [username: session['SPRING_SECURITY_LAST_USERNAME']]
       return
@@ -6861,7 +6861,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:3.2.3'
+   compile 'org.grails.plugins:spring-security-core:4.0.0.M1'
    ...
 }</code></pre>
 </div>
@@ -7835,8 +7835,8 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 3.2.3<br>
-Last updated 2018-07-24 15:33:37 +00:00
+Version 4.0.0.M1<br>
+Last updated 2019-04-08 16:10:59 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
