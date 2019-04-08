@@ -2,7 +2,7 @@
 grails:
     profile: web
     codegen:
-        defaultPackage: grails_3_3
+        defaultPackage: grails_4_0
     gorm:
         # Whether to autowire entities. 
         # Disabled by default for performance reasons.
