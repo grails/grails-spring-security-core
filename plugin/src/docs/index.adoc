@@ -8,6 +8,8 @@ Burt Beckwith
 
 include::introduction.adoc[]
 
+include::newInV4.adoc[]
+
 include::newInV3.adoc[]
 
 include::newInV2.adoc[]
