@@ -18,19 +18,19 @@ import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROT
 import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+import grails.plugin.springsecurity.web.UpdateRequestContextHolderExceptionTranslationFilter
 import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
 import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsHttpPutFormContentFilter
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
-import org.springframework.web.filter.HttpPutFormContentFilter
 import test.TestRole
 import test.TestUser
 import test.TestUserRole
@@ -42,7 +42,7 @@ import javax.servlet.ServletResponse
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
  *
- * @author <ahref='mailto:burt@burtbeckwith.com' > Burt Beckwith</a>
+ * @author <ahref='mailto:burt@burtbeckwith.com'  >  Burt Beckwith</a>
  */
 class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
@@ -90,10 +90,10 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
         map[400] instanceof MutableLogoutFilter
         map[800] instanceof GrailsUsernamePasswordAuthenticationFilter
         map[1400] instanceof SecurityContextHolderAwareRequestFilter
-        map[1500] instanceof GrailsRememberMeAuthenticationFilter
-        map[1600] instanceof GrailsAnonymousAuthenticationFilter
-        map[1800] instanceof HttpPutFormContentFilter
-        map[1900] instanceof ExceptionTranslationFilter
+        map[1500] instanceof GrailsAnonymousAuthenticationFilter
+        map[1700] instanceof GrailsHttpPutFormContentFilter
+        map[1800] instanceof GrailsRememberMeAuthenticationFilter
+        map[1900] instanceof UpdateRequestContextHolderExceptionTranslationFilter
         map[2000] instanceof FilterSecurityInterceptor
 
         when:
@@ -134,10 +134,10 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
         filters[3] instanceof DummyFilter
         filters[4] instanceof GrailsUsernamePasswordAuthenticationFilter
         filters[5] instanceof SecurityContextHolderAwareRequestFilter
-        filters[6] instanceof GrailsRememberMeAuthenticationFilter
-        filters[7] instanceof GrailsAnonymousAuthenticationFilter
-        filters[8] instanceof HttpPutFormContentFilter
-        filters[9] instanceof ExceptionTranslationFilter
+        filters[6] instanceof GrailsAnonymousAuthenticationFilter
+        filters[7] instanceof GrailsHttpPutFormContentFilter
+        filters[8] instanceof GrailsRememberMeAuthenticationFilter
+        filters[9] instanceof UpdateRequestContextHolderExceptionTranslationFilter
         filters[10] instanceof FilterSecurityInterceptor
     }
 
