@@ -205,8 +205,7 @@ class SecurityTagLib implements GrailsConfigurationAware {
 		// retain original attributes for later, since hasAccess() removes ones necessary to create a link
 		def origAttrsMinusExpression = [:] + attrs
 		origAttrsMinusExpression.remove 'expression'
-		boolean hasAccess = hasAccess(attrs, 'link')
-		if (hasAccess) {
+		if (hasAccess(attrs, 'link')) {
 			out << g.link(origAttrsMinusExpression, body)
 			return
 		}
@@ -269,7 +268,9 @@ class SecurityTagLib implements GrailsConfigurationAware {
 					if (str) {
 						fallback = Boolean.parseBoolean(str)
 					}
-				} catch(e){}
+				} catch(e) {
+					log.error 'Failed to parse attribute [fallback] for tag [link], defaulting to false', e
+				}
 			}
 		}
 		return fallback

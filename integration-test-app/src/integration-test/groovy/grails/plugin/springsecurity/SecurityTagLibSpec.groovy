@@ -300,7 +300,6 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		assertOutputEquals body, """<sec:link controller="testController" action="testAction" fallback="true">$body</sec:link>"""
 
 		when:
-		// role 'roleInMap' mapped to controller via interceptUrlMap in Config.groovy
 		authenticate 'roleInMap'
 
 		then:
