@@ -263,13 +263,9 @@ class SecurityTagLib implements GrailsConfigurationAware {
 			fallback = o
 		} else {
 			if (o != null) {
-				try {
-					def str = o.toString()
-					if (str) {
-						fallback = Boolean.parseBoolean(str)
-					}
-				} catch(e) {
-					log.error 'Failed to parse attribute [fallback] for tag [link], defaulting to false', e
+				def str = o.toString()
+				if (str) {
+					fallback = Boolean.parseBoolean(str)
 				}
 			}
 		}
