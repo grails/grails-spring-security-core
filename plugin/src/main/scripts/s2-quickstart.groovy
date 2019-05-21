@@ -168,7 +168,7 @@ private void createDomains(Model userModel, Model roleModel, Model requestmapMod
 
 	final threshold = '6.0.10'
 
-	boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(threshold, props.gormVersion)
+	boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(threshold, props.gormVersion ?: props.getProperty("gorm.version"))
 
 	if ( gormVersionAfterThreshold ) {
 		generateFile 'PersonWithoutInjection', userModel.packagePath, userModel.simpleName
