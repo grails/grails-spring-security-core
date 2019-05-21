@@ -272,6 +272,44 @@ class SecurityTagLibSpec extends AbstractIntegrationSpec {
 		                   """<sec:link controller="testController" action="testAction" expression="hasRole('role1')">$body</sec:link>"""
 	}
 
+	void '<sec:link fallback="true"> via expression'() {
+		when:
+		String body = 'Test link'
+
+		then:
+		assertOutputEquals "", """<sec:link controller="testController" action="testAction" expression="hasRole('role1')" fallback="false">$body</sec:link>"""
+
+		then:
+		assertOutputEquals body, """<sec:link controller="testController" action="testAction" expression="hasRole('role1')" fallback="true">$body</sec:link>"""
+
+		when:
+		authenticate 'role1'
+
+		then:
+		assertOutputEquals 'test', """<sec:access expression="hasRole('role1')">test</sec:access>"""
+		assertOutputEquals """<a href="/testController/testAction">$body</a>""",
+				"""<sec:link controller="testController" action="testAction" expression="hasRole('role1')" fallback="true">$body</sec:link>"""
+	}
+
+	@Ignore
+	void '<sec:link fallback="true"> via url'() {
+		when:
+		String body = 'Test link'
+
+		then:
+		assertOutputEquals '', """<sec:link controller="testController" action="testAction" fallback="false">$body</sec:link>"""
+
+		then:
+		assertOutputEquals body, """<sec:link controller="testController" action="testAction" fallback="true">$body</sec:link>"""
+
+		when:
+		authenticate 'roleInMap'
+
+		then:
+		assertOutputEquals """<a href="/testController/testAction">$body</a>""",
+				"""<sec:link controller="testController" action="testAction" fallback="true">$body</sec:link>"""
+	}
+
 	@Ignore
 	void '<sec:link> via url'() {
 		when:

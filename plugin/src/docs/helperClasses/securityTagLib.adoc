@@ -248,3 +248,10 @@ To use access controls defined, for example, in the interceptUrlMap:
 ----
 <sec:link controller='myController' action='myAction'>My link text</sec:link>
 ----
+
+By default, nothing will be rendered if the specified expression evaluates to `false` or URL is not allowed. To render only the text that would have been linked, set the `fallback` attribute:
+[source,html]
+.Listing {counter:listing}. Example using `<sec:link fallback='true'>` without an expression
+----
+<sec:link controller='myController' action='myAction' fallback='true'>This text will display but won't be linked if the user doesn't have access</sec:link>
+----
