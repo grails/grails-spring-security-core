@@ -40,7 +40,7 @@ and add any custom mappings as needed, e.g.
 grails.plugin.springsecurity.interceptUrlMap = [
    ...
    [pattern: '/secure/**',  access: ['ROLE_ADMIN']],
-   [pattern: '/finance/**', access: ['ROLE_FINANCE', 'isFullyAuthenticated()']]
+   [pattern: '/finance/**', access: ['ROLE_FINANCE', 'IS_AUTHENTICATED_FULLY']]
 ]
 ----
 
