@@ -75,7 +75,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    [pattern: '/**/favicon.ico', access: ['permitAll']],
 
    [pattern: '/user/**',        access: 'ROLE_USER'],
-   [pattern: '/admin/**',       access: ['ROLE_ADMIN', 'isFullyAuthenticated()']],
+   [pattern: '/admin/**',       access: ['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']],
    [pattern: '/thing/register', access: 'isAuthenticated()', httpMethod: 'PUT']
 ]
 ----
