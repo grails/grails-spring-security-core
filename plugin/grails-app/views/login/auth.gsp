@@ -3,10 +3,12 @@
 	<meta name="layout" content="${gspLayout ?: 'main'}"/>
 	<title><g:message code='springSecurity.login.title'/></title>
 	<style type="text/css" media="screen">
+
 	#login {
 		margin: 15px 0px;
 		padding: 0px;
 		text-align: center;
+		font-family: Arial, Helvetica, sans-serif;
 	}
 
 	#login .inner {
@@ -41,7 +43,7 @@
 	}
 
 	#login .inner .cssform input[type="text"] {
-		width: 120px;
+		width: 75%;
 	}
 
 	#login .inner .cssform label {
@@ -54,15 +56,15 @@
 		padding-right: 10px;
 	}
 
-	#login #remember_me_holder {
+	#remember_me_holder {
 		padding-left: 120px;
 	}
 
-	#login #submit {
+	#submit {
 		margin-left: 15px;
 	}
 
-	#login #remember_me_holder label {
+	#remember_me_holder label {
 		float: none;
 		margin-left: 0;
 		text-align: left;
@@ -75,11 +77,16 @@
 	}
 
 	#login .inner .text_ {
-		width: 120px;
+		width: 75%;
 	}
 
 	#login .inner .chk {
 		height: 12px;
+	}
+
+	#passwordToggler {
+		padding: 3px 4px;
+		cursor: pointer;
 	}
 	</style>
 </head>
@@ -96,12 +103,13 @@
 		<form action="${postUrl ?: '/login/authenticate'}" method="POST" id="loginForm" class="cssform" autocomplete="off">
 			<p>
 				<label for="username"><g:message code='springSecurity.login.username.label'/>:</label>
-				<input type="text" class="text_" name="${usernameParameter ?: 'username'}" id="username"/>
+				<input type="text" class="text_" name="${usernameParameter ?: 'username'}" id="username" autocapitalize="none"/>
 			</p>
 
 			<p>
 				<label for="password"><g:message code='springSecurity.login.password.label'/>:</label>
 				<input type="password" class="text_" name="${passwordParameter ?: 'password'}" id="password"/>
+				<i id="passwordToggler" title="toggle password display" onclick="passwordDisplayToggle()">&#128065;</i>
 			</p>
 
 			<p id="remember_me_holder">
@@ -115,10 +123,25 @@
 		</form>
 	</div>
 </div>
-<script>
-(function() {
-	document.forms['loginForm'].elements['${usernameParameter ?: 'username'}'].focus();
-})();
+<script type="text/javascript">
+	document.addEventListener("DOMContentLoaded", function(event) {
+		document.forms['loginForm'].elements['username'].focus();
+	});
+
+	function passwordDisplayToggle() {
+		var toggleEl = document.getElementById("passwordToggler");
+		var eyeIcon = '\u{1F441}';
+		var xIcon = '\u{2715}';
+		var passEl = document.getElementById("password");
+
+		if (passEl.type === "password") {
+			toggleEl.innerHTML = xIcon;
+			passEl.type = "text";
+		} else {
+			toggleEl.innerHTML = eyeIcon;
+			passEl.type = "password";
+		}
+	}
 </script>
 </body>
 </html>

@@ -36,4 +36,4 @@ Tell us what happens instead
 
 ### Example Application
 
-- TODO: link to github repository with example that reproduces the issue
+- TODO: link to Github repository with example that reproduces the issue
