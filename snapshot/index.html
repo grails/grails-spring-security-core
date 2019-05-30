@@ -2585,7 +2585,7 @@ grails.plugin.springsecurity.fii.rejectPublicInvocations = true</code></pre>
    [pattern: '/**/favicon.ico', access: ['permitAll']],
 
    [pattern: '/user/**',        access: 'ROLE_USER'],
-   [pattern: '/admin/**',       access: ['ROLE_ADMIN', 'isFullyAuthenticated()']],
+   [pattern: '/admin/**',       access: ['ROLE_ADMIN', 'IS_AUTHENTICATED_FULLY']],
    [pattern: '/thing/register', access: 'isAuthenticated()', httpMethod: 'PUT']
 ]</code></pre>
 </div>
@@ -2955,7 +2955,7 @@ class Thing {
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">grails.plugin.springsecurity.interceptUrlMap = [
    ...
    [pattern: '/secure/**',  access: ['ROLE_ADMIN']],
-   [pattern: '/finance/**', access: ['ROLE_FINANCE', 'isFullyAuthenticated()']]
+   [pattern: '/finance/**', access: ['ROLE_FINANCE', 'IS_AUTHENTICATED_FULLY']]
 ]</code></pre>
 </div>
 </div>
@@ -3014,12 +3014,12 @@ new Requestmap(url: '/admin/role/**', configAttribute: 'ROLE_SUPERVISOR').save()
 new Requestmap(url: '/admin/user/**',
                configAttribute: 'ROLE_ADMIN,ROLE_SUPERVISOR').save()
 new Requestmap(url: '/login/impersonate',
-               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save()
+               configAttribute: 'ROLE_SWITCH_USER,IS_AUTHENTICATED_FULLY').save()
 springSecurityService.clearCachedRequestmaps()</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>The <code>configAttribute</code> value can have a single value or have multiple comma-delimited values. In this example only users with <code>ROLE_ADMIN</code> or <code>ROLE_SUPERVISOR</code> can access <code>/admin/user/**</code> urls, and only users with <code>ROLE_SWITCH_USER</code> can access the switch-user url (<code>/login/impersonate</code>) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, or <code>IS_AUTHENTICATED_ANONYMOUSLY</code> (or their corresponding SpEL expressions) with one or more roles means the user must have one of the roles and satisty the <code>IS_AUTHENTICATED</code> rule.</p>
+<p>The <code>configAttribute</code> value can have a single value or have multiple comma-delimited values. In this example only users with <code>ROLE_ADMIN</code> or <code>ROLE_SUPERVISOR</code> can access <code>/admin/user/**</code> urls, and only users with <code>ROLE_SWITCH_USER</code> can access the switch-user url (<code>/login/impersonate</code>) and in addition must be authenticated fully, i.e. not using a remember-me cookie. Note that when specifying multiple roles, the user must have at least one of them, but when combining <code>IS_AUTHENTICATED_FULLY</code>, <code>IS_AUTHENTICATED_REMEMBERED</code>, or <code>IS_AUTHENTICATED_ANONYMOUSLY</code> with one or more roles means the user must have one of the roles and satisty the <code>IS_AUTHENTICATED</code> rule.</p>
 </div>
 <div class="paragraph">
 <p>Unlike the <code>application.groovy</code> Map approach (<a href="#configGroovyMap">Static Map</a>), you do not need to revise the <code>Requestmap</code> entry order because the plugin calculates the most specific rule that applies to the current request.</p>
@@ -6190,7 +6190,7 @@ class RoleHierarchyEntry implements Serializable {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">grails.plugin.springsecurity.controllerAnnotations.staticRules = [
    ...
-   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
+   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'IS_AUTHENTICATED_FULLY']]
 ]</code></pre>
 </div>
 </div>
@@ -6201,7 +6201,7 @@ class RoleHierarchyEntry implements Serializable {
 <div class="title">Listing 71. Guarding the switch user url with a database requestmap</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">new Requestmap(url: '/login/impersonate',
-               configAttribute: 'ROLE_SWITCH_USER,isFullyAuthenticated()').save(flush: true)</code></pre>
+               configAttribute: 'ROLE_SWITCH_USER,IS_AUTHENTICATED_FULLY').save(flush: true)</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -6212,7 +6212,7 @@ class RoleHierarchyEntry implements Serializable {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">grails.plugin.springsecurity.interceptUrlMap = [
    ...
-   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
+   [pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'IS_AUTHENTICATED_FULLY']]
 ]</code></pre>
 </div>
 </div>
@@ -8006,7 +8006,7 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 <div id="footer">
 <div id="footer-text">
 Version 4.0.0.RC2<br>
-Last updated 2019-05-25 14:35:20 +00:00
+Last updated 2019-05-30 08:17:36 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
