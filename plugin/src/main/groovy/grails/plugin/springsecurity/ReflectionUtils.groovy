@@ -210,7 +210,7 @@ class ReflectionUtils {
 
 	static SortedMap<Integer, String> findFilterChainNames(ConfigObject conf) {
 		SpringSecurityUtils.findFilterChainNames conf.filterChain.filterNames,
-				conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509,
-				conf.useDigestAuth, conf.useBasicAuth, conf.useSwitchUserFilter
+				conf.secureChannel.definition as boolean, conf.ipRestrictions as boolean, conf.useX509 as boolean,
+				conf.useDigestAuth as boolean, conf.useBasicAuth as boolean, conf.useSwitchUserFilter as boolean
 	}
 }

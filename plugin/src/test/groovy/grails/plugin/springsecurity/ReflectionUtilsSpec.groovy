@@ -147,4 +147,27 @@ class ReflectionUtilsSpec extends AbstractUnitSpec {
 		then:
 		ReflectionUtils.getGrailsServerURL() == null
 	}
+
+	void 'findFilterNames works with multiple boolean representations of settings'() {
+		when:
+		ConfigObject config = [
+				'filterChain.filterNames':'dummy',
+				'secureChannel.definition':secureChannelValue,
+				'ipRestrictions':ipRestrictionsValue,
+				'useX509':x509Value,
+				'useDigestAuth':digestAuthValue,
+				'useBasicAuth':basicAuthValue,
+				'useSwitchUserFilter':switchUserFilterValue
+								] as ConfigObject
+		ReflectionUtils.findFilterChainNames(config)
+
+		then:
+		noExceptionThrown()
+
+		where:
+		secureChannelValue | ipRestrictionsValue | x509Value | digestAuthValue | basicAuthValue | switchUserFilterValue
+		true			   | false				 | false	 | false		   | true			| false
+		'true'			   | 'false'			 | 'false'	 | 'false'		   | 'true'			| 'false'
+		true			   | 'false'			 | null	     | null		       | 'true'			| null
+	}
 }
