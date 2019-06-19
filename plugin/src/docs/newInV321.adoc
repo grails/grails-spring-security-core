@@ -3,6 +3,9 @@
 
 === Default SecurityContextHolder strategy
 
-Version 3.2.1 of the plugin now uses `"MODE_INHERITABLETHREADLOCAL"` as the default strategy. This means that newly created thread inherit the security context of the parent thread.
+Version 3.2.1 of the plugin now uses `"MODE_INHERITABLETHREADLOCAL"` as the default strategy. This means that newly created threads inherit the security context of the parent thread.
 
-NOTE: Beware when using thread pools. Threads keep the security context they inherit when the thread is created the first time. The context isn't updated when the thread is reused for a different task.
+[WARNING]
+====
+Beware when using thread pools. Threads keep the security context they inherit when the thread is created the first time. The context isn't updated when the thread is reused for a different task.
+====
