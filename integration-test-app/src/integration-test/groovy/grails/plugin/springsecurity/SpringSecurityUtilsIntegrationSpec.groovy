@@ -36,6 +36,10 @@ import test.TestUserRole
 import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
+import java.util.concurrent.Callable
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE
 import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
@@ -51,6 +55,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 	SpringSecurityService springSecurityService
 
 	private static final String username = 'username'
+	private static final String otherUsername = 'other'
 	private static TestUser testUser
 
 	void setup() {
@@ -61,7 +66,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 			def role = save(new TestRole(auth: 'ROLE_ADMIN', description: 'admin'))
 			TestUserRole.create testUser, role
 
-			def user = save(new TestUser(loginName: 'other', passwrrd: 'password'))
+			def user = save(new TestUser(loginName: otherUsername, passwrrd: 'password'))
 			TestUserRole.create user, role
 		}
 	}
@@ -219,9 +224,9 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		doInThread {
 			assert springSecurityService.loggedIn, "should appear authenticated in a new thread"
 
-			SpringSecurityUtils.doWithAuth 'other', {
+			SpringSecurityUtils.doWithAuth otherUsername, {
 				assert springSecurityService.loggedIn
-				assert 'other' == springSecurityService.principal.username
+				assert otherUsername == springSecurityService.principal.username
 			}
 
 			assert springSecurityService.loggedIn, 'should not have reset auth'
@@ -230,6 +235,98 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		then:
 		assert springSecurityService.loggedIn, 'should still be authenticated'
 		assert username == springSecurityService.principal.username, 'should still be unauthenticated in main thread'
+	}
+
+	void 'thread pool'() {
+		given:
+		def threadPool = Executors.newFixedThreadPool(1)
+		assert !springSecurityService.isLoggedIn()
+
+		expect: "authentication propagates into thread pool"
+		// doWithAuth: Simulate security context from session
+		username == SpringSecurityUtils.doWithAuth(username) {
+			assert springSecurityService.principal.username == username, "correct username in main thread"
+			// use thread pool: simulate using e.g. Grails Async Framework
+			// developer may think "security context is bound automatically, no need to use doWithAuth"
+			return getPrincipalInThreadPool(threadPool)
+		}
+
+		and: "authentication propagates into thread pool again"
+		// Simulate second HTTP request by different user. Uses same (servlet container) thread.
+		// BUG: User in thread is still `user`
+		otherUsername == SpringSecurityUtils.doWithAuth(otherUsername) {
+			assert springSecurityService.principal.username == otherUsername, "correct username in main thread"
+			return getPrincipalInThreadPool(threadPool)
+		}
+	}
+
+	void 'doWithAuth in thread pool'() {
+		given:
+		def threadPool = Executors.newFixedThreadPool(2)
+
+		// Prepare two user context to simulate session.
+		def userContext = SecurityContextHolder.createEmptyContext()
+		SecurityContextHolder.context = userContext
+		SpringSecurityUtils.reauthenticate(username, null)
+		def otherUserContext = SecurityContextHolder.createEmptyContext()
+		SecurityContextHolder.context = otherUserContext
+		SpringSecurityUtils.reauthenticate(otherUsername, null)
+
+		Closure runAsync = { Closure c ->
+			threadPool.submit(new Runnable() {
+				@Override
+				void run() throws Exception {
+					c()
+				}
+			})
+		}
+
+		// A potential fix for the bug in the above spec might be to wrap every method that runs in a different thread in a doWithAuth
+		Closure someMethod = { String principal, CompletableFuture<String> futureForPrincipal ->
+			String principalInThread = SpringSecurityUtils.doWithAuth(principal) {
+				// do some work
+				sleep(1000)
+				// just for testing:
+				return springSecurityService.principal.username
+			}
+			futureForPrincipal.complete(principalInThread)
+		}
+
+		Closure anotherMethod = { String principal, CompletableFuture<String> futureForPrincipal ->
+			SpringSecurityUtils.doWithAuth(principal) {
+				// do some work
+				// queue another background task
+				runAsync someMethod.curry(principal, futureForPrincipal)
+				// do more work: someMethod should be running now as well
+				sleep(250)
+				// someMethod still running. finishes after this method finishes
+			}
+		}
+
+		when:
+		"user calls anotherLongRunningBackgroundTask"
+		// Request from user: Context is bound from session
+		SecurityContextHolder.context = userContext
+		// user calls anotherLongRunningBackgroundTask: Now both threads in the pool have inherited his security context
+		def future = new CompletableFuture()
+		runAsync anotherMethod.curry(username, future)
+
+		then:
+		"Correct user in background task"
+		username == future.get()
+
+		when:
+		"otherUser calls anotherLongRunningBackgroundTask"
+		// Request from otherUser: Context is bound from session
+		SecurityContextHolder.context = otherUserContext
+		def otherFuture = new CompletableFuture()
+		runAsync anotherMethod.curry(otherUsername, otherFuture)
+
+		then:
+		"Correct user in background task"
+		// Still the same bug: While someMethod was waiting for 1000 ms anotherMethod already completed and `doWithAuth`
+		// reset the authorization to the original one: user
+		otherUsername == otherFuture.get()
 	}
 
 	void 'getCurrentUser not logged in'() {
@@ -268,6 +365,15 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 		if (exception) {
 			throw exception
 		}
+	}
+
+	private String getPrincipalInThreadPool(ExecutorService executorService) {
+		executorService.submit(new Callable<String>() {
+			@Override
+			String call() throws Exception {
+				springSecurityService.principal.username
+			}
+		}).get()
 	}
 }
 
