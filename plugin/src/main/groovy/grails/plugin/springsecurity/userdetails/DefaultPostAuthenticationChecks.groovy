@@ -17,6 +17,8 @@ package grails.plugin.springsecurity.userdetails
 import groovy.util.logging.Slf4j
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.context.MessageSource
+import org.springframework.context.MessageSourceAware
 import org.springframework.context.support.MessageSourceAccessor
 import org.springframework.security.authentication.CredentialsExpiredException
 import org.springframework.security.core.SpringSecurityMessageSource
@@ -33,9 +35,14 @@ import groovy.transform.CompileStatic
  */
 @Slf4j
 @CompileStatic
-class DefaultPostAuthenticationChecks implements UserDetailsChecker {
+class DefaultPostAuthenticationChecks implements UserDetailsChecker, MessageSourceAware {
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.accessor
+
+	@Override
+	void setMessageSource(MessageSource messageSource) {
+		this.messages = new MessageSourceAccessor(messageSource)
+	}
 
 	void check(UserDetails user) {
 		if (!user.credentialsNonExpired) {
