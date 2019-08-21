@@ -1,4 +1,4 @@
-[[newInV3]]
+[[newInV4]]
 == What's New in Version 4.0
 
 Version 4.x of the plugin requires Grails 4 or higher; to use the plugin in Grails 2 or 3 applications use the latest 3.3.x, 3.2.x or 2.x.x version of the plugin.
