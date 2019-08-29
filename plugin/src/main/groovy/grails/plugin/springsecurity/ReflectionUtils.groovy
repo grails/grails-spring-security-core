@@ -142,7 +142,7 @@ class ReflectionUtils {
 				tokens = [value.toString()]
 			}
 
-			def httpMethod = row.httpMethod
+			def httpMethod = row.httpMethod ?: null
 			if (httpMethod instanceof CharSequence) {
 				httpMethod = HttpMethod.valueOf(httpMethod)
 			}
