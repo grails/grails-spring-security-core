@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+
+import org.grails.config.NavigableMap
 import org.springframework.http.HttpMethod
 
 /**
@@ -147,4 +149,23 @@ class ReflectionUtilsSpec extends AbstractUnitSpec {
 		then:
 		ReflectionUtils.getGrailsServerURL() == null
 	}
+	
+    void 'get intercept url map with empty httpMethod config'() {
+        when:
+        List<Map<String, Object>> interceptUrlMap = [
+                [
+                        pattern   : '/secure/**',
+                        access    : ['IS_AUTHENTICATED_ANONYMOUSLY'],
+                        httpMethod: new NavigableMap.NullSafeNavigator(null, null) //This is the case with missing config.
+                ]
+        ]
+        List<InterceptedUrl> interceptedUrls = ReflectionUtils.splitMap(interceptUrlMap)
+
+        then:
+        notThrown(GroovyRuntimeException)
+        interceptedUrls?.size() == 1
+        interceptedUrls.first()?.pattern == '/secure/**'
+        interceptedUrls.first().configAttributes?.size() == 1
+        interceptedUrls.first().configAttributes.first().attribute == 'IS_AUTHENTICATED_ANONYMOUSLY'
+    }
 }
