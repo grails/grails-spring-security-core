@@ -6,8 +6,5 @@ artifactory {
             username = System.getenv("BINTRAY_USER") ?: project.hasProperty("bintrayUser") ? project.bintrayUser : ''
             password = System.getenv("BINTRAY_KEY") ?: project.hasProperty("bintrayKey") ? project.bintrayKey : ''
         }
-        defaults {
-            publications('maven')
-        }
     }
 }
