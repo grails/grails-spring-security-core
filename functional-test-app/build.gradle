@@ -70,7 +70,7 @@ dependencies {
 }
 
 webdriverBinaries {
-    chromedriver '2.46'
+    chromedriver '77.0.3865.40'
     geckodriver '0.23.0'
 }
 
