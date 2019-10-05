@@ -14,21 +14,23 @@
  */
 package grails.plugin.springsecurity
 
+import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE
+import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
 import grails.plugin.springsecurity.userdetails.GrailsUser
 import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
+import grails.plugin.springsecurity.web.UpdateRequestContextHolderExceptionTranslationFilter
 import grails.plugin.springsecurity.web.authentication.GrailsUsernamePasswordAuthenticationFilter
 import grails.plugin.springsecurity.web.authentication.logout.MutableLogoutFilter
 import grails.plugin.springsecurity.web.filter.GrailsAnonymousAuthenticationFilter
+import grails.plugin.springsecurity.web.filter.GrailsHttpPutFormContentFilter
 import grails.plugin.springsecurity.web.filter.GrailsRememberMeAuthenticationFilter
 import org.springframework.beans.factory.NoSuchBeanDefinitionException
 import org.springframework.beans.factory.support.GenericBeanDefinition
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
-import org.springframework.web.filter.HttpPutFormContentFilter
 import test.TestRole
 import test.TestUser
 import test.TestUserRole
@@ -37,9 +39,6 @@ import javax.servlet.FilterChain
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
 
-import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE
-import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
-
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.
  *
@@ -47,230 +46,232 @@ import static org.springframework.beans.factory.support.AbstractBeanDefinition.A
  */
 class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
-	def securityFilterChains
-	SpringSecurityService springSecurityService
+    def securityFilterChains
+    SpringSecurityService springSecurityService
 
-	private static final String username = 'username'
-	private static TestUser testUser
+    private static final String username = 'username'
+    private static TestUser testUser
 
-	void setup() {
-		if (testUser) return
+    void setup() {
+        if (testUser) {
+            return
+        }
 
-		TestUser.withNewTransaction {
-			testUser = save(new TestUser(loginName: username, passwrrd: 'password'))
-			def role = save(new TestRole(auth: 'ROLE_ADMIN', description: 'admin'))
-			TestUserRole.create testUser, role
+        TestUser.withNewTransaction {
+            testUser = save(new TestUser(loginName: username, passwrrd: 'password'))
+            def role = save(new TestRole(auth: 'ROLE_ADMIN', description: 'admin'))
+            TestUserRole.create testUser, role
 
-			def user = save(new TestUser(loginName: 'other', passwrrd: 'password'))
-			TestUserRole.create user, role
-		}
-	}
+            def user = save(new TestUser(loginName: 'other', passwrrd: 'password'))
+            TestUserRole.create user, role
+        }
+    }
 
-	void cleanupSpec() {
-		TestUser.withNewTransaction {
-			TestUserRole.deleteAll TestUserRole.list()
-			TestRole.deleteAll TestRole.list()
-			TestUser.deleteAll TestUser.list()
-		}
-	}
+    void cleanupSpec() {
+        TestUser.withNewTransaction {
+            TestUserRole.deleteAll TestUserRole.list()
+            TestRole.deleteAll TestRole.list()
+            TestUser.deleteAll TestUser.list()
+        }
+    }
 
-	void cleanup() {
-		SecurityContextHolder.clearContext() // logout
-	}
+    void cleanup() {
+        SecurityContextHolder.clearContext() // logout
+    }
 
-	void 'clientRegisterFilter'() {
-		given:
-		def map = SpringSecurityUtils.configuredOrderedFilters
+    void 'clientRegisterFilter'() {
+        given:
+        def map = SpringSecurityUtils.configuredOrderedFilters
 
-		expect:
-		10 == map.size()
-		map[Integer.MIN_VALUE + 10] instanceof SecurityRequestHolderFilter
-		map[300] instanceof SecurityContextPersistenceFilter
-		map[400] instanceof MutableLogoutFilter
-		map[800] instanceof GrailsUsernamePasswordAuthenticationFilter
-		map[1400] instanceof SecurityContextHolderAwareRequestFilter
-		map[1500] instanceof GrailsRememberMeAuthenticationFilter
-		map[1600] instanceof GrailsAnonymousAuthenticationFilter
-		map[1800] instanceof HttpPutFormContentFilter
-		map[1900] instanceof ExceptionTranslationFilter
-		map[2000] instanceof FilterSecurityInterceptor
+        expect:
+        10 == map.size()
+        map[Integer.MIN_VALUE + 10] instanceof SecurityRequestHolderFilter
+        map[300] instanceof SecurityContextPersistenceFilter
+        map[400] instanceof MutableLogoutFilter
+        map[800] instanceof GrailsUsernamePasswordAuthenticationFilter
+        map[1400] instanceof SecurityContextHolderAwareRequestFilter
+        map[1500] instanceof GrailsAnonymousAuthenticationFilter
+        map[1700] instanceof GrailsHttpPutFormContentFilter
+        map[1800] instanceof GrailsRememberMeAuthenticationFilter
+        map[1900] instanceof UpdateRequestContextHolderExceptionTranslationFilter
+        map[2000] instanceof FilterSecurityInterceptor
 
-		when:
-		SpringSecurityUtils.clientRegisterFilter 'foo', SecurityFilterPosition.LOGOUT_FILTER
+        when:
+        SpringSecurityUtils.clientRegisterFilter 'foo', SecurityFilterPosition.LOGOUT_FILTER
 
-		then:
-		thrown AssertionError
+        then:
+        thrown AssertionError
 
-		when:
-		SpringSecurityUtils.clientRegisterFilter 'foo', SecurityFilterPosition.LOGOUT_FILTER.order + 10
+        when:
+        SpringSecurityUtils.clientRegisterFilter 'foo', SecurityFilterPosition.LOGOUT_FILTER.order + 10
 
-		then:
-		thrown NoSuchBeanDefinitionException
+        then:
+        thrown NoSuchBeanDefinitionException
 
-		when:
-		SpringSecurityUtils.clientRegisterFilter 'passwordEncoder', SecurityFilterPosition.LOGOUT_FILTER.order + 10
+        when:
+        SpringSecurityUtils.clientRegisterFilter 'passwordEncoder', SecurityFilterPosition.LOGOUT_FILTER.order + 10
 
-		then:
-		thrown ClassCastException
+        then:
+        thrown ClassCastException
 
-		when:
-		grailsApplication.mainContext.registerBeanDefinition 'dummyFilter',
-			new GenericBeanDefinition(beanClass: DummyFilter, scope: SCOPE_PROTOTYPE, autowireMode: AUTOWIRE_BY_NAME)
+        when:
+        grailsApplication.mainContext.registerBeanDefinition 'dummyFilter',
+                new GenericBeanDefinition(beanClass: DummyFilter, scope: SCOPE_PROTOTYPE, autowireMode: AUTOWIRE_BY_NAME)
 
-		SpringSecurityUtils.clientRegisterFilter 'dummyFilter', SecurityFilterPosition.LOGOUT_FILTER.order + 10
+        SpringSecurityUtils.clientRegisterFilter 'dummyFilter', SecurityFilterPosition.LOGOUT_FILTER.order + 10
 
-		then:
-		11 == map.size()
-		map[410] instanceof DummyFilter
+        then:
+        11 == map.size()
+        map[410] instanceof DummyFilter
 
-		when:
-		def filters = securityFilterChains[0].filters
+        when:
+        def filters = securityFilterChains[0].filters
 
-		then:
-		filters[0] instanceof SecurityRequestHolderFilter
-		filters[1] instanceof SecurityContextPersistenceFilter
-		filters[2] instanceof MutableLogoutFilter
-		filters[3] instanceof DummyFilter
-		filters[4] instanceof GrailsUsernamePasswordAuthenticationFilter
-		filters[5] instanceof SecurityContextHolderAwareRequestFilter
-		filters[6] instanceof GrailsRememberMeAuthenticationFilter
-		filters[7] instanceof GrailsAnonymousAuthenticationFilter
-		filters[8] instanceof HttpPutFormContentFilter
-		filters[9] instanceof ExceptionTranslationFilter
-		filters[10] instanceof FilterSecurityInterceptor
-	}
+        then:
+        filters[0] instanceof SecurityRequestHolderFilter
+        filters[1] instanceof SecurityContextPersistenceFilter
+        filters[2] instanceof MutableLogoutFilter
+        filters[3] instanceof DummyFilter
+        filters[4] instanceof GrailsUsernamePasswordAuthenticationFilter
+        filters[5] instanceof SecurityContextHolderAwareRequestFilter
+        filters[6] instanceof GrailsAnonymousAuthenticationFilter
+        filters[7] instanceof GrailsHttpPutFormContentFilter
+        filters[8] instanceof GrailsRememberMeAuthenticationFilter
+        filters[9] instanceof UpdateRequestContextHolderExceptionTranslationFilter
+        filters[10] instanceof FilterSecurityInterceptor
+    }
 
-	void 'reauthenticate'() {
-		expect:
-		!springSecurityService.loggedIn
+    void 'reauthenticate'() {
+        expect:
+        !springSecurityService.loggedIn
 
-		when:
-		SpringSecurityUtils.reauthenticate username, null
+        when:
+        SpringSecurityUtils.reauthenticate username, null
 
-		then:
-		springSecurityService.loggedIn
+        then:
+        springSecurityService.loggedIn
 
-		when:
-		def principal = springSecurityService.principal
+        when:
+        def principal = springSecurityService.principal
 
-		then:
-		principal instanceof GrailsUser
-		['ROLE_ADMIN'] == principal.authorities.authority
-		username == principal.username
-	}
+        then:
+        principal instanceof GrailsUser
+        ['ROLE_ADMIN'] == principal.authorities.authority
+        username == principal.username
+    }
 
-	void 'doWithAuth with a current auth'() {
-		expect:
-		!springSecurityService.loggedIn
+    void 'doWithAuth with a current auth'() {
+        expect:
+        !springSecurityService.loggedIn
 
-		when:
-		SpringSecurityUtils.reauthenticate username, null
+        when:
+        SpringSecurityUtils.reauthenticate username, null
 
-		then:
-		springSecurityService.loggedIn
+        then:
+        springSecurityService.loggedIn
 
-		when:
-		doInThread {
-			assert springSecurityService.loggedIn, "should be authenticated in a new thread"
+        when:
+        doInThread {
+            assert springSecurityService.loggedIn, "should be authenticated in a new thread"
 
-			SpringSecurityUtils.doWithAuth username, {
-				assert springSecurityService.loggedIn
-				assert username == springSecurityService.principal.username
-			}
+            SpringSecurityUtils.doWithAuth username, {
+                assert springSecurityService.loggedIn
+                assert username == springSecurityService.principal.username
+            }
 
-			assert springSecurityService.loggedIn, 'should not have reset auth in a new thread'
-		}
+            assert springSecurityService.loggedIn, 'should not have reset auth in a new thread'
+        }
 
-		then:
-		assert springSecurityService.loggedIn, 'should still be authenticated in main thread'
-	}
+        then:
+        assert springSecurityService.loggedIn, 'should still be authenticated in main thread'
+    }
 
-	void 'doWithAuth with a new auth'() {
-		expect:
-		!springSecurityService.loggedIn
+    void 'doWithAuth with a new auth'() {
+        expect:
+        !springSecurityService.loggedIn
 
-		when:
-		doInThread {
-			assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
+        when:
+        doInThread {
+            assert !springSecurityService.loggedIn, "shouldn't appear authenticated in a new thread"
 
-			SpringSecurityUtils.doWithAuth username, {
-				assert springSecurityService.loggedIn
-				assert username == springSecurityService.principal.username
-			}
+            SpringSecurityUtils.doWithAuth username, {
+                assert springSecurityService.loggedIn
+                assert username == springSecurityService.principal.username
+            }
 
-			assert !springSecurityService.loggedIn, 'should have reset auth'
-		}
+            assert !springSecurityService.loggedIn, 'should have reset auth'
+        }
 
-		then:
-		assert springSecurityService.loggedIn, 'should still be authenticated in main thread'
-	}
+        then:
+        assert springSecurityService.loggedIn, 'should still be authenticated in main thread'
+    }
 
-	void 'doWithAuth with a new auth, existing'() {
-		expect:
-		!springSecurityService.loggedIn
+    void 'doWithAuth with a new auth, existing'() {
+        expect:
+        !springSecurityService.loggedIn
 
-		when:
-		SpringSecurityUtils.reauthenticate username, null
+        when:
+        SpringSecurityUtils.reauthenticate username, null
 
-		then:
-		springSecurityService.loggedIn
+        then:
+        springSecurityService.loggedIn
 
-		when:
-		doInThread {
-			assert springSecurityService.loggedIn, "should appear authenticated in a new thread"
+        when:
+        doInThread {
+            assert springSecurityService.loggedIn, "should appear authenticated in a new thread"
 
-			SpringSecurityUtils.doWithAuth 'other', {
-				assert springSecurityService.loggedIn
-				assert 'other' == springSecurityService.principal.username
-			}
+            SpringSecurityUtils.doWithAuth 'other', {
+                assert springSecurityService.loggedIn
+                assert 'other' == springSecurityService.principal.username
+            }
 
-			assert springSecurityService.loggedIn, 'should not have reset auth'
-		}
+            assert springSecurityService.loggedIn, 'should not have reset auth'
+        }
 
-		then:
-		assert springSecurityService.loggedIn, 'should still be authenticated'
-		assert username == springSecurityService.principal.username, 'should still be unauthenticated in main thread'
-	}
+        then:
+        assert springSecurityService.loggedIn, 'should still be authenticated'
+        assert username == springSecurityService.principal.username, 'should still be unauthenticated in main thread'
+    }
 
-	void 'getCurrentUser not logged in'() {
-		expect:
-		!springSecurityService.loggedIn
-		!springSecurityService.currentUser
-	}
+    void 'getCurrentUser not logged in'() {
+        expect:
+        !springSecurityService.loggedIn
+        !springSecurityService.currentUser
+    }
 
-	void 'getCurrentUser logged in'() {
-		when:
-		SpringSecurityUtils.reauthenticate username, null
+    void 'getCurrentUser logged in'() {
+        when:
+        SpringSecurityUtils.reauthenticate username, null
 
-		then:
-		springSecurityService.loggedIn
+        then:
+        springSecurityService.loggedIn
 
-		when:
-		def currentUser = springSecurityService.currentUser
+        when:
+        def currentUser = springSecurityService.currentUser
 
-		then:
-		currentUser
-		currentUser.id == testUser.id
-	}
+        then:
+        currentUser
+        currentUser.id == testUser.id
+    }
 
-	private void doInThread(Closure c) {
-		Throwable exception
+    private void doInThread(Closure c) {
+        Throwable exception
 
-		Thread.start {
-			try {
-				c()
-			}
-			catch (Throwable e) {
-				exception = e
-			}
-		}.join()
+        Thread.start {
+            try {
+                c()
+            }
+            catch (Throwable e) {
+                exception = e
+            }
+        }.join()
 
-		if (exception) {
-			throw exception
-		}
-	}
+        if (exception) {
+            throw exception
+        }
+    }
 }
 
 class DummyFilter extends GenericFilterBean {
-	void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {}
+    void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) {}
 }
