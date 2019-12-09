@@ -133,7 +133,7 @@ class ReflectionUtils {
 	static List<InterceptedUrl> splitMap(List<Map<String, Object>> map) {
 		map.collect { Map<String, Object> row ->
 
-			List tokens
+			List<String> tokens
 			def value = row.access
 			if (value instanceof Collection || value.getClass().array) {
 				tokens = value*.toString()
@@ -147,7 +147,7 @@ class ReflectionUtils {
 				httpMethod = HttpMethod.valueOf(httpMethod)
 			}
 
-			new InterceptedUrl(row.pattern, tokens, httpMethod)
+			new InterceptedUrl(row.pattern as String, tokens, httpMethod as HttpMethod)
 		}
 	}
 
