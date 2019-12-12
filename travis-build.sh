@@ -12,7 +12,7 @@ echo "*******************************"
 echo "spring-security-core:check"
 echo "*******************************"
 
-./gradlew -Dgeb.env=firefoxHeadless :spring-security-core:check --console=plain || EXIT_STATUS=$?
+./gradlew -Dgeb.env=firefoxHeadless :spring-security-core:check --no-daemon --console=plain || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "spring-security-core:check failed => exit $EXIT_STATUS"
@@ -23,7 +23,7 @@ echo "*******************************"
 echo "spring-security-core:install"
 echo "*******************************"
 
-./gradlew :spring-security-core:install --console=plain  || EXIT_STATUS=$?
+./gradlew :spring-security-core:install --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "spring-security-core:install failed => exit $EXIT_STATUS"
@@ -34,7 +34,7 @@ echo "*******************************"
 echo "integration-test-app:check"
 echo "*******************************"
 
-./gradlew -Dgeb.env=firefoxHeadless :integration-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -Dgeb.env=firefoxHeadless :integration-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "integration-test-app:check failed => exit $EXIT_STATUS"
@@ -45,7 +45,7 @@ echo "*******************************"
 echo "misc-group:check"
 echo "*******************************"
 
-./gradlew -Dgeb.env=firefoxHeadless :misc-group:check --console=plain  || EXIT_STATUS=$?
+./gradlew -Dgeb.env=firefoxHeadless :misc-group:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "misc-group:check failed => exit $EXIT_STATUS"
@@ -56,7 +56,7 @@ echo "*******************************"
 echo "misc-hierarchical-roles:check"
 echo "*******************************"
 
-./gradlew  -Dgeb.env=firefoxHeadless :misc-hierarchical-roles:check --console=plain  || EXIT_STATUS=$?
+./gradlew  -Dgeb.env=firefoxHeadless :misc-hierarchical-roles:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "misc-hierarchical-roles:check  failed => exit $EXIT_STATUS"
@@ -67,7 +67,7 @@ echo "*******************************"
 echo "static functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=static -Dgeb.env=firefoxHeadless functional-test-app:check  --console=plain || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=static -Dgeb.env=firefoxHeadless functional-test-app:check  --no-daemon --console=plain || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "static functional-test-app:check failed => exit $EXIT_STATUS"
@@ -78,7 +78,7 @@ echo "*******************************"
 echo "annotation functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=annotation -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=annotation -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "static functional-test-app:annotation failed => exit $EXIT_STATUS"
@@ -89,7 +89,7 @@ echo "*******************************"
 echo "requestmap functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=requestmap -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=requestmap -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "requestmap functional-test-app:annotation failed => exit $EXIT_STATUS"
@@ -100,7 +100,7 @@ echo "*******************************"
 echo "basic functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=basic -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=basic -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "basic functional-test-app:annotation failed => exit $EXIT_STATUS"
@@ -111,7 +111,7 @@ echo "*******************************"
 echo "misc functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=misc -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=misc -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "misc functional-test-app:annotation failed => exit $EXIT_STATUS"
@@ -122,7 +122,7 @@ echo "*******************************"
 echo "putWithParams functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=putWithParams -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=putWithParams -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "putWithParams functional-test-app:annotation failed => exit $EXIT_STATUS"
@@ -133,7 +133,7 @@ echo "*******************************"
 echo "bcrypt functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=bcrypt -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "bcrypt functional-test-app:annotation failed => exit $EXIT_STATUS"
@@ -144,7 +144,7 @@ echo "*******************************"
 echo "issue503 functional-test-app:check"
 echo "*******************************"
 
-./gradlew -DTESTCONFIG=issue503 -Dgeb.env=firefoxHeadless functional-test-app:check --console=plain  || EXIT_STATUS=$?
+./gradlew -DTESTCONFIG=issue503 -Dgeb.env=firefoxHeadless functional-test-app:check --no-daemon --console=plain  || EXIT_STATUS=$?
 
 if [ $EXIT_STATUS -ne 0 ]; then
   echo "issue503 functional-test-app:annotation failed => exit $EXIT_STATUS"
