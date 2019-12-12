@@ -1,6 +1,7 @@
 dist: trusty
 addons:
   chrome: stable
+  firefox: latest
 language: groovy
 sudo: required
 before_cache:
