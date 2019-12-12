@@ -48,8 +48,10 @@ class ClosureX509PrincipalExtractor implements X509PrincipalExtractor, MessageSo
 
 		def username = closure.call(subjectDN)
 		if (username == null) {
-			throw new BadCredentialsException(messages.getMessage('SubjectDnX509PrincipalExtractor.noMatching',
-					[subjectDN] as Object[], 'No matching pattern was found in subject DN: {}'))
+			final String code = 'SubjectDnX509PrincipalExtractor.noMatching'
+			final String defaultMessage = 'No matching pattern was found in subject DN: {}'
+			Object[] args = [subjectDN] as Object[]
+			throw new BadCredentialsException(messages.getMessage(code, args, defaultMessage))
 		}
 
 		log.debug "Extracted Principal name is '{}'", username
