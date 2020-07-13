@@ -343,7 +343,7 @@ security {
 	sch {
 		// one of MODE_THREADLOCAL, MODE_INHERITABLETHREADLOCAL, MODE_GLOBAL,
 		// or the name of a class implementing org.springframework.security.core.context.SecurityContextHolderStrategy
-		strategyName = SecurityContextHolder.MODE_INHERITABLETHREADLOCAL
+		strategyName = SecurityContextHolder.MODE_THREADLOCAL
 	}
 
 	gsp {
