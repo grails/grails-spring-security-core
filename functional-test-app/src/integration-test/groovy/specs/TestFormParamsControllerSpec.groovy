@@ -13,10 +13,6 @@ import spock.lang.IgnoreIf
 import spock.lang.Issue
 import spock.lang.Shared
 
-/**
- * Please note, these tests utilize the filterChain.chainMap pattern of:
- * [pattern: '/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter']
- */
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'putWithParams' })
 @Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
 @Integration(applicationClass = functional.test.app.Application)
@@ -125,8 +121,8 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
         ).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the request is not processed by the controller"
-        HttpClientResponseException e = thrown()
-        e.status == HttpStatus.INTERNAL_SERVER_ERROR
+        response.status == HttpStatus.OK // MN Client isn't exposing this is a 302 to login
+        response.body() != "username: ${USERNAME}, password: ${PASSWORD}"
     }
 
     void 'PATCH request to secured endpoint with parameters as x-www-form-urlencoded'() {
@@ -140,8 +136,8 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
         ).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the request is not processed by the controller"
-        HttpClientResponseException e = thrown()
-        e.status == HttpStatus.INTERNAL_SERVER_ERROR
+        response.status == HttpStatus.OK // MN Client isn't exposing this is a 302 to login
+        response.body() != "username: ${USERNAME}, password: ${PASSWORD}"
     }
 
     void 'PATCH request with NULL Content-Type and parameters in the URL'() {
