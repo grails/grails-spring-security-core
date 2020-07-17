@@ -14,6 +14,8 @@
  */
 package grails.plugin.springsecurity
 
+import org.springframework.web.filter.FormContentFilter
+
 import static org.springframework.beans.factory.config.BeanDefinition.SCOPE_PROTOTYPE
 import static org.springframework.beans.factory.support.AbstractBeanDefinition.AUTOWIRE_BY_NAME
 import grails.plugin.springsecurity.userdetails.GrailsUser
@@ -30,7 +32,6 @@ import org.springframework.security.web.access.intercept.FilterSecurityIntercept
 import org.springframework.security.web.context.SecurityContextPersistenceFilter
 import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter
 import org.springframework.web.filter.GenericFilterBean
-import org.springframework.web.filter.HttpPutFormContentFilter
 import test.TestRole
 import test.TestUser
 import test.TestUserRole
@@ -92,7 +93,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
         map[1400] instanceof SecurityContextHolderAwareRequestFilter
         map[1500] instanceof GrailsRememberMeAuthenticationFilter
         map[1600] instanceof GrailsAnonymousAuthenticationFilter
-        map[1800] instanceof HttpPutFormContentFilter
+        map[1800] instanceof FormContentFilter
         map[1900] instanceof ExceptionTranslationFilter
         map[2000] instanceof FilterSecurityInterceptor
 
@@ -136,7 +137,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
         filters[5] instanceof SecurityContextHolderAwareRequestFilter
         filters[6] instanceof GrailsRememberMeAuthenticationFilter
         filters[7] instanceof GrailsAnonymousAuthenticationFilter
-        filters[8] instanceof HttpPutFormContentFilter
+        filters[8] instanceof FormContentFilter
         filters[9] instanceof ExceptionTranslationFilter
         filters[10] instanceof FilterSecurityInterceptor
     }
