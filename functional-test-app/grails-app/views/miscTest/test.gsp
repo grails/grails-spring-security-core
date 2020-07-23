@@ -16,8 +16,17 @@
 	<sec:ifLoggedIn>logged in true</sec:ifLoggedIn><br/>
 	<sec:ifNotLoggedIn>logged in false</sec:ifNotLoggedIn><br/>
 
-	<sec:ifSwitched>switched true</sec:ifSwitched><br/>
-	<sec:ifNotSwitched>switched false</sec:ifNotSwitched><br/>
+	<sec:ifSwitched>switched true<br />
+		<form id="exitUserForm" action='${request.contextPath}/logout/impersonate' method='POST'>
+			<input id="exitUserFormSubmitButton" type='submit' value="Resume as original user"/>
+		</form>
+	</sec:ifSwitched><br/>
+	<sec:ifNotSwitched>switched false <br />
+		<form class="switchUserForm" action='${request.contextPath}/login/impersonate' method='POST'>
+			Switch to user: <input type='text' id="username" name='username'/><br/>
+			<input id="switchUserFormSubmitButton" type='submit' value='Switch'/>
+		</form>
+	</sec:ifNotSwitched><br/>
 	switched original username "<sec:switchedUserOriginalUsername/>"<br/>
 
 	<sec:access   expression="hasRole('ROLE_USER')">access with role user: true</sec:access><br/>

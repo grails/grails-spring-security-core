@@ -562,6 +562,12 @@ to default to 'Annotation'; setting value to 'Annotation'
 				else {
 					failureHandler = ref('authenticationFailureHandler')
 				}
+				if (conf.switchUser.switchUserMatcher) {
+					switchUserMatcher = conf.switchUser.switchUserMatcher
+				}
+				if (conf.switchUser.exitUserMatcher) {
+					exitUserMatcher = conf.switchUser.exitUserMatcher
+				}
 			}
 		}
 

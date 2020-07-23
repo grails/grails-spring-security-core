@@ -57,15 +57,15 @@ grails.plugin.springsecurity.interceptUrlMap = [
 ----
 
 === Switching Back to Original User
-To resume as the original user, navigate to `/logout/impersonate`.
+To resume as the original user, POST to `/logout/impersonate`.
 
 [source,html]
 .Listing {counter:listing}. A link to switch back to the real user
 ----
 <sec:ifSwitched>
-<a href='${request.contextPath}/logout/impersonate'>
-   Resume as <sec:switchedUserOriginalUsername/>
-</a>
+    <form action='${request.contextPath}/logout/impersonate' method='POST'>
+        <input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/>
+    </form>
 </sec:ifSwitched>
 ----
 
@@ -91,11 +91,19 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...
 
 |switchUser.switchUserUrl
 |"`/login/impersonate`"
-|URL to access (via GET or POST) to switch to another user
+|URL to access (via POST) to switch to another user
 
 |switchUser.exitUserUrl
 |"`/logout/impersonate`"
-|URL to access to switch to another user
+|URL to access (via POST) to switch to another user
+
+|switchUser.switchUserMatcher
+|`SwitchUserFilter.switchUserMatcher`
+|An alternative to `switchUserUrl`, define an `AntPathRequestMatcher` to determine if a request needs to switch user.
+
+|switchUser.exitUserMatcher
+|`SwitchUserFilter.exitUserMatcher`
+|An alternative to `exitUserUrl`, define an `AntPathRequestMatcher` to determine if a request needs to exit switch user.
 
 |switchUser.targetUrl
 |Same as `successHandler.defaultTargetUrl`
@@ -112,19 +120,19 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...
 
 === GSP Code
 
-One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the `sec:ifSwitched` tag) then a "`resume`" link is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:
+One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the `sec:ifSwitched` tag) then a "`resume`" button is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:
 
 [source,html]
-.Listing {counter:listing}. Example GSP code to conditionally display a switch user form and resume link
+.Listing {counter:listing}. Example GSP code to conditionally display a switch user form and resume form
 ----
 <sec:ifLoggedIn>
 Logged in as <sec:username/>
 </sec:ifLoggedIn>
 
 <sec:ifSwitched>
-<a href='${request.contextPath}/logout/impersonate'>
-   Resume as <sec:switchedUserOriginalUsername/>
-</a>
+    <form action='${request.contextPath}/logout/impersonate' method='POST'>
+      <input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/>
+   </form>
 </sec:ifSwitched>
 
 <sec:ifNotSwitched>
