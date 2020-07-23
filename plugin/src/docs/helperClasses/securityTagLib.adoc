@@ -116,9 +116,9 @@ Logged in as <sec:username/>
 </sec:ifLoggedIn>
 
 <sec:ifSwitched>
-<a href='${request.contextPath}/logout/impersonate'>
-   Resume as <sec:switchedUserOriginalUsername/>
-</a>
+    <form action='${request.contextPath}/logout/impersonate' method='POST'>
+        <input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/>
+    </form>
 </sec:ifSwitched>
 
 <sec:ifNotSwitched>
@@ -147,9 +147,9 @@ Renders the original user's username if the current user switched from another u
 .Listing {counter:listing}. Example using `<sec:switchedUserOriginalUsername>`
 ----
 <sec:ifSwitched>
-<a href='${request.contextPath}/logout/impersonate'>
-   Resume as <sec:switchedUserOriginalUsername/>
-</a>
+    <form action='${request.contextPath}/logout/impersonate' method='POST'>
+        <input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/>
+    </form>
 </sec:ifSwitched>
 ----
 

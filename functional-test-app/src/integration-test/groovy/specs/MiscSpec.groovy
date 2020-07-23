@@ -1,10 +1,10 @@
 package specs
 
+import geb.module.TextInput
 import org.springframework.security.crypto.password.PasswordEncoder
 import pages.IndexPage
-import spock.lang.IgnoreRest
-import spock.lang.Issue
 import spock.lang.IgnoreIf
+import spock.lang.Issue
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'misc' })
 class MiscSpec extends AbstractHyphenatedSecuritySpec {
@@ -46,9 +46,19 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		auth.contains 'ROLE_USER' // new, added since inferred from role hierarchy
 		!auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
 
-		// switch
+		// switch via GET
 		when:
 		go 'login/impersonate?username=testuser'
+
+		then:
+		assertContentContains 'Error 404 Page Not Found'
+
+		// switch via POST
+		when:
+		go 'misc-test/test'
+		def input = $("#username").module(TextInput)
+		input.text = 'testuser'
+		$("#switchUserFormSubmitButton").click()
 
 		then:
 		assertContentContains 'Available Controllers:'
@@ -77,9 +87,17 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		then:
 		assertContentContains "Sorry, you're not authorized to view this page."
 
-		// switch back
+		// switch back via GET
 		when:
 		go 'logout/impersonate'
+
+		then:
+		assertContentContains 'Error 404 Page Not Found'
+
+		// switch via POST
+		when:
+		go 'misc-test/test'
+		$("#exitUserFormSubmitButton").click()
 
 		then:
 		assertContentContains 'Available Controllers:'

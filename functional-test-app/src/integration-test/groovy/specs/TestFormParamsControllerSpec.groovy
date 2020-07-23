@@ -1,11 +1,10 @@
 package specs
 
-import grails.plugin.springsecurity.Application
+import functional.test.app.Application
 import grails.testing.mixin.integration.Integration
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.exceptions.HttpClientResponseException
 import io.micronaut.http.uri.UriTemplate
 import org.springframework.util.LinkedMultiValueMap
 import org.springframework.util.MultiValueMap
@@ -15,7 +14,7 @@ import spock.lang.Shared
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'putWithParams' })
 @Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
-@Integration(applicationClass = functional.test.app.Application)
+@Integration(applicationClass = Application)
 class TestFormParamsControllerSpec extends HttpClientSpec {
 
     @Shared
