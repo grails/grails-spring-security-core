@@ -106,7 +106,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 		authorities ?: [NO_ROLE]
 	}
 
-	protected UserDetails createUserDetails(user, Collection<GrantedAuthority> authorities) {
+	UserDetails createUserDetails(user, Collection<GrantedAuthority> authorities) {
 
 		def conf = SpringSecurityUtils.securityConfig
 
