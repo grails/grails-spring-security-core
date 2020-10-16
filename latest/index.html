@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 4.0.2</span>
+<span id="revnumber">version 4.0.3</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -609,6 +609,16 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h3 id="release-history-and-acknowledgment">1.1. Release History and Acknowledgment</h3>
 <div class="ulist">
 <ul>
+<li>
+<p>October 16, 2020</p>
+<div class="ulist">
+<ul>
+<li>
+<p>4.0.3</p>
+</li>
+</ul>
+</div>
+</li>
 <li>
 <p>July 17, 2020</p>
 <div class="ulist">
@@ -1299,7 +1309,7 @@ See <code>SpringSecurityCoreGrailsPlugin.groovy</code> for more information on i
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.2'
+   compile 'org.grails.plugins:spring-security-core:4.0.3'
    ...</code></pre>
 </div>
 </div>
@@ -1327,7 +1337,7 @@ Version 4.0.x is only compatible with Grails 4.0.x or higher.
 }
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.3.BUILD-SNAPSHOT'
+   compile 'org.grails.plugins:spring-security-core:4.0.4.BUILD-SNAPSHOT'
    ...</code></pre>
 </div>
 </div>
@@ -1460,7 +1470,7 @@ dependencies {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.2'
+   compile 'org.grails.plugins:spring-security-core:4.0.3'
    ...</code></pre>
 </div>
 </div>
@@ -1488,7 +1498,7 @@ Version 3.2.x is only compatible with Grails 3.3.x or higher.
 }
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.3.BUILD-SNAPSHOT'
+   compile 'org.grails.plugins:spring-security-core:4.0.4.BUILD-SNAPSHOT'
    ...</code></pre>
 </div>
 </div>
@@ -3450,9 +3460,9 @@ Logged in as &lt;sec:username/&gt;
 &lt;/sec:ifLoggedIn&gt;
 
 &lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/logout/impersonate'&gt;
-   Resume as &lt;sec:switchedUserOriginalUsername/&gt;
-&lt;/a&gt;
+    &lt;form action='${request.contextPath}/logout/impersonate' method='POST'&gt;
+        &lt;input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/&gt;
+    &lt;/form&gt;
 &lt;/sec:ifSwitched&gt;
 
 &lt;sec:ifNotSwitched&gt;
@@ -3487,9 +3497,9 @@ Logged in as &lt;sec:username/&gt;
 <div class="title">Listing 32. Example using <code>&lt;sec:switchedUserOriginalUsername&gt;</code></div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/logout/impersonate'&gt;
-   Resume as &lt;sec:switchedUserOriginalUsername/&gt;
-&lt;/a&gt;
+    &lt;form action='${request.contextPath}/logout/impersonate' method='POST'&gt;
+        &lt;input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/&gt;
+    &lt;/form&gt;
 &lt;/sec:ifSwitched&gt;</code></pre>
 </div>
 </div>
@@ -6296,15 +6306,15 @@ class RoleHierarchyEntry implements Serializable {
 <div class="sect2">
 <h3 id="switching-back-to-original-user">18.2. Switching Back to Original User</h3>
 <div class="paragraph">
-<p>To resume as the original user, navigate to <code>/logout/impersonate</code>.</p>
+<p>To resume as the original user, POST to <code>/logout/impersonate</code>.</p>
 </div>
 <div class="listingblock">
 <div class="title">Listing 73. A link to switch back to the real user</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/logout/impersonate'&gt;
-   Resume as &lt;sec:switchedUserOriginalUsername/&gt;
-&lt;/a&gt;
+    &lt;form action='${request.contextPath}/logout/impersonate' method='POST'&gt;
+        &lt;input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/&gt;
+    &lt;/form&gt;
 &lt;/sec:ifSwitched&gt;</code></pre>
 </div>
 </div>
@@ -6345,12 +6355,22 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...</code></pre>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">switchUser.switchUserUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&#8220;/login/impersonate&#8221;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL to access (via GET or POST) to switch to another user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL to access (via POST) to switch to another user</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">switchUser.exitUserUrl</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">&#8220;/logout/impersonate&#8221;</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL to access to switch to another user</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL to access (via POST) to switch to another user</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">switchUser.switchUserMatcher</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SwitchUserFilter.switchUserMatcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An alternative to <code>switchUserUrl</code>, define an <code>AntPathRequestMatcher</code> to determine if a request needs to switch user.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">switchUser.exitUserMatcher</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SwitchUserFilter.exitUserMatcher</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">An alternative to <code>exitUserUrl</code>, define an <code>AntPathRequestMatcher</code> to determine if a request needs to exit switch user.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">switchUser.targetUrl</p></td>
@@ -6373,19 +6393,19 @@ grails.plugin.springsecurity.switchUser.switchFailureUrl = ...</code></pre>
 <div class="sect2">
 <h3 id="gsp-code">18.4. GSP Code</h3>
 <div class="paragraph">
-<p>One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the <code>sec:ifSwitched</code> tag) then a &#8220;resume&#8221; link is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:</p>
+<p>One approach to supporting the switch user feature is to add code to one or more of your GSP templates. In this example the current username is displayed, and if the user has switched from another (using the <code>sec:ifSwitched</code> tag) then a &#8220;resume&#8221; button is displayed. If not, and the user has the required role, a form is displayed to allow input of the username to switch to:</p>
 </div>
 <div class="listingblock">
-<div class="title">Listing 74. Example GSP code to conditionally display a switch user form and resume link</div>
+<div class="title">Listing 74. Example GSP code to conditionally display a switch user form and resume form</div>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-html" data-lang="html">&lt;sec:ifLoggedIn&gt;
 Logged in as &lt;sec:username/&gt;
 &lt;/sec:ifLoggedIn&gt;
 
 &lt;sec:ifSwitched&gt;
-&lt;a href='${request.contextPath}/logout/impersonate'&gt;
-   Resume as &lt;sec:switchedUserOriginalUsername/&gt;
-&lt;/a&gt;
+    &lt;form action='${request.contextPath}/logout/impersonate' method='POST'&gt;
+      &lt;input type='submit' value="Resume as ${grails.plugin.springsecurity.SpringSecurityUtils.switchedUserOriginalUsername}"/&gt;
+   &lt;/form&gt;
 &lt;/sec:ifSwitched&gt;
 
 &lt;sec:ifNotSwitched&gt;
@@ -7107,7 +7127,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.2'
+   compile 'org.grails.plugins:spring-security-core:4.0.3'
    ...
 }</code></pre>
 </div>
@@ -8085,8 +8105,8 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.0.2<br>
-Last updated 2020-07-17 14:27:57 +00:00
+Version 4.0.3<br>
+Last updated 2020-10-16 18:39:25 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
