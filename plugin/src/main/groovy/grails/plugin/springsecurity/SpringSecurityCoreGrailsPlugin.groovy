@@ -1013,7 +1013,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 			defaultFailureUrl = conf.failureHandler.defaultFailureUrl //'/login/authfail?login_error=1'
 			useForward = conf.failureHandler.useForward // false
 			ajaxAuthenticationFailureUrl = conf.failureHandler.ajaxAuthFailUrl // '/login/authfail?ajax=true'
-			exceptionMappings = conf.failureHandler.exceptionMappings // []
+			exceptionMappingsList = conf.failureHandler.exceptionMappings // []
 			allowSessionCreation = conf.failureHandler.allowSessionCreation // true
 		}
 
