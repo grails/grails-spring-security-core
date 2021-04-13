@@ -19,7 +19,7 @@ class ${className} implements Serializable {
 	static constraints = {
 		series nullable: false, maxSize: 64
 		token nullable: false, maxSize: 64
-		username nullable: false, maxSize: 64
+		username nullable: false, maxSize: 64, index:'username_idx'
 		lastUsed nullable: false
 	}
 
