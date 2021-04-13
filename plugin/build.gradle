@@ -12,8 +12,7 @@ buildscript {
 }
 
 group = 'org.grails.plugins'
-def versionTxt = file("${rootProject.projectDir}/version.txt")
-version = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
+version = project.projectVersion
 
 apply plugin: 'idea'
 apply plugin: 'war'
