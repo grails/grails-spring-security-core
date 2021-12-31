@@ -36,6 +36,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           report_paths: '**/functional-test-app/build/test-results/test/TEST-*.xml'
   build:
+    needs: funtional-test
     runs-on: ubuntu-latest
     strategy:
       matrix:
