@@ -19,6 +19,8 @@ tasks.withType(Test) {
 }
 
 webdriverBinaries {
-    chromedriver "$chromeDriverVersion"
+    chromedriver {
+        versionRegexp = '.*'
+    }
     geckodriver "$geckodriverVersion"
 }
