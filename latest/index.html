@@ -425,7 +425,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <h1>Spring Security Core Plugin - Reference Documentation</h1>
 <div class="details">
 <span id="author" class="author">Burt Beckwith</span><br>
-<span id="revnumber">version 4.0.3</span>
+<span id="revnumber">version 4.0.4</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1251,7 +1251,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <p>Version 4.x of the plugin requires Grails 4 or higher; to use the plugin in Grails 2 or 3 applications use the latest 3.3.x, 3.2.x or 2.x.x version of the plugin.</p>
 </div>
 <div class="paragraph">
-<p>In general, using the Spring Security plugin in Grails 4 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 4 (currently 4.0.3.RELEASE), but the changes required were primarily internal and don&#8217;t affect usage. There are new features in Spring Security 4 however, and the plugin will be updated in future releases to take advantage of those.</p>
+<p>In general, using the Spring Security plugin in Grails 4 is nearly identical to using it in Grails 2, other than obvious differences under the hood such as no longer using <code>web.xml</code>. The configuration settings are the same, and the processes for customizing how things work (changing settings, overriding and customizing Spring beans, etc.) are generally the same. There were no package or configuration name changes, so customizations and extensions should continue to work. The plugin now uses Spring Security 5 (currently 5.1.13.RELEASE), but the changes required were primarily internal and don&#8217;t affect usage. There are new features in Spring Security 5 however, and the plugin will be updated in future releases to take advantage of those.</p>
 </div>
 <div class="paragraph">
 <p>Spring Security 5 changed the way passwords are encoded and compared for matches. Formerly a salt was passed into the encoder when calling encode for the password.
@@ -1309,7 +1309,7 @@ See <code>SpringSecurityCoreGrailsPlugin.groovy</code> for more information on i
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.3'
+   compile 'org.grails.plugins:spring-security-core:4.0.4'
    ...</code></pre>
 </div>
 </div>
@@ -1337,7 +1337,7 @@ Version 4.0.x is only compatible with Grails 4.0.x or higher.
 }
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.4.BUILD-SNAPSHOT'
+   compile 'org.grails.plugins:spring-security-core:4.0.5-SNAPSHOT'
    ...</code></pre>
 </div>
 </div>
@@ -1470,7 +1470,7 @@ dependencies {
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.3'
+   compile 'org.grails.plugins:spring-security-core:4.0.4'
    ...</code></pre>
 </div>
 </div>
@@ -1498,7 +1498,7 @@ Version 3.2.x is only compatible with Grails 3.3.x or higher.
 }
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.4.BUILD-SNAPSHOT'
+   compile 'org.grails.plugins:spring-security-core:4.0.5-SNAPSHOT'
    ...</code></pre>
 </div>
 </div>
@@ -7127,7 +7127,7 @@ $ cd bookstore</pre>
 <div class="content">
 <pre class="prettyprint highlight"><code class="language-groovy" data-lang="groovy">dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:4.0.3'
+   compile 'org.grails.plugins:spring-security-core:4.0.4'
    ...
 }</code></pre>
 </div>
@@ -8105,8 +8105,8 @@ logger 'grails.plugin.springsecurity', DEBUG, ['STDOUT'], false</code></pre>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 4.0.3<br>
-Last updated 2020-10-16 18:39:25 +00:00
+Version 4.0.4<br>
+Last updated 2022-01-06 19:10:16 +00:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
