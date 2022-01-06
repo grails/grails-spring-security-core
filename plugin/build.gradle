@@ -7,51 +7,54 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
 		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
-		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+//		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
 	}
 }
 
 group = 'org.grails.plugins'
 version = project.projectVersion
 
+apply plugin: 'java-library'
 apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'org.grails.grails-gsp'
 apply plugin: 'org.grails.grails-plugin'
-apply plugin: 'org.grails.grails-plugin-publish'
+apply plugin: 'org.grails.internal.grails-plugin-publish'
 apply plugin: 'org.asciidoctor.convert'
-apply plugin: "com.jfrog.artifactory"
+//apply plugin: "com.jfrog.artifactory"
 
 repositories {
-	mavenLocal()
-	mavenCentral()
 	maven { url 'https://repo.grails.org/grails/core' }
 }
 
 sourceCompatibility = targetCompatibility = 1.8
 
 dependencies {
-	provided "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
-	provided 'org.grails:grails-dependencies'
-	provided 'org.grails:grails-web-boot'
-	provided 'org.springframework.boot:spring-boot-starter-logging'
-	compile "net.sf.ehcache:ehcache:$ehcacheVersion"
-	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
+	api "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
+	api 'org.grails:grails-dependencies'
+	api 'org.grails:grails-web-boot'
+	api 'org.springframework.boot:spring-boot-starter-logging'
+	api "net.sf.ehcache:ehcache:$ehcacheVersion"
+	api "org.springframework.security:spring-security-core:$springSecurityVersion", {
 		['spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression'].each {
 			exclude module: it
 		}
 	}
-	compile "org.springframework.security:spring-security-web:$springSecurityVersion", {
+	api "org.springframework.security:spring-security-web:$springSecurityVersion", {
 		exclude module: 'spring-web'
 	}
 
-	testCompile "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
-	testCompile "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
-	testRuntime 'cglib:cglib-nodep:3.2.6'
+	testImplementation "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
+	testImplementation "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
+	testRuntimeOnly 'cglib:cglib-nodep:3.2.6'
+}
+
+tasks.named("compileGroovyPages").configure {
+	classpath += configurations.compileClasspath
 }
 
 apply from: "${rootProject.projectDir}/gradle/grailsPublish.gradle"
-apply from: "${rootProject.projectDir}/gradle/artifactoryPublish.gradle"
+//apply from: "${rootProject.projectDir}/gradle/artifactoryPublish.gradle"
 apply from: "${rootProject.projectDir}/gradle/docs.gradle"
 apply from: "${rootProject.projectDir}/gradle/cleanBuild.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
