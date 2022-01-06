@@ -2,5 +2,5 @@ project.ext.pluginVersion = project.projectVersion
 project.ext.pluginName = rootProject.name - 'grails-'
 
 dependencies {
-    compile "org.grails.plugins:$pluginName:$pluginVersion"
+    implementation "org.grails.plugins:$pluginName:$pluginVersion"
 }
