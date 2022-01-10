@@ -1,11 +1,15 @@
-include "misc-group"
-project(":misc-group").projectDir = new File(settingsDir, "misc-functional-test-app/grails-spring-security-group")
+include "examples-misc-group"
+project(":examples-misc-group").projectDir = new File(settingsDir, "examples/misc-functional-test-app/grails-spring-security-group")
 
-include "misc-hierarchical-roles"
-project(":misc-hierarchical-roles").projectDir = new File(settingsDir, "misc-functional-test-app/grails-spring-security-hierarchical-roles")
+include "examples-misc-hierarchical-roles"
+project(":examples-misc-hierarchical-roles").projectDir = new File(settingsDir, "examples/misc-functional-test-app/grails-spring-security-hierarchical-roles")
 
-include 'integration-test-app'
-include 'functional-test-app'
+include "examples-integration-test-app"
+project(":examples-integration-test-app").projectDir = new File(settingsDir, "examples/integration-test-app")
+
+include "examples-functional-test-app"
+project(":examples-functional-test-app").projectDir = new File(settingsDir, "examples/functional-test-app")
+
 include 'plugin'
 findProject(':plugin').name = 'spring-security-core'
 rootProject.name = 'grails-spring-security-core'
