@@ -1,3 +1,5 @@
+package spring
+
 import com.testapp.MaintenanceModeFilter
 import com.testapp.TestUserPasswordEncoderListener
 import grails.plugin.springsecurity.SpringSecurityUtils

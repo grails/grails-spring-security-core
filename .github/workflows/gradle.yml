@@ -57,13 +57,13 @@ jobs:
         id: tests
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: functional-test-app:check -Dgeb.env=chromeHeadless -DTESTCONFIG=${{ matrix.test-config }}
+          arguments: examples-functional-test-app:check -Dgeb.env=chromeHeadless -DTESTCONFIG=${{ matrix.test-config }}
       - name: Publish Test Report
         if: steps.tests.outcome == 'failure'
         uses: scacap/action-surefire-report@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          report_paths: '**/functional-test-app/build/test-results/test/TEST-*.xml'
+          report_paths: '**/examples/functional-test-app/build/test-results/test/TEST-*.xml'
   build:
     if: github.event_name == 'push'
     runs-on: ubuntu-latest
