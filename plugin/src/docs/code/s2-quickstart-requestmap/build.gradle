@@ -44,7 +44,7 @@ dependencies {
     runtime "com.h2database:h2"
     testCompile "org.grails:grails-plugin-testing"
     testCompile "org.grails.plugins:geb"
-    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
+    testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.56.0"
     compile 'org.grails.plugins:spring-security-core:3.3.1'
 }
