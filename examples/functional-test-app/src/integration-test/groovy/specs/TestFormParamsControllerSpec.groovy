@@ -13,7 +13,7 @@ import spock.lang.Issue
 import spock.lang.Shared
 
 @IgnoreIf({ System.getProperty('TESTCONFIG') != 'putWithParams' })
-@Issue('https://github.com/grails-plugins/grails-spring-security-core/issues/554')
+@Issue('https://github.com/grails/grails-spring-security-core/issues/554')
 @Integration(applicationClass = Application)
 class TestFormParamsControllerSpec extends HttpClientSpec {
 

@@ -1,4 +1,4 @@
-[![Java CI](https://github.com/grails-plugins/grails-spring-security-core/actions/workflows/gradle.yml/badge.svg)](https://github.com/grails-plugins/grails-spring-security-core/actions/workflows/gradle.yml)
+[![Java CI](https://github.com/grails/grails-spring-security-core/actions/workflows/gradle.yml/badge.svg)](https://github.com/grails/grails-spring-security-core/actions/workflows/gradle.yml)
 
 Grails Spring Security Core Plugin
 ==================================
