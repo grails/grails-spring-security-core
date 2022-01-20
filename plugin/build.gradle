@@ -79,7 +79,7 @@ dependencies {
 
 	testImplementation "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
 	testImplementation "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
-	testRuntimeOnly 'cglib:cglib-nodep:3.2.6'
+	testRuntimeOnly 'cglib:cglib-nodep:3.3.0'
 }
 
 tasks.named("compileGroovyPages").configure {
