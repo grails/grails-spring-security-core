@@ -30,6 +30,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: check -Dgeb.env=chromeHeadless
+        env:
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER }}
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}
       - name: Publish Test Report
         if: steps.tests.outcome == 'failure'
         uses: scacap/action-surefire-report@v1
@@ -58,6 +61,9 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: examples-functional-test-app:check -Dgeb.env=chromeHeadless -DTESTCONFIG=${{ matrix.test-config }}
+        env:
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER }}
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}
       - name: Publish Test Report
         if: steps.tests.outcome == 'failure'
         uses: scacap/action-surefire-report@v1
@@ -83,6 +89,8 @@ jobs:
         uses: gradle/gradle-build-action@v2
         env:
           GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER }}
+          GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY: ${{ secrets.GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY }}
         with:
           arguments: build -Dgeb.env=chromeHeadless
       - name: Publish Test Report
