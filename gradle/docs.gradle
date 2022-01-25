@@ -3,10 +3,9 @@ buildscript {
         maven { url 'https://repo.grails.org/grails/core' }
     }
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.6.1'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.6.1'
-        classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.1'
-        classpath 'org.asciidoctor:asciidoctorj-pdf:1.6.2'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+        classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
+        classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
     }
 }
 
