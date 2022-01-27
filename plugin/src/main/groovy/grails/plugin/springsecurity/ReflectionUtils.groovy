@@ -113,10 +113,10 @@ class ReflectionUtils {
 
 	static ConfigObject getSecurityConfig() {
 		def grailsConfig = getApplication().config
-		if (grailsConfig.grails.plugins.springsecurity) {
+		if (grailsConfig.containsProperty('grails.plugins.springsecurity')) {
 			log.error "Your security configuration settings use the old prefix 'grails.plugins.springsecurity' but must now use 'grails.plugin.springsecurity'"
 		}
-		grailsConfig.grails.plugin.springsecurity
+		grailsConfig.getProperty('grails.plugin.springsecurity', ConfigObject.class)
 	}
 
 	static void setSecurityConfig(ConfigObject c) {
