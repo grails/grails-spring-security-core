@@ -18,9 +18,9 @@ If you are using cxf grails plugin in your app then move the cxf dependency abov
 
 [source,groovy]
 dependencies {
-    compile 'org.grails.plugins:cxf:3.1.1'
+    implementation 'org.grails.plugins:cxf:3.1.1'
     // CXF above security.
-    compile 'org.grails.plugins:spring-security-core:3.1.2'
+    implementation 'org.grails.plugins:spring-security-core:{stableversion}'
 }
 
 ====

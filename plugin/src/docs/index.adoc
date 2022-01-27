@@ -1,5 +1,5 @@
 = Spring Security Core Plugin - Reference Documentation
-Burt Beckwith
+Burt Beckwith, Puneet Behl
 
 :apidocs: https://docs.spring.io/spring-security/site/docs/4.0.x/apidocs/
 :apidocs_spring: https://docs.spring.io/spring/docs/4.1.x/javadoc-api/
@@ -8,15 +8,7 @@ Burt Beckwith
 
 include::introduction.adoc[]
 
-include::newInV401.adoc[]
-
-include::newInV4.adoc[]
-
-include::newInV321.adoc[]
-
-include::newInV3.adoc[]
-
-include::newInV2.adoc[]
+include::whatsNew.adoc[]
 
 include::domainClasses.adoc[]
 
