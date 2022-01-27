@@ -39,7 +39,7 @@ The "`installation`" process has changed in version 3+ of the plugin, but they'r
 ----
 dependencies {
    ...
-   compile 'org.grails.plugins:spring-security-core:{stableversion}'
+   implementation 'org.grails.plugins:spring-security-core:{stableversion}'
    ...
 ----
 
