@@ -23,6 +23,7 @@ import grails.plugin.springsecurity.ReflectionUtils as PluginReflectionUtils
 import grails.plugin.springsecurity.access.vote.ClosureConfigAttribute
 import grails.plugin.springsecurity.annotation.Secured as PluginSecured
 import grails.rest.Resource
+import grails.web.Action
 import grails.web.UrlConverter
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
@@ -460,7 +461,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		String defaultAction = cc.defaultAction
 
 		List<InterceptedUrl> actionRoles = []
-		for (Method method in clazz.methods) {
+		for (Method method in findActions(clazz)) {
 			Annotation annotation = findSecuredAnnotation(method)
 			if (annotation) {
 				Collection<String> values = getValue(annotation)
@@ -480,7 +481,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 
 	protected List<InterceptedUrl> findActionClosures(Class<?> clazz) {
 		List<InterceptedUrl> actionClosures = []
-		for (Method method in clazz.methods) {
+		for (Method method in findActions(clazz)) {
 			PluginSecured annotation = method.getAnnotation(PluginSecured)
 			if (annotation && annotation.closure() != PluginSecured) {
 				log.trace 'found annotation with a closure on method {} in {}', method.name, clazz.name
@@ -489,6 +490,10 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 			}
 		}
 		actionClosures
+	}
+	
+	protected Collection<Method> findActions(Class<?> clazz) {
+		return clazz.methods.findAll { it.getAnnotation(Action) != null }
 	}
 
 	protected Class<?> findClosureClass(PluginSecured annotation) {
