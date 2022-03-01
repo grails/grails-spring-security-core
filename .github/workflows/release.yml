@@ -13,7 +13,7 @@ jobs:
       GIT_USER_EMAIL: behlp@objectcomputing.com
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           token: ${{ secrets.GH_TOKEN }}
       - uses: gradle/wrapper-validation-action@v1
