@@ -155,9 +155,9 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 	String authorEmail = 'burt@burtbeckwith.com'
 	String title = 'Spring Security Core Plugin'
 	String description = 'Spring Security Core plugin'
-	String documentation = 'http://grails-plugins.github.io/grails-spring-security-core/'
+	String documentation = 'https://grails.github.io/grails-spring-security-core/'
 	String license = 'APACHE'
-	def organization = [name: 'Grails', url: 'http://www.grails.org/']
+	def organization = [name: 'Grails', url: 'https://www.grails.org/']
 	def issueManagement = [url: 'https://github.com/grails/grails-spring-security-core/issues']
 	def scm = [url: 'https://github.com/grails/grails-spring-security-core']
 	def profiles = ['web']
