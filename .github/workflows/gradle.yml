@@ -122,7 +122,6 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           BRANCH: gh-pages
           FOLDER: plugin/build/docs
-          DOC_SUB_FOLDER: neo4j
           DOC_FOLDER: gh-pages
           COMMIT_EMAIL: behlp@objectcomputing.com
           COMMIT_NAME: Puneet Behl
