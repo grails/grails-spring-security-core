@@ -5,7 +5,6 @@ buildscript {
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
         classpath "org.grails.plugins:hibernate5:7.2.0"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
     }
 }
 
@@ -16,7 +15,6 @@ apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"war"
 apply plugin:"org.grails.grails-web"
-apply plugin: "com.bertramlabs.asset-pipeline"
 apply plugin:"org.grails.grails-gsp"
 
 repositories {
@@ -65,11 +63,6 @@ tasks.named("compileGroovyPages").configure {
 bootRun {
     jvmArgs('-Dspring.output.ansi.enabled=always')
     sourceResources sourceSets.main
-}
-
-assets {
-    minifyJs = true
-    minifyCss = true
 }
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
