@@ -4,9 +4,11 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
-		classpath 'org.asciidoctor:asciidoctorj-pdf:2.0.3'
+		classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.2.0'
+		classpath "org.asciidoctor:kindlegen-gradle:3.2.0"
+		classpath "org.asciidoctor:asciidoctor-gradle-jvm-epub:3.3.2"
+		classpath "org.asciidoctor:asciidoctor-gradle-jvm-pdf:3.3.2"
+		classpath "org.asciidoctor:asciidoctor-gradle-jvm-gems:3.3.2"
 	}
 }
 
@@ -18,7 +20,12 @@ apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'org.grails.grails-gsp'
 apply plugin: 'org.grails.grails-plugin'
-apply plugin: 'org.asciidoctor.convert'
+apply plugin: "org.asciidoctor.jvm.gems"
+apply plugin: 'org.asciidoctor.jvm.convert'
+apply plugin: "org.asciidoctor.jvm.pdf"
+apply plugin: "org.asciidoctor.jvm.epub"
+apply plugin: "org.asciidoctor.kindlegen.base"
+
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
