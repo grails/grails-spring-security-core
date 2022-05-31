@@ -3,7 +3,7 @@ buildscript {
         maven { url 'https://repo.grails.org/grails/core' }
     }
     dependencies {
-        classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.2.0'
+        classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.3.2'
         classpath "org.asciidoctor:asciidoctor-gradle-jvm-epub:3.3.2"
         classpath "org.asciidoctor:asciidoctor-gradle-jvm-pdf:3.3.2"
     }
