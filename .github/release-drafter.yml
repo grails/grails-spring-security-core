@@ -31,7 +31,7 @@ version-resolver:
     labels:
       - 'type: patch'
   default: patch
-filter-by-commitish: true
+filter-by-commitish: false
 template: |
   ## What's Changed
 
