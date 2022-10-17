@@ -1,61 +1,62 @@
-= Spring Security Core Plugin - Reference Documentation
-Burt Beckwith, Puneet Behl
-
+:includedir: src/docs/
 :apidocs: https://docs.spring.io/spring-security/site/docs/4.0.x/apidocs/
 :apidocs_spring: https://docs.spring.io/spring/docs/4.1.x/javadoc-api/
 :htmlsingle: docs.spring.io/spring-security/site/docs/4.0.x/reference/htmlsingle/
 :spring_framework_reference: https://docs.spring.io/spring/docs/4.1.x/spring-framework-reference/html/
 
-include::introduction.adoc[]
+= Spring Security Core Plugin - Reference Documentation
+Burt Beckwith, Puneet Behl
 
-include::whatsNew.adoc[]
+include::{includedir}introduction.adoc[]
 
-include::domainClasses.adoc[]
+include::{includedir}whatsNew.adoc[]
 
-include::requestMappings.adoc[]
+include::{includedir}domainClasses.adoc[]
 
-include::helperClasses.adoc[]
+include::{includedir}requestMappings.adoc[]
 
-include::events.adoc[]
+include::{includedir}helperClasses.adoc[]
 
-include::domainClassProperties.adoc[]
+include::{includedir}events.adoc[]
 
-include::authentication.adoc[]
+include::{includedir}domainClassProperties.adoc[]
 
-include::authenticationProviders.adoc[]
+include::{includedir}authentication.adoc[]
 
-include::userDetailsService.adoc[]
+include::{includedir}authenticationProviders.adoc[]
 
-include::passwords.adoc[]
+include::{includedir}userDetailsService.adoc[]
 
-include::urlProperties.adoc[]
+include::{includedir}passwords.adoc[]
 
-include::hierarchicalRoles.adoc[]
+include::{includedir}urlProperties.adoc[]
 
-include::switchUser.adoc[]
+include::{includedir}hierarchicalRoles.adoc[]
 
-include::filters.adoc[]
+include::{includedir}switchUser.adoc[]
 
-include::channelSecurity.adoc[]
+include::{includedir}filters.adoc[]
 
-include::ip.adoc[]
+include::{includedir}channelSecurity.adoc[]
 
-include::sessionFixation.adoc[]
+include::{includedir}ip.adoc[]
 
-include::logoutHandlers.adoc[]
+include::{includedir}sessionFixation.adoc[]
 
-include::voters.adoc[]
+include::{includedir}logoutHandlers.adoc[]
 
-include::miscProperties.adoc[]
+include::{includedir}voters.adoc[]
 
-include::tutorials.adoc[]
+include::{includedir}miscProperties.adoc[]
 
-include::examples.adoc[]
+include::{includedir}tutorials.adoc[]
 
-include::controllerMethods.adoc[]
+include::{includedir}examples.adoc[]
 
-include::i18n.adoc[]
+include::{includedir}controllerMethods.adoc[]
 
-include::scripts.adoc[]
+include::{includedir}i18n.adoc[]
 
-include::debugging.adoc[]
+include::{includedir}scripts.adoc[]
+
+include::{includedir}debugging.adoc[]
