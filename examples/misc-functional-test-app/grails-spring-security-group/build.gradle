@@ -21,6 +21,7 @@ apply plugin:"org.grails.grails-gsp"
 apply plugin: "com.github.erdi.webdriver-binaries"
 
 repositories {
+    mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
 }
 

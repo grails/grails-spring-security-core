@@ -1,6 +1,5 @@
 buildscript {
     repositories {
-        mavenLocal()
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
@@ -21,7 +20,7 @@ apply plugin:"org.grails.grails-gsp"
 apply plugin: "com.bertramlabs.asset-pipeline"
 
 repositories {
-    mavenLocal()
+    mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
 }
 

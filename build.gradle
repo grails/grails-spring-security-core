@@ -12,6 +12,13 @@ version = project.projectVersion
 ext.isSnapshot = project.projectVersion.endsWith('-SNAPSHOT')
 ext.isReleaseVersion = !isSnapshot
 
+allprojects.each {
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.grails.org/grails/core" }
+    }
+}
+
 if (isReleaseVersion) {
     apply plugin: 'maven-publish'
     apply plugin: "io.github.gradle-nexus.publish-plugin"

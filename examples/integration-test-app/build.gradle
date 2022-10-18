@@ -18,6 +18,7 @@ apply plugin:"org.grails.grails-web"
 apply plugin:"org.grails.grails-gsp"
 
 repositories {
+    mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
 }
 
