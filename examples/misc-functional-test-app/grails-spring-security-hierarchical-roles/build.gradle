@@ -1,11 +1,11 @@
 buildscript {
     repositories {
-        mavenLocal()
+        maven { url 'https://plugins.gradle.org/m2/' }
         maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath "org.grails.plugins:hibernate5:7.2.0"
+        classpath "org.grails.plugins:hibernate5:7.3.0"
         classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverBinariesVersion"
 
     }
@@ -28,6 +28,7 @@ repositories {
 }
 
 dependencies {
+    compileOnly "io.micronaut:micronaut-inject-groovy"
     implementation "org.springframework.boot:spring-boot-starter-logging"
     implementation "org.springframework.boot:spring-boot-autoconfigure"
     implementation "org.grails:grails-core"
@@ -55,24 +56,41 @@ dependencies {
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.apache.tomcat:tomcat-jdbc"
     runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
+    testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation "org.grails:grails-gorm-testing-support"
     testImplementation "org.grails:grails-web-testing-support"
 }
 
-project.dependencies.add("integrationTestCompile", project.configurations.findByName("testCompileClasspath"))
-project.dependencies.add("integrationTestRuntime", project.configurations.findByName("testRuntimeClasspath"))
+/*
+project.dependencies.add("integrationTestImplementation", project.configurations.findByName("testImplementationClasspath"))
+project.dependencies.add("integrationTestRuntimeOnly", project.configurations.findByName("testRuntimeOnlyClasspath"))
 
 tasks.named("compileGroovyPages").configure {
     classpath += configurations.compileClasspath
 }
+*/
 
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
+//springBoot.mainClass = 'demo.Application'
 bootRun {
-    jvmArgs('-Dspring.output.ansi.enabled=always')
+    ignoreExitValue true
+    jvmArgs(
+            '-Dspring.output.ansi.enabled=always',
+            '-noverify',
+            '-XX:TieredStopAtLevel=1',
+            '-Xmx1024m')
     sourceResources sourceSets.main
+    String springProfilesActive = 'spring.profiles.active'
+    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+}
+
+tasks.withType(GroovyCompile) {
+    configure(groovyOptions) {
+        forkOptions.jvmArgs = ['-Xmx1024m']
+    }
 }
 
 integrationTest {

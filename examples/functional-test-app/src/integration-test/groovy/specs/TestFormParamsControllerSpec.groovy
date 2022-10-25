@@ -17,15 +17,13 @@ import spock.lang.Shared
 @Integration(applicationClass = Application)
 class TestFormParamsControllerSpec extends HttpClientSpec {
 
-    @Shared
-    String USERNAME = "Admin"
-
-    @Shared
-    String PASSWORD = "myPassword"
+    @Shared String USERNAME = "Admin"
+    @Shared String PASSWORD = "myPassword"
 
     void 'PUT request with no parameters'() {
+
         when: "A PUT request with no parameters is made"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PUT("/testFormParams/permitAll", "").contentType("application/x-www-form-urlencoded"), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PUT("/testFormParams/permitAll", "").contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are null"
         response.status == HttpStatus.OK
@@ -35,7 +33,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
     void 'PUT request with parameters in the URL'() {
         when: "A PUT request with no parameters is made"
         String expandUrl = new UriTemplate("/testFormParams/permitAll{?username,password}").expand(["username": USERNAME, "password": PASSWORD])
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PUT(expandUrl, "").contentType("application/x-www-form-urlencoded"), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PUT(expandUrl, "").contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK
@@ -49,7 +47,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
         form.add("password", PASSWORD)
 
         when: "A PUT request with form params is made"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PUT("/testFormParams/permitAll", form).contentType("application/x-www-form-urlencoded"), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PUT("/testFormParams/permitAll", form).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK
@@ -59,7 +57,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
     void 'PUT request with NULL Content-Type and parameters in the URL'() {
         when: "A PUT request with no parameters is made"
         String expandUrl = new UriTemplate("/testFormParams/permitAll{?username,password}").expand(["username": USERNAME, "password": PASSWORD])
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PUT(expandUrl, ""), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PUT(expandUrl, ""), String)
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK
@@ -68,7 +66,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
 
     void 'PUT request with NULL Content-Type'() {
         when: "A PUT request with NULL Content-Type is made"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PUT("/testFormParams/permitAll", ""), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PUT("/testFormParams/permitAll", ""), String)
 
         then: "the controller responds with the correct status and parameters are null"
         response.status == HttpStatus.OK
@@ -77,7 +75,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
 
     void 'PATCH request with no parameters'() {
         when: "A PATCH request with no parameters is made"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PATCH("/testFormParams/permitAll", "").contentType("application/x-www-form-urlencoded"), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PATCH("/testFormParams/permitAll", "").contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are null"
         response.status == HttpStatus.OK
@@ -87,7 +85,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
     void 'PATCH request with parameters in the URL'() {
         when:
         String expandUrl = new UriTemplate("/testFormParams/permitAll{?username,password}").expand(["username": USERNAME, "password": PASSWORD])
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PATCH(expandUrl, "").contentType("application/x-www-form-urlencoded"), String)
+        HttpResponse<String> response = client.exchange(HttpRequest.PATCH(expandUrl, "").contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are extracted"
         response.status == HttpStatus.OK
@@ -101,7 +99,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
         form.add("password", PASSWORD)
 
         when: "A PATCH request with form params is made"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PATCH("/testFormParams/permitAll", form
+        HttpResponse<String> response = client.exchange(HttpRequest.PATCH("/testFormParams/permitAll", form
         ).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are extracted"
@@ -116,7 +114,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
         form.add("password", PASSWORD)
 
         when: "A PUT request with form params is made to a secured endpoint"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PUT("/testFormParams/permitAdmin", form
+        HttpResponse<String> response = client.exchange(HttpRequest.PUT("/testFormParams/permitAdmin", form
         ).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the request is not processed by the controller"
@@ -131,7 +129,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
         form.add("password", PASSWORD)
 
         when: "A PATCH request with form params is made to a secured endpoint"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PATCH("/testFormParams/permitAdmin", form
+        HttpResponse<String> response = client.exchange(HttpRequest.PATCH("/testFormParams/permitAdmin", form
         ).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the request is not processed by the controller"
@@ -142,7 +140,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
     void 'PATCH request with NULL Content-Type and parameters in the URL'() {
         when:
         String expandUrl = new UriTemplate("/testFormParams/permitAll{?username,password}").expand(["username": USERNAME, "password": PASSWORD])
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PATCH(expandUrl, ""
+        HttpResponse<String> response = client.exchange(HttpRequest.PATCH(expandUrl, ""
         ).contentType("application/x-www-form-urlencoded"), String)
 
         then: "the controller responds with the correct status and parameters are extracted"
@@ -152,7 +150,7 @@ class TestFormParamsControllerSpec extends HttpClientSpec {
 
     void 'PATCH request with NULL Content-Type'() {
         when: "A PATCH request with NULL Content-Type is made"
-        HttpResponse<String> response = client.toBlocking().exchange(HttpRequest.PATCH("/testFormParams/permitAll", ""
+        HttpResponse<String> response = client.exchange(HttpRequest.PATCH("/testFormParams/permitAll", ""
         ), String)
 
         then: "the controller responds with the correct status and parameters are null"
