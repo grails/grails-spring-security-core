@@ -1,5 +1,6 @@
 buildscript {
 	repositories {
+		maven { url 'https://plugins.gradle.org/m2/' }
 		maven { url 'https://repo.grails.org/grails/core' }
 	}
 	dependencies {
@@ -64,6 +65,7 @@ ext.pomInfo = {
 }
 
 repositories {
+	mavenCentral()
 	maven { url 'https://repo.grails.org/grails/core' }
 }
 

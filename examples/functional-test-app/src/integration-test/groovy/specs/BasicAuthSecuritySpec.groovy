@@ -244,7 +244,7 @@ class BasicAuthSecuritySpec extends AbstractSecuritySpec {
 		assertContentContains 'Error 403 Forbidden'
 	}
 
-	@IgnoreIf({ !System.getProperty('geb.env') })
+	@IgnoreIf({ System.getProperty('geb.env') == "htmlUnit" })
 	void 'check allowed for admin2'() {
 
 		// Check that with admin2 auth, some @Secure actions are accessible

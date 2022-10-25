@@ -14,27 +14,19 @@
  */
 package grails.plugin.springsecurity.web.filter
 
+import grails.util.GrailsUtil
+import groovy.transform.TypeChecked
 import groovy.util.logging.Slf4j
-
-import javax.servlet.Filter
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletRequestWrapper
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
-
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.security.web.FilterChainProxy
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.UrlUtils
 import org.springframework.web.filter.GenericFilterBean
 
-import grails.util.GrailsUtil
-import groovy.transform.CompileStatic
+import javax.servlet.*
+import javax.servlet.http.HttpServletRequest
+import javax.servlet.http.HttpServletRequestWrapper
+import javax.servlet.http.HttpServletResponse
+import javax.servlet.http.HttpSession
 
 /**
  * Based on the package-scope org.springframework.security.config.debug.DebugFilter.
@@ -44,7 +36,7 @@ import groovy.transform.CompileStatic
  * @author Burt Beckwith
  */
 @Slf4j
-@CompileStatic
+@TypeChecked
 class DebugFilter extends GenericFilterBean {
 
 	protected static final String ALREADY_FILTERED_ATTR_NAME = DebugFilter.name + '.FILTERED'

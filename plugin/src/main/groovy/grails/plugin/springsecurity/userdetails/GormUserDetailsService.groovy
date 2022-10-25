@@ -48,7 +48,7 @@ class GormUserDetailsService implements GrailsUserDetailsService {
 
 		def conf = SpringSecurityUtils.securityConfig
 		String userClassName = conf.userLookup.userDomainClassName
-		def dc = grailsApplication.getDomainClass(userClassName)
+		def dc = grailsApplication.getArtefact 'Domain', userClassName
 		if (!dc) {
 			throw new IllegalArgumentException("The specified user domain class '$userClassName' is not a domain class")
 		}
