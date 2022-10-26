@@ -76,20 +76,10 @@ dependencies {
     testImplementation "org.seleniumhq.selenium:selenium-support:$seleniumVersion"
 }
 
-//project.dependencies.add("integrationTestCompile", project.configurations.findByName("testCompileClasspath"))
-//project.dependencies.add("integrationTestRuntime", project.configurations.findByName("testRuntimeClasspath"))
-
-/*
-tasks.named("compileGroovyPages").configure {
-    classpath += configurations.compileClasspath
-}
-*/
-
 apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 apply from: "${rootProject.projectDir}/gradle/integrationTest.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
-//springBoot.mainClass = 'functional.test.app.Application'
 bootRun {
     ignoreExitValue true
     jvmArgs(
