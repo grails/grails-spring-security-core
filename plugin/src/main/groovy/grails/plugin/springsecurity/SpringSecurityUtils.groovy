@@ -18,6 +18,7 @@ import grails.core.GrailsApplication
 import grails.plugin.springsecurity.web.GrailsSecurityFilterChain
 import grails.plugin.springsecurity.web.SecurityRequestHolder
 import grails.util.Environment
+import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringEscapeUtils
@@ -133,6 +134,7 @@ final class SpringSecurityUtils {
 	 * Get the current user's authorities.
 	 * @return a list of authorities (empty if not authenticated).
 	 */
+	@CompileDynamic
 	static Collection<GrantedAuthority> getPrincipalAuthorities() {
 		Authentication authentication = getAuthentication()
 		if (!authentication) {
@@ -810,7 +812,7 @@ final class SpringSecurityUtils {
 			}
 		}
 		else {
-			filterChains << new GrailsSecurityFilterChain('/**', allConfiguredFilters.values() as List)
+			filterChains << new GrailsSecurityFilterChain('/**', allConfiguredFilters.values() as List<Filter>)
 		}
 	}
 }

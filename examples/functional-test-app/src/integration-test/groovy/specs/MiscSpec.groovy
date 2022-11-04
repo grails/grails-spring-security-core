@@ -40,8 +40,8 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		String auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Username: admin'
-		auth.contains 'Authenticated: true'
+		auth.contains 'Username=admin'
+		auth.contains 'Authenticated=true'
 		auth.contains 'ROLE_ADMIN'
 		auth.contains 'ROLE_USER' // new, added since inferred from role hierarchy
 		!auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
@@ -69,8 +69,8 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Username: testuser'
-		auth.contains 'Authenticated: true'
+		auth.contains 'Username=testuser'
+		auth.contains 'Authenticated=true'
 		auth.contains 'ROLE_USER'
 		auth.contains 'ROLE_PREVIOUS_ADMINISTRATOR'
 
@@ -113,8 +113,8 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Username: admin'
-		auth.contains 'Authenticated: true'
+		auth.contains 'Username=admin'
+		auth.contains 'Authenticated=true'
 		auth.contains 'ROLE_ADMIN'
 		auth.contains 'ROLE_USER'
 		!auth.contains('ROLE_PREVIOUS_ADMINISTRATOR')
@@ -138,7 +138,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		String auth = getSessionValue('SPRING_SECURITY_CONTEXT')
 
 		then:
-		auth.contains 'Authenticated: true'
+		auth.contains 'Authenticated=true'
 		auth.contains 'ROLE_USER'
 
 		// now get an action that's ROLE_USER only
@@ -269,8 +269,8 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 
 		then:
 		assertContentContains 'getPrincipal: org.springframework.security.core.userdetails.User'
-		assertContentContains 'Username: __grails.anonymous.user__'
-		assertContentContains 'Granted Authorities: ROLE_ANONYMOUS'
+		assertContentContains 'Username=__grails.anonymous.user__'
+		assertContentContains 'Granted Authorities=[ROLE_ANONYMOUS]'
 		assertContentContains 'isLoggedIn: false'
 		assertContentContains 'loggedIn: false'
 		assertContentContains 'getAuthenticatedUser: null'
@@ -290,7 +290,7 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		then:
 		assertContentContains 'getPrincipal: grails.plugin.springsecurity.userdetails.GrailsUser'
 		assertContentContains 'principal: grails.plugin.springsecurity.userdetails.GrailsUser'
-		assertContentContains 'Username: admin'
+		assertContentContains 'Username=admin'
 		assertContentContains 'isLoggedIn: true'
 		assertContentContains 'loggedIn: true'
 		assertContentContains 'getAuthenticatedUser: TestUser(username:admin)'
@@ -368,8 +368,8 @@ class MiscSpec extends AbstractHyphenatedSecuritySpec {
 		go 'misc-test/test-servlet-api-methods'
 
 		then:
-		assertContentContains 'request.getUserPrincipal(): org.springframework.security.authentication.UsernamePasswordAuthenticationToken'
-		assertContentContains 'request.userPrincipal: org.springframework.security.authentication.UsernamePasswordAuthenticationToken'
+		assertContentContains 'request.getUserPrincipal(): UsernamePasswordAuthenticationToken'
+		assertContentContains 'request.userPrincipal: UsernamePasswordAuthenticationToken'
 		assertContentContains "request.isUserInRole('ROLE_ADMIN'): true"
 		assertContentContains "request.isUserInRole('ROLE_FOO'): false"
 		assertContentContains 'request.getRemoteUser(): admin'

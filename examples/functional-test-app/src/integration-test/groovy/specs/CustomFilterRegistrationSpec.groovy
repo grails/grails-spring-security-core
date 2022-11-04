@@ -15,9 +15,9 @@ class CustomFilterRegistrationSpec extends HttpClientSpec {
 
     void 'GET request to /assets/spinner.gif should not throw error because custom filter is excluded'() {
         when: "A GET request to the assets directory is made"
-        HttpResponse response = client.toBlocking().exchange(HttpRequest.GET("/assets/spinner.gif"))
+        HttpResponse response = client.exchange(HttpRequest.GET("/assets/spinner.gif"))
 
-        then: "the filter is not invoked because of the chainMap defition of filters: 'none' in application.groovy"
+        then: "the filter is not invoked because of the chainMap definition of filters: 'none' in application.groovy"
         response.status == HttpStatus.OK
     }
 }

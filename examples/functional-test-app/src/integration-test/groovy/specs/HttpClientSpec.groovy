@@ -1,23 +1,42 @@
 package specs
 
-import grails.testing.spock.OnceBefore
+
+import io.micronaut.http.client.BlockingHttpClient
 import io.micronaut.http.client.HttpClient
-import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-class HttpClientSpec extends Specification {
+abstract class HttpClientSpec extends Specification {
 
-    @Shared
-    @AutoCleanup
-    HttpClient client
+    @Shared HttpClient _httpClient
+    @Shared BlockingHttpClient _client
 
-    @Shared
-    String baseUrl
+    HttpClient getHttpClient() {
+        if(!_httpClient) {
+            _httpClient = createHttpClient()
+        }
+        _httpClient
+    }
 
-    @OnceBefore
-    void init() {
-        this.baseUrl = "http://localhost:$serverPort"
-        this.client  = HttpClient.create(new URL(baseUrl))
+    BlockingHttpClient getClient() {
+        if(!_client) {
+            _client = getHttpClient().toBlocking()
+        }
+        _client
+    }
+
+    HttpClient createHttpClient() {
+        String baseUrl = "http://localhost:$serverPort"
+        HttpClient.create(baseUrl.toURL())
+    }
+
+    def cleanupSpec() {
+        resetHttpClient()
+    }
+
+    void resetHttpClient() {
+        _httpClient?.close()
+        _httpClient = null
+        _client = null
     }
 }

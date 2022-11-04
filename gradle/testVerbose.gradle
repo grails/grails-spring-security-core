@@ -1,4 +1,7 @@
 tasks.withType(Test) {
+
+    useJUnitPlatform()
+
     testLogging {
         exceptionFormat = 'full'
         events 'passed', 'failed'//, 'standardOut', 'standardError'
