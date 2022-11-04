@@ -99,7 +99,7 @@ if (location.href.indexOf('is-external=true') == -1) {
 
             <dl>
                 <dt>All Implemented Interfaces and Traits:</dt>
-                <dd>AccessDecisionVoter&lt;FilterInvocation&gt;, org.springframework.context.ApplicationContextAware</dd>
+                <dd>org.springframework.security.access.AccessDecisionVoter&lt;org.springframework.security.web.FilterInvocation&gt;, org.springframework.context.ApplicationContextAware</dd>
             </dl>
     
 
@@ -111,7 +111,7 @@ if (location.href.indexOf('is-external=true') == -1) {
 @groovy.transform.CompileStatic
 class ClosureVoter
 extends java.lang.Object
-implements AccessDecisionVoter&lt;FilterInvocation&gt;, org.springframework.context.ApplicationContextAware</pre>
+implements org.springframework.security.access.AccessDecisionVoter&lt;org.springframework.security.web.FilterInvocation&gt;, org.springframework.context.ApplicationContextAware</pre>
 
     <p> <DL><DT><B>Authors:</B></DT><DD>Burt Beckwith</DD></DL></p>
 
@@ -211,7 +211,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;, org.springframework.cont
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>int</code></td>
-                            <td class="colLast"><code><strong><a href="#vote(org.springframework.security.core.Authentication, org.springframework.security.web.FilterInvocation, Collection)">vote</a></strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;ConfigAttribute&gt; attributes)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#vote(org.springframework.security.core.Authentication, org.springframework.security.web.FilterInvocation, Collection)">vote</a></strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; attributes)</code><br></td>
                         </tr>
                         
                     </table>
@@ -319,7 +319,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;, org.springframework.cont
                         <a name="vote(org.springframework.security.core.Authentication, org.springframework.security.web.FilterInvocation, Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>int <strong>vote</strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;ConfigAttribute&gt; attributes)</h4>
+                                <h4>int <strong>vote</strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; attributes)</h4>
                                 <p></p>
                             </li>
                         </ul>

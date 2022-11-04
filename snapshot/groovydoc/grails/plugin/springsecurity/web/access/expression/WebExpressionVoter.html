@@ -99,7 +99,7 @@ if (location.href.indexOf('is-external=true') == -1) {
 
             <dl>
                 <dt>All Implemented Interfaces and Traits:</dt>
-                <dd>AccessDecisionVoter&lt;FilterInvocation&gt;</dd>
+                <dd>org.springframework.security.access.AccessDecisionVoter&lt;org.springframework.security.web.FilterInvocation&gt;</dd>
             </dl>
     
 
@@ -111,7 +111,7 @@ if (location.href.indexOf('is-external=true') == -1) {
 @groovy.util.logging.Slf4j
 class WebExpressionVoter
 extends java.lang.Object
-implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
+implements org.springframework.security.access.AccessDecisionVoter&lt;org.springframework.security.web.FilterInvocation&gt;</pre>
 
     <p> Based on the class of the same name in Spring Security which uses the
  package-default WebExpressionConfigAttribute. <DL><DT><B>Authors:</B></DT><DD>Luke Taylor</DD><DD>Burt Beckwith</DD></DL></p>
@@ -145,7 +145,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
                         </tr>
                         
                         <tr class="altColor">
-                            <td class="colFirst"><code><strong>SecurityExpressionHandler&lt;FilterInvocation&gt;</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>org.springframework.security.access.expression.SecurityExpressionHandler&lt;org.springframework.security.web.FilterInvocation&gt;</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#expressionHandler">expressionHandler</a></code><br>Dependency injection for the expression handler.</td>
                         </tr>
                         
@@ -200,7 +200,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/web/access/expression/WebExpressionConfigAttribute.html'>WebExpressionConfigAttribute</a></code></td>
-                            <td class="colLast"><code><strong><a href="#findConfigAttribute(Collection)">findConfigAttribute</a></strong>(java.util.Collection&lt;ConfigAttribute&gt; attributes)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#findConfigAttribute(Collection)">findConfigAttribute</a></strong>(java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; attributes)</code><br></td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -218,7 +218,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>int</code></td>
-                            <td class="colLast"><code><strong><a href="#vote(org.springframework.security.core.Authentication, org.springframework.security.web.FilterInvocation, Collection)">vote</a></strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;ConfigAttribute&gt; attributes)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#vote(org.springframework.security.core.Authentication, org.springframework.security.web.FilterInvocation, Collection)">vote</a></strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; attributes)</code><br></td>
                         </tr>
                         
                     </table>
@@ -267,7 +267,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
                         <a name="expressionHandler"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>SecurityExpressionHandler&lt;FilterInvocation&gt; <strong>expressionHandler</strong></h4>
+                                <h4>org.springframework.security.access.expression.SecurityExpressionHandler&lt;org.springframework.security.web.FilterInvocation&gt; <strong>expressionHandler</strong></h4>
                                 <p>Dependency injection for the expression handler.</p>
                             </li>
                         </ul>
@@ -310,7 +310,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
                         <a name="findConfigAttribute(Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/web/access/expression/WebExpressionConfigAttribute.html'>WebExpressionConfigAttribute</a> <strong>findConfigAttribute</strong>(java.util.Collection&lt;ConfigAttribute&gt; attributes)</h4>
+                                <h4>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/web/access/expression/WebExpressionConfigAttribute.html'>WebExpressionConfigAttribute</a> <strong>findConfigAttribute</strong>(java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; attributes)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -334,7 +334,7 @@ implements AccessDecisionVoter&lt;FilterInvocation&gt;</pre>
                         <a name="vote(org.springframework.security.core.Authentication, org.springframework.security.web.FilterInvocation, Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>int <strong>vote</strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;ConfigAttribute&gt; attributes)</h4>
+                                <h4>int <strong>vote</strong>(org.springframework.security.core.Authentication authentication, org.springframework.security.web.FilterInvocation fi, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; attributes)</h4>
                                 <p></p>
                             </li>
                         </ul>

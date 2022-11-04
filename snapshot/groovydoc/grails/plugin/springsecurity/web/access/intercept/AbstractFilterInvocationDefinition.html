@@ -142,13 +142,13 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         </tr>
                         
                         <tr class="altColor">
-                            <td class="colFirst"><code><strong>protected&nbsp;static&nbsp;java.util.Collection&lt;ConfigAttribute&gt;</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>protected&nbsp;static&nbsp;java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ALLOW404">ALLOW404</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
                         <tr class="rowColor">
-                            <td class="colFirst"><code><strong>protected&nbsp;static&nbsp;java.util.Collection&lt;ConfigAttribute&gt;</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>protected&nbsp;static&nbsp;java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#DENY">DENY</a></code></td>
                             <td class="colLast"></td>
                         </tr>
@@ -166,7 +166,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         </tr>
                         
                         <tr class="altColor">
-                            <td class="colFirst"><code><strong>protected&nbsp;java.util.List&lt;InterceptedUrl&gt;</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>protected&nbsp;java.util.List&lt;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html' title='InterceptedUrl'>InterceptedUrl</a>&gt;</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#compiled">compiled</a></code></td>
                             <td class="colLast"></td>
                         </tr>
@@ -288,31 +288,31 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>protected&nbsp;java.util.Collection&lt;ConfigAttribute&gt;</code></td>
+                            <td class="colLast"><code>protected&nbsp;java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#findConfigAttributes(java.lang.String, java.lang.String)">findConfigAttributes</a></strong>(java.lang.String url, java.lang.String requestMethod)</code><br></td>
                         </tr>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>java.util.Collection&lt;ConfigAttribute&gt;</code></td>
+                            <td class="colLast"><code>java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#findMatchingAttributes(java.lang.String)">findMatchingAttributes</a></strong>(java.lang.String url)</code><br>For admin/debugging - find all config attributes that apply to the specified URL (doesn't consider request method restrictions).</td>
                         </tr>
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>java.util.Collection&lt;ConfigAttribute&gt;</code></td>
+                            <td class="colLast"><code>java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#getAllConfigAttributes()">getAllConfigAttributes</a></strong>()</code><br></td>
                         </tr>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>java.util.Collection&lt;ConfigAttribute&gt;</code></td>
+                            <td class="colLast"><code>java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#getAttributes(java.lang.Object)">getAttributes</a></strong>(java.lang.Object object)</code><br></td>
                         </tr>
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>java.util.List&lt;InterceptedUrl&gt;</code></td>
+                            <td class="colLast"><code>java.util.List&lt;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html' title='InterceptedUrl'>InterceptedUrl</a>&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#getConfigAttributeMap()">getConfigAttributeMap</a></strong>()</code><br>For debugging.</td>
                         </tr>
                         
@@ -361,7 +361,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html'>InterceptedUrl</a></code></td>
-                            <td class="colLast"><code><strong><a href="#storeMapping(java.lang.String, org.springframework.http.HttpMethod, Collection)">storeMapping</a></strong>(java.lang.String pattern, org.springframework.http.HttpMethod method, java.util.Collection&lt;ConfigAttribute&gt; configAttributes)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#storeMapping(java.lang.String, org.springframework.http.HttpMethod, Collection)">storeMapping</a></strong>(java.lang.String pattern, org.springframework.http.HttpMethod method, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; configAttributes)</code><br></td>
                         </tr>
                         
                         <tr class="altColor">
@@ -414,7 +414,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="ALLOW404"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;static&nbsp;final&nbsp;java.util.Collection&lt;ConfigAttribute&gt; <strong>ALLOW404</strong></h4>
+                                <h4>protected&nbsp;static&nbsp;final&nbsp;java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; <strong>ALLOW404</strong></h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -422,7 +422,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="DENY"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;static&nbsp;final&nbsp;java.util.Collection&lt;ConfigAttribute&gt; <strong>DENY</strong></h4>
+                                <h4>protected&nbsp;static&nbsp;final&nbsp;java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; <strong>DENY</strong></h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -446,7 +446,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="compiled"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;final&nbsp;java.util.List&lt;InterceptedUrl&gt; <strong>compiled</strong></h4>
+                                <h4>protected&nbsp;final&nbsp;java.util.List&lt;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html' title='InterceptedUrl'>InterceptedUrl</a>&gt; <strong>compiled</strong></h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -565,7 +565,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="findConfigAttributes(java.lang.String, java.lang.String)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;java.util.Collection&lt;ConfigAttribute&gt; <strong>findConfigAttributes</strong>(java.lang.String url, java.lang.String requestMethod)</h4>
+                                <h4>protected&nbsp;java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; <strong>findConfigAttributes</strong>(java.lang.String url, java.lang.String requestMethod)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -573,7 +573,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="findMatchingAttributes(java.lang.String)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>java.util.Collection&lt;ConfigAttribute&gt; <strong>findMatchingAttributes</strong>(java.lang.String url)</h4>
+                                <h4>java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; <strong>findMatchingAttributes</strong>(java.lang.String url)</h4>
                                 <p> For admin/debugging - find all config attributes that apply to the specified URL (doesn't consider request method restrictions). <DL><DT><B>Parameters:</B></DT><DD><code>url</code> -  the URL</DD></DL><DL><DT><B>Returns:</B></DT><DD>matching attributes</DD></DL></p>
                             </li>
                         </ul>
@@ -581,7 +581,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="getAllConfigAttributes()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>java.util.Collection&lt;ConfigAttribute&gt; <strong>getAllConfigAttributes</strong>()</h4>
+                                <h4>java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; <strong>getAllConfigAttributes</strong>()</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -589,7 +589,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="getAttributes(java.lang.Object)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>java.util.Collection&lt;ConfigAttribute&gt; <strong>getAttributes</strong>(java.lang.Object object)</h4>
+                                <h4>java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; <strong>getAttributes</strong>(java.lang.Object object)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -597,7 +597,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="getConfigAttributeMap()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>java.util.List&lt;InterceptedUrl&gt; <strong>getConfigAttributeMap</strong>()</h4>
+                                <h4>java.util.List&lt;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html' title='InterceptedUrl'>InterceptedUrl</a>&gt; <strong>getConfigAttributeMap</strong>()</h4>
                                 <p> For debugging. <DL><DT><B>Returns:</B></DT><DD>an unmodifiable map of <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AnnotationFilterInvocationDefinition.html' title='AnnotationFilterInvocationDefinition'>AnnotationFilterInvocationDefinition</a>ConfigAttributeDefinition
  keyed by compiled patterns</DD></DL></p>
                             </li>
@@ -662,7 +662,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="storeMapping(java.lang.String, org.springframework.http.HttpMethod, Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html'>InterceptedUrl</a> <strong>storeMapping</strong>(java.lang.String pattern, org.springframework.http.HttpMethod method, java.util.Collection&lt;ConfigAttribute&gt; configAttributes)</h4>
+                                <h4>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html'>InterceptedUrl</a> <strong>storeMapping</strong>(java.lang.String pattern, org.springframework.http.HttpMethod method, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; configAttributes)</h4>
                                 <p></p>
                             </li>
                         </ul>

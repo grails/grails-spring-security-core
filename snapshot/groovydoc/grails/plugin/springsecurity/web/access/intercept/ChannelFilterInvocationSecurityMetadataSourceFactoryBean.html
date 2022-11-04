@@ -99,7 +99,7 @@ if (location.href.indexOf('is-external=true') == -1) {
 
             <dl>
                 <dt>All Implemented Interfaces and Traits:</dt>
-                <dd>FactoryBean&lt;FilterInvocationSecurityMetadataSource&gt;, org.springframework.beans.factory.InitializingBean</dd>
+                <dd>org.springframework.beans.factory.FactoryBean&lt;org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource&gt;, org.springframework.beans.factory.InitializingBean</dd>
             </dl>
     
 
@@ -110,9 +110,9 @@ if (location.href.indexOf('is-external=true') == -1) {
 <pre>@groovy.transform.CompileStatic
 class ChannelFilterInvocationSecurityMetadataSourceFactoryBean
 extends java.lang.Object
-implements FactoryBean&lt;FilterInvocationSecurityMetadataSource&gt;, org.springframework.beans.factory.InitializingBean</pre>
+implements org.springframework.beans.factory.FactoryBean&lt;org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource&gt;, org.springframework.beans.factory.InitializingBean</pre>
 
-    <p> Factory bean that builds a FilterInvocationSecurityMetadataSource for channel security. <DL><DT><B>Authors:</B></DT><DD>Burt Beckwith</DD></DL></p>
+    <p> Factory bean that builds a org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource for channel security. <DL><DT><B>Authors:</B></DT><DD>Burt Beckwith</DD></DL></p>
 
           </li>
     </ul>
@@ -239,7 +239,7 @@ implements FactoryBean&lt;FilterInvocationSecurityMetadataSource&gt;, org.spring
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>protected&nbsp;java.util.LinkedHashMap&lt;RequestMatcher, java.util.Collection&lt;ConfigAttribute&gt;&gt;</code></td>
+                            <td class="colLast"><code>protected&nbsp;java.util.LinkedHashMap&lt;org.springframework.security.web.util.matcher.RequestMatcher, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#buildMap()">buildMap</a></strong>()</code><br></td>
                         </tr>
                         
@@ -251,7 +251,7 @@ implements FactoryBean&lt;FilterInvocationSecurityMetadataSource&gt;, org.spring
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>java.lang.Class&lt;DefaultFilterInvocationSecurityMetadataSource&gt;</code></td>
+                            <td class="colLast"><code>java.lang.Class&lt;org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#getObjectType()">getObjectType</a></strong>()</code><br></td>
                         </tr>
                         
@@ -393,7 +393,7 @@ implements FactoryBean&lt;FilterInvocationSecurityMetadataSource&gt;, org.spring
                         <a name="buildMap()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;java.util.LinkedHashMap&lt;RequestMatcher, java.util.Collection&lt;ConfigAttribute&gt;&gt; <strong>buildMap</strong>()</h4>
+                                <h4>protected&nbsp;java.util.LinkedHashMap&lt;org.springframework.security.web.util.matcher.RequestMatcher, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt;&gt; <strong>buildMap</strong>()</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -409,7 +409,7 @@ implements FactoryBean&lt;FilterInvocationSecurityMetadataSource&gt;, org.spring
                         <a name="getObjectType()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>java.lang.Class&lt;DefaultFilterInvocationSecurityMetadataSource&gt; <strong>getObjectType</strong>()</h4>
+                                <h4>java.lang.Class&lt;org.springframework.security.web.access.intercept.DefaultFilterInvocationSecurityMetadataSource&gt; <strong>getObjectType</strong>()</h4>
                                 <p></p>
                             </li>
                         </ul>

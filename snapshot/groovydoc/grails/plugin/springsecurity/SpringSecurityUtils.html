@@ -204,7 +204,7 @@ extends java.lang.Object</pre>
                         </tr>
                         
                         <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, Filter&gt;</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, javax.servlet.Filter&gt;</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#configuredOrderedFilters">configuredOrderedFilters</a></code><br>Set by SpringSecurityCoreGrailsPlugin contains the actual filter beans in order.</td>
                         </tr>
                         
@@ -315,7 +315,7 @@ extends java.lang.Object</pre>
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>static&nbsp;java.util.Collection&lt;GrantedAuthority&gt;</code></td>
+                            <td class="colLast"><code>static&nbsp;java.util.Collection&lt;org.springframework.security.core.GrantedAuthority&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#getPrincipalAuthorities()">getPrincipalAuthorities</a></strong>()</code><br>Get the current user's authorities.</td>
                         </tr>
                         
@@ -358,7 +358,7 @@ extends java.lang.Object</pre>
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;boolean</code></td>
-                            <td class="colLast"><code><strong><a href="#ifAllGranted(Collection)">ifAllGranted</a></strong>(java.util.Collection&lt;? extends GrantedAuthority&gt; roles)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#ifAllGranted(Collection)">ifAllGranted</a></strong>(java.util.Collection&lt;? extends org.springframework.security.core.GrantedAuthority&gt; roles)</code><br></td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -370,7 +370,7 @@ extends java.lang.Object</pre>
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;boolean</code></td>
-                            <td class="colLast"><code><strong><a href="#ifAnyGranted(Collection)">ifAnyGranted</a></strong>(java.util.Collection&lt;? extends GrantedAuthority&gt; roles)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#ifAnyGranted(Collection)">ifAnyGranted</a></strong>(java.util.Collection&lt;? extends org.springframework.security.core.GrantedAuthority&gt; roles)</code><br></td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -382,7 +382,7 @@ extends java.lang.Object</pre>
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;boolean</code></td>
-                            <td class="colLast"><code><strong><a href="#ifNotGranted(Collection)">ifNotGranted</a></strong>(java.util.Collection&lt;? extends GrantedAuthority&gt; roles)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#ifNotGranted(Collection)">ifNotGranted</a></strong>(java.util.Collection&lt;? extends org.springframework.security.core.GrantedAuthority&gt; roles)</code><br></td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -411,8 +411,8 @@ extends java.lang.Object</pre>
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>static&nbsp;java.util.List&lt;GrantedAuthority&gt;</code></td>
-                            <td class="colLast"><code><strong><a href="#parseAuthoritiesString(java.lang.String)">parseAuthoritiesString</a></strong>(java.lang.String roleNames)</code><br>Split the role names and create GrantedAuthoritys for each.</td>
+                            <td class="colLast"><code>static&nbsp;java.util.List&lt;org.springframework.security.core.GrantedAuthority&gt;</code></td>
+                            <td class="colLast"><code><strong><a href="#parseAuthoritiesString(java.lang.String)">parseAuthoritiesString</a></strong>(java.lang.String roleNames)</code><br>Split the role names and create org.springframework.security.core.GrantedAuthoritys for each.</td>
                         </tr>
                         
                         <tr class="altColor">
@@ -610,7 +610,7 @@ extends java.lang.Object</pre>
                         <a name="configuredOrderedFilters"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, Filter&gt; <strong>configuredOrderedFilters</strong></h4>
+                                <h4>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, javax.servlet.Filter&gt; <strong>configuredOrderedFilters</strong></h4>
                                 <p>Set by SpringSecurityCoreGrailsPlugin contains the actual filter beans in order.</p>
                             </li>
                         </ul>
@@ -676,7 +676,7 @@ extends java.lang.Object</pre>
                         <ul class="blockListLast">
                             <li class="blockList">
                                 <h4>static&nbsp;java.util.Set&lt;java.lang.String&gt; <strong>authoritiesToRoles</strong>(java.lang.Object authorities)</h4>
-                                <p> Extract the role names from authorities. <DL><DT><B>Parameters:</B></DT><DD><code>authorities</code> -  the authorities (a collection or array of GrantedAuthority).</DD></DL><DL><DT><B>Returns:</B></DT><DD>the names</DD></DL></p>
+                                <p> Extract the role names from authorities. <DL><DT><B>Parameters:</B></DT><DD><code>authorities</code> -  the authorities (a collection or array of org.springframework.security.core.GrantedAuthority).</DD></DL><DL><DT><B>Returns:</B></DT><DD>the names</DD></DL></p>
                             </li>
                         </ul>
                     
@@ -761,7 +761,8 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <a name="getPrincipalAuthorities()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;java.util.Collection&lt;GrantedAuthority&gt; <strong>getPrincipalAuthorities</strong>()</h4>
+                                <h4>@groovy.transform.CompileDynamic
+static&nbsp;java.util.Collection&lt;org.springframework.security.core.GrantedAuthority&gt; <strong>getPrincipalAuthorities</strong>()</h4>
                                 <p> Get the current user's authorities. <DL><DT><B>Returns:</B></DT><DD>a list of authorities (empty if not authenticated).</DD></DL></p>
                             </li>
                         </ul>
@@ -817,7 +818,7 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <a name="ifAllGranted(Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;boolean <strong>ifAllGranted</strong>(java.util.Collection&lt;? extends GrantedAuthority&gt; roles)</h4>
+                                <h4>static&nbsp;boolean <strong>ifAllGranted</strong>(java.util.Collection&lt;? extends org.springframework.security.core.GrantedAuthority&gt; roles)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -833,7 +834,7 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <a name="ifAnyGranted(Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;boolean <strong>ifAnyGranted</strong>(java.util.Collection&lt;? extends GrantedAuthority&gt; roles)</h4>
+                                <h4>static&nbsp;boolean <strong>ifAnyGranted</strong>(java.util.Collection&lt;? extends org.springframework.security.core.GrantedAuthority&gt; roles)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -849,7 +850,7 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <a name="ifNotGranted(Collection)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;boolean <strong>ifNotGranted</strong>(java.util.Collection&lt;? extends GrantedAuthority&gt; roles)</h4>
+                                <h4>static&nbsp;boolean <strong>ifNotGranted</strong>(java.util.Collection&lt;? extends org.springframework.security.core.GrantedAuthority&gt; roles)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -889,8 +890,8 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <a name="parseAuthoritiesString(java.lang.String)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;java.util.List&lt;GrantedAuthority&gt; <strong>parseAuthoritiesString</strong>(java.lang.String roleNames)</h4>
-                                <p> Split the role names and create GrantedAuthoritys for each. <DL><DT><B>Parameters:</B></DT><DD><code>roleNames</code> -  comma-delimited role names</DD></DL><DL><DT><B>Returns:</B></DT><DD>authorities (possibly empty)</DD></DL></p>
+                                <h4>static&nbsp;java.util.List&lt;org.springframework.security.core.GrantedAuthority&gt; <strong>parseAuthoritiesString</strong>(java.lang.String roleNames)</h4>
+                                <p> Split the role names and create org.springframework.security.core.GrantedAuthoritys for each. <DL><DT><B>Parameters:</B></DT><DD><code>roleNames</code> -  comma-delimited role names</DD></DL><DL><DT><B>Returns:</B></DT><DD>authorities (possibly empty)</DD></DL></p>
                             </li>
                         </ul>
                     
@@ -987,7 +988,7 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <ul class="blockListLast">
                             <li class="blockList">
                                 <h4>static&nbsp;java.util.Set&lt;java.lang.String&gt; <strong>retainAll</strong>(java.lang.Object granted, java.lang.Object required)</h4>
-                                <p> Find authorities in <code>granted</code> that are also in <code>required</code>. <DL><DT><B>Parameters:</B></DT><DD><code>granted</code> -  the granted authorities (a collection or array of GrantedAuthority).</DD><DD><code>required</code> -  the required authorities (a collection or array of GrantedAuthority).</DD></DL><DL><DT><B>Returns:</B></DT><DD>the authority names</DD></DL></p>
+                                <p> Find authorities in <code>granted</code> that are also in <code>required</code>. <DL><DT><B>Parameters:</B></DT><DD><code>granted</code> -  the granted authorities (a collection or array of org.springframework.security.core.GrantedAuthority).</DD><DD><code>required</code> -  the required authorities (a collection or array of org.springframework.security.core.GrantedAuthority).</DD></DL><DL><DT><B>Returns:</B></DT><DD>the authority names</DD></DL></p>
                             </li>
                         </ul>
                     
