@@ -27,13 +27,6 @@ repositories {
     maven { url "https://repo.grails.org/grails/core" }
 }
 
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
-}
-
 dependencies {
     compileOnly 'io.micronaut:micronaut-inject-groovy'
     console "org.grails:grails-console"
