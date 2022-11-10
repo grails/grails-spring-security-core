@@ -195,6 +195,12 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                             <td class="colLast"></td>
                         </tr>
                         
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong>protected&nbsp;org.springframework.web.util.UrlPathHelper</strong></code>&nbsp;</td>
+                            <td class="colLast"><code><a href="#urlPathHelper">urlPathHelper</a></code></td>
+                            <td class="colLast"></td>
+                        </tr>
+                        
                     </table>
                    </ul>
                 </li>
@@ -271,7 +277,7 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>protected&nbsp;java.lang.String</code></td>
-                            <td class="colLast"><code><strong><a href="#calculateUri(javax.servlet.http.HttpServletRequest)">calculateUri</a></strong>(javax.servlet.http.HttpServletRequest request)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#calculateUri(javax.servlet.http.HttpServletRequest)">calculateUri</a></strong>(javax.servlet.http.HttpServletRequest request)</code><br>Resolve the URI from javax.servlet.http.HttpServletRequest</td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -365,6 +371,12 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         </tr>
                         
                         <tr class="altColor">
+                            <td class="colFirst"><code></code></td>
+                            <td class="colLast"><code>protected&nbsp;java.lang.String</code></td>
+                            <td class="colLast"><code><strong><a href="#stripContextPath(java.lang.String, javax.servlet.http.HttpServletRequest)">stripContextPath</a></strong>(java.lang.String uri, javax.servlet.http.HttpServletRequest request)</code><br></td>
+                        </tr>
+                        
+                        <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>boolean</code></td>
                             <td class="colLast"><code><strong><a href="#supports(Class)">supports</a></strong>(java.lang.Class&lt;?&gt; clazz)</code><br></td>
@@ -483,6 +495,14 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                             </li>
                         </ul>
                     
+                        <a name="urlPathHelper"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4>protected&nbsp;org.springframework.web.util.UrlPathHelper <strong>urlPathHelper</strong></h4>
+                                <p></p>
+                            </li>
+                        </ul>
+                    
                 </li>
             </ul>
             
@@ -541,8 +561,9 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <a name="calculateUri(javax.servlet.http.HttpServletRequest)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>protected&nbsp;java.lang.String <strong>calculateUri</strong>(javax.servlet.http.HttpServletRequest request)</h4>
-                                <p></p>
+                                <h4>@java.lang.Deprecated
+protected&nbsp;java.lang.String <strong>calculateUri</strong>(javax.servlet.http.HttpServletRequest request)</h4>
+                                <p> Resolve the URI from javax.servlet.http.HttpServletRequest<DL><DT><B>deprecated:</B></DT><DD>Use org.springframework.web.util.UrlPathHelper#getRequestUri(javax.servlet.http.HttpServletRequest request) and <a href='#stripContextPath'>stripContextPath</a> instead</DD></DL> <DL><DT><B>Parameters:</B></DT><DD><code>request</code> -  The javax.servlet.http.HttpServletRequest</DD></DL><DL><DT><B>Returns:</B></DT><DD>The resolved URI string</DD></DL></p>
                             </li>
                         </ul>
                     
@@ -663,6 +684,14 @@ implements org.springframework.security.web.access.intercept.FilterInvocationSec
                         <ul class="blockListLast">
                             <li class="blockList">
                                 <h4>protected&nbsp;<a href='../../../../../../grails/plugin/springsecurity/InterceptedUrl.html'>InterceptedUrl</a> <strong>storeMapping</strong>(java.lang.String pattern, org.springframework.http.HttpMethod method, java.util.Collection&lt;org.springframework.security.access.ConfigAttribute&gt; configAttributes)</h4>
+                                <p></p>
+                            </li>
+                        </ul>
+                    
+                        <a name="stripContextPath(java.lang.String, javax.servlet.http.HttpServletRequest)"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4>protected&nbsp;java.lang.String <strong>stripContextPath</strong>(java.lang.String uri, javax.servlet.http.HttpServletRequest request)</h4>
                                 <p></p>
                             </li>
                         </ul>
