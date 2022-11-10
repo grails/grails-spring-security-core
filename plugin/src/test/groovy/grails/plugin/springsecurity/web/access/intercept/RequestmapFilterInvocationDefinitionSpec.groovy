@@ -120,7 +120,17 @@ class RequestmapFilterInvocationDefinitionSpec extends AbstractUnitSpec {
 		request.requestURI = '/context/foo;f1=WWW/bar;s1=1;s2=2/index.html;i1=1;i2=2'
 
 		then:
-		'/context/foo/bar/index.html' == fid.determineUrl(new FilterInvocation(request, response, chain))
+		'/foo/bar/index.html' == fid.determineUrl(new FilterInvocation(request, response, chain))
+	}
+
+	void "test determineUrl context path and query params are stripped from url"() {
+		when:
+		def chain = new MockFilterChain()
+		request.contextPath = '/context'
+		request.requestURI = '/context/foo/bar/index.html?type=HelloWorld'
+
+		then:
+		'/foo/bar/index.html' == fid.determineUrl(new FilterInvocation(request, response, chain))
 	}
 
 	void 'supports'() {
