@@ -85,7 +85,7 @@ class AnnotationFilterInvocationDefinition extends AbstractFilterInvocationDefin
 		HttpServletRequest request = filterInvocation.httpRequest
 		HttpServletResponse response = filterInvocation.httpResponse
 
-		String requestUrl = calculateUri(request)
+		String requestUrl = urlPathHelper.getRequestUri(request)
 
 		GrailsWebRequest existingRequest
 		try {
