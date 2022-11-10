@@ -94,7 +94,8 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	}
 
 	protected String determineUrl(FilterInvocation filterInvocation) {
-		lowercaseAndStripQuerystring urlPathHelper.getRequestUri(filterInvocation.httpRequest)
+        final HttpServletRequest request = filterInvocation.request
+		lowercaseAndStripQuerystring stripContextPath(urlPathHelper.getRequestUri(request), request)
 	}
 
 	protected boolean stopAtFirstMatch() {
@@ -175,17 +176,25 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		Collections.unmodifiableCollection all
 	}
 
-	/**
-	 * Resolve the URI from {@link javax.servlet.http.HttpServletRequest}
-	 * @param request The {@link javax.servlet.http.HttpServletRequest}
-	 *
-	 * @return The resolved URI string
-	 * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(javax.servlet.http.HttpServletRequest request)} instead
-	 */
-	@Deprecated
-	protected String calculateUri(HttpServletRequest request) {
-		urlPathHelper.getRequestUri(request)
-	}
+    /**
+     * Resolve the URI from {@link javax.servlet.http.HttpServletRequest}
+     * @param request The {@link javax.servlet.http.HttpServletRequest}
+     *
+     * @return The resolved URI string
+     * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(javax.servlet.http.HttpServletRequest request)} and {@link #stripContextPath} instead
+     */
+    @Deprecated
+    protected String calculateUri(HttpServletRequest request) {
+        stripContextPath(urlPathHelper.getRequestUri(request), request)
+    }
+
+    protected String stripContextPath(String uri, HttpServletRequest request) {
+        String contextPath = request.contextPath
+        if (contextPath && uri.startsWith(contextPath)) {
+            uri = uri.substring(contextPath.length())
+        }
+        uri
+    }
 
 	protected String lowercaseAndStripQuerystring(String url) {
 
