@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import groovy.util.logging.Slf4j
+import org.springframework.web.util.UrlPathHelper
 
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -55,6 +56,7 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.accessor
 	protected AntPathMatcher urlMatcher = new AntPathMatcher()
 	protected boolean initialized
+	protected UrlPathHelper urlPathHelper = UrlPathHelper.defaultInstance
 
 	/** Dependency injection for whether to reject if there's no matching rule. */
 	boolean rejectIfNoRule
@@ -92,7 +94,7 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	}
 
 	protected String determineUrl(FilterInvocation filterInvocation) {
-		lowercaseAndStripQuerystring calculateUri(filterInvocation.httpRequest)
+		lowercaseAndStripQuerystring urlPathHelper.getRequestUri(filterInvocation.httpRequest)
 	}
 
 	protected boolean stopAtFirstMatch() {
@@ -173,10 +175,16 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		Collections.unmodifiableCollection all
 	}
 
+	/**
+	 * Resolve the URI from {@link javax.servlet.http.HttpServletRequest}
+	 * @param request The {@link javax.servlet.http.HttpServletRequest}
+	 *
+	 * @return The resolved URI string
+	 * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(javax.servlet.http.HttpServletRequest request)} instead
+	 */
+	@Deprecated
 	protected String calculateUri(HttpServletRequest request) {
-		String url = request.requestURI.substring(request.contextPath.length())
-		int semicolonIndex = url.indexOf(';')
-		semicolonIndex == -1 ? url : url.substring(0, semicolonIndex)
+		urlPathHelper.getRequestUri(request)
 	}
 
 	protected String lowercaseAndStripQuerystring(String url) {
