@@ -53,7 +53,7 @@ dependencies {
     implementation project(':spring-security-core')
     console "org.grails:grails-console"
     profile "org.grails.profiles:web"
-    runtimeOnly "org.glassfish.web:el-impl:2.1.2-b03"
+    runtimeOnly "org.glassfish.web:el-impl:2.2.1"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.apache.tomcat:tomcat-jdbc"
     runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
