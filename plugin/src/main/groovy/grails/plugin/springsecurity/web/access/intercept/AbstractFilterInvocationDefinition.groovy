@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import groovy.util.logging.Slf4j
+import org.springframework.web.util.UrlPathHelper
 
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -55,6 +56,7 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.accessor
 	protected AntPathMatcher urlMatcher = new AntPathMatcher()
 	protected boolean initialized
+	protected UrlPathHelper urlPathHelper = UrlPathHelper.defaultInstance
 
 	/** Dependency injection for whether to reject if there's no matching rule. */
 	boolean rejectIfNoRule
@@ -92,7 +94,8 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	}
 
 	protected String determineUrl(FilterInvocation filterInvocation) {
-		lowercaseAndStripQuerystring calculateUri(filterInvocation.httpRequest)
+        final HttpServletRequest request = filterInvocation.httpRequest
+		lowercaseAndStripQuerystring stripContextPath(urlPathHelper.getRequestUri(request), request)
 	}
 
 	protected boolean stopAtFirstMatch() {
@@ -173,11 +176,25 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		Collections.unmodifiableCollection all
 	}
 
-	protected String calculateUri(HttpServletRequest request) {
-		String url = request.requestURI.substring(request.contextPath.length())
-		int semicolonIndex = url.indexOf(';')
-		semicolonIndex == -1 ? url : url.substring(0, semicolonIndex)
-	}
+    /**
+     * Resolve the URI from {@link javax.servlet.http.HttpServletRequest}
+     * @param request The {@link javax.servlet.http.HttpServletRequest}
+     *
+     * @return The resolved URI string
+     * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(javax.servlet.http.HttpServletRequest request)} and {@link #stripContextPath} instead
+     */
+    @Deprecated
+    protected String calculateUri(HttpServletRequest request) {
+        stripContextPath(urlPathHelper.getRequestUri(request), request)
+    }
+
+    protected String stripContextPath(String uri, HttpServletRequest request) {
+        String contextPath = request.contextPath
+        if (contextPath && uri.startsWith(contextPath)) {
+            uri = uri.substring(contextPath.length())
+        }
+        uri
+    }
 
 	protected String lowercaseAndStripQuerystring(String url) {
 
