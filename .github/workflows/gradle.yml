@@ -3,9 +3,11 @@ on:
   push:
     branches:
       - '[4-9]+.[0-9]+.x'
+      - '[3-9]+.[3-9]+.x'
   pull_request:
     branches:
       - '[4-9]+.[0-9]+.x'
+      - '[3-9]+.[3-9]+.x'      
   workflow_dispatch:
 jobs:
   core-tests:
