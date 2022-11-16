@@ -12,7 +12,7 @@ buildscript {
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
-String versionTxt = file("${rootProject.projectDir}/version.txt").text.trim()
+String versionTxt = project.projectVersion
 String stableversion = ''
 String snapshotversion = ''
 String[] arr = versionTxt.tokenize('.')

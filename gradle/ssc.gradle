@@ -1,15 +1,5 @@
-File pluginDir = file('.').parentFile
-File versionTxt
-while (true) {
-    versionTxt = new File(pluginDir, 'version.txt')
-    if (versionTxt.exists()) {
-        break
-    }
-    pluginDir = pluginDir.parentFile
-}
-
-project.ext.pluginVersion = versionTxt.text.trim()
-project.ext.pluginName = pluginDir.name - 'grails-'
+project.ext.pluginVersion = project.projectVersion
+project.ext.pluginName = rootProject.name - 'grails-'
 
 dependencies {
     compile "org.grails.plugins:$pluginName:$pluginVersion"
