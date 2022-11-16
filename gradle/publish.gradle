@@ -1,0 +1,90 @@
+apply plugin: 'com.bmuschko.nexus'
+apply plugin: 'maven-publish'
+
+ext.nexusUsername = project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : System.getenv("SONATYPE_USERNAME") ?: ''
+ext.nexusPassword = project.hasProperty("sonatypeOssPassword") ? project.sonatypeOssPassword : System.getenv("SONATYPE_PASSWORD") ?: ''
+ext."signing.keyId" = project.hasProperty("signing.keyId") ? project.getProperty('signing.keyId') : System.getenv("SIGNING_KEY") ?: null
+ext."signing.password" = project.hasProperty("signing.password") ? project.getProperty('signing.password') : System.getenv("SIGNING_PASSPHRASE") ?: null
+ext."signing.secretKeyRingFile" = project.hasProperty("signing.secretKeyRingFile") ? project.getProperty('signing.secretKeyRingFile') : null
+
+ext.pomInfo = {
+    delegate.name 'Grails Spring Security Core Plugin'
+    delegate.description 'The Spring Security plugin simplifies the integration of Spring Security into Grails applications.'
+    delegate.url 'https://grails.github.io/grails-spring-security-core//'
+
+    delegate.licenses {
+        delegate.license {
+            delegate.name 'The Apache Software License, Version 2.0'
+            delegate.url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+            delegate.distribution 'repo'
+        }
+    }
+
+    delegate.scm {
+        delegate.url 'scm:git@github.com:grails/grails-spring-security-core.git'
+        delegate.connection 'scm:git@github.com:grails/grails-spring-security-core.git'
+        delegate.developerConnection 'scm:git@github.com:grails/grails-spring-security-core.git'
+    }
+
+    delegate.developers {
+        delegate.developer {
+            delegate.id 'puneetbehl'
+            delegate.name 'Puneet Behl'
+            delegate.email 'behlp@objectcomputing.com'
+        }
+    }
+}
+
+
+if (!project.hasProperty("artifactoryPublishPassword") && System.getenv("ARTIFACTORY_PASSWORD")) {
+    project.ext.artifactoryPublishPassword = System.getenv("ARTIFACTORY_PASSWORD")
+}
+
+nexus {
+    sign = isRelease
+    repositoryUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+}
+
+modifyPom {
+    delegate.project {
+        def updatePom = pomInfo.clone()
+        updatePom.delegate = delegate
+        updatePom()
+    }
+}
+
+publishing {
+
+    if (isSnapshot) {
+
+        repositories {
+            maven {
+                credentials {
+                    def u = project.hasProperty("artifactoryPublishUsername") ? project.artifactoryPublishUsername : System.getenv("ARTIFACTORY_USERNAME") ?: ''
+                    def p = project.hasProperty("artifactoryPublishPassword") ? project.artifactoryPublishPassword : System.getenv("ARTIFACTORY_PASSWORD") ?: ''
+                    username = u
+                    password = p
+                }
+                url "https://repo.grails.org/grails/libs-snapshots-local"
+            }
+        }
+    }
+
+    if (project.name == 'grails-dependencies') return
+    if (project.name == 'grails-bom') return
+
+    publications {
+        maven(MavenPublication) {
+            from components.java
+
+            artifact source: sourcesJar, classifier: "sources"
+            artifact source: javadocJar, classifier: "javadoc"
+            pom.withXml {
+                def xml = asNode()
+
+                xml.children().last() + pomInfo
+            }
+
+        }
+    }
+}

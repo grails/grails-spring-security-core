@@ -1,0 +1,101 @@
+name: Release
+on:
+  release:
+    types: [published]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: ['8']
+    env:
+      GIT_USER_NAME: puneetbehl
+      GIT_USER_EMAIL: behlp@objectcomputing.com
+      GRADLE_OPTS: -Xmx1500m -Dfile.encoding=UTF-8
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          token: ${{ secrets.GH_TOKEN }}
+      - name: Cache Gradle packages
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Extract Target Branch
+        id: extract_branch
+        run: |
+          echo "Determining Target Branch"
+          TARGET_BRANCH=`cat $GITHUB_EVENT_PATH | jq '.release.target_commitish' | sed -e 's/^"\(.*\)"$/\1/g'`
+          echo $TARGET_BRANCH
+          echo ::set-output name=value::${TARGET_BRANCH}
+      - name: Set the current release version
+        id: release_version
+        run: echo ::set-output name=release_version::${GITHUB_REF:11}
+      - name: Run pre-release
+        uses: micronaut-projects/github-actions/pre-release@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish to Sonatype OSSRH
+        if: success()
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+          SIGNING_KEY: ${{ secrets.SIGNING_KEY }}
+          SIGNING_PASSPHRASE: ${{ secrets.SIGNING_PASSPHRASE }}
+          SECRING_FILE: ${{ secrets.SECRING_FILE }}
+        run: |
+          echo $SECRING_FILE | base64 -d > secring.gpg
+          echo "Publishing Artifacts"
+          (set -x; ./gradlew -Psigning.secretKeyRingFile="${GITHUB_WORKSPACE}/secring.gpg" uploadArchives --no-daemon)
+      - name: Close And Release Sonatype Staging Repository
+        if: success()
+        env:
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_STAGING_PROFILE_ID: ${{ secrets.SONATYPE_STAGING_PROFILE_ID }}
+        run: |
+          ./gradlew closeAndReleaseRepository --no-daemon
+      - name: Publish Documentation
+        id: docs
+        if: steps.publish.outcome == 'success'
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: spring-security-core:docs
+      - name: Export Gradle Properties
+        uses: micronaut-projects/github-actions/export-gradle-properties@master
+      - name: Publish to Github Pages
+        if: steps.docs.outcome == 'success'
+        uses: micronaut-projects/github-pages-deploy-action@master
+        env:
+          BETA: ${{ contains(steps.release_version.outputs.release_version, 'M') || contains(steps.release_version.outputs.release_version, 'RC') }}
+          TARGET_REPOSITORY: ${{ github.repository }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: plugin/build/docs
+          DOC_FOLDER: gh-pages
+          COMMIT_EMAIL: behlp@objectcomputing.com
+          COMMIT_NAME: Puneet Behl
+          VERSION: ${{ steps.release_version.outputs.release_version }}
+      - name: Run post-release
+        if: steps.publish.outcome == 'success' && steps.docs.outcome == 'success' && success()
+        uses: micronaut-projects/github-actions/post-release@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        env:
+          SNAPSHOT_SUFFIX: -SNAPSHOT
+      - name: Cleanup Gradle Cache
+        # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+        # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+        run: |
+          rm -f ~/.gradle/caches/modules-2/modules-2.lock
+          rm -f ~/.gradle/caches/modules-2/gc.properties

@@ -8,29 +8,26 @@ buildscript {
 		classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
 		classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
 		classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
-		classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+		classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
 	}
 }
 
 group = 'org.grails.plugins'
-def versionTxt = file("${rootProject.projectDir}/version.txt")
-version = versionTxt.exists() ? versionTxt.text.trim() : '0.1'
+version = project.projectVersion
 
 apply plugin: 'idea'
 apply plugin: 'war'
 apply plugin: 'org.grails.grails-gsp'
 apply plugin: 'org.grails.grails-plugin'
-apply plugin: 'org.grails.grails-plugin-publish'
 apply plugin: 'org.asciidoctor.convert'
-apply plugin: "com.jfrog.artifactory"
+
 
 repositories {
-	mavenLocal()
 	mavenCentral()
 	maven { url 'https://repo.grails.org/grails/core' }
 }
 
-sourceCompatibility = targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = 1.8
 
 dependencies {
 	provided "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
@@ -52,8 +49,7 @@ dependencies {
 	testRuntime 'cglib:cglib-nodep:3.2.6'
 }
 
-apply from: "${rootProject.projectDir}/gradle/grailsPublish.gradle"
-apply from: "${rootProject.projectDir}/gradle/artifactoryPublish.gradle"
+apply from: "${rootProject.projectDir}/gradle/publish.gradle"
 apply from: "${rootProject.projectDir}/gradle/docs.gradle"
 apply from: "${rootProject.projectDir}/gradle/cleanBuild.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
