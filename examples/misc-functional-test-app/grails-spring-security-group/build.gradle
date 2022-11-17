@@ -63,6 +63,7 @@ dependencies {
 }
 
 apply from: "${rootProject.projectDir}/gradle/ssc.gradle"
+apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 bootRun {

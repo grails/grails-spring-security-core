@@ -64,6 +64,7 @@ dependencies {
     compile project(':spring-security-core')
 }
 
+apply from: "${rootProject.projectDir}/gradle/geb.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
 bootRun {
