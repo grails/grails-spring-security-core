@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity.web.access.intercept
 
 import groovy.util.logging.Slf4j
+import org.springframework.web.util.UrlPathHelper
 
 import java.util.concurrent.CopyOnWriteArrayList
 
@@ -48,6 +49,7 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	protected static final Collection<ConfigAttribute> DENY = Collections.singletonList((ConfigAttribute)new SecurityConfig('_DENY_'))
 	protected static final Collection<ConfigAttribute> ALLOW404 = Collections.singletonList((ConfigAttribute)new SecurityConfig('permitAll'))
 	protected static final String ERROR404 = '__ERROR404__'
+	protected static UrlPathHelper urlPathHelper = new UrlPathHelper()
 
 	protected RoleVoter roleVoter
 	protected AuthenticatedVoter authenticatedVoter
@@ -92,7 +94,10 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	}
 
 	protected String determineUrl(FilterInvocation filterInvocation) {
-		lowercaseAndStripQuerystring calculateUri(filterInvocation.httpRequest)
+		final HttpServletRequest request = filterInvocation.httpRequest
+		String url = urlPathHelper.getLookupPathForRequest(request)
+		url = stripContextPath(url, request)
+		lowercaseAndStripQuerystring(url)
 	}
 
 	protected boolean stopAtFirstMatch() {
@@ -173,10 +178,23 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 		Collections.unmodifiableCollection all
 	}
 
+	/**
+	 *
+	 * @param request The {@link HttpServletRequest} to calculate the URI for
+	 * @return The URI for the request, or {@link #ERROR404} if the request is for a 404
+	 * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(HttpServletRequest)} and {@link #stripContextPath(String, HttpServletRequest)} instead
+	 */
+	@Deprecated
 	protected String calculateUri(HttpServletRequest request) {
-		String url = request.requestURI.substring(request.contextPath.length())
-		int semicolonIndex = url.indexOf(';')
-		semicolonIndex == -1 ? url : url.substring(0, semicolonIndex)
+		stripContextPath(urlPathHelper.getRequestUri(request), request)
+	}
+
+	protected String stripContextPath(String uri, HttpServletRequest request) {
+		String contextPath = request.contextPath
+		if (contextPath && uri.startsWith(contextPath)) {
+			uri = uri.substring(contextPath.length())
+		}
+		uri
 	}
 
 	protected String lowercaseAndStripQuerystring(String url) {
