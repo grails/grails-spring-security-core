@@ -6,9 +6,11 @@ buildscript {
     dependencies {
         classpath "com.bmuschko:gradle-nexus-plugin:$gradleNexusPluginVersion"
         classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.11.0"
+        classpath "com.gradle:build-scan-plugin:1.16"
     }
 }
 
+apply plugin: "com.gradle.build-scan"
 
 allprojects {
     repositories {
@@ -31,4 +33,9 @@ if (isRelease) {
         serverUrl = "https://s01.oss.sonatype.org/service/local/"
         stagingProfileId = ossStagingProfileId
     }
+}
+
+buildScan {
+    licenseAgreementUrl = 'https://gradle.com/terms-of-service'
+    licenseAgree = 'yes'
 }

@@ -49,7 +49,7 @@ dependencies {
 	testRuntime 'cglib:cglib-nodep:3.2.6'
 }
 
-apply from: "${rootProject.projectDir}/gradle/publish.gradle"
 apply from: "${rootProject.projectDir}/gradle/docs.gradle"
+apply from: "${rootProject.projectDir}/gradle/publish.gradle"
 apply from: "${rootProject.projectDir}/gradle/cleanBuild.gradle"
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"

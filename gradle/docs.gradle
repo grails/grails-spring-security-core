@@ -4,28 +4,28 @@ buildscript {
     }
     dependencies {
         classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
-        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'org.asciidoctor:asciidoctorj-epub3:1.5.0-alpha.6'
         classpath 'org.asciidoctor:asciidoctorj-pdf:1.5.0-alpha.11'
     }
 }
 
-import org.apache.tools.ant.taskdefs.condition.Os
-
 String versionTxt = project.projectVersion
 String stableversion = ''
 String snapshotversion = ''
 String[] arr = versionTxt.tokenize('.')
-int mayor = arr[0] as int
+int major = arr[0] as int
 int minor = arr[1] as int
-int patch = arr[2] as int
+int patch = arr[2].tokenize('-')[0] as int
 
-if (versionTxt.endsWith('SNAPSHOT')) {
-    stableversion = "${mayor}.${minor}.${(patch-1)}".toString()
-    snapshotversion = versionTxt
+ext.isSnapshot = project.projectVersion.endsWith("SNAPSHOT")
+ext.isRelease = !ext.isSnapshot
+
+if (isSnapshot) {
+    stableversion = "${major}.${minor}.${(patch-1)}".toString()
+    snapshotversion = project.projectVersion
 } else {
-    stableversion = versionTxt
-    snapshotversion = "${mayor}.${minor}.${patch+1}.BUILD-SNAPSHOT".toString()
+    stableversion = project.projectVersion
+    snapshotversion = "${major}.${minor}.${patch+1}-SNAPSHOT".toString()
 }
 
 def asciidoctorAttributes = [
@@ -51,7 +51,6 @@ def asciidoctorAttributes = [
         toc2                : '',
         toclevels           : '2'
 ]
-
 
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.asciidoctor.gradle.AsciidoctorTask
@@ -165,8 +164,7 @@ task untarKidlengen(dependsOn: downloadKindlegenLinux) {
 
 
 task chmodXKindlegen {
-    dependsOn 'untarKidlengen'
-    dependsOn 'unzipKidlengen'
+    dependsOn 'untarKidlengen', 'unzipKidlengen'
     ext {
         kindlegenFile = "${cleanKindlegen.ext.kindlegenfolder}/kindlegen"
     }
