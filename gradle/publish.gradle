@@ -1,6 +1,8 @@
 apply plugin: 'com.bmuschko.nexus'
 apply plugin: 'maven-publish'
 
+ext.isSnapshot = project.projectVersion.endsWith("SNAPSHOT")
+ext.isRelease = !ext.isSnapshot
 ext.nexusUsername = project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : System.getenv("SONATYPE_USERNAME") ?: ''
 ext.nexusPassword = project.hasProperty("sonatypeOssPassword") ? project.sonatypeOssPassword : System.getenv("SONATYPE_PASSWORD") ?: ''
 ext."signing.keyId" = project.hasProperty("signing.keyId") ? project.getProperty('signing.keyId') : System.getenv("SIGNING_KEY") ?: null
