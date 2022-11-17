@@ -125,17 +125,6 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: spring-security-core:docs
-      - name: Publish to Github Pages
-        if: steps.docs.outcome == 'success' && github.event_name == 'push'
-        uses: micronaut-projects/github-pages-deploy-action@master
-        env:
-          TARGET_REPOSITORY: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: plugin/build/docs
-          DOC_FOLDER: gh-pages
-          COMMIT_EMAIL: behlp@objectcomputing.com
-          COMMIT_NAME: Puneet Behl
       - name: Cleanup Gradle Cache
         # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
         # Restoring these files from a GitHub Actions cache might cause problems for future builds.
