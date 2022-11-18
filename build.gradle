@@ -26,6 +26,8 @@ if (isRelease) {
     apply plugin: 'maven-publish'
     apply plugin: 'io.codearte.nexus-staging'
 
+    ext.nexusUsername = project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : System.getenv("SONATYPE_USERNAME") ?: ''
+    ext.nexusPassword = project.hasProperty("sonatypeOssPassword") ? project.sonatypeOssPassword : System.getenv("SONATYPE_PASSWORD") ?: ''
     ext.ossStagingProfileId = System.getenv("SONATYPE_STAGING_PROFILE_ID") ?: project.hasProperty("sonatypeOssStagingProfileId") ? project.sonatypeOssStagingProfileId : ''
 
     nexusStaging {
