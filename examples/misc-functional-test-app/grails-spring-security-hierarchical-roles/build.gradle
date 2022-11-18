@@ -59,7 +59,7 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testCompile "org.grails:grails-web-testing-support"
     testRuntime "org.seleniumhq.selenium:htmlunit-driver:2.57.0"
-    testRuntime "net.sourceforge.htmlunit:htmlunit:2.57.0"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.66.0"
     compile project(':spring-security-core')
 }
 
