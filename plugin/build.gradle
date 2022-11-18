@@ -31,8 +31,8 @@ sourceCompatibility = targetCompatibility = 1.8
 
 dependencies {
 	provided "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
-	provided 'org.grails:grails-dependencies'
-	provided 'org.grails:grails-web-boot'
+	provided "org.grails:grails-dependencies:$grailsVersion"
+	provided "org.grails:grails-web-boot:$grailsVersion"
 	provided 'org.springframework.boot:spring-boot-starter-logging'
 	compile "net.sf.ehcache:ehcache:$ehcacheVersion"
 	compile "org.springframework.security:spring-security-core:$springSecurityVersion", {
