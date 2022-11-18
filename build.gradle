@@ -23,7 +23,6 @@ ext.isSnapshot = project.projectVersion.endsWith("SNAPSHOT")
 ext.isRelease = !ext.isSnapshot
 
 if (isRelease) {
-    apply plugin: 'maven-publish'
     apply plugin: 'io.codearte.nexus-staging'
 
     ext.nexusUsername = project.hasProperty("sonatypeOssUsername") ? project.sonatypeOssUsername : System.getenv("SONATYPE_USERNAME") ?: ''
@@ -32,6 +31,7 @@ if (isRelease) {
 
     nexusStaging {
         numberOfRetries = 40
+        packageGroup = "org.grails"
         serverUrl = "https://s01.oss.sonatype.org/service/local/"
         stagingProfileId = ossStagingProfileId
     }
