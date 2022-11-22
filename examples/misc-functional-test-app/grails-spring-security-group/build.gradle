@@ -56,7 +56,7 @@ dependencies {
     testCompile "org.grails:grails-gorm-testing-support"
     testCompile "org.grails:grails-web-testing-support"
     testRuntime "org.seleniumhq.selenium:htmlunit-driver:2.57.0"
-    testRuntime "net.sourceforge.htmlunit:htmlunit:2.66.0"
+    testRuntime "net.sourceforge.htmlunit:htmlunit:2.67.0"
     compile project(':spring-security-core')
 }
 
