@@ -59,7 +59,7 @@ dependencies {
     testImplementation "org.mockito:mockito-core"
     testImplementation "org.grails:grails-web-testing-support"
     testImplementation "org.grails.plugins:geb"
-    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.6.0"
+    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.7.2"
     testImplementation "org.seleniumhq.selenium:selenium-api:4.7.2"
     testImplementation "org.seleniumhq.selenium:selenium-support:4.6.0"
     testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.7.2"
