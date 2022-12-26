@@ -5,6 +5,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+		classpath "io.spring.gradle:dependency-management-plugin:1.1.0"
 		classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.3.2'
 		classpath "org.asciidoctor:kindlegen-gradle:3.2.0"
 		classpath "org.asciidoctor:asciidoctor-gradle-jvm-epub:3.3.2"
@@ -26,6 +27,7 @@ apply plugin: 'org.asciidoctor.jvm.convert'
 apply plugin: "org.asciidoctor.jvm.pdf"
 apply plugin: "org.asciidoctor.jvm.epub"
 apply plugin: "org.asciidoctor.kindlegen.base"
+apply plugin: "io.spring.dependency-management"
 
 apply plugin: 'maven-publish'
 apply plugin: 'signing'
@@ -69,14 +71,21 @@ repositories {
 	maven { url 'https://repo.grails.org/grails/core' }
 }
 
+dependencyManagement {
+	imports {
+		mavenBom "org.grails:grails-bom:$grailsVersion"
+	}
+	applyMavenExclusions false
+}
+
 sourceCompatibility = targetCompatibility = 1.8
 
 dependencies {
-	api "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
-	api 'org.grails:grails-dependencies'
-	api 'org.grails:grails-web-boot'
-	api 'org.springframework.boot:spring-boot-starter-logging'
-	api "net.sf.ehcache:ehcache:$ehcacheVersion"
+	compileOnly "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
+	compileOnly 'org.grails:grails-dependencies'
+	compileOnly 'org.grails:grails-web-boot'
+	compileOnly 'org.springframework.boot:spring-boot-starter-logging'
+	compileOnly "net.sf.ehcache:ehcache:$ehcacheVersion"
 	api "org.springframework.security:spring-security-core:$springSecurityVersion", {
 		['spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression'].each {
 			exclude module: it
