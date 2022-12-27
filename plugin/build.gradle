@@ -46,7 +46,7 @@ dependencies {
 
 	testCompile "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
 	testCompile "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
-	testRuntime 'cglib:cglib-nodep:3.2.6'
+	testRuntime 'cglib:cglib-nodep:3.2.12'
 }
 
 apply from: "${rootProject.projectDir}/gradle/docs.gradle"
