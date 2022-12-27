@@ -16,6 +16,12 @@
     },
     {
       "matchPackagePatterns": [
+        "^org\\.seleniumhq"
+      ],
+      "groupName": "selenium monorepo"
+    },
+    {
+      "matchPackagePatterns": [
         "^org\\.spockframework"
       ],
       "groupName": "spock framework monorepo"
