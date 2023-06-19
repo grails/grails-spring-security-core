@@ -7,7 +7,7 @@ This structure enables environment-specific configuration such as, for example, 
 
 [NOTE]
 ====
-The plugin's configuration values all start with `grails.plugin.springsecurity` to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the `grails.plugin.springsecurity` preffix. For example, you specify the attribute `password.algorithm` as:
+The plugin's configuration values all start with `grails.plugin.springsecurity` to distinguish them from similarly named options in Grails and from other plugins. You must specify all property overrides with the `grails.plugin.springsecurity` prefix. For example, you specify the attribute `password.algorithm` as:
 
 [source,groovy]
 ----
