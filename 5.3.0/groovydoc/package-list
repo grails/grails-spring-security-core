@@ -1,0 +1,17 @@
+grails.plugin.springsecurity
+grails.plugin.springsecurity.access
+grails.plugin.springsecurity.access.intercept
+grails.plugin.springsecurity.access.vote
+grails.plugin.springsecurity.annotation
+grails.plugin.springsecurity.authentication
+grails.plugin.springsecurity.userdetails
+grails.plugin.springsecurity.web
+grails.plugin.springsecurity.web.access
+grails.plugin.springsecurity.web.access.expression
+grails.plugin.springsecurity.web.access.intercept
+grails.plugin.springsecurity.web.authentication
+grails.plugin.springsecurity.web.authentication.logout
+grails.plugin.springsecurity.web.authentication.preauth.x509
+grails.plugin.springsecurity.web.authentication.rememberme
+grails.plugin.springsecurity.web.authentication.switchuser
+grails.plugin.springsecurity.web.filter
