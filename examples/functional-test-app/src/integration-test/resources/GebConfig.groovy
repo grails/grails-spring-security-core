@@ -21,6 +21,7 @@ environments {
 		driver = {
 			ChromeOptions o = new ChromeOptions()
 			o.addArguments('headless')
+			o.addArguments('--remote-allow-origins=*')
 			new ChromeDriver(o)
 		}
 	}
