@@ -142,47 +142,53 @@ extends grails.plugins.Plugin</pre>
                         
                         <tr class="rowColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#ENCODING_ID_BCRYPT">ENCODING_ID_BCRYPT</a></code></td>
+                            <td class="colLast"><code><a href="#ENCODING_ID_ARGON2">ENCODING_ID_ARGON2</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
                         <tr class="altColor">
+                            <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
+                            <td class="colLast"><code><a href="#ENCODING_ID_BCRYPT">ENCODING_ID_BCRYPT</a></code></td>
+                            <td class="colLast"></td>
+                        </tr>
+                        
+                        <tr class="rowColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_LDAP">ENCODING_ID_LDAP</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
-                        <tr class="rowColor">
+                        <tr class="altColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_MD4">ENCODING_ID_MD4</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
-                        <tr class="altColor">
+                        <tr class="rowColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_MD5">ENCODING_ID_MD5</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
-                        <tr class="rowColor">
+                        <tr class="altColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_NOOP">ENCODING_ID_NOOP</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
-                        <tr class="altColor">
+                        <tr class="rowColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_PBKDF2">ENCODING_ID_PBKDF2</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
-                        <tr class="rowColor">
+                        <tr class="altColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_SCRYPT">ENCODING_ID_SCRYPT</a></code></td>
                             <td class="colLast"></td>
                         </tr>
                         
-                        <tr class="altColor">
+                        <tr class="rowColor">
                             <td class="colFirst"><code><strong>static&nbsp;java.lang.String</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#ENCODING_ID_SHA1">ENCODING_ID_SHA1</a></code></td>
                             <td class="colLast"></td>
@@ -352,7 +358,7 @@ extends grails.plugins.Plugin</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
-                            <td class="colLast"><code>java.util.Map&lt;java.lang.String, org.springframework.security.crypto.password.PasswordEncoder&gt;</code></td>
+                            <td class="colLast"><code>static&nbsp;java.util.Map&lt;java.lang.String, org.springframework.security.crypto.password.PasswordEncoder&gt;</code></td>
                             <td class="colLast"><code><strong><a href="#idToPasswordEncoder(groovy.util.ConfigObject)">idToPasswordEncoder</a></strong>(groovy.util.ConfigObject conf)</code><br></td>
                         </tr>
                         
@@ -384,7 +390,7 @@ extends grails.plugins.Plugin</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code>class grails.plugins.Plugin</code></td>
-                            <td class="colLast"><code>grails.plugins.Plugin#getPluginManager(), grails.plugins.Plugin#getEnabled(), grails.plugins.Plugin#setEnvironment(grails.util.Environment), grails.plugins.Plugin#getEnvironment(), grails.plugins.Plugin#getPlugin(), grails.plugins.Plugin#onChange(java.util.Map), grails.plugins.Plugin#getConfig(), grails.plugins.Plugin#onShutdown(java.util.Map), grails.plugins.Plugin#setGrailsApplication(grails.core.GrailsApplication), grails.plugins.Plugin#doWithDynamicMethods(), grails.plugins.Plugin#doWithApplicationContext(), grails.plugins.Plugin#onConfigChange(java.util.Map), grails.plugins.Plugin#onStartup(java.util.Map), grails.plugins.Plugin#getArtefacts(), grails.plugins.Plugin#setApplicationContext(org.springframework.context.ApplicationContext), grails.plugins.Plugin#beans(groovy.lang.Closure), grails.plugins.Plugin#setPlugin(grails.plugins.GrailsPlugin), grails.plugins.Plugin#setPluginManager(grails.plugins.GrailsPluginManager), grails.plugins.Plugin#doWithSpring(), grails.plugins.Plugin#getApplicationContext(), grails.plugins.Plugin#getGrailsApplication(), grails.plugins.Plugin#isEnabled(), grails.plugins.Plugin#setEnabled(boolean), grails.plugins.Plugin#getMetaClass(), grails.plugins.Plugin#setMetaClass(groovy.lang.MetaClass), grails.plugins.Plugin#getManager(), grails.plugins.Plugin#wait(long, int), grails.plugins.Plugin#wait(long), grails.plugins.Plugin#wait(), grails.plugins.Plugin#equals(java.lang.Object), grails.plugins.Plugin#toString(), grails.plugins.Plugin#hashCode(), grails.plugins.Plugin#getClass(), grails.plugins.Plugin#notify(), grails.plugins.Plugin#notifyAll(), grails.plugins.Plugin#invokeMethod(java.lang.String, java.lang.Object), grails.plugins.Plugin#setProperty(java.lang.String, java.lang.Object), grails.plugins.Plugin#getProperty(java.lang.String)</code></td>
+                            <td class="colLast"><code>grails.plugins.Plugin#getPluginManager(), grails.plugins.Plugin#getEnabled(), grails.plugins.Plugin#getEnvironment(), grails.plugins.Plugin#setEnvironment(grails.util.Environment), grails.plugins.Plugin#getPlugin(), grails.plugins.Plugin#onChange(java.util.Map), grails.plugins.Plugin#getConfig(), grails.plugins.Plugin#onShutdown(java.util.Map), grails.plugins.Plugin#getArtefacts(), grails.plugins.Plugin#setApplicationContext(org.springframework.context.ApplicationContext), grails.plugins.Plugin#beans(groovy.lang.Closure), grails.plugins.Plugin#doWithSpring(), grails.plugins.Plugin#doWithDynamicMethods(), grails.plugins.Plugin#doWithApplicationContext(), grails.plugins.Plugin#onConfigChange(java.util.Map), grails.plugins.Plugin#onStartup(java.util.Map), grails.plugins.Plugin#setGrailsApplication(grails.core.GrailsApplication), grails.plugins.Plugin#setPlugin(grails.plugins.GrailsPlugin), grails.plugins.Plugin#setPluginManager(grails.plugins.GrailsPluginManager), grails.plugins.Plugin#getApplicationContext(), grails.plugins.Plugin#getGrailsApplication(), grails.plugins.Plugin#isEnabled(), grails.plugins.Plugin#setEnabled(boolean), grails.plugins.Plugin#getMetaClass(), grails.plugins.Plugin#setMetaClass(groovy.lang.MetaClass), grails.plugins.Plugin#getManager(), grails.plugins.Plugin#wait(long, int), grails.plugins.Plugin#wait(long), grails.plugins.Plugin#wait(), grails.plugins.Plugin#equals(java.lang.Object), grails.plugins.Plugin#toString(), grails.plugins.Plugin#hashCode(), grails.plugins.Plugin#getClass(), grails.plugins.Plugin#notify(), grails.plugins.Plugin#notifyAll(), grails.plugins.Plugin#invokeMethod(java.lang.String, java.lang.Object), grails.plugins.Plugin#setProperty(java.lang.String, java.lang.Object), grails.plugins.Plugin#getProperty(java.lang.String)</code></td>
                         </tr>
                     </table>
                    </ul>
@@ -413,6 +419,14 @@ extends grails.plugins.Plugin</pre>
                         <ul class="blockListLast">
                             <li class="blockList">
                                 <h4>public&nbsp;static&nbsp;final&nbsp;java.lang.String <strong>ENCODING_IDSHA256</strong></h4>
+                                <p></p>
+                            </li>
+                        </ul>
+                    
+                        <a name="ENCODING_ID_ARGON2"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4>public&nbsp;static&nbsp;final&nbsp;java.lang.String <strong>ENCODING_ID_ARGON2</strong></h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -651,7 +665,7 @@ extends grails.plugins.Plugin</pre>
                         <a name="idToPasswordEncoder(groovy.util.ConfigObject)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>java.util.Map&lt;java.lang.String, org.springframework.security.crypto.password.PasswordEncoder&gt; <strong>idToPasswordEncoder</strong>(groovy.util.ConfigObject conf)</h4>
+                                <h4>static&nbsp;java.util.Map&lt;java.lang.String, org.springframework.security.crypto.password.PasswordEncoder&gt; <strong>idToPasswordEncoder</strong>(groovy.util.ConfigObject conf)</h4>
                                 <p></p>
                             </li>
                         </ul>
