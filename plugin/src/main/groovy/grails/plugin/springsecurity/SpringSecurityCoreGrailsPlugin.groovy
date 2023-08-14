@@ -81,6 +81,7 @@ import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
 import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
+import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder
 import org.springframework.security.crypto.password.LdapShaPasswordEncoder
@@ -145,6 +146,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 	public static final String ENCODING_ID_NOOP = "noop"
 	public static final String ENCODING_ID_PBKDF2 = "pbkdf2"
 	public static final String ENCODING_ID_SCRYPT = "scrypt"
+	public static final String ENCODING_ID_ARGON2 = "argon2"
 	public static final String ENCODING_ID_SHA1 = "SHA-1"
 	public static final String ENCODING_IDSHA256 = "SHA-256"
 
@@ -412,8 +414,8 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 		String securityConfigType = SpringSecurityUtils.securityConfigType
 		log.trace "Using security config type '{}'", securityConfigType
 		if (securityConfigType != 'Annotation' &&
-		    securityConfigType != 'Requestmap' &&
-		    securityConfigType != 'InterceptUrlMap') {
+				securityConfigType != 'Requestmap' &&
+				securityConfigType != 'InterceptUrlMap') {
 
 			String message = """
 ERROR: the 'securityConfigType' property must be one of
@@ -513,7 +515,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 			authenticationEventPublisher(classFor('authenticationEventPublisher', DefaultAuthenticationEventPublisher)) {
 				additionalExceptionMappings =
-					([(NoStackUsernameNotFoundException.name): AuthenticationFailureBadCredentialsEvent.name] as Properties)
+						([(NoStackUsernameNotFoundException.name): AuthenticationFailureBadCredentialsEvent.name] as Properties)
 			}
 		}
 		else {
@@ -703,7 +705,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		// build handlers list here to give dependent plugins a chance to register some
 		def logoutHandlerNames = (conf.logout.handlerNames ?: SpringSecurityUtils.logoutHandlerNames) +
-			(conf.logout.additionalHandlerNames ?: [])
+				(conf.logout.additionalHandlerNames ?: [])
 		applicationContext.logoutHandlers.clear()
 		applicationContext.logoutHandlers.addAll createBeanList(logoutHandlerNames)
 		log.trace 'LogoutHandlers: {}', applicationContext.logoutHandlers
@@ -766,8 +768,8 @@ to default to 'Annotation'; setting value to 'Annotation'
 	private void initializeFromAnnotations(conf) {
 		AnnotationFilterInvocationDefinition afid = applicationContext.objectDefinitionSource
 		afid.initialize conf.controllerAnnotations.staticRules,
-			applicationContext.grailsUrlMappingsHolder, grailsApplication.controllerClasses,
-			grailsApplication.domainClasses
+				applicationContext.grailsUrlMappingsHolder, grailsApplication.controllerClasses,
+				grailsApplication.domainClasses
 	}
 
 	private createRefList = { names -> names.collect { name -> ref(name) } }
@@ -1100,30 +1102,31 @@ to default to 'Annotation'; setting value to 'Annotation'
 	}
 
 
-	Map<String, PasswordEncoder> idToPasswordEncoder(ConfigObject conf) {
+	static Map<String, PasswordEncoder> idToPasswordEncoder(ConfigObject conf) {
 
-		MessageDigestPasswordEncoder messsageDigestPasswordEncoderMD5 = new MessageDigestPasswordEncoder(ENCODING_ID_MD5)
-		messsageDigestPasswordEncoderMD5.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
-		messsageDigestPasswordEncoderMD5.iterations = conf.password.hash.iterations // 10000
+		MessageDigestPasswordEncoder messageDigestPasswordEncoderMD5 = new MessageDigestPasswordEncoder(ENCODING_ID_MD5)
+		messageDigestPasswordEncoderMD5.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
+		messageDigestPasswordEncoderMD5.iterations = conf.password.hash.iterations // 10000
 
-		MessageDigestPasswordEncoder messsageDigestPasswordEncoderSHA1 = new MessageDigestPasswordEncoder(ENCODING_ID_SHA1)
-		messsageDigestPasswordEncoderSHA1.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
-		messsageDigestPasswordEncoderSHA1.iterations = conf.password.hash.iterations // 10000
+		MessageDigestPasswordEncoder messageDigestPasswordEncoderSHA1 = new MessageDigestPasswordEncoder(ENCODING_ID_SHA1)
+		messageDigestPasswordEncoderSHA1.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
+		messageDigestPasswordEncoderSHA1.iterations = conf.password.hash.iterations // 10000
 
-		MessageDigestPasswordEncoder messsageDigestPasswordEncoderSHA256 = new MessageDigestPasswordEncoder(ENCODING_IDSHA256)
-		messsageDigestPasswordEncoderSHA256.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
-		messsageDigestPasswordEncoderSHA256.iterations = conf.password.hash.iterations // 10000
+		MessageDigestPasswordEncoder messageDigestPasswordEncoderSHA256 = new MessageDigestPasswordEncoder(ENCODING_IDSHA256)
+		messageDigestPasswordEncoderSHA256.encodeHashAsBase64 = conf.password.encodeHashAsBase64 // false
+		messageDigestPasswordEncoderSHA256.iterations = conf.password.hash.iterations // 10000
 
 		int strength = conf.password.bcrypt.logrounds
 		[(ENCODING_ID_BCRYPT): new BCryptPasswordEncoder(strength),
-		(ENCODING_ID_LDAP): new LdapShaPasswordEncoder(),
-		(ENCODING_ID_MD4): new Md4PasswordEncoder(),
-		(ENCODING_ID_MD5): messsageDigestPasswordEncoderMD5,
-		(ENCODING_ID_NOOP): NoOpPasswordEncoder.getInstance(),
-		(ENCODING_ID_PBKDF2): new Pbkdf2PasswordEncoder(),
-		(ENCODING_ID_SCRYPT): new SCryptPasswordEncoder(),
-		(ENCODING_ID_SHA1): messsageDigestPasswordEncoderSHA1,
-		(ENCODING_IDSHA256): messsageDigestPasswordEncoderSHA256,
-		"sha256": new StandardPasswordEncoder()]
+		 (ENCODING_ID_LDAP): new LdapShaPasswordEncoder(),
+		 (ENCODING_ID_MD4): new Md4PasswordEncoder(),
+		 (ENCODING_ID_MD5): messageDigestPasswordEncoderMD5,
+		 (ENCODING_ID_NOOP): NoOpPasswordEncoder.getInstance(),
+		 (ENCODING_ID_PBKDF2): new Pbkdf2PasswordEncoder(),
+		 (ENCODING_ID_SCRYPT): new SCryptPasswordEncoder(),
+		 (ENCODING_ID_ARGON2): new Argon2PasswordEncoder(),
+		 (ENCODING_ID_SHA1): messageDigestPasswordEncoderSHA1,
+		 (ENCODING_IDSHA256): messageDigestPasswordEncoderSHA256,
+		 "sha256": new StandardPasswordEncoder()]
 	}
 }
