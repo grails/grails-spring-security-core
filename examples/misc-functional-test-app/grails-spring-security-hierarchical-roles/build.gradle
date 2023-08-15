@@ -1,26 +1,27 @@
-buildscript {
-    repositories {
-        maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath "org.grails.plugins:hibernate5:7.3.0"
-        classpath "gradle.plugin.com.github.erdi.webdriver-binaries:webdriver-binaries-gradle-plugin:$webdriverBinariesVersion"
-
-    }
+plugins {
+    id "groovy"
+    id "org.grails.grails-web"
+    id "org.grails.grails-gsp"
+    id "com.github.erdi.webdriver-binaries"
+    id "war"
+    id "idea"
+    id "application"
+    id "eclipse"
 }
 
 version "0.1"
 group "grails.spring.security.hierarchical.roles"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"war"
-apply plugin:"org.grails.grails-web"
-apply plugin:"org.grails.grails-gsp"
-apply plugin:"org.grails.grails-gsp"
-apply plugin: "com.github.erdi.webdriver-binaries"
+configurations {
+    all {
+        resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
+        resolutionStrategy.eachDependency { DependencyResolveDetails details->
+            if (details.requested.group == 'org.seleniumhq.selenium') {
+                details.useVersion('4.10.0')
+            }
+        }
+    }
+}
 
 repositories {
     mavenLocal()

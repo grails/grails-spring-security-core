@@ -1,22 +1,15 @@
-buildscript {
-    repositories {
-        maven { url 'https://plugins.gradle.org/m2/' }
-        maven { url "https://repo.grails.org/grails/core" }
-    }
-    dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath "org.grails.plugins:hibernate5:7.3.0"
-    }
+plugins {
+    id "groovy"
+    id "org.grails.grails-web"
+    id "org.grails.grails-gsp"
+    id "war"
+    id "idea"
+    id "application"
+    id "eclipse"
 }
 
 version "0.1"
 group "misc.integration.test.app"
-
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"war"
-apply plugin:"org.grails.grails-web"
-apply plugin:"org.grails.grails-gsp"
 
 repositories {
     mavenCentral()

@@ -1,36 +1,23 @@
-buildscript {
-	repositories {
-		maven { url 'https://plugins.gradle.org/m2/' }
-		maven { url 'https://repo.grails.org/grails/core' }
-	}
-	dependencies {
-		classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-		classpath "io.spring.gradle:dependency-management-plugin:1.1.0"
-		classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.3.2'
-		classpath "org.asciidoctor:kindlegen-gradle:3.2.0"
-		classpath "org.asciidoctor:asciidoctor-gradle-jvm-epub:3.3.2"
-		classpath "org.asciidoctor:asciidoctor-gradle-jvm-pdf:3.3.2"
-		classpath "org.asciidoctor:asciidoctor-gradle-jvm-gems:3.3.2"
-	}
+plugins {
+	id "groovy"
+	id "java-library"
+	id "org.grails.grails-gsp"
+	id "org.grails.grails-web"
+	id "war"
+	id "idea"
+	id "eclipse"
+	id "org.asciidoctor.jvm.gems"
+	id 'org.asciidoctor.jvm.convert'
+	id "org.asciidoctor.jvm.pdf"
+	id "org.asciidoctor.jvm.epub"
+	id "org.asciidoctor.kindlegen.base"
+	id "io.spring.dependency-management"
+	id 'maven-publish'
+	id 'signing'
 }
 
 group = 'org.grails.plugins'
 version = project.projectVersion
-
-apply plugin: 'java-library'
-apply plugin: 'idea'
-apply plugin: 'war'
-apply plugin: 'org.grails.grails-gsp'
-apply plugin: 'org.grails.grails-plugin'
-apply plugin: "org.asciidoctor.jvm.gems"
-apply plugin: 'org.asciidoctor.jvm.convert'
-apply plugin: "org.asciidoctor.jvm.pdf"
-apply plugin: "org.asciidoctor.jvm.epub"
-apply plugin: "org.asciidoctor.kindlegen.base"
-apply plugin: "io.spring.dependency-management"
-
-apply plugin: 'maven-publish'
-apply plugin: 'signing'
 
 ext."signing.keyId" = project.hasProperty("signing.keyId") ? project.getProperty('signing.keyId') : System.getenv('SIGNING_KEY')
 ext."signing.secretKeyRingFile" = project.hasProperty("signing.secretKeyRingFile") ? project.getProperty('signing.secretKeyRingFile') : "${System.properties['user.home']}${File.separator}.gnupg${File.separator}secring.gpg"
@@ -66,6 +53,11 @@ ext.pomInfo = {
 	}
 }
 
+java {
+	withJavadocJar()
+	withSourcesJar()
+}
+
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.grails.org/grails/core' }
@@ -76,6 +68,17 @@ dependencyManagement {
 		mavenBom "org.grails:grails-bom:$grailsVersion"
 	}
 	applyMavenExclusions false
+}
+
+configurations {
+	all {
+		resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
+		resolutionStrategy.eachDependency { DependencyResolveDetails details->
+			if (details.requested.group == 'org.seleniumhq.selenium') {
+				details.useVersion('4.10.0')
+			}
+		}
+	}
 }
 
 sourceCompatibility = targetCompatibility = 1.11
