@@ -5,7 +5,7 @@ buildscript {
 	}
 	dependencies {
 		classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-		classpath "io.spring.gradle:dependency-management-plugin:1.1.0"
+		classpath "io.spring.gradle:dependency-management-plugin:1.1.3"
 		classpath 'org.asciidoctor:asciidoctor-gradle-jvm:3.3.2'
 		classpath "org.asciidoctor:kindlegen-gradle:3.2.0"
 		classpath "org.asciidoctor:asciidoctor-gradle-jvm-epub:3.3.2"
