@@ -58,17 +58,6 @@ java {
 	withSourcesJar()
 }
 
-configurations {
-	all {
-		resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
-		resolutionStrategy.eachDependency { DependencyResolveDetails details->
-			if (details.requested.group == 'org.seleniumhq.selenium') {
-				details.useVersion('4.10.0')
-			}
-		}
-	}
-}
-
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.grails.org/grails/core' }
@@ -79,6 +68,17 @@ dependencyManagement {
 		mavenBom "org.grails:grails-bom:$grailsVersion"
 	}
 	applyMavenExclusions false
+}
+
+configurations {
+	all {
+		resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
+		resolutionStrategy.eachDependency { DependencyResolveDetails details->
+			if (details.requested.group == 'org.seleniumhq.selenium') {
+				details.useVersion('4.10.0')
+			}
+		}
+	}
 }
 
 sourceCompatibility = targetCompatibility = 1.11
