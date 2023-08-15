@@ -12,6 +12,17 @@ plugins {
 version "0.1"
 group "grails.spring.security.hierarchical.roles"
 
+configurations {
+    all {
+        resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
+        resolutionStrategy.eachDependency { DependencyResolveDetails details->
+            if (details.requested.group == 'org.seleniumhq.selenium') {
+                details.useVersion('4.10.0')
+            }
+        }
+    }
+}
+
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
