@@ -13,9 +13,6 @@ jobs:
   core-tests:
     if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [ '8', '11' ]
     env:
       WORKSPACE: ${{ github.workspace }}
       GRADLE_OPTS: -Xmx1500m -Dfile.encoding=UTF-8
@@ -25,7 +22,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: ${{ matrix.java }}
+          java-version: '11.0.6'
       - name: Run Tests
         if: github.event_name == 'pull_request'
         id: tests
@@ -49,7 +46,6 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11' ]
         test-config: [ 'static', 'annotation', 'requestmap', 'basic', 'misc', 'putWithParams', 'bcrypt', 'issue503' ]
     env:
       WORKSPACE: ${{ github.workspace }}
@@ -60,7 +56,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: ${{ matrix.java }}
+          java-version: '11.0.6'
       - name: Run Tests
         id: tests
         uses: gradle/gradle-build-action@v2
@@ -91,7 +87,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: 8
+          java-version: '11.0.6'
       - name: Run Build
         if: github.event_name == 'push'
         id: build
