@@ -78,7 +78,7 @@ dependencyManagement {
 	applyMavenExclusions false
 }
 
-sourceCompatibility = targetCompatibility = 1.8
+sourceCompatibility = targetCompatibility = 1.11
 
 dependencies {
 	compileOnly "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
