@@ -130,12 +130,18 @@ publishing {
 		maven(MavenPublication) {
 			artifactId project.name
 			from components.java
-
-			artifact sourcesJar
-			artifact javadocJar
 			artifact source: "${buildDir}/classes/groovy/main/META-INF/grails-plugin.xml",
 					classifier: "plugin",
 					extension: 'xml'
+
+			versionMapping {
+				usage('java-api') {
+					fromResolutionOf('runtimeClasspath')
+				}
+				usage('java-runtime') {
+					fromResolutionResult()
+				}
+			}
 			pom.withXml {
 				def xml = asNode()
 
