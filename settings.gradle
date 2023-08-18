@@ -27,7 +27,7 @@ plugins {
 gradleEnterprise {
     server = 'https://ge.grails.org'
     buildScan {
-        publishAlwaysIf(System.getenv('CI') != 'true')
+        publishAlwaysIf(System.getenv('CI') == 'true')
         publishIfAuthenticated()
         uploadInBackground = System.getenv("CI") == null
         capture {
