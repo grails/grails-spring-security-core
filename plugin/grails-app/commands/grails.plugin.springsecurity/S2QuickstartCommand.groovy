@@ -51,13 +51,13 @@ class S2QuickstartCommand implements GrailsApplicationCommand, CommandLineHelper
     String description = 'Creates domain classes and updates config settings for the Spring Security plugin.'
 
     private final static String USAGE_MESSAGE = '''
-   grails s2-quickstart <domain-class-package> <user-class-name> <role-class-name> [requestmap-class-name] [--groupClassName=group-class-name]
-or grails s2-quickstart --uiOnly
+   ./gradlew runCommand "-Pargs=s2-quickstart [DOMAIN-CLASS-PACKAGE] [USER-CLASS-NAME] [ROLE-CLASS-NAME] [REQUESTMAP-CLASS-NAME] --groupClassName=GROUP-CLASS-NAME"
+or ./gradlew runCommand "-Pargs=s2-quickstart --uiOnly"
 
-Example: grails s2-quickstart com.yourapp User Role
-Example: grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup
-Example: grails s2-quickstart com.yourapp Person Authority Requestmap
-Example: grails s2-quickstart --uiOnly
+Example: ./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role"
+Example: ./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role --groupClassName=RoleGroup"
+Example: ./gradlew runCommand "-Pargs=s2-quickstart com.yourapp Person Authority Requestmap"
+Example: ./gradlew runCommand "-Pargs=s2-quickstart --uiOnly"
 '''
 
     @Delegate
@@ -79,7 +79,11 @@ Example: grails s2-quickstart --uiOnly
         }
 
         updateConfig(userModel?.simpleName, roleModel?.simpleName, requestmapModel?.simpleName, userModel?.packageName, roleGroupModel != null)
+        logStatus()
+        return SUCCESS
+    }
 
+    private void logStatus() {
         if (uiOnly) {
             consoleLogger.addStatus '''
 ************************************************************
@@ -88,8 +92,7 @@ Example: grails s2-quickstart --uiOnly
 * values are correct.                                      *
 ************************************************************
 '''
-        }
-        else {
+        } else {
             consoleLogger.addStatus '''
 ************************************************************
 * Created security-related domain classes. Your            *
@@ -99,7 +102,6 @@ Example: grails s2-quickstart --uiOnly
 ************************************************************
 '''
         }
-        return SUCCESS
     }
 
     private void initializeTemplateAttributes() {
@@ -111,7 +113,7 @@ Example: grails s2-quickstart --uiOnly
                 roleClassProperty  : roleModel.modelName,
                 requestmapClassName: requestmapModel?.simpleName,
                 groupClassName     : roleGroupModel?.simpleName,
-                groupClassProperty : roleGroupModel?.modelName ])
+                groupClassProperty : roleGroupModel?.modelName])
     }
 
     private void initialize() {
@@ -121,16 +123,16 @@ Example: grails s2-quickstart --uiOnly
         packageName = args[0]
         userModel = model(packageName + '.' + args[1])
         if (userModel) {
-            consoleLogger.addStatus('Creating User class ' + userModel.simpleName + ' in package ' + packageName)
+            consoleLogger.addStatus('\nCreating User class ' + userModel.simpleName + ' in package ' + packageName)
         }
         roleModel = model(packageName + '.' + args[2])
         if (roleModel) {
-            consoleLogger.addStatus('Creating Role class ' + roleModel.simpleName + ' in package ' + packageName)
+            consoleLogger.addStatus('\nCreating Role class ' + roleModel.simpleName + ' in package ' + packageName)
         }
         final String groupClassName = flagValue('groupClassName')
         roleGroupModel = groupClassName ? model(packageName + '.' + groupClassName) : null
         if (roleGroupModel) {
-            consoleLogger.addStatus('Creating Role/Group classes ' + roleGroupModel.simpleName + ' in package ' + packageName)
+            consoleLogger.addStatus('\nCreating Role/Group classes ' + roleGroupModel.simpleName + ' in package ' + packageName)
         }
     }
 
@@ -138,39 +140,39 @@ Example: grails s2-quickstart --uiOnly
         String[] arr = versionString.split('\\.')
         Map<String, Integer> v = new HashMap<>([mayor: 0, minor: 0, bug: 0])
         try {
-            if ( arr.size() >= 1) {
+            if (arr.size() >= 1) {
                 v.mayor = arr[0].toInteger()
             }
-            if ( arr.size() >= 2) {
+            if (arr.size() >= 2) {
                 v.minor = arr[1].toInteger()
             }
-            if ( arr.size() >= 3) {
+            if (arr.size() >= 3) {
                 v.bug = arr[2].toInteger()
             }
-        } catch ( Exception e ) {
+        } catch (Exception e) {
             v = [mayor: 0, minor: 0, bug: 0]
         }
         v
     }
 
     private boolean versionAfterOrEqualsToThreshold(String threshold, String value) {
-        if ( value == null ) {
+        if (value == null) {
             return false
         }
-        if ( value.startsWith(threshold) ) {
+        if (value.startsWith(threshold)) {
             return true
         }
 
         Map<String, Integer> va = extractVersion(value)
         Map<String, Integer> vb = extractVersion(threshold)
         List<Map<String, Integer>> l = [va, vb]
-        l.sort {  a, b ->
+        l.sort { a, b ->
             def compare = a.mayor <=> b.mayor
-            if ( compare != 0 ) {
+            if (compare != 0) {
                 return compare
             }
             compare = a.minor <=> b.minor
-            if ( compare != 0 ) {
+            if (compare != 0) {
                 return compare
             }
             a.bug <=> b.bug
@@ -187,14 +189,22 @@ Example: grails s2-quickstart --uiOnly
         final Properties props = new Properties()
         file("gradle.properties")?.withInputStream { props.load(it) }
 
-        boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(GORM_VERSION_THRESHOLD, (String) props.gormVersion ?: (String) props.getProperty("gorm.version"))
+        boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(GORM_VERSION_THRESHOLD,
+                (String) props.gormVersion ?: (String) props.getProperty("gorm.version"))
 
-        if ( gormVersionAfterThreshold ) {
-            generateFile 'PersonWithoutInjection', userModel.packagePath, userModel.simpleName
-            if ( salt ) {
-                generateFile 'PersonPasswordEncoderListenerWithSalt', userModel.packagePath, userModel.simpleName, "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy'
+        if (gormVersionAfterThreshold) {
+            generateFile('PersonWithoutInjection', userModel.packagePath, userModel.simpleName)
+            if (salt) {
+                generateFile('PersonPasswordEncoderListenerWithSalt',
+                        userModel.packagePath,
+                        userModel.simpleName,
+                        "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy')
             } else {
-                generateFile 'PersonPasswordEncoderListener', userModel.packagePath, userModel.simpleName, "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy'
+                generateFile('PersonPasswordEncoderListener',
+                        userModel.packagePath,
+                        userModel.simpleName,
+                        "${userModel.simpleName}PasswordEncoderListener",
+                        'src/main/groovy')
             }
             List<Map<String, String>> beans = []
             beans.add([import    : "import ${userModel.packageName}.${userModel.simpleName}PasswordEncoderListener".toString(),
@@ -202,24 +212,24 @@ Example: grails s2-quickstart --uiOnly
             addBeans(beans, 'grails-app/conf/spring/resources.groovy')
 
         } else {
-            if ( salt ) {
-                generateFile 'PersonWithSalt', userModel.packagePath, userModel.simpleName
+            if (salt) {
+                generateFile('PersonWithSalt', userModel.packagePath, userModel.simpleName)
             } else {
-                generateFile 'Person', userModel.packagePath, userModel.simpleName
+                generateFile('Person', userModel.packagePath, userModel.simpleName)
             }
         }
 
-        generateFile 'Authority', roleModel.packagePath, roleModel.simpleName
-        generateFile 'PersonAuthority', roleModel.packagePath, userModel.simpleName + roleModel.simpleName
+        generateFile('Authority', roleModel.packagePath, roleModel.simpleName)
+        generateFile('PersonAuthority', roleModel.packagePath, userModel.simpleName + roleModel.simpleName)
 
         if (requestmapModel) {
-            generateFile 'Requestmap', requestmapModel.packagePath, requestmapModel.simpleName
+            generateFile('Requestmap', requestmapModel.packagePath, requestmapModel.simpleName)
         }
 
         if (groupModel) {
-            generateFile 'AuthorityGroup', groupModel.packagePath, groupModel.simpleName
-            generateFile 'PersonAuthorityGroup', groupModel.packagePath, userModel.simpleName + groupModel.simpleName
-            generateFile 'AuthorityGroupAuthority', groupModel.packagePath, groupModel.simpleName + roleModel.simpleName
+            generateFile('AuthorityGroup', groupModel.packagePath, groupModel.simpleName)
+            generateFile('PersonAuthorityGroup', groupModel.packagePath, userModel.simpleName + groupModel.simpleName)
+            generateFile('AuthorityGroupAuthority', groupModel.packagePath, groupModel.simpleName + roleModel.simpleName)
         }
     }
 
@@ -228,42 +238,42 @@ Example: grails s2-quickstart --uiOnly
         file('grails-app/conf/application.groovy').withWriterAppend { BufferedWriter writer ->
             writer.newLine()
             writer.newLine()
-            writer.writeLine '// Added by the Spring Security Core plugin:'
+            writer.writeLine('// Added by the Spring Security Core plugin:')
             if (!uiOnly) {
-                writer.writeLine "grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'"
-                writer.writeLine "grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'"
-                writer.writeLine "grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'"
+                writer.writeLine("grails.plugin.springsecurity.userLookup.userDomainClassName = '${packageName}.$userClassName'")
+                writer.writeLine("grails.plugin.springsecurity.userLookup.authorityJoinClassName = '${packageName}.$userClassName$roleClassName'")
+                writer.writeLine("grails.plugin.springsecurity.authority.className = '${packageName}.$roleClassName'")
             }
             if (useRoleGroups) {
-                writer.writeLine "grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'"
-                writer.writeLine 'grails.plugin.springsecurity.useRoleGroups = true'
+                writer.writeLine("grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'")
+                writer.writeLine('grails.plugin.springsecurity.useRoleGroups = true')
             }
             if (requestmapClassName) {
-                writer.writeLine "grails.plugin.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'"
-                writer.writeLine "grails.plugin.springsecurity.securityConfigType = 'Requestmap'"
+                writer.writeLine("grails.plugin.springsecurity.requestMap.className = '${packageName}.$requestmapClassName'")
+                writer.writeLine("grails.plugin.springsecurity.securityConfigType = 'Requestmap'")
             }
-            writer.writeLine 'grails.plugin.springsecurity.controllerAnnotations.staticRules = ['
-            writer.writeLine "\t[pattern: '/',               access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/error',          access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/index',          access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/index.gsp',      access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/shutdown',       access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/assets/**',      access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/**/js/**',       access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/**/css/**',      access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/**/images/**',   access: ['permitAll']],"
-            writer.writeLine "\t[pattern: '/**/favicon.ico', access: ['permitAll']]"
-            writer.writeLine ']'
+            writer.writeLine('grails.plugin.springsecurity.controllerAnnotations.staticRules = [')
+            writer.writeLine("\t[pattern: '/',               access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/error',          access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/index',          access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/index.gsp',      access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/shutdown',       access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/assets/**',      access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/**/js/**',       access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/**/css/**',      access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/**/images/**',   access: ['permitAll']],")
+            writer.writeLine("\t[pattern: '/**/favicon.ico', access: ['permitAll']]")
+            writer.writeLine(']')
             writer.newLine()
 
-            writer.writeLine 'grails.plugin.springsecurity.filterChain.chainMap = ['
-            writer.writeLine "\t[pattern: '/assets/**',      filters: 'none'],"
-            writer.writeLine "\t[pattern: '/**/js/**',       filters: 'none'],"
-            writer.writeLine "\t[pattern: '/**/css/**',      filters: 'none'],"
-            writer.writeLine "\t[pattern: '/**/images/**',   filters: 'none'],"
-            writer.writeLine "\t[pattern: '/**/favicon.ico', filters: 'none'],"
-            writer.writeLine "\t[pattern: '/**',             filters: 'JOINED_FILTERS']"
-            writer.writeLine ']'
+            writer.writeLine('grails.plugin.springsecurity.filterChain.chainMap = [')
+            writer.writeLine("\t[pattern: '/assets/**',      filters: 'none'],")
+            writer.writeLine("\t[pattern: '/**/js/**',       filters: 'none'],")
+            writer.writeLine("\t[pattern: '/**/css/**',      filters: 'none'],")
+            writer.writeLine("\t[pattern: '/**/images/**',   filters: 'none'],")
+            writer.writeLine("\t[pattern: '/**/favicon.ico', filters: 'none'],")
+            writer.writeLine("\t[pattern: '/**',             filters: 'JOINED_FILTERS']")
+            writer.writeLine(']')
             writer.newLine()
         }
     }
@@ -278,10 +288,10 @@ Example: grails s2-quickstart --uiOnly
         final File resourceConfig = new File(resourceConfigFilePath)
         List<String> lines = []
         beans.forEach(bean -> lines.add(bean.import))
-        if ( resourceConfig.exists() ) {
+        if (resourceConfig.exists()) {
             resourceConfig.eachLine { line, nb ->
                 lines << line
-                if ( line.contains('beans = {') ) {
+                if (line.contains('beans = {')) {
                     beans.each { Map bean ->
                         lines << '    ' + bean.definition
                     }
