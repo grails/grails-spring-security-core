@@ -60,7 +60,7 @@ asciidoctor {
 tasks.register("docs") {
     group = "documentation"
     dependsOn = ["groovydoc", "asciidoctor"]
-    finalizedBy "copyImages", 'createReleaseDropDown'
+    finalizedBy "copyImages", 'createReleaseDropDown', 'ghPagesRootIndexPage'
 }
 
 tasks.register("copyImages", Copy) {
@@ -69,6 +69,26 @@ tasks.register("copyImages", Copy) {
     into layout.buildDirectory.dir("docs")
     include "**/*.png"
     includeEmptyDirs = false
+}
+
+tasks.register("ghPagesRootIndexPage", Copy) {
+    dependsOn ["docs"]
+    group = "documentation"
+    from layout.projectDirectory.file("src/docs/index.tmpl")
+    into layout.buildDirectory.file("docs")
+    rename('index.tmpl', 'gh-pages.html')
+    finalizedBy "replaceVersionPlacehold"
+}
+
+tasks.register("replaceVersionPlacehold") {
+    dependsOn ["ghPagesRootIndexPage"]
+    inputs.files(ghPagesRootIndexPage.outputs.files)
+    doFirst {
+        File file = layout.buildDirectory.file("docs/gh-pages.html").<RegularFile> get().asFile
+        file.text = file.text.replaceAll('@VERSION@', (String) project.projectVersion)
+    }
+
+    onlyIf { !project.projectVersion.endsWith('SNAPSHOT') }
 }
 
 tasks.register("createReleaseDropDown", grails.plugin.springsecurity.CreateReleaseDropDownTask) {
