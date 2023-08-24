@@ -1,4 +1,5 @@
 grails.plugin.springsecurity
+grails.plugin.springsecurity
 grails.plugin.springsecurity.access
 grails.plugin.springsecurity.access.intercept
 grails.plugin.springsecurity.access.vote
