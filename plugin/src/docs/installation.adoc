@@ -1,0 +1,72 @@
+[[installation]]
+== Installation
+
+=== Prerequisites
+
+Ensure you have the following set up:
+
+* A Grails project
+* A working internet connection
+
+==== Installation Steps
+
+1. Open your Grails project.
+
+2. Locate your `build.gradle` file in the root directory of your project.
+
+3. Add the Spring Security Core Plugin dependency to the `dependencies` section in your `build.gradle`:
+
+[source,groovy]
+----
+dependencies {
+    // ... other dependencies
+    implementation 'org.grails.plugins:spring-security-core:${stableVersion}'
+}
+----
+
+4. Save the `build.gradle` file.
+
+5. Open a terminal or command prompt.
+
+6. Navigate to your project's root directory using the `cd` command.
+
+7. Run the following Gradle command to update your project's dependencies:
+
++
+[source,bash]
+----
+./gradlew clean build
+----
++
+
+8. The Spring Security Core Plugin 6.0.0 is now installed and integrated into your Grails project.
+
+9. You can start using the plugin's features and commands in your application.
+
+10. Run the <<s2-quickstart>> script to generate domain classes and add the initial configuration settings in `application.groovy`:
+
++
+[source,bash]
+```
+./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role"
+```
+
+=== Verifying Installation
+
+To verify that the plugin has been successfully installed, you can run a simple test:
+
+1. In your Grails project, create a new controller or use an existing one.
+
+2. Add a secure annotation, such as `@Secured(['ROLE_USER'])`, to a method in your controller.
+
+3. Run your Grails application using the command:
+
++
+[source,bash]
+----
+./gradlew bootRun
+----
++
+
+4. Access the URL associated with the method you secured. If the plugin is correctly installed, it should enforce the security constraint you defined.
+

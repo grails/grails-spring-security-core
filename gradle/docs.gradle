@@ -1,24 +1,24 @@
 String versionTxt = project.projectVersion
-boolean isSnapshot = versionTxt.endsWith('SNAPSHOT')
-boolean isBeta = versionTxt.contains('RC') || versionTxt.contains('M')
 String stableVersion = ''
 String snapshotVersion = ''
-String[] arr = versionTxt.tokenize('.')
-int major = arr[0] as int
-int minor = arr[1] as int
-int patch
-if (isSnapshot || isBeta || arr[2].endsWith("TEST")) {
-    patch = arr[2].split('-')[0] as int
-} else {
-    patch = arr[2] as int
-}
-
-if (isSnapshot || isBeta) {
-    stableVersion = "${major}.${minor}.${(patch-1)}".toString()
-    snapshotVersion = versionTxt
-} else {
-    stableVersion = versionTxt
-    snapshotVersion = "${major}.${minor}.${patch+1}-SNAPSHOT".toString()
+String[] parts = versionTxt.split("\\.")
+if (parts.length >= 3) {
+    int major = parts[0] as int
+    int minor = parts[1] as int
+    int patch
+    if (parts.length > 3) {
+        patch = parts[2] as int
+        stableVersion = "$major.$minor.${patch-1}"
+        snapshotVersion = versionTxt
+    } else if (parts[2].contains('-')) {
+        final String[] subparts = parts[2].split("-")
+        patch = subparts.first() as int
+        stableVersion = "${major}.${minor}.${patch - 1}"
+        snapshotVersion = "${major}.${minor}." + subparts[1..-1].join("-")
+    } else {
+        stableVersion = versionTxt
+        snapshotVersion = "$major.$minor.${patch + 1}"
+    }
 }
 
 def asciidoctorAttributes = [

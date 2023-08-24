@@ -1,6 +1,0 @@
-[[newInV5]]
-== What's New in Version 5.0.0
-
-Version 5.x of the plugin requires Grails 5 or later; this version also updates to Spring Security Core version 5.6.1. We recommend you to check more details about what's new in Spring Security 5.6 at https://docs.spring.io/spring-security/reference/whats-new.html.
-
-

@@ -11,6 +11,8 @@ include::{includedir}introduction.adoc[]
 
 include::{includedir}whatsNew.adoc[]
 
+include::{includedir}installation.adoc[]
+
 include::{includedir}domainClasses.adoc[]
 
 include::{includedir}requestMappings.adoc[]
