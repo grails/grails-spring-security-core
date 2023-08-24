@@ -76,7 +76,7 @@ abstract class CreateReleaseDropDownTask extends DefaultTask {
 
     private String createVersionSelectDropDownHtml(List<SoftwareVersion> softwareVersions) {
         String selectHtml = "<select onChange='window.document.location.href=this.options[this.selectedIndex].value;'>"
-        String snapshotHref = "https://grails.github.io/grails-spring-security-core/index.html"
+        String snapshotHref = "https://grails.github.io/grails-spring-security-core/snapshot/index.html"
         if (currentVersion.get().endsWith("-SNAPSHOT")) {
             selectHtml += "<option selected='selected' value='${snapshotHref}'>SNAPSHOT</option>"
         } else {
