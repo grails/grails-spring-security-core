@@ -6,11 +6,7 @@ plugins {
 	id "war"
 	id "idea"
 	id "eclipse"
-	id "org.asciidoctor.jvm.gems"
 	id 'org.asciidoctor.jvm.convert'
-	id "org.asciidoctor.jvm.pdf"
-	id "org.asciidoctor.jvm.epub"
-	id "org.asciidoctor.kindlegen.base"
 	id "io.spring.dependency-management"
 	id 'maven-publish'
 	id 'signing'

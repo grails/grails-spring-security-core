@@ -10,8 +10,7 @@ $ cd bookstore
 
 ==== 2. "`Install`" the plugin by adding it to build.gradle
 
-[source,groovy]
-[subs="attributes"]
+[source,groovy,sub="+attributes"]
 ----
 dependencies {
    ...
