@@ -5,6 +5,8 @@ The Spring Security plugin simplifies the integration of https://projects.spring
 
 This guide documents configuration defaults and describes how to configure and extend the Spring Security plugin for Grails applications.
 
-include::introduction/configGroovy.adoc[]
+include::introduction/installation.adoc[leveloffset=+1]
 
-include::introduction/gettingStarted.adoc[]
+include::introduction/configGroovy.adoc[leveloffset=+1]
+
+include::introduction/gettingStarted.adoc[leveloffset=+1]

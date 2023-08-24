@@ -8,7 +8,7 @@ Ensure you have the following set up:
 * A Grails project
 * A working internet connection
 
-==== Installation Steps
+=== Installation Steps
 
 1. Open your Grails project.
 
@@ -16,14 +16,16 @@ Ensure you have the following set up:
 
 3. Add the Spring Security Core Plugin dependency to the `dependencies` section in your `build.gradle`:
 
++
 [source,groovy]
-[subs="attributes"]
+[subs=="attributes"]
 ----
 dependencies {
     // ... other dependencies
     implementation 'org.grails.plugins:spring-security-core:{stableversion}'
 }
 ----
++
 
 4. Save the `build.gradle` file.
 
@@ -49,7 +51,7 @@ dependencies {
 +
 [source,bash]
 ```
-./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role"
+./gradlew runCommand "-Pargs==s2-quickstart com.yourapp User Role"
 ```
 
 === Verifying Installation

@@ -1,8 +1,37 @@
 [[gettingStarted]]
-=== Getting Started
+== Quick Start Guide
 
-Once you install the plugin, you simply run the initialization script, <<s2-quickstart>>, and make any required configuration changes in `application.groovy` / `application.yml`. The plugin registers its servlet API configuration (the Spring Security filter chain, etc.) programmatically, not in `web.xml` as was the case in earlier versions, and also configures the Spring beans in the application context that implement various pieces of functionality. Dependency management determines which jar files to use.
+Getting started with the plugin is simple and efficient. Follow these steps to enhance the security of your Grails application:
 
-To get started using the Spring Security plugin with your Grails application, see <<tutorials>>.
+.Step 1: Install the Plugin
 
-You do not need deep knowledge of Spring Security to use the plugin, but it is helpful to understand the underlying implementation. See https://{htmlsingle}[the Spring Security documentation].
+Begin by installing the Spring Security plugin into your Grails project. Add the following dependency to your `build.gradle`:
+
+[source,gradle]
+[subs=="attributes"]
+----
+implementation 'org.grails.plugins:spring-security-core:{stableversion}'
+----
+
+.Step 2: Run the Initialization Script
+
+After installation, execute the `s2-quickstart` initialization script. This sets up essential classes and configurations required for the plugin's functionality. In your terminal, run:
+
+[source,bash]
+----
+./gradlew runCommand -Pargs="s2-quickstart com.yourapp User Role"
+----
+
+=== Plugin Configuration and Setup
+
+The Spring Security plugin streamlines configuration and setup through a combination of steps:
+
+1. **Programmatic Servlet API Configuration:**
+
+   Unlike earlier versions that utilized `web.xml`, the plugin now registers its servlet API configuration, including the Spring Security filter chain, programmatically.
+
+2. **Configure Spring Beans:**
+
+   The plugin configures Spring beans within the application context to implement various functionality components. Dependency management automatically handles the selection of appropriate jar files.
+
+By following these steps, your Grails application will be ready to leverage the Spring Security plugin for enhanced security. While in-depth knowledge of Spring Security isn't mandatory, having a basic understanding of its underlying implementation can be helpful. For more details, refer to the [Spring Security documentation](https://{htmlsingle}).
