@@ -7,8 +7,7 @@ Getting started with the plugin is simple and efficient. Follow these steps to e
 
 Begin by installing the Spring Security plugin into your Grails project. Add the following dependency to your `build.gradle`:
 
-[source,gradle]
-[subs=="attributes"]
+[source,gradle,subs="+attributes"]
 ----
 implementation 'org.grails.plugins:spring-security-core:{stableversion}'
 ----

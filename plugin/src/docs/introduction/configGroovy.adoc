@@ -20,8 +20,7 @@ grails.plugin.springsecurity.password.algorithm = 'bcrypt'
 
 If your application incorporates the CXF Grails plugin, it's crucial to arrange the dependencies correctly. Place the CXF dependency above the Spring Security plugin within the `dependencies` block, as shown below:
 
-[source,groovy]
-[subs=="attributes"]
+[source,groovy,subs="+attributes"]
 ----
 dependencies {
     implementation 'org.grails.plugins:cxf:3.1.1'
