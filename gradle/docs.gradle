@@ -28,7 +28,6 @@ def asciidoctorAttributes = [
         docinfo1            : 'true',
         doctype             : 'book',
         encoding            : 'utf-8',
-        'front-cover-image'  : 'image:cover.png[Front Cover,800,600]',
         icons               : 'font',
         id                  : project.name + ':' + project.version,
         idprefix            : '',
@@ -45,10 +44,6 @@ def asciidoctorAttributes = [
         toclevels           : '2'
 ]
 
-repositories {
-//    ruby.gems()
-}
-
 asciidoctor {
     sourceDir file('src/docs')
     sources {
@@ -58,63 +53,25 @@ asciidoctor {
     attributes asciidoctorAttributes
 }
 
-asciidoctorPdf {
-    dependsOn asciidoctorGemsPrepare
-    sourceDir = file('src/docs')
-    sources {
-        include 'index.adoc'
-    }
-    outputDir = new File(buildDir, 'docs')
-
-    asciidoctorj {
-        requires 'rouge'
-        attributes asciidoctorAttributes
-    }
-}
-
-asciidoctorEpub {
-    dependsOn asciidoctorGemsPrepare
-    sourceDir = file('src/docs')
-    sources {
-        include 'index.adoc'
-    }
-    outputDir = new File(buildDir, 'docs')
-
-    asciidoctorj {
-        requires 'rouge'
-        attributes asciidoctorAttributes
-    }
-
-    ebookFormats = ["EPUB3"]
-}
-
-tasks.named("asciidoctor").configure {
-    dependsOn = ['asciidoctorPdf', 'asciidoctorEpub']
-}
-
-tasks.register("docs").configure {
+tasks.register("docs") {
     group = "documentation"
     dependsOn = ["groovydoc", "asciidoctor"]
-    doLast {
-        File dir = new File(buildDir, 'docs')
-        ['epub', 'mobi', 'pdf'].each { String ext ->
-            File f = new File(dir, 'index.' + ext)
-            if (f.exists()) {
-                f.renameTo new File(dir, project.name + '.' + ext)
-            }
-        }
-
-        new File(buildDir, 'docs/ghpages.html') << file('src/docs/index.tmpl').text.replaceAll('@VERSION@', project.version)
-
-        copy {
-            from 'src/docs'
-            into new File(buildDir, 'docs').path
-            include '**/*.png'
-            includeEmptyDirs = false
-        }
-    }
+    finalizedBy "copyImages", 'createReleaseDropDown'
 }
 
-dependencies {
-    asciidoctorGems 'rubygems:rouge:3.15.0'
+tasks.register("copyImages", Copy) {
+    dependsOn = ["docs"]
+    from layout.projectDirectory.dir("src/docs")
+    into layout.buildDirectory.dir("docs")
+    include "**/*.png"
+    includeEmptyDirs = false
+}
+
+tasks.register("createReleaseDropDown", grails.plugin.springsecurity.CreateReleaseDropDownTask) {
+    dependsOn = ['docs']
+    mustRunAfter = ['docs']
+    githubSlug = 'grails/grails-spring-security-core'
+    currentVersion = project.projectVersion
+    versions = ["5.3.0", "4.0.5", "3.3.2"]
+    index = file("${buildDir.absolutePath}/docs/index.html")
 }

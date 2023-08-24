@@ -2,8 +2,15 @@ repositories {
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core/" }
 }
+
+configurations.all {
+    resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
+}
+
 dependencies {
+    implementation gradleApi()
     implementation("com.bertramlabs.plugins:asset-pipeline-gradle:4.3.0")
     implementation("org.grails:grails-gradle-plugin:6.0.0")
     implementation("org.grails.plugins:hibernate5:8.0.0")
+    implementation("org.jsoup:jsoup:1.16.1")
 }
