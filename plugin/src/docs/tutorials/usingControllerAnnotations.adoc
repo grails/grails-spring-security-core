@@ -28,9 +28,10 @@ $ grails compile
 
 ==== 3. Create the User and Role domain classes.
 
-....
-$ grails s2-quickstart com.mycompany.myapp User Role
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-quickstart com.mycompany.myapp User Role"
+----
 
 You can choose your names for your domain classes and package; these are just examples.
 

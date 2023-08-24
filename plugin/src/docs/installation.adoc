@@ -17,10 +17,11 @@ Ensure you have the following set up:
 3. Add the Spring Security Core Plugin dependency to the `dependencies` section in your `build.gradle`:
 
 [source,groovy]
+[subs="attributes"]
 ----
 dependencies {
     // ... other dependencies
-    implementation 'org.grails.plugins:spring-security-core:${stableVersion}'
+    implementation 'org.grails.plugins:spring-security-core:{stableversion}'
 }
 ----
 

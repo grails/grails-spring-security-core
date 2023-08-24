@@ -9,27 +9,32 @@ If you specify the uiOnly flag, no domain classes are created but the plugin set
 
 The general format is:
 
-....
-grails s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME [REQUESTMAP_CLASS_NAME] [--groupClassName=GROUP_CLASS_NAME]
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-quickstart DOMAIN_CLASS_PACKAGE USER_CLASS_NAME ROLE_CLASS_NAME [REQUESTMAP_CLASS_NAME] [--groupClassName=GROUP_CLASS_NAME]"
+----
 
 .Examples
 
-....
-grails s2-quickstart com.yourapp User Role
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role"
+----
 
-....
-grails s2-quickstart com.yourapp User Role --groupClassName=RoleGroup
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role --groupClassName=RoleGroup"
+----
 
-....
-grails s2-quickstart com.yourapp Person Authority Requestmap
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-quickstart com.yourapp Person Authority Requestmap"
+----
 
-....
-grails s2-quickstart --uiOnly
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-quickstart --uiOnly"
+----
 
 .Description
 

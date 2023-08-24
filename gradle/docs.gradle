@@ -13,7 +13,11 @@ if (parts.length >= 3) {
     } else if (parts[2].contains('-')) {
         final String[] subparts = parts[2].split("-")
         patch = subparts.first() as int
-        stableVersion = "${major}.${minor}.${patch - 1}"
+        if (patch == 0) {
+            stableVersion = "${major}.${minor}.${patch}"
+        } else {
+            stableVersion = "${major}.${minor}.${patch - 1}"
+        }
         snapshotVersion = "${major}.${minor}." + subparts[1..-1].join("-")
     } else {
         stableVersion = versionTxt

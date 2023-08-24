@@ -5,15 +5,17 @@
 
 Creates a persistent token domain class for storing remember-me cookie information in the database. The general format is:
 
-....
-grails s2-create-persistent-token <classname>
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-create-persistent-token <classname>"
+----
 
 .Example
 
-....
-grails s2-create-persistent-token com.yourapp.PersistentLogin
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-create-persistent-token com.yourapp.PersistentLogin"
+----
 
 .Description
 

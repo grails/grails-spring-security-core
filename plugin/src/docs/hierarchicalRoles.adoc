@@ -69,9 +69,10 @@ Specifying a static string in the `roleHierarchy` property will be sufficient fo
 
 For example, running
 
-....
-$ grails s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry
-....
+[source,bash]
+----
+./gradlew runCommand "-Pargs=s2-create-role-hierarchy-entry com.yourapp.RoleHierarchyEntry"
+----
 
 will generate this class in `grails-app/domain/com/yourapp/RoleHierarchyEntry.groovy`:
 
