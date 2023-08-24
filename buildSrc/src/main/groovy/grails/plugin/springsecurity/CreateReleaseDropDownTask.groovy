@@ -81,6 +81,7 @@ abstract class CreateReleaseDropDownTask extends DefaultTask {
             selectHtml += "<option selected='selected' value='${snapshotHref}'>SNAPSHOT</option>"
         } else {
             selectHtml += "<option value='${snapshotHref}'>SNAPSHOT</option>"
+            selectHtml += "<option selected='selected' value=\"https://grails.github.io/grails-spring-security-core/${currentVersion.get()}/index.html\">${currentVersion.get()}</option>"
         }
         softwareVersions.forEach(softwareVersion -> {
             String versionName = softwareVersion.versionText
