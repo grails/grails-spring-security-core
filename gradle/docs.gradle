@@ -76,7 +76,7 @@ tasks.register("ghPagesRootIndexPage", Copy) {
     group = "documentation"
     from layout.projectDirectory.file("src/docs/index.tmpl")
     into layout.buildDirectory.file("docs")
-    rename('index.tmpl', 'gh-pages.html')
+    rename('index.tmpl', 'ghpages.html')
     finalizedBy "replaceVersionPlacehold"
 }
 
@@ -84,7 +84,7 @@ tasks.register("replaceVersionPlacehold") {
     dependsOn ["ghPagesRootIndexPage"]
     inputs.files(ghPagesRootIndexPage.outputs.files)
     doFirst {
-        File file = layout.buildDirectory.file("docs/gh-pages.html").<RegularFile> get().asFile
+        File file = layout.buildDirectory.file("docs/ghpages.html").<RegularFile> get().asFile
         file.text = file.text.replaceAll('@VERSION@', (String) project.projectVersion)
     }
 
