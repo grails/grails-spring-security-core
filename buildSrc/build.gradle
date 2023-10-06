@@ -11,6 +11,6 @@ dependencies {
     implementation gradleApi()
     implementation("com.bertramlabs.plugins:asset-pipeline-gradle:4.4.0")
     implementation("org.grails:grails-gradle-plugin:6.0.0")
-    implementation("org.grails.plugins:hibernate5:8.0.0")
+    implementation("org.grails.plugins:hibernate5:8.0.1")
     implementation("org.jsoup:jsoup:1.16.1")
 }
