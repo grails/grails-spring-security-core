@@ -188,36 +188,25 @@ Example: ./gradlew runCommand "-Pargs=s2-quickstart --uiOnly"
 
         final Properties props = new Properties()
         file("gradle.properties")?.withInputStream { props.load(it) }
-
-        boolean gormVersionAfterThreshold = versionAfterOrEqualsToThreshold(GORM_VERSION_THRESHOLD,
-                (String) props.gormVersion ?: (String) props.getProperty("gorm.version"))
-
-        if (gormVersionAfterThreshold) {
-            generateFile('PersonWithoutInjection', userModel.packagePath, userModel.simpleName)
-            if (salt) {
-                generateFile('PersonPasswordEncoderListenerWithSalt',
-                        userModel.packagePath,
-                        userModel.simpleName,
-                        "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy')
-            } else {
-                generateFile('PersonPasswordEncoderListener',
-                        userModel.packagePath,
-                        userModel.simpleName,
-                        "${userModel.simpleName}PasswordEncoderListener",
-                        'src/main/groovy')
-            }
-            List<Map<String, String>> beans = []
-            beans.add([import    : "import ${userModel.packageName}.${userModel.simpleName}PasswordEncoderListener".toString(),
-                       definition: "${userModel.propertyName}PasswordEncoderListener(${userModel.simpleName}PasswordEncoderListener)".toString()])
-            addBeans(beans, 'grails-app/conf/spring/resources.groovy')
-
+        
+        generateFile('PersonWithoutInjection', userModel.packagePath, userModel.simpleName)
+        if (salt) {
+            generateFile('PersonPasswordEncoderListenerWithSalt',
+                    userModel.packagePath,
+                    userModel.simpleName,
+                    "${userModel.simpleName}PasswordEncoderListener", 'src/main/groovy')
         } else {
-            if (salt) {
-                generateFile('PersonWithSalt', userModel.packagePath, userModel.simpleName)
-            } else {
-                generateFile('Person', userModel.packagePath, userModel.simpleName)
-            }
+            generateFile('PersonPasswordEncoderListener',
+                    userModel.packagePath,
+                    userModel.simpleName,
+                    "${userModel.simpleName}PasswordEncoderListener",
+                    'src/main/groovy')
         }
+        List<Map<String, String>> beans = []
+        beans.add([import    : "import ${userModel.packageName}.${userModel.simpleName}PasswordEncoderListener".toString(),
+                   definition: "${userModel.propertyName}PasswordEncoderListener(${userModel.simpleName}PasswordEncoderListener)".toString()])
+        addBeans(beans, 'grails-app/conf/spring/resources.groovy')
+
 
         generateFile('Authority', roleModel.packagePath, roleModel.simpleName)
         generateFile('PersonAuthority', roleModel.packagePath, userModel.simpleName + roleModel.simpleName)
