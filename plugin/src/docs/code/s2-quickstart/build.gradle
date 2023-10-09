@@ -5,7 +5,7 @@ buildscript {
     dependencies {
         classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
         classpath "com.bertramlabs.plugins:asset-pipeline-gradle:$assetPipelineVersion"
-        classpath "org.grails.plugins:hibernate5:8.0.0"
+        classpath "org.grails.plugins:hibernate5:8.0.1"
     }
 }
 
@@ -48,7 +48,7 @@ dependencies {
     implementation "org.grails.plugins:events"
     implementation "org.grails.plugins:gsp"
     profile "org.grails.profiles:web"
-    implementation 'org.grails.plugins:spring-security-core:6.0.0'
+    implementation 'org.grails.plugins:spring-security-core:6.0.1'
     runtimeOnly "org.glassfish.web:el-impl:2.2.1-b05"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.apache.tomcat:tomcat-jdbc"
@@ -59,11 +59,11 @@ dependencies {
     testImplementation "org.mockito:mockito-core"
     testImplementation "org.grails:grails-web-testing-support"
     testImplementation "org.grails.plugins:geb"
-    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.11.0"
-    testImplementation "org.seleniumhq.selenium:selenium-api:4.11.0"
-    testImplementation "org.seleniumhq.selenium:selenium-support:4.11.0"
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.11.0"
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.11.0"
+    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.13.0"
+    testImplementation "org.seleniumhq.selenium:selenium-api:4.13.0"
+    testImplementation "org.seleniumhq.selenium:selenium-support:4.13.0"
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.13.0"
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.13.0"
 }
 
 bootRun {
