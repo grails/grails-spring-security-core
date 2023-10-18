@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       GIT_USER_NAME: puneetbehl
-      GIT_USER_EMAIL: behlp@objectcomputing.com
+      GIT_USER_EMAIL: behlp@unityfoundation.io
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -70,7 +70,7 @@ jobs:
           BRANCH: gh-pages
           FOLDER: plugin/build/docs
           DOC_FOLDER: gh-pages
-          COMMIT_EMAIL: behlp@objectcomputing.com
+          COMMIT_EMAIL: behlp@unityfoundation.io
           COMMIT_NAME: Puneet Behl
           VERSION: ${{ steps.release_version.outputs.release_version }}
       - name: Run post-release

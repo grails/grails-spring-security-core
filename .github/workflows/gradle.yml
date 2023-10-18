@@ -139,5 +139,5 @@ jobs:
           BRANCH: gh-pages
           FOLDER: plugin/build/docs
           DOC_FOLDER: gh-pages
-          COMMIT_EMAIL: behlp@objectcomputing.com
+          COMMIT_EMAIL: behlp@unityfoundation.io
           COMMIT_NAME: Puneet Behl
