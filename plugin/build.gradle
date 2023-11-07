@@ -8,6 +8,7 @@ plugins {
 	id "eclipse"
 	id 'org.asciidoctor.jvm.convert'
 	id "io.spring.dependency-management"
+	id 'org.grails.grails-plugin'
 	id 'maven-publish'
 	id 'signing'
 }
