@@ -54,6 +54,12 @@ java {
 	withSourcesJar()
 }
 
+bootJar.enabled = false
+jar {
+	enabled = true
+	archiveClassifier.set('')
+}
+
 repositories {
 	mavenCentral()
 	maven { url 'https://repo.grails.org/grails/core' }
