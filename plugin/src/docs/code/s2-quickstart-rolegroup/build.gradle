@@ -44,7 +44,7 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.52.0"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.70.0"
-   compile 'org.grails.plugins:spring-security-core:6.0.3'
+   compile 'org.grails.plugins:spring-security-core:6.1.0'
 }
 
 bootRun {
