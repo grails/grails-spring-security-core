@@ -51,6 +51,8 @@ ext.pomInfo = {
 }
 
 java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
 	withJavadocJar()
 	withSourcesJar()
 }
@@ -83,8 +85,6 @@ configurations {
 		}
 	}
 }
-
-sourceCompatibility = targetCompatibility = 1.11
 
 dependencies {
 	compileOnly "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
