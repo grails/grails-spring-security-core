@@ -93,7 +93,7 @@ dependencies {
 	api "org.springframework.security:spring-security-web:$springSecurityVersion", {
 		exclude module: 'spring-web'
 	}
-
+	implementation 'org.grails.plugins:async'
 	testImplementation "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
 	testImplementation "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
 	testRuntimeOnly 'cglib:cglib-nodep:3.3.0'
