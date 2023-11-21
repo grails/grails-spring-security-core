@@ -50,7 +50,7 @@ dependencies {
 +
 [source,bash]
 ```
-./gradlew runCommand "-Pargs==s2-quickstart com.yourapp User Role"
+./gradlew runCommand "-Pargs=s2-quickstart com.yourapp User Role"
 ```
 
 === Verifying Installation
