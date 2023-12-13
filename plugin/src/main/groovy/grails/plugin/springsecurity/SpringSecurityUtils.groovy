@@ -443,7 +443,7 @@ final class SpringSecurityUtils {
 				continue
 			}
 
-			List<Filter> filters = [] + filterChain.filters // copy
+			List<Filter> filters = filterChain.filters.collect() // copy
 			int index = 0
 			while (index < filters.size() && filterToPosition[filters[index]] < order) {
 				index++
