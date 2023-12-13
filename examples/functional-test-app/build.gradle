@@ -16,6 +16,12 @@ group "grails_4_0"
 repositories {
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
+    if(groovyVersion?.endsWith('-SNAPSHOT')) {
+        maven {
+            name 'JFrog Groovy snapshot repo'
+            url 'https://groovy.jfrog.io/artifactory/libs-snapshot-local/'
+        }
+    }
 }
 
 configurations {
