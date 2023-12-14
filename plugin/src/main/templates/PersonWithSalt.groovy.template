@@ -45,12 +45,12 @@ class ${userClassName} implements Serializable {
 		if ( !springSecurityService ) {
 			return null
 		}
-		def algorithm = springSecurityService.grailsApplication.config.grails.plugin.springsecurity.password.algorithm
+		def algorithm = springSecurityService.grailsApplication.config.getProperty('grails.plugin.springsecurity.password.algorithm')
 		if ( algorithm == 'bcrypt' || algorithm == 'pbkdf2' ) {
 			return null
 		}
 
-		def reflectionSaltProperty = springSecurityService.grailsApplication.config.grails.plugin.springsecurity.dao.reflectionSaltSourceProperty
+		def reflectionSaltProperty = springSecurityService.grailsApplication.config.getProperty('grails.plugin.springsecurity.dao.reflectionSaltSourceProperty')
 		if ( reflectionSaltProperty ) {
 			return getProperty(reflectionSaltProperty)
 		}
