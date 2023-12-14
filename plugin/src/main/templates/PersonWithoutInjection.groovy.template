@@ -28,6 +28,7 @@ class ${userClassName} implements Serializable {
     }
 
     static mapping = {
-	    password column: '`password`'
+        ${'User' == userClassName ? "table name: '`user`'" : ''}
+        password column: '`password`'
     }
 }
