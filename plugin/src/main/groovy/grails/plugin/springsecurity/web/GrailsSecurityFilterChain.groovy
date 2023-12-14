@@ -37,7 +37,7 @@ class GrailsSecurityFilterChain implements SecurityFilterChain {
 	final String matcherPattern
 
 	GrailsSecurityFilterChain(String matcherPattern, List<Filter> filters) {
-		this.filters = [] + filters
+		this.filters = filters.collect() // copy
 		this.matcherPattern = matcherPattern
 		requestMatcher = new AntPathRequestMatcher(matcherPattern, null, false)
 		log.info 'Creating filter chain: {}, {}', requestMatcher, filters

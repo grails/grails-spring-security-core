@@ -42,7 +42,7 @@ class TestUserTestRole implements Serializable {
 		criteriaFor(testUserId, testRoleId).count()
 	}
 
-	private static DetachedCriteria criteriaFor(long testUserId, long testRoleId) {
+	private static DetachedCriteria<TestUserTestRole> criteriaFor(long testUserId, long testRoleId) {
 		TestUserTestRole.where {
 			testUser == TestUser.load(testUserId) &&
 			testRole == TestRole.load(testRoleId)

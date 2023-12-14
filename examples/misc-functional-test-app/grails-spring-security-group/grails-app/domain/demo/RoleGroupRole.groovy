@@ -42,7 +42,7 @@ class RoleGroupRole implements Serializable {
 		criteriaFor(roleGroupId, roleId).count()
 	}
 
-	private static DetachedCriteria criteriaFor(long roleGroupId, long roleId) {
+	private static DetachedCriteria<RoleGroupRole> criteriaFor(long roleGroupId, long roleId) {
 		RoleGroupRole.where {
 			roleGroup == RoleGroup.load(roleGroupId) &&
 			role == Role.load(roleId)

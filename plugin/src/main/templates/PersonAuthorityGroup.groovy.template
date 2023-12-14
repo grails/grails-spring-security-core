@@ -41,7 +41,7 @@ class ${userClassName}${groupClassName} implements Serializable {
 		criteriaFor(${userClassProperty}Id, ${groupClassProperty}Id).count()
 	}
 
-	private static DetachedCriteria criteriaFor(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
+	private static DetachedCriteria<${userClassName}${groupClassName}> criteriaFor(long ${userClassProperty}Id, long ${groupClassProperty}Id) {
 		${userClassName}${groupClassName}.where {
 			${userClassProperty} == ${userClassName}.load(${userClassProperty}Id) &&
 			${groupClassProperty} == ${groupClassName}.load(${groupClassProperty}Id)
