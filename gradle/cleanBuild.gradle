@@ -1,5 +1,6 @@
 // deletes everything from the build directory except for test reports
-task cleanBuild {
+tasks.register('cleanBuild') {
+    def buildDir = layout.buildDirectory.get().asFile
     if (!buildDir.exists()) return
 
     buildDir.eachFile {

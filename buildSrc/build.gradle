@@ -1,16 +1,21 @@
 repositories {
     mavenCentral()
-    maven { url "https://repo.grails.org/grails/core/" }
-}
-
-configurations.all {
-    resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
+    maven { url = 'https://repo.grails.org/grails/core' }
 }
 
 dependencies {
-    implementation gradleApi()
-    implementation("com.bertramlabs.plugins:asset-pipeline-gradle:4.4.0")
-    implementation("org.grails:grails-gradle-plugin:6.1.0")
-    implementation("org.grails.plugins:hibernate5:8.0.3")
-    implementation("org.jsoup:jsoup:1.17.1")
+    implementation buildsrcLibs.asciidoctorj
+    implementation buildsrcLibs.asset.pipeline.gradle
+    implementation buildsrcLibs.grails.gradle.plugin, {
+        // Grails Gradle plugin leaks groovy-xml onto compile classpath
+        // which is causes a version conflict for Gradle
+        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+    }
+    implementation buildsrcLibs.webdriver.binaries.gradle.plugin
+
+    testImplementation buildsrcLibs.spock.core
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }

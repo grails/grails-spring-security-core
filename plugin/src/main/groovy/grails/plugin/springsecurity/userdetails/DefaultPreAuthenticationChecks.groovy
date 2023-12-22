@@ -15,8 +15,6 @@
 package grails.plugin.springsecurity.userdetails
 
 import groovy.util.logging.Slf4j
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.context.MessageSource
 import org.springframework.context.MessageSourceAware
 import org.springframework.context.support.MessageSourceAccessor

@@ -1,6 +1,5 @@
 package specs
 
-import grails.plugin.springsecurity.Application
 import grails.testing.mixin.integration.Integration
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.HttpResponse

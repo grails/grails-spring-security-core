@@ -1,23 +1,6 @@
-pluginManagement {
-    repositories {
-        mavenLocal()
-        maven { url "https://repo.grails.org/grails/core/" }
-        gradlePluginPortal()
-    }
-    plugins {
-        id "org.grails.grails-web" version "6.1.1"
-        id "org.grails.grails-gsp" version "6.1.1"
-        id "org.grails.grails-plugin" version "$grailsGradlePluginVersion"
-        id "com.bertramlabs.asset-pipeline" version "4.4.0"
-        id "com.github.erdi.webdriver-binaries" version "3.2"
-        id "io.spring.dependency-management" version "1.1.4"
-        id "org.asciidoctor.jvm.convert" version "4.0.0-alpha.1"
-    }
-}
-
 plugins {
-    id "com.gradle.enterprise" version "3.16.1"
-    id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.12.1'
+    id 'com.gradle.enterprise' version '3.16.2'
+    id 'com.gradle.common-custom-user-data-gradle-plugin' version '1.13'
 }
 
 gradleEnterprise {
@@ -25,38 +8,44 @@ gradleEnterprise {
     buildScan {
         publishAlwaysIf(System.getenv('CI') == 'true')
         publishIfAuthenticated()
-        uploadInBackground = System.getenv("CI") == null
+        uploadInBackground = System.getenv('CI') == null
         capture {
             taskInputFiles = true
         }
     }
-
 }
 
 buildCache {
     local { enabled = System.getenv('CI') != 'true' }
-    remote(HttpBuildCache) {
-        push = System.getenv('CI') == 'true'
+    remote(gradleEnterprise.buildCache) {
+        def isAuthenticated = System.getenv('GRADLE_ENTERPRISE_ACCESS_KEY')
+        push = System.getenv('CI') == 'true' && isAuthenticated
         enabled = true
-        url = 'https://ge.grails.org/cache/'
-        credentials {
-            username = System.getenv('GRADLE_ENTERPRISE_BUILD_CACHE_NODE_USER')
-            password = System.getenv('GRADLE_ENTERPRISE_BUILD_CACHE_NODE_KEY')
+    }
+}
+
+dependencyResolutionManagement {
+    versionCatalogs {
+        libs {
+            def groovyVersion = System.getenv('GROOVY_VERSION')
+            if (groovyVersion) {
+                logger.warn "Using custom version $groovyVersion of Groovy due to GROOVY_VERSION being set."
+                version('groovy', groovyVersion)
+            }
         }
-    }}
+    }
+}
 
-include "examples-misc-group"
-project(":examples-misc-group").projectDir = new File(settingsDir, "examples/misc-functional-test-app/grails-spring-security-group")
-
-include "examples-misc-hierarchical-roles"
-project(":examples-misc-hierarchical-roles").projectDir = new File(settingsDir, "examples/misc-functional-test-app/grails-spring-security-hierarchical-roles")
-
-include "examples-integration-test-app"
-project(":examples-integration-test-app").projectDir = new File(settingsDir, "examples/integration-test-app")
-
-include "examples-functional-test-app"
-project(":examples-functional-test-app").projectDir = new File(settingsDir, "examples/functional-test-app")
+rootProject.name = 'grails-spring-security-core'
 
 include 'plugin'
-findProject(':plugin').name = 'spring-security-core'
-rootProject.name = 'grails-spring-security-core'
+include 'examples-functional-test-app'
+include 'examples-integration-test-app'
+include 'examples-misc-group'
+include 'examples-misc-hierarchical-roles'
+
+project(':plugin').name = 'spring-security-core'
+project(':examples-functional-test-app'    ).projectDir = [settingsDir, 'examples/functional-test-app'] as File
+project(':examples-integration-test-app'   ).projectDir = [settingsDir, 'examples/integration-test-app'] as File
+project(':examples-misc-group'             ).projectDir = [settingsDir, 'examples/misc-functional-test-app/grails-spring-security-group'] as File
+project(':examples-misc-hierarchical-roles').projectDir = [settingsDir, 'examples/misc-functional-test-app/grails-spring-security-hierarchical-roles'] as File

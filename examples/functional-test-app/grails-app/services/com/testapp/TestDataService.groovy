@@ -3,7 +3,6 @@ package com.testapp
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.gorm.transactions.Transactional
 import groovy.sql.Sql
-import org.springframework.transaction.annotation.Propagation
 import rest.Book
 import rest.Customer
 import rest.Movie

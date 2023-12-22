@@ -19,8 +19,6 @@ import grails.plugin.springsecurity.ReflectionUtils
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.web.util.WebUtils
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.web.util.matcher.IpAddressMatcher
 import org.springframework.util.AntPathMatcher
