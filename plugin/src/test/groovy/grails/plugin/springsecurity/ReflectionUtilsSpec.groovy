@@ -15,7 +15,6 @@
 package grails.plugin.springsecurity
 
 
-import org.grails.config.NavigableMap
 import org.springframework.http.HttpMethod
 
 /**
@@ -179,7 +178,7 @@ class ReflectionUtilsSpec extends AbstractUnitSpec {
                 [
                         pattern   : '/secure/**',
                         access    : ['IS_AUTHENTICATED_ANONYMOUSLY'],
-                        httpMethod: new NavigableMap.NullSafeNavigator(null, null) //This is the case with missing config.
+                        httpMethod: null //This is the case with missing config.
                 ]
         ]
         List<InterceptedUrl> interceptedUrls = ReflectionUtils.splitMap(interceptUrlMap)
