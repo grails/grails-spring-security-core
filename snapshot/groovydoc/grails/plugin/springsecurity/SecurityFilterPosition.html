@@ -70,11 +70,11 @@ if (location.href.indexOf('is-external=true') == -1) {
     <div>
         <ul class="subNavList">
             <li>Summary:&nbsp;</li>
-            Nested&nbsp;&nbsp;&nbsp;Enum constants&nbsp;&nbsp;&nbsp;<li><a href="#field_summary">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#property_summary">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_summary">Method</a></li>&nbsp;&nbsp;&nbsp;
+            Nested&nbsp;&nbsp;&nbsp;<li><a href="#enum_constant_summary">Enum constants</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#field_summary">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#property_summary">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_summary">Method</a></li>&nbsp;&nbsp;&nbsp;
         </ul>
         <ul class="subNavList">
             <li>&nbsp;|&nbsp;Detail:&nbsp;</li>
-            Enum constants&nbsp;&nbsp;&nbsp;<li><a href="#field_detail">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#prop_detail">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_detail">Method</a></li>&nbsp;&nbsp;&nbsp;
+            <li><a href="#enum_constant_detail">Enum constants</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#field_detail">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#prop_detail">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_detail">Method</a></li>&nbsp;&nbsp;&nbsp;
         </ul>
     </div>
     <a name="skip-navbar_top">
@@ -102,8 +102,8 @@ if (location.href.indexOf('is-external=true') == -1) {
             <hr>
             <br>
 
-<pre>final&nbsp;enum SecurityFilterPosition
-extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
+<pre>enum SecurityFilterPosition
+extends java.lang.Enum</pre>
 
     <p> Stores the default order numbers of all Spring Security filters for use in configuration.
 
@@ -122,6 +122,137 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
 
         <!-- =========== ENUM CONSTANT SUMMARY =========== -->
         
+            <ul class="blockList">
+                <li class="blockList"><a name="enum_constant_summary"><!--   --></a>
+                    <h3>Enum Constants Summary</h3>
+                    <ul class="blockList">
+                    <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Enum constants summary table">
+                        <caption><span>Enum constants classes</span><span class="tabEnd">&nbsp;</span></caption>
+                        <tr>
+                            <th class="colFirst" scope="col">Enum constant</th>
+                            <th class="colLast" scope="col">Description</th>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#ANONYMOUS_FILTER">ANONYMOUS_FILTER</a></strong></code></td>
+                            <td class="colLast">Anonymous auth</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#BASIC_AUTH_FILTER">BASIC_AUTH_FILTER</a></strong></code></td>
+                            <td class="colLast">Basic Auth</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#CAS_FILTER">CAS_FILTER</a></strong></code></td>
+                            <td class="colLast">CAS</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#CHANNEL_FILTER">CHANNEL_FILTER</a></strong></code></td>
+                            <td class="colLast">HTTP/HTTPS channel filter</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#CONCURRENT_SESSION_FILTER">CONCURRENT_SESSION_FILTER</a></strong></code></td>
+                            <td class="colLast">Concurrent Sessions</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#DIGEST_AUTH_FILTER">DIGEST_AUTH_FILTER</a></strong></code></td>
+                            <td class="colLast">Digest auth</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#EXCEPTION_TRANSLATION_FILTER">EXCEPTION_TRANSLATION_FILTER</a></strong></code></td>
+                            <td class="colLast">ExceptionTranslationFilter</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#FILTER_SECURITY_INTERCEPTOR">FILTER_SECURITY_INTERCEPTOR</a></strong></code></td>
+                            <td class="colLast">FilterSecurityInterceptor</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#FIRST">FIRST</a></strong></code></td>
+                            <td class="colLast">First</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#FORM_CONTENT_FILTER">FORM_CONTENT_FILTER</a></strong></code></td>
+                            <td class="colLast">Spring FormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#FORM_LOGIN_FILTER">FORM_LOGIN_FILTER</a></strong></code></td>
+                            <td class="colLast">UsernamePasswordAuthenticationFilter</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#LAST">LAST</a></strong></code></td>
+                            <td class="colLast">Last</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#LOGIN_PAGE_FILTER">LOGIN_PAGE_FILTER</a></strong></code></td>
+                            <td class="colLast">Not used, generates a dynamic login form</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#LOGOUT_FILTER">LOGOUT_FILTER</a></strong></code></td>
+                            <td class="colLast">Logout</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#OPENID_FILTER">OPENID_FILTER</a></strong></code></td>
+                            <td class="colLast">OpenID</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#PRE_AUTH_FILTER">PRE_AUTH_FILTER</a></strong></code></td>
+                            <td class="colLast">Pre-auth</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#REMEMBER_ME_FILTER">REMEMBER_ME_FILTER</a></strong></code></td>
+                            <td class="colLast">Remember-me cookie</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#REQUEST_CACHE_FILTER">REQUEST_CACHE_FILTER</a></strong></code></td>
+                            <td class="colLast">saved request filter</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#SECURITY_CONTEXT_FILTER">SECURITY_CONTEXT_FILTER</a></strong></code></td>
+                            <td class="colLast">Populates the SecurityContextHolder</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#SERVLET_API_SUPPORT_FILTER">SERVLET_API_SUPPORT_FILTER</a></strong></code></td>
+                            <td class="colLast">SecurityContextHolderAwareRequestFilter</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#SESSION_MANAGEMENT_FILTER">SESSION_MANAGEMENT_FILTER</a></strong></code></td>
+                            <td class="colLast">SessionManagementFilter</td>
+                        </tr>
+                        
+                        <tr class="rowColor">
+                            <td class="colFirst"><code><strong><a href="#SWITCH_USER_FILTER">SWITCH_USER_FILTER</a></strong></code></td>
+                            <td class="colLast">Switch user</td>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code><strong><a href="#X509_FILTER">X509_FILTER</a></strong></code></td>
+                            <td class="colLast">x509 certs</td>
+                        </tr>
+                        
+                    </table>
+                   </ul>
+                </li>
+            </ul>
+        
         <!-- =========== FIELD SUMMARY =========== -->
         
             <ul class="blockList">
@@ -138,90 +269,6 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#ANONYMOUS_FILTER">ANONYMOUS_FILTER</a></code></td>
-                            <td class="colLast">Anonymous auth</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#BASIC_AUTH_FILTER">BASIC_AUTH_FILTER</a></code></td>
-                            <td class="colLast">Basic Auth</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#CAS_FILTER">CAS_FILTER</a></code></td>
-                            <td class="colLast">CAS</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#CHANNEL_FILTER">CHANNEL_FILTER</a></code></td>
-                            <td class="colLast">HTTP/HTTPS channel filter</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#CONCURRENT_SESSION_FILTER">CONCURRENT_SESSION_FILTER</a></code></td>
-                            <td class="colLast">Concurrent Sessions</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#DIGEST_AUTH_FILTER">DIGEST_AUTH_FILTER</a></code></td>
-                            <td class="colLast">Digest auth</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#EXCEPTION_TRANSLATION_FILTER">EXCEPTION_TRANSLATION_FILTER</a></code></td>
-                            <td class="colLast">ExceptionTranslationFilter</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#FILTER_SECURITY_INTERCEPTOR">FILTER_SECURITY_INTERCEPTOR</a></code></td>
-                            <td class="colLast">FilterSecurityInterceptor</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#FIRST">FIRST</a></code></td>
-                            <td class="colLast">First</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#FORM_CONTENT_FILTER">FORM_CONTENT_FILTER</a></code></td>
-                            <td class="colLast">Spring FormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#FORM_LOGIN_FILTER">FORM_LOGIN_FILTER</a></code></td>
-                            <td class="colLast">UsernamePasswordAuthenticationFilter</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#LAST">LAST</a></code></td>
-                            <td class="colLast">Last</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#LOGIN_PAGE_FILTER">LOGIN_PAGE_FILTER</a></code></td>
-                            <td class="colLast">Not used, generates a dynamic login form</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#LOGOUT_FILTER">LOGOUT_FILTER</a></code></td>
-                            <td class="colLast">Logout</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#MAX_VALUE">MAX_VALUE</a></code></td>
                             <td class="colLast"></td>
                         </tr>
@@ -230,60 +277,6 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
                             <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#MIN_VALUE">MIN_VALUE</a></code></td>
                             <td class="colLast"></td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#OPENID_FILTER">OPENID_FILTER</a></code></td>
-                            <td class="colLast">OpenID</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#PRE_AUTH_FILTER">PRE_AUTH_FILTER</a></code></td>
-                            <td class="colLast">Pre-auth</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#REMEMBER_ME_FILTER">REMEMBER_ME_FILTER</a></code></td>
-                            <td class="colLast">Remember-me cookie</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#REQUEST_CACHE_FILTER">REQUEST_CACHE_FILTER</a></code></td>
-                            <td class="colLast">saved request filter</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#SECURITY_CONTEXT_FILTER">SECURITY_CONTEXT_FILTER</a></code></td>
-                            <td class="colLast">Populates the SecurityContextHolder</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#SERVLET_API_SUPPORT_FILTER">SERVLET_API_SUPPORT_FILTER</a></code></td>
-                            <td class="colLast">SecurityContextHolderAwareRequestFilter</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#SESSION_MANAGEMENT_FILTER">SESSION_MANAGEMENT_FILTER</a></code></td>
-                            <td class="colLast">SessionManagementFilter</td>
-                        </tr>
-                        
-                        <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#SWITCH_USER_FILTER">SWITCH_USER_FILTER</a></code></td>
-                            <td class="colLast">Switch user</td>
-                        </tr>
-                        
-                        <tr class="altColor">
-                            <td class="colFirst"><code><strong>static&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a></strong></code>&nbsp;</td>
-                            <td class="colLast"><code><a href="#X509_FILTER">X509_FILTER</a></code></td>
-                            <td class="colLast">x509 certs</td>
                         </tr>
                         
                     </table>
@@ -365,6 +358,24 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
                    </ul>
               </li>
             
+            <li class="blockList"><a name="method_summary"><!--   --></a>
+                    <h3>Inherited Methods Summary</h3>
+                    <ul class="blockList">
+                    <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Inherited Methods Summary table">
+                        <caption><span>Inherited Methods</span><span class="tabEnd">&nbsp;</span></caption>
+                        <tr>
+                            <th class="colFirst" scope="col">Methods inherited from class</th>
+                            <th class="colLast" scope="col">Name</th>
+                        </tr>
+                        
+                        <tr class="altColor">
+                            <td class="colFirst"><code>class java.lang.Enum</code></td>
+                            <td class="colLast"><code>java.lang.Enum#name(), java.lang.Enum#equals(java.lang.Object), java.lang.Enum#toString(), java.lang.Enum#hashCode(), java.lang.Enum#compareTo(java.lang.Object), java.lang.Enum#compareTo(java.lang.Enum), java.lang.Enum#valueOf(java.lang.Class, java.lang.String), java.lang.Enum#getDeclaringClass(), java.lang.Enum#ordinal(), java.lang.Enum#wait(long), java.lang.Enum#wait(long, int), java.lang.Enum#wait(), java.lang.Enum#getClass(), java.lang.Enum#notify(), java.lang.Enum#notifyAll()</code></td>
+                        </tr>
+                    </table>
+                   </ul>
+              </li>
+                
         </ul>
         
     </li>
@@ -375,6 +386,200 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
     <ul class="blockList">
         <li class="blockList">
            
+            <!-- ============ ENUM CONSTANT DETAIL ========== -->
+            <ul class="blockList">
+                <li class="blockList"><a name="enum_constant_detail">
+                    <!--   -->
+                </a>
+                    <h3>Enum Constant Detail</h3>
+                    
+                        <a name="ANONYMOUS_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>ANONYMOUS_FILTER</strong></h4>
+                                <p>Anonymous auth</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="BASIC_AUTH_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>BASIC_AUTH_FILTER</strong></h4>
+                                <p>Basic Auth</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="CAS_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>CAS_FILTER</strong></h4>
+                                <p>CAS</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="CHANNEL_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>CHANNEL_FILTER</strong></h4>
+                                <p>HTTP/HTTPS channel filter</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="CONCURRENT_SESSION_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>CONCURRENT_SESSION_FILTER</strong></h4>
+                                <p>Concurrent Sessions</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="DIGEST_AUTH_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>DIGEST_AUTH_FILTER</strong></h4>
+                                <p>Digest auth</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="EXCEPTION_TRANSLATION_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>EXCEPTION_TRANSLATION_FILTER</strong></h4>
+                                <p>ExceptionTranslationFilter</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="FILTER_SECURITY_INTERCEPTOR"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>FILTER_SECURITY_INTERCEPTOR</strong></h4>
+                                <p>FilterSecurityInterceptor</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="FIRST"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>FIRST</strong></h4>
+                                <p>First</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="FORM_CONTENT_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>FORM_CONTENT_FILTER</strong></h4>
+                                <p>Spring FormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="FORM_LOGIN_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>FORM_LOGIN_FILTER</strong></h4>
+                                <p>UsernamePasswordAuthenticationFilter</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="LAST"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>LAST</strong></h4>
+                                <p>Last</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="LOGIN_PAGE_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>LOGIN_PAGE_FILTER</strong></h4>
+                                <p>Not used, generates a dynamic login form</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="LOGOUT_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>LOGOUT_FILTER</strong></h4>
+                                <p>Logout</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="OPENID_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>OPENID_FILTER</strong></h4>
+                                <p>OpenID</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="PRE_AUTH_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>PRE_AUTH_FILTER</strong></h4>
+                                <p>Pre-auth</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="REMEMBER_ME_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>REMEMBER_ME_FILTER</strong></h4>
+                                <p>Remember-me cookie</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="REQUEST_CACHE_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>REQUEST_CACHE_FILTER</strong></h4>
+                                <p>saved request filter</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="SECURITY_CONTEXT_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>SECURITY_CONTEXT_FILTER</strong></h4>
+                                <p>Populates the SecurityContextHolder</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="SERVLET_API_SUPPORT_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>SERVLET_API_SUPPORT_FILTER</strong></h4>
+                                <p>SecurityContextHolderAwareRequestFilter</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="SESSION_MANAGEMENT_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>SESSION_MANAGEMENT_FILTER</strong></h4>
+                                <p>SessionManagementFilter</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="SWITCH_USER_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>SWITCH_USER_FILTER</strong></h4>
+                                <p>Switch user</p>
+                            </li>
+                        </ul>
+                    
+                        <a name="X509_FILTER"><!-- --></a>
+                        <ul class="blockListLast">
+                            <li class="blockList">
+                                <h4><a href="../../../grails/plugin/springsecurity/SecurityFilterPosition.html">SecurityFilterPosition</a> <strong>X509_FILTER</strong></h4>
+                                <p>x509 certs</p>
+                            </li>
+                        </ul>
+                    
+                </li>
+            </ul>
+            
 
             
             <!-- =========== FIELD DETAIL =========== -->
@@ -383,118 +588,6 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
                     <!--   -->
                 </a>
                     <h3>Field Detail</h3>
-                    
-                        <a name="ANONYMOUS_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>ANONYMOUS_FILTER</strong></h4>
-                                <p>Anonymous auth</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="BASIC_AUTH_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>BASIC_AUTH_FILTER</strong></h4>
-                                <p>Basic Auth</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="CAS_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>CAS_FILTER</strong></h4>
-                                <p>CAS</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="CHANNEL_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>CHANNEL_FILTER</strong></h4>
-                                <p>HTTP/HTTPS channel filter</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="CONCURRENT_SESSION_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>CONCURRENT_SESSION_FILTER</strong></h4>
-                                <p>Concurrent Sessions</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="DIGEST_AUTH_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>DIGEST_AUTH_FILTER</strong></h4>
-                                <p>Digest auth</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="EXCEPTION_TRANSLATION_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>EXCEPTION_TRANSLATION_FILTER</strong></h4>
-                                <p>ExceptionTranslationFilter</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="FILTER_SECURITY_INTERCEPTOR"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>FILTER_SECURITY_INTERCEPTOR</strong></h4>
-                                <p>FilterSecurityInterceptor</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="FIRST"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>FIRST</strong></h4>
-                                <p>First</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="FORM_CONTENT_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>FORM_CONTENT_FILTER</strong></h4>
-                                <p>Spring FormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="FORM_LOGIN_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>FORM_LOGIN_FILTER</strong></h4>
-                                <p>UsernamePasswordAuthenticationFilter</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="LAST"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>LAST</strong></h4>
-                                <p>Last</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="LOGIN_PAGE_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>LOGIN_PAGE_FILTER</strong></h4>
-                                <p>Not used, generates a dynamic login form</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="LOGOUT_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>LOGOUT_FILTER</strong></h4>
-                                <p>Logout</p>
-                            </li>
-                        </ul>
                     
                         <a name="MAX_VALUE"><!-- --></a>
                         <ul class="blockListLast">
@@ -509,78 +602,6 @@ extends java.lang.Enum&lt;E&lt;E&gt;&gt;</pre>
                             <li class="blockList">
                                 <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>MIN_VALUE</strong></h4>
                                 <p></p>
-                            </li>
-                        </ul>
-                    
-                        <a name="OPENID_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>OPENID_FILTER</strong></h4>
-                                <p>OpenID</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="PRE_AUTH_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>PRE_AUTH_FILTER</strong></h4>
-                                <p>Pre-auth</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="REMEMBER_ME_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>REMEMBER_ME_FILTER</strong></h4>
-                                <p>Remember-me cookie</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="REQUEST_CACHE_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>REQUEST_CACHE_FILTER</strong></h4>
-                                <p>saved request filter</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="SECURITY_CONTEXT_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>SECURITY_CONTEXT_FILTER</strong></h4>
-                                <p>Populates the SecurityContextHolder</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="SERVLET_API_SUPPORT_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>SERVLET_API_SUPPORT_FILTER</strong></h4>
-                                <p>SecurityContextHolderAwareRequestFilter</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="SESSION_MANAGEMENT_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>SESSION_MANAGEMENT_FILTER</strong></h4>
-                                <p>SessionManagementFilter</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="SWITCH_USER_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>SWITCH_USER_FILTER</strong></h4>
-                                <p>Switch user</p>
-                            </li>
-                        </ul>
-                    
-                        <a name="X509_FILTER"><!-- --></a>
-                        <ul class="blockListLast">
-                            <li class="blockList">
-                                <h4>public&nbsp;static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFilterPosition.html'>SecurityFilterPosition</a> <strong>X509_FILTER</strong></h4>
-                                <p>x509 certs</p>
                             </li>
                         </ul>
                     
@@ -691,11 +712,11 @@ static&nbsp;final&nbsp;<a href='../../../grails/plugin/springsecurity/SecurityFi
     <div>
         <ul class="subNavList">
             <li>Summary:&nbsp;</li>
-            Nested&nbsp;&nbsp;&nbsp;Enum constants&nbsp;&nbsp;&nbsp;<li><a href="#field_summary">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#property_summary">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_summary">Method</a></li>&nbsp;&nbsp;&nbsp;
+            Nested&nbsp;&nbsp;&nbsp;<li><a href="#enum_constant_summary">Enum constants</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#field_summary">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#property_summary">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_summary">Method</a></li>&nbsp;&nbsp;&nbsp;
         </ul>
         <ul class="subNavList">
             <li>&nbsp;|&nbsp;Detail:&nbsp;</li>
-            Enum constants&nbsp;&nbsp;&nbsp;<li><a href="#field_detail">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#prop_detail">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_detail">Method</a></li>&nbsp;&nbsp;&nbsp;
+            <li><a href="#enum_constant_detail">Enum constants</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#field_detail">Field</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#prop_detail">Property</a></li>&nbsp;&nbsp;&nbsp;<li><a href="#method_detail">Method</a></li>&nbsp;&nbsp;&nbsp;
         </ul>
     </div>
     <p>Groovy Documentation</p>
