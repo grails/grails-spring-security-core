@@ -1,101 +1,70 @@
-String versionTxt = project.projectVersion
-String stableVersion = ''
-String snapshotVersion = ''
-String[] parts = versionTxt.split("\\.")
-if (parts.length >= 3) {
-    int major = parts[0] as int
-    int minor = parts[1] as int
-    int patch
-    if (parts.length > 3) {
-        patch = parts[2] as int
-        stableVersion = "$major.$minor.${patch-1}"
-        snapshotVersion = versionTxt
-    } else if (parts[2].contains('-')) {
-        final String[] subparts = parts[2].split("-")
-        patch = subparts.first() as int
-        if (patch == 0) {
-            stableVersion = "${major}.${minor}.${patch}"
-        } else {
-            stableVersion = "${major}.${minor}.${patch - 1}"
-        }
-        snapshotVersion = "${major}.${minor}." + subparts[1..-1].join("-")
-    } else {
-        stableVersion = versionTxt
-        snapshotVersion = "$major.$minor.${patch + 1}"
-    }
-}
+import grails.plugin.springsecurity.CreateReleaseDropDownTask
+import grails.plugin.springsecurity.SoftwareVersion
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
+
+apply plugin: 'org.asciidoctor.jvm.convert'
+
+def softwareVersion = SoftwareVersion.build(version.toString())
 
 def asciidoctorAttributes = [
-        stableversion       : stableVersion,
-        snapshotversion     : snapshotVersion,
-        copyright           : 'Apache License, Version 2.0',
-        docinfo1            : 'true',
-        doctype             : 'book',
-        encoding            : 'utf-8',
-        icons               : 'font',
-        id                  : project.name + ':' + project.version,
-        idprefix            : '',
-        idseparator         : '-',
-        lang                : 'en',
-        linkattrs           : true,
-        numbered            : '',
-        producer            : 'Asciidoctor',
-        revnumber           : project.version,
-        setanchors          : true,
+        stableversion        : softwareVersion.stableVersion,
+        snapshotversion      : softwareVersion.snapshotVersion,
+        copyright            : 'Apache License, Version 2.0',
+        docinfo1             : 'true',
+        doctype              : 'book',
+        encoding             : 'utf-8',
+        icons                : 'font',
+        id                   : name + ':' + version,
+        idprefix             : '',
+        idseparator          : '-',
+        lang                 : 'en',
+        linkattrs            : true,
+        numbered             : '',
+        producer             : 'Asciidoctor',
+        revnumber            : version,
+        setanchors           : true,
         'source-highlighter' : 'prettify',
-        toc                 : 'left',
-        toc2                : '',
-        toclevels           : '2'
+        toc                  : 'left',
+        toc2                 : '',
+        toclevels            : '2'
 ]
 
-asciidoctor {
-    sourceDir file('src/docs')
-    sources {
-        include 'index.adoc'
-    }
-    outputDir = new File(buildDir, 'docs')
+tasks.named('asciidoctor', AsciidoctorTask) {
+    sourceDir layout.projectDirectory.file('src/docs')
+    sources { include 'index.adoc' }
+    outputDir = layout.buildDirectory.file('docs')
     attributes asciidoctorAttributes
 }
 
-tasks.register("docs") {
-    group = "documentation"
-    dependsOn = ["groovydoc", "asciidoctor"]
-    finalizedBy "copyImages", 'createReleaseDropDown', 'ghPagesRootIndexPage'
+tasks.register('docs') {
+    group = 'documentation'
+    dependsOn = ['groovydoc', 'asciidoctor']
+    finalizedBy 'copyImages', 'createReleaseDropDown', 'ghPagesRootIndexPage'
 }
 
-tasks.register("copyImages", Copy) {
-    dependsOn = ["docs"]
-    from layout.projectDirectory.dir("src/docs")
-    into layout.buildDirectory.dir("docs")
-    include "**/*.png"
+tasks.register('copyImages', Copy) {
+    group = 'documentation'
+    dependsOn = ['docs']
+    from layout.projectDirectory.dir('src/docs')
+    into layout.buildDirectory.dir('docs')
+    include '**/*.png'
     includeEmptyDirs = false
 }
 
-tasks.register("ghPagesRootIndexPage", Copy) {
-    dependsOn ["docs"]
-    group = "documentation"
-    from layout.projectDirectory.file("src/docs/index.tmpl")
-    into layout.buildDirectory.file("docs")
-    rename('index.tmpl', 'ghpages.html')
-    finalizedBy "replaceVersionPlacehold"
+tasks.register('ghPagesRootIndexPage', Copy) {
+    group = 'documentation'
+    dependsOn = ['docs']
+    from layout.projectDirectory.file('src/docs/index.tmpl')
+    into layout.buildDirectory.dir('docs')
+    rename 'index.tmpl', 'ghpages.html'
 }
 
-tasks.register("replaceVersionPlacehold") {
-    dependsOn ["ghPagesRootIndexPage"]
-    inputs.files(ghPagesRootIndexPage.outputs.files)
-    doFirst {
-        File file = layout.buildDirectory.file("docs/ghpages.html").<RegularFile> get().asFile
-        file.text = file.text.replaceAll('@VERSION@', (String) project.projectVersion)
-    }
-
-    onlyIf { !project.projectVersion.endsWith('SNAPSHOT') }
-}
-
-tasks.register("createReleaseDropDown", grails.plugin.springsecurity.CreateReleaseDropDownTask) {
+tasks.register('createReleaseDropDown', CreateReleaseDropDownTask) {
+    group = 'documentation'
     dependsOn = ['docs']
     mustRunAfter = ['docs']
     githubSlug = 'grails/grails-spring-security-core'
-    currentVersion = project.projectVersion
-    versions = ["5.3.0", "4.0.5", "3.3.2"]
-    index = file("${buildDir.absolutePath}/docs/index.html")
+    currentVersion = version
+    versions = docsVersionSelectorInclude.split(',').collect { it.strip() }
+    index = layout.buildDirectory.file('docs/index.html')
 }

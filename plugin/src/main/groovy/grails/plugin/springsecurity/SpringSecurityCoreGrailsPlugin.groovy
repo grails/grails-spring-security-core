@@ -150,7 +150,7 @@ class SpringSecurityCoreGrailsPlugin extends Plugin {
 	public static final String ENCODING_ID_SHA1 = "SHA-1"
 	public static final String ENCODING_IDSHA256 = "SHA-256"
 
-	String grailsVersion = '4.0.0 > *'
+	String grailsVersion = '6.0.0 > *'
 	List observe = ['controllers']
 	List loadAfter = ['controllers', 'hibernate', 'hibernate4', 'hibernate5', 'services']
 	String author = 'Burt Beckwith'

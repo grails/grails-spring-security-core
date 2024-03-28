@@ -1,0 +1,68 @@
+ext.set('signing.keyId', findProperty('signing.keyId') ?: System.getenv('SIGNING_KEY'))
+ext.set('signing.password', findProperty('signing.password') ?: System.getenv('SIGNING_PASSPHRASE'))
+
+def javaComponent = components.named('java')
+extensions.configure(PublishingExtension) { PublishingExtension pe ->
+    pe.publications.register('grailsPlugin', MavenPublication) {
+        from javaComponent.get()
+        versionMapping {
+            usage('java-api') {	fromResolutionOf('runtimeClasspath') }
+            usage('java-runtime') {	fromResolutionResult() }
+        }
+        pom {
+            name = 'Grails spring-security-core plugin'
+            description = 'The Spring Security plugin simplifies the integration of Spring Security into Grails® framework applications.'
+            url = 'https://github.com/grails/grails-spring-security-core'
+            licenses {
+                license {
+                    name = 'The Apache Software License, Version 2.0'
+                    url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    distribution = 'repo'
+                }
+            }
+            developers {
+                developer {
+                    id = 'burtbeckwith'
+                    name = 'Burt Beckwith'
+                }
+                developer {
+                    id = 'puneetbehl'
+                    name = 'Puneet Behl'
+                }
+            }
+            scm {
+                connection = 'scm:git:git://github.com/grails/grails-spring-security-core.git'
+                developerConnection = 'scm:git:ssh://github.com:grails/grails-spring-security-core.git'
+                url = 'https://github.com/grails/grails-spring-security-core'
+            }
+        }
+        // dependency management shouldn't be included
+        pom.withXml {
+            def root = it.asElement()
+            root.getElementsByTagName('dependencyManagement').each { root.removeChild(it) }
+        }
+    }
+    if (isSnapshot) {
+        pe.repositories {
+            maven {
+                credentials {
+                    username = findProperty('artifactoryUsername')
+                    password = findProperty('artifactoryPassword')
+                }
+                url = uri('https://repo.grails.org/grails/plugins3-snapshots-local')
+            }
+        }
+    }
+}
+
+afterEvaluate {
+    def mavenPublication = extensions.findByType(PublishingExtension).publications.named('grailsPlugin')
+    extensions.configure(SigningExtension) { SigningExtension se ->
+        se.required = { isReleaseVersion }
+        se.sign mavenPublication.get()
+    }
+}
+
+tasks.withType(Sign).configureEach {
+    onlyIf { isReleaseVersion }
+}

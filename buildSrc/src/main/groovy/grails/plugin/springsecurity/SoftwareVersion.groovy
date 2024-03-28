@@ -7,28 +7,48 @@ class SoftwareVersion implements Comparable<SoftwareVersion> {
     int patch
 
     Snapshot snapshot
-
     String versionText
 
-    static SoftwareVersion build(String version) {
-        String[] parts = version.split("\\.")
-        SoftwareVersion softVersion
+    static SoftwareVersion build(String versionString) {
+
+        String[] parts = versionString.split('\\.')
+        SoftwareVersion version = null
+
         if (parts.length >= 3) {
-            softVersion = new SoftwareVersion()
-            softVersion.versionText = version
-            softVersion.major = parts[0].toInteger()
-            softVersion.minor = parts[1].toInteger()
-            if (parts.length > 3) {
-                softVersion.snapshot = new Snapshot(parts[3])
+
+            version = new SoftwareVersion()
+            version.versionText = versionString
+            version.major = parts[0].toInteger()
+            version.minor = parts[1].toInteger()
+            def patchParts = parts[2].split('-')
+            version.patch = patchParts[0].toInteger()
+
+            if (patchParts.length > 1) {
+                version.snapshot = new Snapshot(patchParts[1])
             } else if (parts[2].contains('-')) {
                 String[] subparts = parts[2].split("-")
-                softVersion.patch = subparts.first() as int
-                softVersion.snapshot = new Snapshot(subparts[1..-1].join("-"))
-                return softVersion
+                version.patch = subparts.first() as int
+                version.snapshot = new Snapshot(subparts[1..-1].join("-"))
+                return version
             }
-            softVersion.patch = parts[2].toInteger()
         }
-        softVersion
+        version
+    }
+
+    String getStableVersion() {
+        if (this.isSnapshot()) {
+            return "${this.major}.${this.minor}.${this.patch - 1}"
+        } else {
+            return this.versionText
+        }
+    }
+
+    String getSnapshotVersion() {
+        if (this.isSnapshot()) {
+            return this.versionText
+        } else {
+            return "${this.major}.${this.minor}.${this.patch + 1}"
+        }
     }
 
     boolean isSnapshot() {
@@ -64,7 +84,7 @@ class SoftwareVersion implements Comparable<SoftwareVersion> {
     }
 
     @Override
-    public String toString() {
+    String toString() {
         return "SoftwareVersion{" +
                 "major=" + major +
                 ", minor=" + minor +

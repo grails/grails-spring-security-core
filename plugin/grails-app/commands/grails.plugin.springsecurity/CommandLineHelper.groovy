@@ -1,7 +1,6 @@
 package grails.plugin.springsecurity
 
 import grails.dev.commands.ExecutionContext
-import io.micronaut.core.naming.NameUtils
 import org.grails.build.parsing.CommandLine
 
 trait CommandLineHelper {

@@ -1,0 +1,8 @@
+configurations.configureEach {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        if (details.requested.group == 'org.codehaus.groovy') {
+            String groovyVersion = findProperty('groovyVersion') ?: libs.versions.groovy.get()
+            details.useVersion(groovyVersion)
+        }
+    }
+}

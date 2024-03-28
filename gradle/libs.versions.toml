@@ -1,0 +1,94 @@
+[versions]
+asset-pipeline = '4.3.0'
+commons-lang = '2.6'
+ehcache = '2.10.9.2'
+geb = '6.0'
+gorm-hibernate5 = '8.0.3'
+grails = '6.1.2'
+grails-async-and-events = '5.0.2'
+grails-datamapping = '8.0.3'
+grails-gsp = '6.2.0'
+grails-converters = '4.0.1'
+grails-testing-support = '3.1.2'
+groovy = '3.0.21'
+h2database = '2.2.224'
+javax-annotation-api = '1.3.2'
+javax-servlet-api = '4.0.1'
+micronaut = '3.10.4'
+selenium = '4.18.1'
+selenium-safari = '4.18.1'
+slf4j = '1.7.36'
+spock = '2.0-groovy-3.0'
+spring = '5.3.33'
+springboot = '2.7.18'
+spring-security = '5.8.11'
+tomcat = '9.0.87'
+
+[libraries]
+commons-lang = { module = 'commons-lang:commons-lang', version.ref = 'commons-lang' }
+ehcache = { module = 'net.sf.ehcache:ehcache', version.ref = 'ehcache' }
+geb-core = { module = 'org.gebish:geb-core', version.ref = 'geb' }
+geb-spock = { module = 'org.gebish:geb-spock', version.ref = 'geb' }
+gorm-hibernate5 = { module = 'org.grails.plugins:hibernate5', version.ref = 'gorm-hibernate5' }
+grails-asset-pipeline = { module = 'com.bertramlabs.plugins:asset-pipeline-grails', version.ref = 'asset-pipeline' }
+grails-core = { module = 'org.grails:grails-core', version.ref = 'grails' }
+grails-bootstrap = { module = 'org.grails:grails-bootstrap', version.ref = 'grails' }
+grails-converters = { module = 'org.grails.plugins:converters', version.ref = 'grails-converters' }
+grails-datastore-core = { module = 'org.grails:grails-datastore-core', version.ref = 'grails-datamapping' }
+grails-datastore-gorm = { module = 'org.grails:grails-datastore-gorm', version.ref = 'grails-datamapping' }
+grails-domain = { module = 'org.grails:grails-plugin-domain-class', version.ref = 'grails' }
+grails-events-transform = { module = 'org.grails:grails-events-transform', version.ref = 'grails-async-and-events' }
+grails-gsp = { module = 'org.grails.plugins:gsp', version.ref = 'grails-gsp' }
+grails-gorm-testing-support = { module = 'org.grails:grails-gorm-testing-support', version.ref = 'grails-testing-support' }
+grails-i18n = { module = 'org.grails:grails-plugin-i18n', version.ref = 'grails' }
+grails-interceptors = { module = 'org.grails:grails-plugin-interceptors', version.ref = 'grails' }
+grails-mimetypes = { module = 'org.grails:grails-plugin-mimetypes', version.ref = 'grails' }
+grails-plugin-async = { module = 'org.grails.plugins:async', version.ref = 'grails-async-and-events' }
+grails-rest = { module = 'org.grails:grails-plugin-rest', version.ref = 'grails' }
+grails-services = { module = 'org.grails:grails-plugin-services', version.ref = 'grails' }
+grails-testing-support-gorm = { module = 'org.grails:grails-gorm-testing-support', version.ref = 'grails-testing-support' }
+grails-testing-support-web = { module = 'org.grails:grails-web-testing-support', version.ref = 'grails-testing-support' }
+grails-urlmappings = { module = 'org.grails:grails-plugin-url-mappings', version.ref = 'grails' }
+grails-validation = { module = 'org.grails:grails-plugin-validation', version.ref = 'grails' }
+grails-web-common = { module = 'org.grails:grails-web-common', version.ref = 'grails' }
+grails-web-testing-support = { module = 'org.grails:grails-web-testing-support', version.ref = 'grails-testing-support' }
+grails-web-urlmappings = { module = 'org.grails:grails-web-url-mappings', version.ref = 'grails' }
+groovy-core = { module = 'org.codehaus.groovy:groovy', version.ref = 'groovy' }
+javax-annotation-api = { module = 'javax.annotation:javax.annotation-api', version.ref = 'javax-annotation-api' }
+javax-servlet-api = { module = 'javax.servlet:javax.servlet-api', version.ref = 'javax-servlet-api' }
+h2database = { module = 'com.h2database:h2', version.ref = 'h2database' }
+micronaut-httpclient = { module = 'io.micronaut:micronaut-http-client', version.ref = 'micronaut' }
+micronaut-inject-groovy = { module = 'io.micronaut:micronaut-inject-groovy', version.ref = 'micronaut' }
+selenium-api = { module = 'org.seleniumhq.selenium:selenium-api', version.ref = 'selenium' }
+selenium-chrome-driver = { module = 'org.seleniumhq.selenium:selenium-chrome-driver', version.ref = 'selenium' }
+selenium-chromium-driver = { module = 'org.seleniumhq.selenium:selenium-chromium-driver', version.ref = 'selenium' }
+selenium-devtools-v85 = { module = 'org.seleniumhq.selenium:selenium-devtools-v85', version.ref = 'selenium' }
+selenium-firefox-driver = { module = 'org.seleniumhq.selenium:selenium-firefox-driver', version.ref = 'selenium' }
+selenium-http = { module = 'org.seleniumhq.selenium:selenium-http', version.ref = 'selenium' }
+selenium-json = { module = 'org.seleniumhq.selenium:selenium-json', version.ref = 'selenium' }
+selenium-remote-driver = { module = 'org.seleniumhq.selenium:selenium-remote-driver', version.ref = 'selenium' }
+selenium-safari-driver = { module = 'org.seleniumhq.selenium:selenium-safari-driver', version.ref = 'selenium-safari' }
+selenium-support = { module = 'org.seleniumhq.selenium:selenium-support', version.ref = 'selenium' }
+slf4j-nop = { module = 'org.slf4j:slf4j-nop', version.ref = 'slf4j' }
+spock-core = { module = 'org.spockframework:spock-core', version.ref = 'spock' }
+spring-beans = { module = 'org.springframework:spring-beans', version.ref = 'spring' }
+spring-core = { module = 'org.springframework:spring-core', version.ref = 'spring' }
+spring-context-core = { module = 'org.springframework:spring-context', version.ref = 'spring' }
+spring-context-support = { module = 'org.springframework:spring-context-support', version.ref = 'spring' }
+spring-expression = { module = 'org.springframework:spring-expression', version.ref = 'spring' }
+spring-security-core = { module = 'org.springframework.security:spring-security-core', version.ref = 'spring-security' }
+spring-security-crypto = { module = 'org.springframework.security:spring-security-crypto', version.ref = 'spring-security' }
+spring-security-web = { module = 'org.springframework.security:spring-security-web', version.ref = 'spring-security' }
+spring-test = { module = 'org.springframework:spring-test', version.ref = 'spring' }
+spring-tx = { module = 'org.springframework:spring-tx', version.ref = 'spring' }
+spring-web = { module = 'org.springframework:spring-web', version.ref = 'spring' }
+springboot-autoconfigure = { module = 'org.springframework.boot:spring-boot-autoconfigure', version.ref = 'springboot' }
+springboot-core = { module = 'org.springframework.boot:spring-boot', version.ref = 'springboot' }
+springboot-starter-logging = { module = 'org.springframework.boot:spring-boot-starter-logging', version.ref = 'springboot' }
+springboot-starter-tomcat = { module = 'org.springframework.boot:spring-boot-starter-tomcat', version.ref = 'springboot' }
+tomcat-jdbc = { module = 'org.apache.tomcat:tomcat-jdbc', version.ref = 'tomcat' }
+
+[bundles]
+geb = ['geb-core', 'geb-spock']
+grails-testing-support = ['grails-testing-support-gorm', 'grails-testing-support-web']
+selenium = ['selenium-api', 'selenium-chrome-driver', 'selenium-chromium-driver', 'selenium-devtools-v85', 'selenium-firefox-driver', 'selenium-http', 'selenium-json', 'selenium-remote-driver', 'selenium-safari-driver', 'selenium-support']

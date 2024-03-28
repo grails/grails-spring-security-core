@@ -1,174 +1,57 @@
 plugins {
-	id "groovy"
-	id "java-library"
-	id "org.grails.grails-gsp"
-	id "org.grails.grails-web"
-	id "war"
-	id "idea"
-	id "eclipse"
-	id 'org.asciidoctor.jvm.convert'
-	id "io.spring.dependency-management"
+	id 'groovy'
+	id 'java-library'
+	id 'org.grails.grails-gsp'
 	id 'org.grails.grails-plugin'
 	id 'maven-publish'
 	id 'signing'
 }
 
 group = 'org.grails.plugins'
-version = project.projectVersion
-
-ext."signing.keyId" = project.hasProperty("signing.keyId") ? project.getProperty('signing.keyId') : System.getenv('SIGNING_KEY')
-ext."signing.secretKeyRingFile" = project.hasProperty("signing.secretKeyRingFile") ? project.getProperty('signing.secretKeyRingFile') : "${System.properties['user.home']}${File.separator}.gnupg${File.separator}secring.gpg"
-ext."signing.password" = project.hasProperty("signing.password") ? project.getProperty('signing.password') : System.getenv('SIGNING_PASSPHRASE')
-ext.pomInfo = {
-	delegate.name "Grails spring-security-core plugin"
-	delegate.description 'The Spring Security plugin simplifies the integration of Spring Security into Grails® framework applications.'
-	delegate.url project.hasProperty('vcsUrl') ? project.vcsUrl : "https://github.com/grails-plugins/$project.name"
-
-	delegate.licenses {
-		delegate.license {
-			delegate.name 'The Apache Software License, Version 2.0'
-			delegate.url 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-			delegate.distribution 'repo'
-		}
-	}
-
-	delegate.scm {
-		delegate.url "scm:git@github.com:${githubSlug}.git"
-		delegate.connection "scm:git@github.com:${githubSlug}.git"
-		delegate.developerConnection "scm:git@github.com:${githubSlug}.git"
-	}
-
-	if (developers) {
-		delegate.developers {
-			for (dev in developers.split(',')) {
-				delegate.developer {
-					delegate.id dev.toLowerCase().replace(' ', '')
-					delegate.name dev
-				}
-			}
-		}
-	}
-}
-
-java {
-	sourceCompatibility = JavaVersion.VERSION_11
-	targetCompatibility = JavaVersion.VERSION_11
-	withJavadocJar()
-	withSourcesJar()
-}
-
-bootJar.enabled = false
-jar {
-	enabled = true
-	archiveClassifier.set('')
-}
-
-repositories {
-	mavenCentral()
-	maven { url 'https://repo.grails.org/grails/core' }
-	if(groovyVersion?.endsWith('-SNAPSHOT')) {
-		maven {
-			name 'JFrog Groovy snapshot repo'
-			url 'https://groovy.jfrog.io/artifactory/libs-snapshot-local/'
-		}
-	}
-}
-
-dependencyManagement {
-	imports {
-		mavenBom "org.grails:grails-bom:$grailsVersion"
-	}
-	applyMavenExclusions false
-}
-
-configurations {
-	all {
-		resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
-		resolutionStrategy.eachDependency { DependencyResolveDetails details->
-			if (details.requested.group == 'org.seleniumhq.selenium') {
-				details.useVersion('4.10.0')
-			}
-		}
-	}
-}
 
 dependencies {
-	compileOnly "javax.servlet:javax.servlet-api:$javaxServletApiVersion"
-	compileOnly 'org.grails:grails-dependencies'
-	compileOnly 'org.grails:grails-web-boot'
-	compileOnly 'org.springframework.boot:spring-boot-starter-logging'
-	compileOnly "net.sf.ehcache:ehcache:$ehcacheVersion"
-	api "org.springframework.security:spring-security-core:$springSecurityVersion", {
-		['spring-aop', 'spring-beans', 'spring-context', 'spring-core', 'spring-expression'].each {
-			exclude module: it
-		}
-	}
-	api "org.springframework.security:spring-security-web:$springSecurityVersion", {
-		exclude module: 'spring-web'
-	}
-	implementation 'org.grails.plugins:async'
-	testImplementation "org.grails:grails-gorm-testing-support:$grailsTestingSupportVersion"
-	testImplementation "org.grails:grails-web-testing-support:$grailsTestingSupportVersion"
-	testRuntimeOnly 'cglib:cglib-nodep:3.3.0'
+
+	api libs.grails.core
+	api libs.grails.datastore.core // API because used in templates
+	api libs.grails.datastore.gorm // API because used in templates
+	api libs.grails.events.transform // API because used in templates
+	api libs.grails.mimetypes
+	api libs.grails.plugin.async // AsyncGrailsWebRequest is used in public API
+	api libs.grails.web.common
+	api libs.grails.web.urlmappings
+	api libs.spring.beans
+	api libs.spring.context.core
+	api libs.spring.expression
+	api libs.spring.security.core
+	api libs.spring.security.web
+	api libs.spring.web
+
+	implementation libs.commons.lang
+	implementation libs.ehcache
+	implementation libs.grails.bootstrap
+	implementation libs.grails.converters
+	implementation libs.grails.rest
+	implementation libs.springboot.core
+	implementation libs.spring.context.support
+	implementation libs.spring.core
+	implementation libs.spring.security.crypto
+	implementation libs.spring.tx
+
+	compileOnly libs.groovy.core // Compile-time annotations
+	compileOnly libs.javax.servlet.api // Provided
+	compileOnly libs.slf4j.nop // Prevents warnings about missing slf4j implementation during compilation
+
+	testImplementation libs.bundles.grails.testing.support
+	testImplementation libs.spock.core
+	testImplementation libs.spring.test
+
+	testRuntimeOnly libs.slf4j.nop // Prevents warnings about missing slf4j implementation during tests
 }
 
-tasks.named("compileGroovyPages").configure {
-	classpath += configurations.compileClasspath
-}
-
-apply from: "${rootProject.projectDir}/gradle/docs.gradle"
-apply from: "${rootProject.projectDir}/gradle/cleanBuild.gradle"
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
-
-publishing {
-	if (isSnapshot) {
-		repositories {
-			maven {
-				credentials {
-					def u = System.getenv("ARTIFACTORY_USERNAME") ?: project.hasProperty("artifactoryPublishUsername") ? project.artifactoryPublishUsername : ''
-					def p = System.getenv("ARTIFACTORY_PASSWORD") ?: project.hasProperty("artifactoryPublishPassword") ? project.artifactoryPublishPassword : ''
-					username = u
-					password = p
-				}
-				url "https://repo.grails.org/grails/plugins3-snapshots-local"
-			}
-		}
-	}
-
-	publications {
-		maven(MavenPublication) {
-			artifactId project.name
-			from components.java
-			artifact source: "${buildDir}/classes/groovy/main/META-INF/grails-plugin.xml",
-					classifier: "plugin",
-					extension: 'xml'
-
-			versionMapping {
-				usage('java-api') {
-					fromResolutionOf('runtimeClasspath')
-				}
-				usage('java-runtime') {
-					fromResolutionResult()
-				}
-			}
-			pom.withXml {
-				def xml = asNode()
-
-				xml.children().last() + pomInfo
-				// dependency management shouldn't be included
-				def n = xml.get("dependencyManagement")
-				if (n)
-					xml.remove(n)
-			}
-
-		}
-	}
-}
-
-signing {
-	sign publishing.publications.maven
-}
-
-tasks.withType(Sign) {
-	onlyIf { isReleaseVersion }
-}
+apply from: rootProject.layout.projectDirectory.file('gradle/java-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/groovy-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/grails-plugin-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/test-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/cleanBuild.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/publishing.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/docs.gradle')

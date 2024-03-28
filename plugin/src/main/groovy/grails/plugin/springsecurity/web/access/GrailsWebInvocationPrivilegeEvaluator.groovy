@@ -26,8 +26,6 @@ import javax.servlet.ServletResponse
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.access.ConfigAttribute
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor

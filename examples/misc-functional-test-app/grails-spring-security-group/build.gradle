@@ -1,101 +1,39 @@
 plugins {
-    id "groovy"
-    id "org.grails.grails-web"
-    id "org.grails.grails-gsp"
-    id "com.github.erdi.webdriver-binaries"
-    id "war"
-    id "idea"
-    id "application"
-    id "eclipse"
+    id 'application'
+    id 'groovy'
+    id 'org.grails.grails-web'
 }
 
-version "0.1"
-group "grails.spring.security.group"
-
-repositories {
-    mavenCentral()
-    maven { url "https://repo.grails.org/grails/core" }
-    if(groovyVersion?.endsWith('-SNAPSHOT')) {
-        maven {
-            name 'JFrog Groovy snapshot repo'
-            url 'https://groovy.jfrog.io/artifactory/libs-snapshot-local/'
-        }
-    }
-}
-
-configurations {
-    all {
-        resolutionStrategy.force 'org.codehaus.groovy:groovy-xml:3.0.13'
-        resolutionStrategy.eachDependency { DependencyResolveDetails details->
-            if (details.requested.group == 'org.seleniumhq.selenium') {
-                details.useVersion('4.10.0')
-            }
-        }
-    }
-}
+group = 'grails.spring.security.group'
 
 dependencies {
-    compileOnly 'io.micronaut:micronaut-inject-groovy'
-    console 'org.grails:grails-console'
-    implementation "org.springframework.boot:spring-boot-starter-logging"
-    implementation "org.springframework.boot:spring-boot-autoconfigure"
-    implementation "org.grails:grails-core"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-tomcat"
-    implementation "org.grails:grails-web-boot"
-    implementation "org.grails:grails-logging"
-    implementation "org.grails:grails-plugin-rest"
-    implementation "org.grails:grails-plugin-databinding"
-    implementation "org.grails:grails-plugin-i18n"
-    implementation "org.grails:grails-plugin-services"
-    implementation "org.grails:grails-plugin-url-mappings"
-    implementation "org.grails:grails-plugin-interceptors"
-    implementation "org.grails.plugins:cache"
-    implementation "org.grails.plugins:async"
-    implementation "org.grails.plugins:scaffolding"
-    implementation "org.grails.plugins:events"
-    implementation "org.grails.plugins:hibernate5"
-    implementation "org.hibernate:hibernate-core:$hibernateCoreVersion"
-    implementation "org.grails.plugins:gsp"
+
     implementation project(':spring-security-core')
-    profile "org.grails.profiles:web"
-    runtimeOnly "org.glassfish.web:el-impl:2.1.2-b03"
-    runtimeOnly "com.h2database:h2"
-    runtimeOnly "org.apache.tomcat:tomcat-jdbc"
-    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:$assetPipelineVersion"
-    testImplementation 'io.micronaut:micronaut-inject-groovy'
-    testImplementation "org.grails:grails-gorm-testing-support"
-    testImplementation "org.grails:grails-web-testing-support"
+
+    implementation libs.grails.core
+    implementation libs.grails.datastore.core
+    implementation libs.grails.datastore.gorm
+    implementation libs.grails.events.transform
+    implementation libs.grails.rest
+    implementation libs.groovy.core
+    implementation libs.spring.beans
+
+    runtimeOnly libs.gorm.hibernate5
+    runtimeOnly libs.grails.i18n
+    runtimeOnly libs.grails.interceptors
+    runtimeOnly libs.grails.services
+    runtimeOnly libs.grails.urlmappings
+    runtimeOnly libs.springboot.autoconfigure
+    runtimeOnly libs.springboot.starter.logging
+    runtimeOnly libs.springboot.starter.tomcat
+    runtimeOnly libs.h2database
+    runtimeOnly libs.tomcat.jdbc
+
+    compileOnly libs.micronaut.inject.groovy
 }
 
-//project.dependencies.add("integrationTestImplementation", project.configurations.findByName("testImplementationClasspath"))
-//project.dependencies.add("integrationTestRuntimeOnly", project.configurations.findByName("testRuntimeOnlyClasspath"))
-
-/*
-tasks.named("compileGroovyPages").configure {
-    classpath += configurations.implementationClasspath
-}
-*/
-
-apply from: "${rootProject.projectDir}/gradle/geb.gradle"
-apply from: "${rootProject.projectDir}/gradle/ssc.gradle"
-apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
-
-//springBoot.mainClass = 'demo.Application'
-bootRun {
-    ignoreExitValue true
-    jvmArgs(
-            '-Dspring.output.ansi.enabled=always',
-            '-noverify',
-            '-XX:TieredStopAtLevel=1',
-            '-Xmx1024m')
-    sourceResources sourceSets.main
-    String springProfilesActive = 'spring.profiles.active'
-    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
-}
-
-tasks.withType(GroovyCompile) {
-    configure(groovyOptions) {
-        forkOptions.jvmArgs = ['-Xmx1024m']
-    }
-}
+apply from: rootProject.layout.projectDirectory.file('gradle/java-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/groovy-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/test-config.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/integrationTest.gradle')
+apply from: rootProject.layout.projectDirectory.file('gradle/examples-config.gradle')
