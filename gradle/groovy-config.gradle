@@ -1,8 +1,9 @@
 configurations.configureEach {
     resolutionStrategy.eachDependency { DependencyResolveDetails details ->
-        if (details.requested.group == 'org.codehaus.groovy') {
+        if ((details.requested.group == 'org.codehaus.groovy' || details.requested.group == 'org.apache.groovy') && details.requested.name != 'groovy-bom') {
             String groovyVersion = findProperty('groovyVersion') ?: libs.versions.groovy.get()
-            details.useVersion(groovyVersion)
+            details.useTarget(group: 'org.apache.groovy', name: details.requested.name, version: groovyVersion)
+            details.because "The dependency coordinates are changed in Apache Groovy 4, plus ensure version"
         }
     }
 }

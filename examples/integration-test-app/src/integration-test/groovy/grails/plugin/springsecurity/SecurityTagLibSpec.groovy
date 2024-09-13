@@ -34,8 +34,8 @@ import org.springframework.web.context.request.RequestContextHolder
 import spock.lang.Ignore
 import spock.lang.Shared
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletContext
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletContext
 import java.security.Principal
 
 /**

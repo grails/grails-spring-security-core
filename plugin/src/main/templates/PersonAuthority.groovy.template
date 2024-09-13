@@ -3,7 +3,7 @@ package ${packageName}
 import grails.gorm.DetachedCriteria
 import grails.compiler.GrailsCompileStatic
 import groovy.transform.ToString
-import org.codehaus.groovy.util.HashCodeHelper
+import org.apache.groovy.util.HashCodeHelper
 
 @GrailsCompileStatic
 @ToString(cache=true, includeNames=true, includePackage=false)

@@ -46,7 +46,7 @@ class SecurityTestUtils {
 	 * @return the authentication
 	 */
 	static Authentication authenticate(principal, credentials, List<GrantedAuthority> authorities) {
-		Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities)
+		Authentication authentication = authorities != null ? new TestingAuthenticationToken(principal, credentials, authorities) :  new TestingAuthenticationToken(principal, credentials)
 		authentication.authenticated = true
 		SCH.context.authentication = authentication
 		authentication

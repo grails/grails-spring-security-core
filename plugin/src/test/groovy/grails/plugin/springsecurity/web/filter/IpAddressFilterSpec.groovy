@@ -16,7 +16,7 @@ package grails.plugin.springsecurity.web.filter
 
 import grails.plugin.springsecurity.AbstractUnitSpec
 
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
 
 /**
  * Unit tests for <code>IpAddressFilter</code>.

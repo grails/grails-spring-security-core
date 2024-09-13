@@ -25,7 +25,7 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.web.FilterInvocation
 import org.springframework.security.web.access.WebInvocationPrivilegeEvaluator
 
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
 
 /**
  * Security tags.

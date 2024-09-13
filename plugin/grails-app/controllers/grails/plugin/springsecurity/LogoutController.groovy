@@ -17,7 +17,7 @@ package grails.plugin.springsecurity
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.web.RedirectStrategy
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 @Secured('permitAll')
 class LogoutController {

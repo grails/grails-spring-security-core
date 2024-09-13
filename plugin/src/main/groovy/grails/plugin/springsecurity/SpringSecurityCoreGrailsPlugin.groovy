@@ -20,6 +20,7 @@ import grails.plugin.springsecurity.access.vote.AuthenticatedVetoableDecisionMan
 import grails.plugin.springsecurity.access.vote.ClosureVoter
 import grails.plugin.springsecurity.authentication.GrailsAnonymousAuthenticationProvider
 import grails.plugin.springsecurity.authentication.NullAuthenticationEventPublisher
+import grails.plugin.springsecurity.cache.SpringUserCacheFactoryBean
 import grails.plugin.springsecurity.userdetails.DefaultPostAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.DefaultPreAuthenticationChecks
 import grails.plugin.springsecurity.userdetails.GormUserDetailsService
@@ -58,8 +59,7 @@ import groovy.util.logging.Slf4j
 import org.grails.web.mime.HttpServletResponseExtension
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean
-import org.springframework.cache.ehcache.EhCacheFactoryBean
-import org.springframework.cache.ehcache.EhCacheManagerFactoryBean
+import org.springframework.cache.jcache.JCacheCacheManager
 import org.springframework.core.Ordered
 import org.springframework.expression.spel.standard.SpelExpressionParser
 import org.springframework.security.access.event.LoggerListener
@@ -79,7 +79,6 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent
 import org.springframework.security.core.context.SecurityContextHolder as SCH
 import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper
-import org.springframework.security.core.userdetails.cache.EhCacheBasedUserCache
 import org.springframework.security.core.userdetails.cache.NullUserCache
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -131,7 +130,7 @@ import org.springframework.security.web.session.HttpSessionEventPublisher
 import org.springframework.security.web.util.matcher.AnyRequestMatcher
 import org.springframework.web.filter.FormContentFilter
 
-import javax.servlet.DispatcherType
+import jakarta.servlet.DispatcherType
 
 /**
  * @author Burt Beckwith
@@ -600,16 +599,11 @@ to default to 'Annotation'; setting value to 'Annotation'
 		// user details cache
 		if (conf.cacheUsers) {
 			log.trace 'Configuring user cache'
-			userCache(classFor('userCache', EhCacheBasedUserCache)) {
-				cache = ref('securityUserCache')
-			}
-			securityUserCache(classFor('securityUserCache', EhCacheFactoryBean)) {
+			userCache(classFor('userCache', SpringUserCacheFactoryBean)) {
 				cacheManager = ref('cacheManager')
 				cacheName = 'userCache'
 			}
-			cacheManager(classFor('cacheManager', EhCacheManagerFactoryBean)) {
-				cacheManagerName = 'spring-security-core-user-cache-' + UUID.randomUUID()
-			}
+			cacheManager(classFor('cacheManager', JCacheCacheManager))
 		}
 		else {
 			userCache(classFor('userCache', NullUserCache))
@@ -1122,9 +1116,9 @@ to default to 'Annotation'; setting value to 'Annotation'
 		 (ENCODING_ID_MD4): new Md4PasswordEncoder(),
 		 (ENCODING_ID_MD5): messageDigestPasswordEncoderMD5,
 		 (ENCODING_ID_NOOP): NoOpPasswordEncoder.getInstance(),
-		 (ENCODING_ID_PBKDF2): new Pbkdf2PasswordEncoder(),
-		 (ENCODING_ID_SCRYPT): new SCryptPasswordEncoder(),
-		 (ENCODING_ID_ARGON2): new Argon2PasswordEncoder(),
+		 (ENCODING_ID_PBKDF2): Pbkdf2PasswordEncoder.defaultsForSpringSecurity_v5_8(),
+		 (ENCODING_ID_SCRYPT): SCryptPasswordEncoder.defaultsForSpringSecurity_v5_8(),
+		 (ENCODING_ID_ARGON2): Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8(),
 		 (ENCODING_ID_SHA1): messageDigestPasswordEncoderSHA1,
 		 (ENCODING_IDSHA256): messageDigestPasswordEncoderSHA256,
 		 "sha256": new StandardPasswordEncoder()]

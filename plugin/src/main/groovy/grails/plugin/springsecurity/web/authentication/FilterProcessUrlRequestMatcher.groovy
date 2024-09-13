@@ -14,7 +14,7 @@
  */
 package grails.plugin.springsecurity.web.authentication
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import org.springframework.security.web.util.UrlUtils
 import org.springframework.security.web.util.matcher.RequestMatcher

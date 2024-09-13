@@ -21,7 +21,7 @@ import org.springframework.mock.web.MockHttpServletResponse
 import org.springframework.security.web.authentication.logout.LogoutHandler
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler
 
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
 
 /**
  * Unit tests for MutableLogoutFilter.

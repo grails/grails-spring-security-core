@@ -22,11 +22,11 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.UrlUtils
 import org.springframework.web.filter.GenericFilterBean
 
-import javax.servlet.*
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletRequestWrapper
-import javax.servlet.http.HttpServletResponse
-import javax.servlet.http.HttpSession
+import jakarta.servlet.*
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequestWrapper
+import jakarta.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpSession
 
 /**
  * Based on the package-scope org.springframework.security.config.debug.DebugFilter.

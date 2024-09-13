@@ -23,12 +23,12 @@ import org.springframework.security.web.access.ExceptionTranslationFilter
 import org.springframework.security.web.savedrequest.RequestCache
 import org.springframework.web.context.request.RequestContextHolder
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * Replaces the current GrailsWebRequest with one that delegates to the real current instance but uses the request and

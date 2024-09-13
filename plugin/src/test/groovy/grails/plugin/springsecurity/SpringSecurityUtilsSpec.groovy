@@ -25,9 +25,9 @@ import org.springframework.security.web.savedrequest.DefaultSavedRequest
 import org.springframework.web.filter.GenericFilterBean
 import spock.lang.Unroll
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
 
 /**
  * @author Burt Beckwith

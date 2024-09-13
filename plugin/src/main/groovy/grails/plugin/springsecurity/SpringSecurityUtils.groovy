@@ -40,9 +40,9 @@ import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.util.StringUtils
 import org.springframework.web.multipart.MultipartHttpServletRequest
 
-import javax.servlet.Filter
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpSession
+import jakarta.servlet.Filter
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpSession
 
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY
 
