@@ -21,7 +21,7 @@ slf4j = '1.7.36'
 spock = '2.0-groovy-3.0'
 spring = '5.3.33'
 springboot = '2.7.18'
-spring-security = '5.8.11'
+spring-security = '6.3.3'
 tomcat = '9.0.87'
 
 [libraries]
