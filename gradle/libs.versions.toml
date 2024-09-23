@@ -20,7 +20,7 @@ selenium-safari = '4.19.1'
 slf4j = '2.0.16'
 spock = '2.3-groovy-4.0'
 spring = '6.1.12'
-springboot = '3.3.3'
+springboot = '3.3.4'
 spring-security = '6.3.3'
 tomcat = '10.1.29'
 
