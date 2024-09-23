@@ -100,7 +100,6 @@ if (location.href.indexOf('is-external=true') == -1) {
 
             <!-- todo: direct known subclasses -->
             <hr>
-            <br>
 
 <pre>@groovy.util.logging.Slf4j
 class SpringSecurityService
@@ -149,7 +148,7 @@ extends java.lang.Object</pre>
 
         <!-- =========== PROPERTY SUMMARY =========== -->
         
-         <ul class="blockList">
+         <ul class="blockList"> 
                 <li class="blockList"><a name="property_summary"><!--   --></a>
                     <h3>Properties Summary</h3>
                     <ul class="blockList">
@@ -183,6 +182,7 @@ extends java.lang.Object</pre>
                     </table>
                    </ul>
                 </li>
+                
             </ul>
         
 
@@ -203,8 +203,7 @@ extends java.lang.Object</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst">
-                                <code><a href="#SpringSecurityService()">SpringSecurityService</a>
-                                ()</code><br></td>
+                                <code><strong><a href="#SpringSecurityService()">SpringSecurityService</a></strong>()</code><br></td>
                         </tr>
                         
                     </table>
@@ -305,7 +304,7 @@ extends java.lang.Object</pre>
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>boolean</code></td>
-                            <td class="colLast"><code><strong><a href="#isAjax(javax.servlet.http.HttpServletRequest)">isAjax</a></strong>(javax.servlet.http.HttpServletRequest request)</code><br>Check if the request was triggered by an Ajax call.</td>
+                            <td class="colLast"><code><strong><a href="#isAjax(jakarta.servlet.http.HttpServletRequest)">isAjax</a></strong>(jakarta.servlet.http.HttpServletRequest request)</code><br>Check if the request was triggered by an Ajax call.</td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -362,7 +361,7 @@ extends java.lang.Object</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code>class java.lang.Object</code></td>
-                            <td class="colLast"><code>java.lang.Object#wait(long), java.lang.Object#wait(long, int), java.lang.Object#wait(), java.lang.Object#equals(java.lang.Object), java.lang.Object#toString(), java.lang.Object#hashCode(), java.lang.Object#getClass(), java.lang.Object#notify(), java.lang.Object#notifyAll()</code></td>
+                            <td class="colLast"><code>java.lang.Object#wait(long, int), java.lang.Object#wait(), java.lang.Object#wait(long), java.lang.Object#equals(java.lang.Object), java.lang.Object#toString(), java.lang.Object#hashCode(), java.lang.Object#getClass(), java.lang.Object#notify(), java.lang.Object#notifyAll()</code></td>
                         </tr>
                     </table>
                    </ul>
@@ -486,8 +485,7 @@ extends java.lang.Object</pre>
                         <a name="createRequestMaps(List)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@grails.gorm.transactions.Transactional
-void <strong>createRequestMaps</strong>(java.util.List&lt;java.util.Map&lt;java.lang.String, java.lang.Object&gt;&gt; data)</h4>
+                                <h4>@grails.gorm.transactions.Transactional<br>void <strong>createRequestMaps</strong>(java.util.List&lt;java.util.Map&lt;java.lang.String, java.lang.Object&gt;&gt; data)</h4>
                                 <p> Create multiple requestmap instances in a transaction. <DL><DT><B>Parameters:</B></DT><DD><code>data
 </code> -            a list of maps where each map contains the data for one instance
            (configAttribute and url are required, httpMethod is optional)</DD></DL></p>
@@ -497,8 +495,7 @@ void <strong>createRequestMaps</strong>(java.util.List&lt;java.util.Map&lt;java.
                         <a name="createRequestMaps(List, java.lang.String)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@grails.gorm.transactions.Transactional
-void <strong>createRequestMaps</strong>(java.util.List&lt;java.lang.String&gt; urls, java.lang.String configAttribute)</h4>
+                                <h4>@grails.gorm.transactions.Transactional<br>void <strong>createRequestMaps</strong>(java.util.List&lt;java.lang.String&gt; urls, java.lang.String configAttribute)</h4>
                                 <p> Create multiple requestmap instances in a transaction that all share the same <code>configAttribute</code>. <DL><DT><B>Parameters:</B></DT><DD><code>urls</code> -  a list of url patterns</DD></DL></p>
                             </li>
                         </ul>
@@ -506,8 +503,7 @@ void <strong>createRequestMaps</strong>(java.util.List&lt;java.lang.String&gt; u
                         <a name="deleteRole(java.lang.Object)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@grails.gorm.transactions.Transactional
-void <strong>deleteRole</strong>(java.lang.Object role)</h4>
+                                <h4>@grails.gorm.transactions.Transactional<br>void <strong>deleteRole</strong>(java.lang.Object role)</h4>
                                 <p> Delete a role, and if Requestmap class is used to store roles, remove the role
  from all Requestmap definitions. If a Requestmap's config attribute is this role,
  it will be deleted. <DL><DT><B>Parameters:</B></DT><DD><code>role</code> -  the role to delete</DD></DL></p>
@@ -583,10 +579,10 @@ void <strong>deleteRole</strong>(java.lang.Object role)</h4>
                             </li>
                         </ul>
                     
-                        <a name="isAjax(javax.servlet.http.HttpServletRequest)"><!-- --></a>
+                        <a name="isAjax(jakarta.servlet.http.HttpServletRequest)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>boolean <strong>isAjax</strong>(javax.servlet.http.HttpServletRequest request)</h4>
+                                <h4>boolean <strong>isAjax</strong>(jakarta.servlet.http.HttpServletRequest request)</h4>
                                 <p> Check if the request was triggered by an Ajax call. <DL><DT><B>Parameters:</B></DT><DD><code>request</code> -  the request</DD></DL><DL><DT><B>Returns:</B></DT><DD><code>true</code> if Ajax</DD></DL></p>
                             </li>
                         </ul>
@@ -630,8 +626,7 @@ void <strong>deleteRole</strong>(java.lang.Object role)</h4>
                         <a name="updateRole(java.lang.Object, java.lang.Object)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@grails.gorm.transactions.Transactional
-boolean <strong>updateRole</strong>(java.lang.Object role, java.lang.Object newProperties)</h4>
+                                <h4>@grails.gorm.transactions.Transactional<br>boolean <strong>updateRole</strong>(java.lang.Object role, java.lang.Object newProperties)</h4>
                                 <p> Update a role, and if Requestmap class is used to store roles, replace the new role
  name in all Requestmap definitions that use it if the name was changed. <DL><DT><B>Parameters:</B></DT><DD><code>role</code> -  the role to update</DD><DD><code>newProperties</code> -  the new role attributes ('params' from the calling controller)</DD></DL></p>
                             </li>

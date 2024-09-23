@@ -105,7 +105,6 @@ if (location.href.indexOf('is-external=true') == -1) {
 
             <!-- todo: direct known subclasses -->
             <hr>
-            <br>
 
 <pre>@groovy.util.logging.Slf4j
 @groovy.transform.CompileStatic
@@ -182,7 +181,7 @@ implements org.springframework.web.context.ServletContextAware</pre>
 
         <!-- =========== PROPERTY SUMMARY =========== -->
         
-         <ul class="blockList">
+         <ul class="blockList"> 
                 <li class="blockList"><a name="property_summary"><!--   --></a>
                     <h3>Properties Summary</h3>
                     <ul class="blockList">
@@ -209,13 +208,31 @@ implements org.springframework.web.context.ServletContextAware</pre>
                         </tr>
                         
                         <tr class="rowColor">
-                            <td class="colFirst"><code><strong>javax.servlet.ServletContext</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>jakarta.servlet.ServletContext</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#servletContext">servletContext</a></code><br></td>
                         </tr>
                         
                     </table>
                    </ul>
                 </li>
+                
+                 <li class="blockList"><a name="properties_summary"><!--   --></a>
+                     <ul class="blockList">
+                         <table class="overviewSummary" border="0" cellpadding="3" cellspacing="0" summary="Inherited properties summary table">
+                             <caption><span>Inherited properties</span><span class="tabEnd">&nbsp;</span></caption>
+                             <tr>
+                                 <th class="colFirst" scope="col">Properties inherited from class</th>
+                                 <th class="colLast" scope="col">Properties</th>
+                             </tr>
+                                                     <tr class="altColor">
+                                <td class="colFirst"><strong><code>class <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html'>AbstractFilterInvocationDefinition</a></code></strong></td>
+                                <td class="colLast"><code>rejectIfNoRule</code></td>
+                            </tr>
+
+                         </table>
+                     </ul>
+                 </li>
+                 
             </ul>
         
 
@@ -236,8 +253,7 @@ implements org.springframework.web.context.ServletContextAware</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst">
-                                <code><a href="#AnnotationFilterInvocationDefinition()">AnnotationFilterInvocationDefinition</a>
-                                ()</code><br></td>
+                                <code><strong><a href="#AnnotationFilterInvocationDefinition()">AnnotationFilterInvocationDefinition</a></strong>()</code><br></td>
                         </tr>
                         
                     </table>
@@ -439,7 +455,7 @@ implements org.springframework.web.context.ServletContextAware</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code>class <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html'>AbstractFilterInvocationDefinition</a></code></td>
-                            <td class="colLast"><code><a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#calculateUri(javax.servlet.http.HttpServletRequest)'>calculateUri</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#compileAndStoreMapping(grails.plugin.springsecurity.InterceptedUrl)'>compileAndStoreMapping</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#determineUrl(org.springframework.security.web.FilterInvocation)'>determineUrl</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#findConfigAttributes(java.lang.String, java.lang.String)'>findConfigAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#findMatchingAttributes(java.lang.String)'>findMatchingAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getAllConfigAttributes()'>getAllConfigAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getAttributes(java.lang.Object)'>getAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getConfigAttributeMap()'>getConfigAttributeMap</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getInterceptedUrl(java.lang.String, org.springframework.http.HttpMethod)'>getInterceptedUrl</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#initialize()'>initialize</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#lowercaseAndStripQuerystring(java.lang.String)'>lowercaseAndStripQuerystring</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#reset()'>reset</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#resetConfigs()'>resetConfigs</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#split(java.lang.String)'>split</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#stopAtFirstMatch()'>stopAtFirstMatch</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#storeMapping(java.lang.String, org.springframework.http.HttpMethod, Collection)'>storeMapping</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#stripContextPath(java.lang.String, javax.servlet.http.HttpServletRequest)'>stripContextPath</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#supports(Class)'>supports</a></code></td>
+                            <td class="colLast"><code><a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#calculateUri(jakarta.servlet.http.HttpServletRequest)'>calculateUri</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#compileAndStoreMapping(grails.plugin.springsecurity.InterceptedUrl)'>compileAndStoreMapping</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#determineUrl(org.springframework.security.web.FilterInvocation)'>determineUrl</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#findConfigAttributes(java.lang.String, java.lang.String)'>findConfigAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#findMatchingAttributes(java.lang.String)'>findMatchingAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getAllConfigAttributes()'>getAllConfigAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getAttributes(java.lang.Object)'>getAttributes</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getConfigAttributeMap()'>getConfigAttributeMap</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#getInterceptedUrl(java.lang.String, org.springframework.http.HttpMethod)'>getInterceptedUrl</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#initialize()'>initialize</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#lowercaseAndStripQuerystring(java.lang.String)'>lowercaseAndStripQuerystring</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#reset()'>reset</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#resetConfigs()'>resetConfigs</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#split(java.lang.String)'>split</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#stopAtFirstMatch()'>stopAtFirstMatch</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#storeMapping(java.lang.String, org.springframework.http.HttpMethod, Collection)'>storeMapping</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#stripContextPath(java.lang.String, jakarta.servlet.http.HttpServletRequest)'>stripContextPath</a>, <a href='../../../../../../grails/plugin/springsecurity/web/access/intercept/AbstractFilterInvocationDefinition.html#supports(Class)'>supports</a></code></td>
                         </tr>
                     </table>
                    </ul>
@@ -519,7 +535,7 @@ implements org.springframework.web.context.ServletContextAware</pre>
                         <a name="servletContext"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>javax.servlet.ServletContext <strong>servletContext</strong></h4>
+                                <h4>jakarta.servlet.ServletContext <strong>servletContext</strong></h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -594,8 +610,7 @@ implements org.springframework.web.context.ServletContextAware</pre>
                         <a name="compileStaticRules(java.lang.Object)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@java.lang.SuppressWarnings(value: unchecked)
-protected&nbsp;void <strong>compileStaticRules</strong>(java.lang.Object staticRules)</h4>
+                                <h4>@java.lang.SuppressWarnings(value: unchecked)<br>protected&nbsp;void <strong>compileStaticRules</strong>(java.lang.Object staticRules)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -611,8 +626,7 @@ protected&nbsp;void <strong>compileStaticRules</strong>(java.lang.Object staticR
                         <a name="copyParams(org.grails.web.servlet.mvc.GrailsWebRequest)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@java.lang.SuppressWarnings(value: unchecked)
-protected&nbsp;java.util.Map&lt;java.lang.String, java.lang.Object&gt; <strong>copyParams</strong>(org.grails.web.servlet.mvc.GrailsWebRequest grailsRequest)</h4>
+                                <h4>@java.lang.SuppressWarnings(value: unchecked)<br>protected&nbsp;java.util.Map&lt;java.lang.String, java.lang.Object&gt; <strong>copyParams</strong>(org.grails.web.servlet.mvc.GrailsWebRequest grailsRequest)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -628,8 +642,7 @@ protected&nbsp;java.util.Map&lt;java.lang.String, java.lang.Object&gt; <strong>c
                         <a name="determineUrl(org.springframework.security.web.FilterInvocation)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@java.lang.Override
-protected&nbsp;java.lang.String <strong>determineUrl</strong>(org.springframework.security.web.FilterInvocation filterInvocation)</h4>
+                                <h4>@java.lang.Override<br>protected&nbsp;java.lang.String <strong>determineUrl</strong>(org.springframework.security.web.FilterInvocation filterInvocation)</h4>
                                 <p></p>
                             </li>
                         </ul>

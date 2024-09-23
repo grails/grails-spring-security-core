@@ -100,11 +100,10 @@ if (location.href.indexOf('is-external=true') == -1) {
 
             <!-- todo: direct known subclasses -->
             <hr>
-            <br>
 
 <pre>@groovy.transform.CompileStatic
 @groovy.util.logging.Slf4j
-final&nbsp;class SpringSecurityUtils
+final class SpringSecurityUtils
 extends java.lang.Object</pre>
 
     <p> Helper methods. <DL><DT><B>Authors:</B></DT><DD>Burt Beckwith</DD></DL></p>
@@ -187,7 +186,7 @@ extends java.lang.Object</pre>
 
         <!-- =========== PROPERTY SUMMARY =========== -->
         
-         <ul class="blockList">
+         <ul class="blockList"> 
                 <li class="blockList"><a name="property_summary"><!--   --></a>
                     <h3>Properties Summary</h3>
                     <ul class="blockList">
@@ -204,7 +203,7 @@ extends java.lang.Object</pre>
                         </tr>
                         
                         <tr class="rowColor">
-                            <td class="colFirst"><code><strong>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, javax.servlet.Filter&gt;</strong></code>&nbsp;</td>
+                            <td class="colFirst"><code><strong>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, jakarta.servlet.Filter&gt;</strong></code>&nbsp;</td>
                             <td class="colLast"><code><a href="#configuredOrderedFilters">configuredOrderedFilters</a></code><br>Set by SpringSecurityCoreGrailsPlugin contains the actual filter beans in order.</td>
                         </tr>
                         
@@ -236,6 +235,7 @@ extends java.lang.Object</pre>
                     </table>
                    </ul>
                 </li>
+                
             </ul>
         
 
@@ -304,13 +304,13 @@ extends java.lang.Object</pre>
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;java.lang.Throwable</code></td>
-                            <td class="colLast"><code><strong><a href="#getLastException(javax.servlet.http.HttpSession)">getLastException</a></strong>(javax.servlet.http.HttpSession session)</code><br>Get the last auth exception.</td>
+                            <td class="colLast"><code><strong><a href="#getLastException(jakarta.servlet.http.HttpSession)">getLastException</a></strong>(jakarta.servlet.http.HttpSession session)</code><br>Get the last auth exception.</td>
                         </tr>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;java.lang.String</code></td>
-                            <td class="colLast"><code><strong><a href="#getLastUsername(javax.servlet.http.HttpSession)">getLastUsername</a></strong>(javax.servlet.http.HttpSession session)</code><br>Get the last attempted username.</td>
+                            <td class="colLast"><code><strong><a href="#getLastUsername(jakarta.servlet.http.HttpSession)">getLastUsername</a></strong>(jakarta.servlet.http.HttpSession session)</code><br>Get the last attempted username.</td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -322,7 +322,7 @@ extends java.lang.Object</pre>
                         <tr class="altColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;org.springframework.security.web.savedrequest.SavedRequest</code></td>
-                            <td class="colLast"><code><strong><a href="#getSavedRequest(javax.servlet.http.HttpSession)">getSavedRequest</a></strong>(javax.servlet.http.HttpSession session)</code><br>Get the saved request from the session.</td>
+                            <td class="colLast"><code><strong><a href="#getSavedRequest(jakarta.servlet.http.HttpSession)">getSavedRequest</a></strong>(jakarta.servlet.http.HttpSession session)</code><br>Get the saved request from the session.</td>
                         </tr>
                         
                         <tr class="rowColor">
@@ -340,7 +340,7 @@ extends java.lang.Object</pre>
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;org.springframework.security.core.context.SecurityContext</code></td>
-                            <td class="colLast"><code><strong><a href="#getSecurityContext(javax.servlet.http.HttpSession)">getSecurityContext</a></strong>(javax.servlet.http.HttpSession session)</code><br></td>
+                            <td class="colLast"><code><strong><a href="#getSecurityContext(jakarta.servlet.http.HttpSession)">getSecurityContext</a></strong>(jakarta.servlet.http.HttpSession session)</code><br></td>
                         </tr>
                         
                         <tr class="altColor">
@@ -388,7 +388,7 @@ extends java.lang.Object</pre>
                         <tr class="rowColor">
                             <td class="colFirst"><code></code></td>
                             <td class="colLast"><code>static&nbsp;boolean</code></td>
-                            <td class="colLast"><code><strong><a href="#isAjax(javax.servlet.http.HttpServletRequest)">isAjax</a></strong>(javax.servlet.http.HttpServletRequest request)</code><br>Check if the request was triggered by an Ajax call.</td>
+                            <td class="colLast"><code><strong><a href="#isAjax(jakarta.servlet.http.HttpServletRequest)">isAjax</a></strong>(jakarta.servlet.http.HttpServletRequest request)</code><br>Check if the request was triggered by an Ajax call.</td>
                         </tr>
                         
                         <tr class="altColor">
@@ -504,7 +504,7 @@ extends java.lang.Object</pre>
                         
                         <tr class="altColor">
                             <td class="colFirst"><code>class java.lang.Object</code></td>
-                            <td class="colLast"><code>java.lang.Object#wait(long), java.lang.Object#wait(long, int), java.lang.Object#wait(), java.lang.Object#equals(java.lang.Object), java.lang.Object#toString(), java.lang.Object#hashCode(), java.lang.Object#getClass(), java.lang.Object#notify(), java.lang.Object#notifyAll()</code></td>
+                            <td class="colLast"><code>java.lang.Object#wait(long, int), java.lang.Object#wait(), java.lang.Object#wait(long), java.lang.Object#equals(java.lang.Object), java.lang.Object#toString(), java.lang.Object#hashCode(), java.lang.Object#getClass(), java.lang.Object#notify(), java.lang.Object#notifyAll()</code></td>
                         </tr>
                     </table>
                    </ul>
@@ -610,7 +610,7 @@ extends java.lang.Object</pre>
                         <a name="configuredOrderedFilters"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, javax.servlet.Filter&gt; <strong>configuredOrderedFilters</strong></h4>
+                                <h4>static&nbsp;java.util.SortedMap&lt;java.lang.Integer, jakarta.servlet.Filter&gt; <strong>configuredOrderedFilters</strong></h4>
                                 <p>Set by SpringSecurityCoreGrailsPlugin contains the actual filter beans in order.</p>
                             </li>
                         </ul>
@@ -703,8 +703,7 @@ extends java.lang.Object</pre>
                         <a name="clientRegisterFilter(java.lang.String, int)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@java.lang.SuppressWarnings(value: deprecation)
-static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName, int order)</h4>
+                                <h4>@java.lang.SuppressWarnings(value: deprecation)<br>static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName, int order)</h4>
                                 <p> Register a filter in a specified position in the chain.
 
  Note - this is for use in application code after the plugin has initialized,
@@ -742,18 +741,18 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                             </li>
                         </ul>
                     
-                        <a name="getLastException(javax.servlet.http.HttpSession)"><!-- --></a>
+                        <a name="getLastException(jakarta.servlet.http.HttpSession)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;java.lang.Throwable <strong>getLastException</strong>(javax.servlet.http.HttpSession session)</h4>
+                                <h4>static&nbsp;java.lang.Throwable <strong>getLastException</strong>(jakarta.servlet.http.HttpSession session)</h4>
                                 <p> Get the last auth exception. <DL><DT><B>Parameters:</B></DT><DD><code>session</code> -  the session</DD></DL><DL><DT><B>Returns:</B></DT><DD>the exception</DD></DL></p>
                             </li>
                         </ul>
                     
-                        <a name="getLastUsername(javax.servlet.http.HttpSession)"><!-- --></a>
+                        <a name="getLastUsername(jakarta.servlet.http.HttpSession)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;java.lang.String <strong>getLastUsername</strong>(javax.servlet.http.HttpSession session)</h4>
+                                <h4>static&nbsp;java.lang.String <strong>getLastUsername</strong>(jakarta.servlet.http.HttpSession session)</h4>
                                 <p> Get the last attempted username. <DL><DT><B>Parameters:</B></DT><DD><code>session</code> -  the session</DD></DL><DL><DT><B>Returns:</B></DT><DD>the username</DD></DL></p>
                             </li>
                         </ul>
@@ -761,16 +760,15 @@ static&nbsp;void <strong>clientRegisterFilter</strong>(java.lang.String beanName
                         <a name="getPrincipalAuthorities()"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>@groovy.transform.CompileDynamic
-static&nbsp;java.util.Collection&lt;org.springframework.security.core.GrantedAuthority&gt; <strong>getPrincipalAuthorities</strong>()</h4>
+                                <h4>@groovy.transform.CompileDynamic<br>static&nbsp;java.util.Collection&lt;org.springframework.security.core.GrantedAuthority&gt; <strong>getPrincipalAuthorities</strong>()</h4>
                                 <p> Get the current user's authorities. <DL><DT><B>Returns:</B></DT><DD>a list of authorities (empty if not authenticated).</DD></DL></p>
                             </li>
                         </ul>
                     
-                        <a name="getSavedRequest(javax.servlet.http.HttpSession)"><!-- --></a>
+                        <a name="getSavedRequest(jakarta.servlet.http.HttpSession)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;org.springframework.security.web.savedrequest.SavedRequest <strong>getSavedRequest</strong>(javax.servlet.http.HttpSession session)</h4>
+                                <h4>static&nbsp;org.springframework.security.web.savedrequest.SavedRequest <strong>getSavedRequest</strong>(jakarta.servlet.http.HttpSession session)</h4>
                                 <p> Get the saved request from the session. <DL><DT><B>Parameters:</B></DT><DD><code>session</code> -  the session</DD></DL><DL><DT><B>Returns:</B></DT><DD>the saved request</DD></DL></p>
                             </li>
                         </ul>
@@ -791,10 +789,10 @@ static&nbsp;java.util.Collection&lt;org.springframework.security.core.GrantedAut
                             </li>
                         </ul>
                     
-                        <a name="getSecurityContext(javax.servlet.http.HttpSession)"><!-- --></a>
+                        <a name="getSecurityContext(jakarta.servlet.http.HttpSession)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;org.springframework.security.core.context.SecurityContext <strong>getSecurityContext</strong>(javax.servlet.http.HttpSession session)</h4>
+                                <h4>static&nbsp;org.springframework.security.core.context.SecurityContext <strong>getSecurityContext</strong>(jakarta.servlet.http.HttpSession session)</h4>
                                 <p></p>
                             </li>
                         </ul>
@@ -855,10 +853,10 @@ static&nbsp;java.util.Collection&lt;org.springframework.security.core.GrantedAut
                             </li>
                         </ul>
                     
-                        <a name="isAjax(javax.servlet.http.HttpServletRequest)"><!-- --></a>
+                        <a name="isAjax(jakarta.servlet.http.HttpServletRequest)"><!-- --></a>
                         <ul class="blockListLast">
                             <li class="blockList">
-                                <h4>static&nbsp;boolean <strong>isAjax</strong>(javax.servlet.http.HttpServletRequest request)</h4>
+                                <h4>static&nbsp;boolean <strong>isAjax</strong>(jakarta.servlet.http.HttpServletRequest request)</h4>
                                 <p> Check if the request was triggered by an Ajax call. <DL><DT><B>Parameters:</B></DT><DD><code>request</code> -  the request</DD></DL><DL><DT><B>Returns:</B></DT><DD><code>true</code> if Ajax</DD></DL></p>
                             </li>
                         </ul>
