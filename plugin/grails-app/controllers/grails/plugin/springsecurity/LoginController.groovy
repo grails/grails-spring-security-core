@@ -27,7 +27,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.WebAttributes
 import org.springframework.security.web.authentication.session.SessionAuthenticationException
 
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletResponse
 
 @Secured('permitAll')
 class LoginController {

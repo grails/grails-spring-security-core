@@ -33,7 +33,7 @@ dependencies {
     runtimeOnly libs.tomcat.jdbc
 
     compileOnly libs.micronaut.inject.groovy
-    compileOnly libs.javax.servlet.api
+    compileOnly libs.jakarta.servlet.api
     compileOnly libs.slf4j.nop
 
     testImplementation libs.spock.core

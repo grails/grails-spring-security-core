@@ -49,6 +49,18 @@ switch (testconfig) {
 		]
 		break
 
+	case 'basicCacheUsers':
+		grails.plugin.springsecurity.securityConfigType = 'Annotation'
+		grails.plugin.springsecurity.useBasicAuth = true
+		grails.plugin.springsecurity.basic.realmName = 'Grails Spring Security Basic Test Realm'
+		grails.plugin.springsecurity.filterChain.chainMap = [
+			[pattern: '/secureclassannotated/**', filters: 'JOINED_FILTERS,-exceptionTranslationFilter'],
+			[pattern: '/**',                      filters: 'JOINED_FILTERS,-basicAuthenticationFilter,-basicExceptionTranslationFilter']
+		]
+		grails.plugin.springsecurity.cacheUsers = true
+		grails.plugin.springsecurity.providerManager.eraseCredentialsAfterAuthentication = false
+		break
+
 	case 'bcrypt':
 		grails.plugin.springsecurity.securityConfigType = 'Annotation'
 		grails.plugin.springsecurity.password.algorithm = 'bcrypt'

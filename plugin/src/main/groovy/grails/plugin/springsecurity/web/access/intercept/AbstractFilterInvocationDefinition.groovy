@@ -19,7 +19,7 @@ import org.springframework.web.util.UrlPathHelper
 
 import java.util.concurrent.CopyOnWriteArrayList
 
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletRequest
 
 import org.springframework.context.support.MessageSourceAccessor
 import org.springframework.http.HttpMethod
@@ -175,11 +175,11 @@ abstract class AbstractFilterInvocationDefinition implements FilterInvocationSec
 	}
 
     /**
-     * Resolve the URI from {@link javax.servlet.http.HttpServletRequest}
-     * @param request The {@link javax.servlet.http.HttpServletRequest}
+     * Resolve the URI from {@link jakarta.servlet.http.HttpServletRequest}
+     * @param request The {@link jakarta.servlet.http.HttpServletRequest}
      *
      * @return The resolved URI string
-     * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(javax.servlet.http.HttpServletRequest request)} and {@link #stripContextPath} instead
+     * @deprecated Use {@link org.springframework.web.util.UrlPathHelper#getRequestUri(jakarta.servlet.http.HttpServletRequest request)} and {@link #stripContextPath} instead
      */
     @Deprecated
     protected String calculateUri(HttpServletRequest request) {

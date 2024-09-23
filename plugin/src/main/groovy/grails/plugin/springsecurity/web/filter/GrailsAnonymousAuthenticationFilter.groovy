@@ -16,11 +16,11 @@ package grails.plugin.springsecurity.web.filter
 
 import groovy.util.logging.Slf4j
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletException
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletException
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
+import jakarta.servlet.http.HttpServletRequest
 
 import org.springframework.security.authentication.AuthenticationDetailsSource
 import org.springframework.security.core.Authentication

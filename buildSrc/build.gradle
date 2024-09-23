@@ -9,7 +9,7 @@ dependencies {
     implementation buildsrcLibs.grails.gradle.plugin, {
         // Grails Gradle plugin leaks groovy-xml onto compile classpath
         // which is causes a version conflict for Gradle
-        exclude group: 'org.codehaus.groovy', module: 'groovy-xml'
+        exclude group: 'org.apache.groovy', module: 'groovy-xml'
     }
     implementation buildsrcLibs.webdriver.binaries.gradle.plugin
 

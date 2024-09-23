@@ -9,6 +9,7 @@ import spock.lang.IgnoreIf
 @IgnoreIf({ !(
 		System.getProperty('TESTCONFIG') == 'annotation' ||
         System.getProperty('TESTCONFIG') == 'basic' ||
+        System.getProperty('TESTCONFIG') == 'basicCacheUsers' ||
         System.getProperty('TESTCONFIG') == 'requestmap' ||
         System.getProperty('TESTCONFIG') == 'static')
 })

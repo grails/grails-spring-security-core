@@ -20,8 +20,8 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.RequestMatcher
 
-import javax.servlet.Filter
-import javax.servlet.http.HttpServletRequest
+import jakarta.servlet.Filter
+import jakarta.servlet.http.HttpServletRequest
 
 /**
  * Based on org.springframework.security.web.DefaultSecurityFilterChain which is final.

@@ -18,7 +18,7 @@ import grails.plugin.springsecurity.AbstractUnitSpec
 import grails.plugin.springsecurity.web.SecurityRequestHolder
 import grails.plugin.springsecurity.web.SecurityRequestHolderFilter
 
-import javax.servlet.FilterChain
+import jakarta.servlet.FilterChain
 
 /**
  * @author Burt Beckwith

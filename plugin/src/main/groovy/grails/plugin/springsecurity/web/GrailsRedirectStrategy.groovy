@@ -20,8 +20,8 @@ import org.springframework.security.web.PortResolver
 import org.springframework.security.web.RedirectStrategy
 import org.springframework.security.web.util.UrlUtils
 
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 /**
  * Builds absolute urls when using header check channel security to prevent the

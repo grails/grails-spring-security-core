@@ -36,9 +36,9 @@ import test.TestRole
 import test.TestUser
 import test.TestUserRole
 
-import javax.servlet.FilterChain
-import javax.servlet.ServletRequest
-import javax.servlet.ServletResponse
+import jakarta.servlet.FilterChain
+import jakarta.servlet.ServletRequest
+import jakarta.servlet.ServletResponse
 
 /**
  * Integration tests for <code>SpringSecurityUtils</code>.

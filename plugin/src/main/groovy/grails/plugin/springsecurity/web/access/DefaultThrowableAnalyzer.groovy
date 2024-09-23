@@ -14,7 +14,7 @@
  */
 package grails.plugin.springsecurity.web.access
 
-import javax.servlet.ServletException
+import jakarta.servlet.ServletException
 
 import org.springframework.security.web.util.ThrowableAnalyzer
 import org.springframework.security.web.util.ThrowableCauseExtractor

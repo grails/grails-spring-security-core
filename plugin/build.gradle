@@ -9,6 +9,12 @@ plugins {
 
 group = 'org.grails.plugins'
 
+configurations {
+    all {
+        exclude group: 'javax.servlet'
+    }
+}
+
 dependencies {
 
 	api libs.grails.core
@@ -38,7 +44,7 @@ dependencies {
 	implementation libs.spring.tx
 
 	compileOnly libs.groovy.core // Compile-time annotations
-	compileOnly libs.javax.servlet.api // Provided
+	compileOnly libs.jakarta.servlet.api // Provided
 	compileOnly libs.slf4j.nop // Prevents warnings about missing slf4j implementation during compilation
 
 	testImplementation libs.bundles.grails.testing.support
