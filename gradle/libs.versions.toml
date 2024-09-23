@@ -22,7 +22,7 @@ spock = '2.3-groovy-4.0'
 spring = '6.1.12'
 springboot = '3.3.3'
 spring-security = '6.3.3'
-tomcat = '10.1.29'
+tomcat = '10.1.30'
 
 [libraries]
 commons-lang = { module = 'commons-lang:commons-lang', version.ref = 'commons-lang' }
