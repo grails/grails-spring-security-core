@@ -29,6 +29,7 @@ jobs:
         with:
           arguments: |
             check 
+            --refresh-dependencies
             -Dgeb.env=chromeHeadless
 
   functional-test:
