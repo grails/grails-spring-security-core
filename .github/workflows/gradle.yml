@@ -68,6 +68,7 @@ jobs:
         with:
           arguments: |
             spring-security-core:build 
+            --refresh-dependencies
             -Dgeb.env=chromeHeadless
 
       - name: Publish Snapshot artifacts to Artifactory (repo.grails.org)
