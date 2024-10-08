@@ -22,6 +22,7 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.apache.commons.lang.StringEscapeUtils
+import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -420,11 +421,14 @@ final class SpringSecurityUtils {
 		assert !oldFilter,
 			"Cannot register filter '$beanName' at position $order; '$oldFilter' is already registered in that position"
 
-		Filter filter = getBean(beanName)
-		configuredOrderedFilters[order] = filter
+		def filter = getBean(beanName)
+		if (filter instanceof FilterRegistrationBean) {
+			filter = ((FilterRegistrationBean) filter).filter
+		}
+		configuredOrderedFilters[order] = (Filter) filter
 
 		List<GrailsSecurityFilterChain> filterChains = getBean('securityFilterChains', List)
-		mergeFilterChains configuredOrderedFilters, filter, beanName, order, filterChains
+		mergeFilterChains configuredOrderedFilters, (Filter) filter, beanName, order, filterChains
 
 		log.trace 'Client registered bean "{}" as a filter at order {}', beanName, order
 		log.trace 'Updated filter chain: {}', filterChains
