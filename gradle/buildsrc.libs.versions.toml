@@ -3,7 +3,7 @@ asciidoctorj = '4.0.3'
 asset-pipeline-gradle = '5.0.1'
 grails-gradle-plugin = '7.0.0-SNAPSHOT'
 webdriver-binaries = '3.2'
-spock = '2.3-groovy-3.0'
+spock = '2.3-groovy-4.0'
 
 [libraries]
 asciidoctorj = { module = 'org.asciidoctor:asciidoctor-gradle-jvm', version.ref = 'asciidoctorj' }
