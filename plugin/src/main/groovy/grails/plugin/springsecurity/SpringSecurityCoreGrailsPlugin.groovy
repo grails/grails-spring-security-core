@@ -670,12 +670,6 @@ to default to 'Annotation'; setting value to 'Annotation'
 		}
 		log.trace 'Using SecurityContextHolder strategy {}', SCH.strategyName
 
-		// if sitemesh 3 is installed, an additional sitemesh 3 filter will need to be registered
-		// as part of the security filter chain so that pages are decorated using the security context
-		if (applicationContext.getBean('sitemesh3Secured')) {
-			SpringSecurityUtils.clientRegisterFilter('sitemesh3Secured', SecurityFilterPosition.FORM_CONTENT_FILTER.previous())
-		}
-
 		// build filters here to give dependent plugins a chance to register some
 		SortedMap<Integer, String> filterNames = ReflectionUtils.findFilterChainNames(conf)
 		def securityFilterChains = applicationContext.securityFilterChains
