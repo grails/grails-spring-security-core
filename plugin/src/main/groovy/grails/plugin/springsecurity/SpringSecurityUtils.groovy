@@ -778,16 +778,12 @@ final class SpringSecurityUtils {
 
 		def allConfiguredFilters = [:]
 		filterNames.each { Integer order, String name ->
-			Filter filter = applicationContext.getBean(name, Filter)
-			allConfiguredFilters[name] = filter
-			SpringSecurityUtils.configuredOrderedFilters[order] = filter
-		}
-		// if sitemesh 3 is installed, an additional sitemesh 3 filter will need to be registered
-		// as part of the security filter chain so that pages are decorated using the security context
-		FilterRegistrationBean sitemesh3Filter = (FilterRegistrationBean) applicationContext.getBean('sitemesh3Secured')
-		if (sitemesh3Filter) {
-			allConfiguredFilters['sitemesh3Secured'] = sitemesh3Filter.filter
-			SpringSecurityUtils.configuredOrderedFilters[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order - 10] = sitemesh3Filter.filter
+			def filter = applicationContext.getBean(name)
+			if (filter instanceof FilterRegistrationBean) {
+				filter = ((FilterRegistrationBean) filter).filter
+			}
+			allConfiguredFilters[name] = (Filter) filter
+			SpringSecurityUtils.configuredOrderedFilters[order] = (Filter) filter
 		}
 		log.trace 'Ordered filters: {}', SpringSecurityUtils.configuredOrderedFilters
 
