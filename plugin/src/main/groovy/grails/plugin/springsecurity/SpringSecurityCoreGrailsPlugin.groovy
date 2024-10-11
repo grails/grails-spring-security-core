@@ -673,6 +673,14 @@ to default to 'Annotation'; setting value to 'Annotation'
 		// build filters here to give dependent plugins a chance to register some
 		SortedMap<Integer, String> filterNames = ReflectionUtils.findFilterChainNames(conf)
 		def securityFilterChains = applicationContext.securityFilterChains
+
+		// if sitemesh 3 is installed, an additional sitemesh 3 filter will need to be registered
+		// as part of the security filter chain so that pages are decorated using the security context
+		def sitemesh3Filter = applicationContext.getBean('sitemesh3Secured')
+		if (sitemesh3Filter) {
+			filterNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order - 10] = 'sitemesh3Secured'
+		}
+
 		SpringSecurityUtils.buildFilterChains filterNames, conf.filterChain.chainMap ?: [], securityFilterChains, applicationContext
 		log.trace 'Filter chain: {}', securityFilterChains
 

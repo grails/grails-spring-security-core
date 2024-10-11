@@ -87,15 +87,15 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
         expect:
         10 == map.size()
         map[Integer.MIN_VALUE + 10] instanceof SecurityRequestHolderFilter
-        map[300] instanceof SecurityContextPersistenceFilter
-        map[400] instanceof MutableLogoutFilter
-        map[800] instanceof GrailsUsernamePasswordAuthenticationFilter
-        map[1400] instanceof SecurityContextHolderAwareRequestFilter
-        map[1500] instanceof GrailsRememberMeAuthenticationFilter
-        map[1600] instanceof GrailsAnonymousAuthenticationFilter
-        map[1800] instanceof FormContentFilter
-        map[1900] instanceof ExceptionTranslationFilter
-        map[2000] instanceof FilterSecurityInterceptor
+        map[SecurityFilterPosition.SECURITY_CONTEXT_FILTER.order] instanceof SecurityContextPersistenceFilter
+        map[SecurityFilterPosition.LOGOUT_FILTER.order] instanceof MutableLogoutFilter
+        map[SecurityFilterPosition.FORM_LOGIN_FILTER.order] instanceof GrailsUsernamePasswordAuthenticationFilter
+        map[SecurityFilterPosition.SERVLET_API_SUPPORT_FILTER.order] instanceof SecurityContextHolderAwareRequestFilter
+        map[SecurityFilterPosition.REMEMBER_ME_FILTER.order] instanceof GrailsRememberMeAuthenticationFilter
+        map[SecurityFilterPosition.ANONYMOUS_FILTER.order] instanceof GrailsAnonymousAuthenticationFilter
+        map[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order-10] instanceof FormContentFilter
+        map[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order] instanceof ExceptionTranslationFilter
+        map[SecurityFilterPosition.FILTER_SECURITY_INTERCEPTOR.order] instanceof FilterSecurityInterceptor
 
         when:
         SpringSecurityUtils.clientRegisterFilter 'foo', SecurityFilterPosition.LOGOUT_FILTER
@@ -123,7 +123,7 @@ class SpringSecurityUtilsIntegrationSpec extends AbstractIntegrationSpec {
 
         then:
         11 == map.size()
-        map[410] instanceof DummyFilter
+        map[SecurityFilterPosition.LOGOUT_FILTER.order + 10] instanceof DummyFilter
 
         when:
         def filters = securityFilterChains[0].filters
