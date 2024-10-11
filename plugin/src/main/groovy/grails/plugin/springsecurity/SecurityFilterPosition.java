@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package grails.plugin.springsecurity
+package grails.plugin.springsecurity;
 
 /**
  * Stores the default order numbers of all Spring Security filters for use in configuration.
@@ -23,63 +23,101 @@ package grails.plugin.springsecurity
  * @author Burt Beckwith
  */
 enum SecurityFilterPosition {
-	/** First */
+
 	FIRST(Integer.MIN_VALUE),
-	/** HTTP/HTTPS channel filter */
+
+	DISABLE_ENCODE_URL_FILTER,
+
+	FORCE_EAGER_SESSION_FILTER,
+
 	CHANNEL_FILTER,
-	/** Concurrent Sessions */
-	CONCURRENT_SESSION_FILTER,
-	/** Populates the SecurityContextHolder */
+
 	SECURITY_CONTEXT_FILTER,
-	/** Logout */
+
+	CONCURRENT_SESSION_FILTER,
+
+	WEB_ASYNC_MANAGER_FILTER,
+
+	HEADERS_FILTER,
+
+	CORS_FILTER,
+
+	SAML2_LOGOUT_REQUEST_FILTER,
+
+	SAML2_LOGOUT_RESPONSE_FILTER,
+
+	CSRF_FILTER,
+
+	SAML2_LOGOUT_FILTER,
+
 	LOGOUT_FILTER,
-	/** x509 certs */
+
+	OAUTH2_AUTHORIZATION_REQUEST_FILTER,
+
+	SAML2_AUTHENTICATION_REQUEST_FILTER,
+
 	X509_FILTER,
-	/** Pre-auth */
+
 	PRE_AUTH_FILTER,
-	/** CAS */
+
 	CAS_FILTER,
-	/** UsernamePasswordAuthenticationFilter */
+
+	OAUTH2_LOGIN_FILTER,
+
+	SAML2_AUTHENTICATION_FILTER,
+
 	FORM_LOGIN_FILTER,
-	/** OpenID */
+
 	OPENID_FILTER,
-	/** Not used, generates a dynamic login form */
+
 	LOGIN_PAGE_FILTER,
-	/** Digest auth */
+
+	LOGOUT_PAGE_FILTER,
+
 	DIGEST_AUTH_FILTER,
-	/** Basic Auth */
+
+	BEARER_TOKEN_AUTH_FILTER,
+
 	BASIC_AUTH_FILTER,
-	/** saved request filter */
+
 	REQUEST_CACHE_FILTER,
-	/** SecurityContextHolderAwareRequestFilter */
+
 	SERVLET_API_SUPPORT_FILTER,
-	/** Remember-me cookie */
+
+	JAAS_API_SUPPORT_FILTER,
+
 	REMEMBER_ME_FILTER,
-	/** Anonymous auth */
+
 	ANONYMOUS_FILTER,
-	/** SessionManagementFilter */
+
+	OAUTH2_AUTHORIZATION_CODE_GRANT_FILTER,
+
+	WELL_KNOWN_CHANGE_PASSWORD_REDIRECT_FILTER,
+
 	SESSION_MANAGEMENT_FILTER,
-	/** Spring FormContentFilter allows www-url-form-encoded content-types to provide params in PUT requests */
-	FORM_CONTENT_FILTER,
-	/** ExceptionTranslationFilter */
+
 	EXCEPTION_TRANSLATION_FILTER,
-	/** FilterSecurityInterceptor */
+
 	FILTER_SECURITY_INTERCEPTOR,
-	/** Switch user */
+
 	SWITCH_USER_FILTER,
-	/** Last */
-	LAST(Integer.MAX_VALUE)
 
-	private static final int INTERVAL = 100
+	LAST(Integer.MAX_VALUE);
 
-	/** The position in the chain. */
-	final int order
+	private static final int INTERVAL = 100;
 
-	private SecurityFilterPosition() {
-		order = ordinal() * INTERVAL
+	private final int order;
+
+	SecurityFilterPosition() {
+		this.order = ordinal() * INTERVAL;
 	}
 
-	private SecurityFilterPosition(int filterOrder) {
-		order = filterOrder
+	SecurityFilterPosition(int order) {
+		this.order = order;
 	}
+
+	public int getOrder() {
+		return this.order;
+	}
+
 }
