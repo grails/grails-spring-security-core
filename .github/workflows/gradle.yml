@@ -83,6 +83,7 @@ jobs:
           arguments: |
             -Dorg.gradle.internal.publish.checksums.insecure=true 
             spring-security-core:publish
+            -x javadoc            
 
       - name: Generate Snapshot Documentation
         if: success()
