@@ -77,6 +77,7 @@ spring-context-core = { module = 'org.springframework:spring-context', version.r
 spring-context-support = { module = 'org.springframework:spring-context-support', version.ref = 'spring' }
 spring-expression = { module = 'org.springframework:spring-expression', version.ref = 'spring' }
 spring-security-core = { module = 'org.springframework.security:spring-security-core', version.ref = 'spring-security' }
+spring-security-config = { module = 'org.springframework.security:spring-security-config', version.ref = 'spring-security' }
 spring-security-crypto = { module = 'org.springframework.security:spring-security-crypto', version.ref = 'spring-security' }
 spring-security-web = { module = 'org.springframework.security:spring-security-web', version.ref = 'spring-security' }
 spring-test = { module = 'org.springframework:spring-test', version.ref = 'spring' }
