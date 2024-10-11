@@ -22,7 +22,7 @@ package grails.plugin.springsecurity;
  *
  * @author Burt Beckwith
  */
-enum SecurityFilterPosition {
+enum SecurityFilterPosition  {
 
 	FIRST(Integer.MIN_VALUE),
 
@@ -67,8 +67,6 @@ enum SecurityFilterPosition {
 	SAML2_AUTHENTICATION_FILTER,
 
 	FORM_LOGIN_FILTER,
-
-	OPENID_FILTER,
 
 	LOGIN_PAGE_FILTER,
 

@@ -787,7 +787,7 @@ final class SpringSecurityUtils {
 		FilterRegistrationBean sitemesh3Filter = (FilterRegistrationBean) applicationContext.getBean('sitemesh3Secured')
 		if (sitemesh3Filter) {
 			allConfiguredFilters['sitemesh3Secured'] = sitemesh3Filter.filter
-			SpringSecurityUtils.configuredOrderedFilters[SecurityFilterPosition.FORM_CONTENT_FILTER.previous().order] = sitemesh3Filter.filter
+			SpringSecurityUtils.configuredOrderedFilters[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order - 10] = sitemesh3Filter.filter
 		}
 		log.trace 'Ordered filters: {}', SpringSecurityUtils.configuredOrderedFilters
 
