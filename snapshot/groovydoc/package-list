@@ -5,7 +5,6 @@ grails.plugin.springsecurity.access.intercept
 grails.plugin.springsecurity.access.vote
 grails.plugin.springsecurity.annotation
 grails.plugin.springsecurity.authentication
-grails.plugin.springsecurity.cache
 grails.plugin.springsecurity.userdetails
 grails.plugin.springsecurity.web
 grails.plugin.springsecurity.web.access
