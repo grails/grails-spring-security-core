@@ -70,6 +70,7 @@ jobs:
             spring-security-core:build 
             --refresh-dependencies
             -Dgeb.env=chromeHeadless
+            -x javadoc
 
       - name: Publish Snapshot artifacts to Artifactory (repo.grails.org)
         uses: gradle/actions/setup-gradle@v3
