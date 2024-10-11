@@ -15,6 +15,7 @@
 package grails.plugin.springsecurity
 
 import grails.converters.JSON
+import org.grails.web.servlet.mvc.GrailsWebRequest
 import org.springframework.context.MessageSource
 import org.springframework.security.access.annotation.Secured
 import org.springframework.security.authentication.AccountExpiredException
@@ -104,18 +105,19 @@ class LoginController {
         String msg = ''
         def exception = session[WebAttributes.AUTHENTICATION_EXCEPTION]
         if (exception) {
+            def locale = GrailsWebRequest.lookup().getLocale() ?: Locale.getDefault()
             if (exception instanceof AccountExpiredException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.expired', null, "Account Expired", request.locale)
+                msg = messageSource.getMessage('springSecurity.errors.login.expired', null, "Account Expired", locale)
             } else if (exception instanceof CredentialsExpiredException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.passwordExpired', null, "Password Expired", request.locale)
+                msg = messageSource.getMessage('springSecurity.errors.login.passwordExpired', null, "Password Expired", locale)
             } else if (exception instanceof DisabledException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.disabled', null, "Account Disabled", request.locale)
+                msg = messageSource.getMessage('springSecurity.errors.login.disabled', null, "Account Disabled", locale)
             } else if (exception instanceof LockedException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.locked', null, "Account Locked", request.locale)
+                msg = messageSource.getMessage('springSecurity.errors.login.locked', null, "Account Locked", locale)
             } else if (exception instanceof SessionAuthenticationException) {
-                msg = messageSource.getMessage('springSecurity.errors.login.max.sessions.exceeded', null, "Sorry, you have exceeded your maximum number of open sessions.", request.locale)
+                msg = messageSource.getMessage('springSecurity.errors.login.max.sessions.exceeded', null, "Sorry, you have exceeded your maximum number of open sessions.", locale)
             } else {
-                msg = messageSource.getMessage('springSecurity.errors.login.fail', null, "Authentication Failure", request.locale)
+                msg = messageSource.getMessage('springSecurity.errors.login.fail', null, "Authentication Failure", locale)
             }
         }
 
