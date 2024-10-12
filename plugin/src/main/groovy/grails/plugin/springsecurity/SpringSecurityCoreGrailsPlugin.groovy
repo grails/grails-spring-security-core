@@ -676,8 +676,7 @@ to default to 'Annotation'; setting value to 'Annotation'
 
 		// if sitemesh 3 is installed, an additional sitemesh 3 filter will need to be registered
 		// as part of the security filter chain so that pages are decorated using the security context
-		def sitemesh3Filter = applicationContext.getBean('sitemesh3Secured')
-		if (sitemesh3Filter) {
+		if (applicationContext.containsBean('sitemesh3Secured')) {
 			filterNames[SecurityFilterPosition.EXCEPTION_TRANSLATION_FILTER.order - 10] = 'sitemesh3Secured'
 		}
 
