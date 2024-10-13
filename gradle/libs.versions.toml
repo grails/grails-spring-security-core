@@ -1,6 +1,6 @@
 [versions]
 asset-pipeline = '5.0.1'
-commons-text = '1.1'
+commons-text = '1.12.0'
 ehcache = '3.10.8'
 geb = '7.0'
 gorm-hibernate5 = '9.0.0-SNAPSHOT'
