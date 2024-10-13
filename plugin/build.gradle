@@ -9,12 +9,6 @@ plugins {
 
 group = 'org.grails.plugins'
 
-configurations {
-    all {
-        exclude group: 'javax.servlet'
-    }
-}
-
 dependencies {
 
 	api libs.grails.core
