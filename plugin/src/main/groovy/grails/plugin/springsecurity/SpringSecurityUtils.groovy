@@ -21,7 +21,7 @@ import grails.util.Environment
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import org.apache.commons.lang.StringEscapeUtils
+import org.apache.commons.text.StringEscapeUtils
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.ApplicationContext
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy
@@ -617,7 +617,7 @@ final class SpringSecurityUtils {
 	static String getLastUsername(HttpSession session) {
 		String username = (String)session.getAttribute(SPRING_SECURITY_LAST_USERNAME_KEY)
 		if (username) {
-			username = StringEscapeUtils.unescapeHtml(username)
+			username = StringEscapeUtils.unescapeHtml4(username)
 		}
 		username
 	}

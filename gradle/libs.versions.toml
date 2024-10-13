@@ -1,6 +1,6 @@
 [versions]
 asset-pipeline = '5.0.1'
-commons-lang = '2.6'
+commons-text = '1.1'
 ehcache = '3.10.8'
 geb = '7.0'
 gorm-hibernate5 = '9.0.0-SNAPSHOT'
@@ -25,7 +25,7 @@ spring-security = '6.3.3'
 tomcat = '10.1.29'
 
 [libraries]
-commons-lang = { module = 'commons-lang:commons-lang', version.ref = 'commons-lang' }
+commons-text = { module = 'org.apache.commons:commons-text', version.ref = 'commons-text' }
 ehcache = { module = 'org.ehcache:ehcache', version.ref = 'ehcache' }
 geb-core = { module = 'org.gebish:geb-core', version.ref = 'geb' }
 geb-spock = { module = 'org.gebish:geb-spock', version.ref = 'geb' }

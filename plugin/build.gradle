@@ -32,7 +32,7 @@ dependencies {
 	api libs.spring.security.web
 	api libs.spring.web
 
-	implementation libs.commons.lang
+	implementation libs.commons.text
 	implementation libs.ehcache
 	implementation libs.grails.bootstrap
 	implementation libs.grails.converters
