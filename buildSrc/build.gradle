@@ -4,6 +4,7 @@ repositories {
 }
 
 dependencies {
+    implementation platform("org.grails:grails-bom:7.0.0-SNAPSHOT")
     implementation buildsrcLibs.asciidoctorj
     implementation buildsrcLibs.asset.pipeline.gradle
     implementation buildsrcLibs.grails.gradle.plugin, {
