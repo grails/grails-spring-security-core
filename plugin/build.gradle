@@ -36,7 +36,7 @@ dependencies {
 	implementation libs.spring.core
 	implementation libs.spring.security.crypto
 	implementation libs.spring.tx
-	implementation "jline:jline" // for shell commands
+	compileOnly "jline:jline" // for shell commands
 
 	compileOnly libs.groovy.core // Compile-time annotations
 	compileOnly libs.jakarta.servlet.api // Provided
